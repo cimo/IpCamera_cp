@@ -1,0 +1,58 @@
+@import "utility.scss";
+
+@media(max-width: $maxWidth) {
+}
+@media(min-width: $minWidth) {
+}
+
+.container-fluid {
+    overflow: hidden;
+}
+
+.logo_desktop {
+    display: none;
+    font-family: "acme", sans-serif;
+    font-size: 75px;
+    color: #ffffff;
+    text-shadow: -1px 0 #000000, 0 1px #000000, 1px -1px #000000, 5px 5px #000000;
+    margin: 0;
+}
+.logo_mobile {
+    display: none;
+    font-family: "acme", sans-serif;
+    font-size: 24px;
+    color: #ffffff;
+    text-shadow: -1px 0 #000000, 0 1px #000000, 1px -1px #000000, 2px 2px #000000;
+    margin: 0;
+}
+
+/**/
+
+.tab_container {
+    padding: 0 15px;
+    border: 1px solid #dddddd;
+    border-top: 0;
+}
+
+.camera_controls {
+    width: 50px;
+    cursor: pointer;
+}
+.camera_controls_2 {
+    margin-top: 24% !important;
+}
+
+#camera_video_area {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background-color: #ff0000;
+    @include opacity(0.5);
+}
+
+#camera_video_result {
+    position: relative;
+}
