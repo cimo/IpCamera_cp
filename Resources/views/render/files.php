@@ -9,7 +9,7 @@ $ipCamera = new IpCamera();
 $files = $ipCamera->filesList();
 ?>
 <div id="camera_files_table" class="margin_bottom">
-    <?php require_once("{$utility->getPathRootFull()}/Resources/views/include/table.php"); ?>
+    <?php require_once("{$utility->getPathRoot()}/Resources/views/include/table.php"); ?>
     
     <div class="overflow_y_hidden">
         <table class="table table-bordered table-striped">
@@ -43,7 +43,7 @@ $files = $ipCamera->filesList();
                 </tr>
             </thead>
             <tbody class="table_tbody">
-                <?php echo $files['list']; ?>
+                <?php echo isset($files['list']) == true ? $files['list'] : ""; ?>
             </tbody>
         </table>
     </div>

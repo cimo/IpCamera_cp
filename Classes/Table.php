@@ -16,7 +16,7 @@ class Table {
         $this->utility = $utility;
     }
     
-    public function request($rows, $page, $sessionTag, $reverse, $flat = false) {
+    public function request($rows, $page, $sessionTag, $reverse, $flat) {
         $newRows = $rows;
         
         if ($reverse == true)
@@ -37,6 +37,13 @@ class Table {
             'pagination' => $pagination,
             'list' => $list
         );
+    }
+    
+    public function checkPost() {
+        if (isset($_POST['searchWritten']) == true && isset($_POST['paginationCurrent']) == true)
+            return true;
+        
+        return false;
     }
     
     private function search($index, $value) {

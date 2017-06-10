@@ -1,10 +1,5 @@
 @import "utility.scss";
 
-@media(max-width: $maxWidth) {
-}
-@media(min-width: $minWidth) {
-}
-
 .container-fluid {
     overflow: hidden;
 }
@@ -26,9 +21,14 @@
     margin: 0;
 }
 
-/**/
+/* --- */
 
-.tab_container {
+@media(max-width: $maxWidth) {
+}
+@media(min-width: $minWidth) {
+}
+
+.camera_tab_container {
     padding: 0 15px;
     border: 1px solid #dddddd;
     border-top: 0;
@@ -38,8 +38,13 @@
     width: 50px;
     cursor: pointer;
 }
-.camera_controls_2 {
-    margin-top: 24% !important;
+
+.bootstrap-switch-id-camera_control_swipe_switch {
+    margin-right: 20px;
+}
+
+.camera_control_picture {
+    vertical-align: middle;
 }
 
 #camera_video_area {

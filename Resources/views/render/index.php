@@ -23,14 +23,14 @@ $cameraNumber = isset($_SESSION['camera_number']) == true ? $_SESSION['camera_nu
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <!--<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
         <!-- Favicon -->
-        <link href="<?php echo $utility->getUrlPublic(); ?>/images/templates/<?php echo $settings['template']; ?>/favicon.ico" rel="icon" type="image/x-icon">
+        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settings['template']; ?>/favicon.ico" rel="icon" type="image/x-icon">
         <!-- Css -->
-        <link href="<?php echo $utility->getUrlPublic(); ?>/css/lib/jquery-ui_1.12.1.min.css" rel="stylesheet"/>
-        <link href="<?php echo $utility->getUrlPublic(); ?>/css/lib/jquery-ui_1.12.1_structure.min.css" rel="stylesheet"/>
-        <link href="<?php echo $utility->getUrlPublic(); ?>/css/lib/bootstrap_3.3.7.min.css" rel="stylesheet"/>
-        <link href="<?php echo $utility->getUrlPublic(); ?>/css/lib/bootstrap-switch_3.3.2.min.css" rel="stylesheet"/>
-        <link href="<?php echo $utility->getUrlPublic(); ?>/css/lib/font-awesome_4.7.0_custom.min.css" rel="stylesheet">
-        <link href="<?php echo $utility->getUrlPublic(); ?>/css/basic.css" rel="stylesheet"/>
+        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/jquery-ui_1.12.1.min.css" rel="stylesheet"/>
+        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/jquery-ui_1.12.1_structure.min.css" rel="stylesheet"/>
+        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/bootstrap_3.3.7.min.css" rel="stylesheet"/>
+        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/bootstrap-switch_3.3.2.min.css" rel="stylesheet"/>
+        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/font-awesome_4.7.0_custom.min.css" rel="stylesheet">
+        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/basic.css" rel="stylesheet"/>
     </head>
     <body class="user_select_none">
         <div class="container-fluid">
@@ -39,9 +39,9 @@ $cameraNumber = isset($_SESSION['camera_number']) == true ? $_SESSION['camera_nu
             <div class="row">
                 <div class="col-md-12">
                     <?php
-                    require_once("{$utility->getPathRootFull()}/Resources/views/include/loader.php");
-                    require_once("{$utility->getPathRootFull()}/Resources/views/include/flashBag.php");
-                    require_once("{$utility->getPathRootFull()}/Resources/views/include/popup_easy.php");
+                    require_once("{$utility->getPathRoot()}/Resources/views/include/loader.php");
+                    require_once("{$utility->getPathRoot()}/Resources/views/include/flashBag.php");
+                    require_once("{$utility->getPathRoot()}/Resources/views/include/popup_easy.php");
                     ?>
                 </div>
             </div>
@@ -54,7 +54,7 @@ $cameraNumber = isset($_SESSION['camera_number']) == true ? $_SESSION['camera_nu
                             </div>
                             <div class="pull-right display_mobile">
                                 <input id="camera_control_swipe_switch" type="checkbox" data-on-color="success" data-off-color="danger"/>
-                                <img class="camera_control_picture margin_left camera_controls" src="<?php echo "{$utility->getUrlPublic()}/images/templates/{$settings['template']}"; ?>/picture.png" alt="picture.png"/>
+                                <i class="fa fa-camera fa-3x camera_controls camera_control_picture"></i>
                             </div>
                         </div>
                         <div class="panel-body overflow_hidden padding_clear">
@@ -63,7 +63,7 @@ $cameraNumber = isset($_SESSION['camera_number']) == true ? $_SESSION['camera_nu
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="panel panel-primary display_desktop">
+                    <div id="controls_container" class="panel panel-primary">
                         <div class="panel-heading">
                             <h3 class="panel-title">Controls</h3>
                         </div>
@@ -87,9 +87,9 @@ $cameraNumber = isset($_SESSION['camera_number']) == true ? $_SESSION['camera_nu
                                     <a id="actions_tab_2" data-toggle="tab" href="#actions_tab_content_2">Files</a>
                                 </li>
                             </ul>
-                            <div class="tab-content tab_container clearfix">
+                            <div class="tab-content clearfix camera_tab_container">
                                 <div id="actions_tab_content_1" class="tab-pane active">
-                                    <?php require_once("{$utility->getPathRootFull()}/Resources/views/render/status.php"); ?>
+                                    <?php require_once("{$utility->getPathRoot()}/Resources/views/render/status.php"); ?>
                                 </div>
                                 <div id="actions_tab_content_3" class="tab-pane">
                                     <div class="margin_top overflow_y_hidden">
@@ -117,14 +117,11 @@ $cameraNumber = isset($_SESSION['camera_number']) == true ? $_SESSION['camera_nu
             
             var path = {
                 'documentRoot': "<?php echo $_SERVER['DOCUMENT_ROOT']; ?>",
-                'root': "<?php echo $utility->getPathRoot(); ?>",
-                'rootFull': "<?php echo $utility->getPathRootFull(); ?>"
+                'root': "<?php echo $utility->getPathRoot(); ?>"
             };
             
             var url = {
                 'root': "<?php echo $utility->getUrlRoot(); ?>",
-                'public': "<?php echo $utility->getUrlPublic(); ?>",
-                'view': "<?php echo $utility->getUrlView(); ?>",
                 'ipCameraControl': "<?php echo $ipCamera->getControlUrl(); ?>"
             };
             
@@ -133,7 +130,6 @@ $cameraNumber = isset($_SESSION['camera_number']) == true ? $_SESSION['camera_nu
                 'ok': "Ok",
                 'abort': "Abort",
                 'ajaxConnectionError': "Connection error, please reload the page.",
-                'ajaxInProgress': "There is a background process that has not completed. Reloading might result in data loss.",
                 'ipCameraStatusActive': "Active.",
                 'ipCameraStatusNotActive': "Not active.",
                 'ipCameraCreateNew': "You would like create a new camera settings?",
@@ -149,24 +145,24 @@ $cameraNumber = isset($_SESSION['camera_number']) == true ? $_SESSION['camera_nu
                 'serverUrl': "<?php echo $settings['server_url']; ?>"
             };
         </script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlPublic(); ?>/js/lib/jquery_3.1.1.min.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlPublic(); ?>/js/lib/jquery-ui_1.12.1.min.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlPublic(); ?>/js/lib/jquery-mobile_1.5.0.min.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlPublic(); ?>/js/lib/bootstrap_3.3.7.min.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlPublic(); ?>/js/lib/bootstrap-switch_3.3.2.min.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/lib/jquery_3.1.1.min.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/lib/jquery-ui_1.12.1.min.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/lib/jquery-mobile_1.5.0.min.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/lib/bootstrap_3.3.7.min.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/lib/bootstrap-switch_3.3.2.min.js"></script>
         <!--[if lte IE 9]>
-        <script type="text/javascript" src="<?php echo $utility->getUrlPublic(); ?>/js/lib/media-match_2.0.2.min.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/lib/media-match_2.0.2.min.js"></script>
         <![endif]-->
-        <script type="text/javascript" src="<?php echo $utility->getUrlPublic(); ?>/js/Utility.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlPublic(); ?>/js/Ajax.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlPublic(); ?>/js/Loader.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlPublic(); ?>/js/FlashBag.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlPublic(); ?>/js/PopupEasy.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlPublic(); ?>/js/Download.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlPublic(); ?>/js/Table.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Utility.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Ajax.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Loader.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/FlashBag.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/PopupEasy.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Table.js"></script>
+                <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Download.js"></script>
         
-        <script type="text/javascript" src="<?php echo $utility->getUrlPublic(); ?>/js/IpCamera.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/IpCamera.js"></script>
         
-        <script type="text/javascript" src="<?php echo $utility->getUrlPublic(); ?>/js/Index.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Index.js"></script>
     </body>
 </html>

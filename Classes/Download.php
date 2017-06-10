@@ -13,9 +13,9 @@ class Download {
     }
     
     public function output() {
-        $token = $_GET['token'];
-        $path = $_GET['path'];
-        $name = trim($_GET['name']);
+        $token = isset($_GET['token']) == true ? $_GET['token'] : "";
+        $path = isset($_GET['path']) == true ? $_GET['path'] : "";
+        $name = isset($_GET['name']) == true ? $_GET['name'] : trim($_GET['name']);
         
         $filePath = "$path/$name";
         

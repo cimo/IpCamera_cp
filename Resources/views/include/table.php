@@ -1,9 +1,9 @@
-<div class="margin_bottom">
-    <button id="camera_files_refresh" class="btn btn-primary">Refresh</button>
-    <button id="camera_files_delete_all" class="btn btn-danger">Delete all</button>
+<div class="buttons margin_bottom display_none">
+    <button class="btn btn-primary refresh">Refresh</button>
+    <button class="btn btn-danger delete_all">Delete all</button>
 </div>
-<div class="input-group search_input pull-right margin_bottom">
-    <input class="form-control" type="text" placeholder="Search" value="<?php echo $files['search']['value']; ?>"/>
+<div class="input-group pull-right search_input margin_bottom">
+    <input class="form-control" type="text" placeholder="Search" value="<?php echo isset($files['search']) == true ? $files['search']['value'] : ""; ?>"/>
     <span class="input-group-btn">
         <button class="btn btn-primary" type="button">
             <i class="fa fa-search"></i>
@@ -16,7 +16,7 @@
         <a href="#">Previous</a>
     </li>
     <li>
-        <span class="text"><?php echo $files['pagination']['text']; ?></span>
+        <span class="text"><?php echo isset($files['search']) == true ? $files['pagination']['text'] : ""; ?></span>
     </li>
     <li class="next">
         <a href="#">Next</a>

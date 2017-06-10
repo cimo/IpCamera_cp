@@ -15,18 +15,18 @@ function FlashBag() {
     });
     
     self.show = function() {
-        if ($("#flashBag").css("display") === "none" && $("#flashBag").find(".content").html() !== "") {
+        if ($("#flashBag").css("display") === "none" && $("#flashBag").find(".content").html().trim() !== "") {
             $("#flashBag").show();
             
             $("#flashBag_close").on("click", "", function() {
-                $("#flashBag").hide();
+                self.hide();
             });
         }
         
         if (utility.isIntoView("#flashBag") === false) {
-            if ($("#flashBag_popup").css("display") === "none") {
+            if ($("#flashBag_popup").css("display") === "none" && $("#flashBag").find(".content").html().trim() !== "") {
                 var flashBagClass = $("#flashBag").prop("class");
-                var flashBagHtml = $("#flashBag").find(".content").html();
+                var flashBagHtml = $("#flashBag").find(".content").html().trim();
 
                 $("#flashBag_popup").prop({'class': flashBagClass});
                 $("#flashBag_popup").addClass("shadow");
@@ -34,8 +34,7 @@ function FlashBag() {
                 $("#flashBag_popup").show();
                 
                 $("#flashBag_popup_close").on("click", "", function() {
-                    $("#flashBag_popup").hide();
-                    $("#flashBag").hide();
+                    self.hide();
                 });
             }
         }

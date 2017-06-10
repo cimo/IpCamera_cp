@@ -9,19 +9,19 @@ function Ajax() {
     // Properties
     
     // Functions public
-    self.send = function(url, method, data, loaderEnabled, callbackBefore, callbackSuccess, callbackError, callbackComplete) {
+    self.send = function(loaderEnabled, messageHide, url, method, data, dataType, cache, callbackBefore, callbackSuccess, callbackError, callbackComplete) {
         if (loaderEnabled === true)
             loader.show();
         
-        if (window.session.activity === "")
+        if (messageHide === true && window.session.activity === "")
             flashBag.hide();
         
         $.ajax({
             'url': url,
             'method': method,
             'data': data,
-            'dataType': "json",
-            'cache': false,
+            'dataType': dataType,
+            'cache': cache,
             beforeSend: function() {
                 if (callbackBefore !== null)
                     callbackBefore();
@@ -42,7 +42,7 @@ function Ajax() {
                 flashBag.hide();
                 
                 if (xhr.status === 408 || status === "timeout")
-                    self.send(url, method, data, callbackBefore, callbackSuccess, callbackError, callbackComplete);
+                    self.send(loaderEnabled, messageHide, url, method, data, dataType, cache, callbackBefore, callbackSuccess, callbackError, callbackComplete);
                 else {
                     if (callbackError !== null)
                         callbackError(xhr);
@@ -57,6 +57,9 @@ function Ajax() {
     
     self.reply = function(xhr, tag) {
         var reply = "";
+        
+        if ($("#menu_root_navbar").hasClass("in") === true)
+            $("#menu_root_nav_button").click();
         
         if ($(tag).length > 0)
             $(tag).find("*[required='required']").parents(".form-group").removeClass("has-error");
@@ -95,17 +98,28 @@ function Ajax() {
                     var errors = xhr.response.errors;
 
                     $.each(errors, function(key, value) {
-                        if (typeof(value[0]) === "string" && $.isEmptyObject(value) === false && key !== "token") {
-                            var object = $(tag).find("*[name*='"+ key + "']")[0];
+                        if (typeof(value[0]) === "string" && $.isEmptyObject(value) === false && key !== "_token") {
+                            var object = null;
+                            
+                            if ($(tag).length > 0)
+                                object = $(tag).find("*[name*='"+ key + "']")[0];
+                            
+                            if (object !== undefined) {
+                                $(object).parents(".form-group").addClass("has-error");
 
-                            $(object).parents(".form-group").addClass("has-error");
-                            
-                            var icon = "";
-                            
-                            if ($(object).parents(".form-group").find(".input-group-addon").length > 0)
-                                icon = $(object).parents(".form-group").find(".input-group-addon").html();
-                            
-                            list += "<li>" + icon + " <b>" + $(object).parents(".form-group").find("label").html() + "</b>: " + value[0] + "</li>";
+                                var icon = "";
+                                var label = " - ";
+
+                                if ($(object).parents(".form-group").find(".input-group-addon").length > 0)
+                                    icon = $(object).parents(".form-group").find(".input-group-addon").html();
+                                
+                                if ($(object).parents(".form-group").find("label").html() !== undefined)
+                                    label = $(object).parents(".form-group").find("label").html()
+                                else if ($($(object).parents(".form-group").find("*[name*='"+ key + "']")).attr("placeholder") !== undefined)
+                                    label = $($(object).parents(".form-group").find("*[name*='"+ key + "']")).attr("placeholder");
+                                
+                                list += "<li>" + icon + " <b>" + label + "</b>: " + value[0] + "</li>";
+                            }
                         }
                     });
                 }

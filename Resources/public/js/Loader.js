@@ -9,7 +9,7 @@ function Loader() {
     // Functions public
     self.create = function(type) {
         if (type === "image")
-            $("<div id=\"request_loader\" class=\"display_none shadow\"><img src=\"" + window.url.public + "/images/templates/" + window.settings.template + "/request_loader.gif\" alt=\"request_loader.gif\"/></div>").appendTo("body");
+            $("<div id=\"request_loader\" class=\"display_none shadow\"><img src=\"" + window.url.root + "/Resources/public/images/templates/" + window.settings.template + "/request_loader.gif\" alt=\"request_loader.gif\"/></div>").appendTo("body");
         
         $(window).on("beforeunload", "", function() {
             if ($("#request_loader").length === 0 || $("#request_loader").css("display") === "none") {

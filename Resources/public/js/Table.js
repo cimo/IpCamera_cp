@@ -6,24 +6,32 @@ function Table() {
     
     var urlRequest = "";
     var idResult = "";
+    var oneElement = "";
     
     var current = 0;
     var total = 0;
     
     var sortOrderBy = false;
     
+    var buttonsStatus = "";
+    
     // Properties
+    self.setButtonsStatus = function(value) {
+        buttonsStatus = value;
+    };
     
     // Functions public
-    self.init = function(url, id) {
+    self.init = function(url, id, single) {
         urlRequest = url;
         idResult = id;
+        oneElement = single;
         
         status();
         
         utility.linkPreventDefault();
         
-        utility.selectOnlyOneElement(idResult + " .table_tbody");
+        if (oneElement === true)
+            utility.selectOnlyOneElement(idResult + " .table_tbody");
     };
     
     self.search = function(delegate) {
@@ -166,6 +174,9 @@ function Table() {
         $.each($(idResult).find("table thead tr"), function(key, value) {
             $(value).find("th i").addClass("display_none");
         });
+        
+        if (buttonsStatus === "show")
+            $(idResult).find(".buttons").removeClass("display_none");
     }
     
     function send() {
@@ -175,9 +186,12 @@ function Table() {
         };
         
         ajax.send(
+            true,
+            true,
             urlRequest,
             "post",
             data,
+            "json",
             false,
             function() {
                 $(idResult).find("table tbody").addClass("visibility_hidden");
@@ -198,7 +212,8 @@ function Table() {
                 
                 utility.linkPreventDefault();
                 
-                utility.selectOnlyOneElement(idResult + " .table_tbody");
+                if (oneElement === true)
+                    utility.selectOnlyOneElement(idResult + " .table_tbody");
             },
             null,
             null

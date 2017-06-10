@@ -13,7 +13,7 @@ class Ajax {
     }
     
     public function errors($elements) {
-        $objectElements = (object) $elements;
+        $objectElements = (object)$elements;
         
         $errors = Array();
 

@@ -9,48 +9,38 @@ class Utility {
     private $database;
     private $query;
     
-    private $settings;
-    
-    private $websiteName;
-    
     private $pathRoot;
-    private $pathRootFull;
     
     private $urlRoot;
-    private $urlPublic;
-    private $urlView;
+    
+    private $websiteFile;
+    private $websiteName;
+    
+    private $settings;
     
     // Properties
     public function getQuery() {
         return $this->query;
     }
     
-    public function getSettings() {
-        return $this->settings;
-    }
-    
-    public function getWebsiteName() {
-        return $this->websiteName;
-    }
-    
     public function getPathRoot() {
         return $this->pathRoot;
-    }
-    
-    public function getPathRootFull() {
-        return $this->pathRootFull;
     }
     
     public function getUrlRoot() {
         return $this->urlRoot;
     }
     
-    public function getUrlPublic() {
-        return $this->urlPublic;
+    public function getWebsiteFile() {
+        return $this->websiteFile;
     }
     
-    public function getUrlView() {
-        return $this->urlView;
+    public function getWebsiteName() {
+        return $this->websiteName;
+    }
+    
+    public function getSettings() {
+        return $this->settings;
     }
     
     // Functions public
@@ -59,23 +49,18 @@ class Utility {
         $this->database = new Database();
         $this->query = new Query($this->database);
         
-        $this->settings = $this->query->selectSettingsFromDatabase();
+        $protocol = isset($_SERVER['HTTPS']) == true ? "https://" : "http://";
         
+        $this->pathRoot = $_SERVER['DOCUMENT_ROOT'] . $this->config->getPathRoot();
+        
+        $this->urlRoot = $protocol . $_SERVER['HTTP_HOST'] . $this->config->getUrlRoot();
+        
+        $this->websiteFile = $this->config->getFile();
         $this->websiteName = $this->config->getName();
         
-        $this->pathRoot = $this->config->getPathRoot();
-        $this->pathRootFull = $_SERVER['DOCUMENT_ROOT'] . $this->pathRoot;
-        
-        $protocol = isset($_SERVER['HTTPS']) == true ? "https://" : "http://";
-        $this->urlRoot = $protocol . $_SERVER['HTTP_HOST'] . $this->config->getUrlRoot() . $this->config->getFile();
-        $this->urlPublic = $protocol . $_SERVER['HTTP_HOST'] . $this->config->getUrlRoot() . "/Resources/public";
-        $this->urlView = $protocol . $_SERVER['HTTP_HOST'] . $this->config->getUrlRoot() . "/Resources/views";
+        $this->settings = $this->query->selectSettingsFromDatabase();
         
         $this->arrayColumnFix();
-    }
-    
-    public function generateToken() {
-        $_SESSION['token'] = bin2hex(openssl_random_pseudo_bytes(21));
     }
     
     public function checkSessionOverTime() {
@@ -98,6 +83,10 @@ class Utility {
         return "";
     }
     
+    public function generateToken() {
+        $_SESSION['token'] = bin2hex(openssl_random_pseudo_bytes(21));
+    }
+    
     public function sessionDestroy() {
         session_destroy();
         session_unset();
@@ -105,7 +94,7 @@ class Utility {
         $cookies = Array(
             'rememberme'
         );
-
+        
         foreach ($cookies as $value)
             unset($_COOKIE[$value]);
     }
@@ -119,7 +108,7 @@ class Utility {
             setcookie($name, $value, $lifeTime, $currentCookieParams['path'], $currentCookieParams['domain'], $secure, $httpOnly);
     }
     
-    public function searchInFile($filePath, $word, $replace = null) {
+    public function searchInFile($filePath, $word, $replace) {
         $reading = fopen($filePath, "r");
         $writing = fopen($filePath + ".tmp", "w");
         
@@ -147,21 +136,23 @@ class Utility {
         fclose($writing);
         
         if ($checked == true) 
-            @rename($filePath + ".tmp", $filePath);
+            rename($filePath + ".tmp", $filePath);
         else
-            @unlink($filePath + ".tmp");
+            unlink($filePath + ".tmp");
     }
     
-    public function removeDirRecursive($path, $parent = true) {
+    public function removeDirRecursive($path, $parent) {
         if (file_exists($path) == true) {
             $rdi = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS);
             $rii = new RecursiveIteratorIterator($rdi, RecursiveIteratorIterator::CHILD_FIRST);
-
+            
             foreach($rii as $file) {
-                if ($file->isDir() == true)
-                    rmdir($file->getRealPath());
-                else
-                    @unlink($file->getRealPath());
+                if (file_exists($file->getRealPath()) == true) {
+                    if ($file->isDir() == true)
+                        rmdir($file->getRealPath());
+                    else
+                        unlink($file->getRealPath());
+                }
             }
 
             if ($parent == true)
@@ -169,7 +160,7 @@ class Utility {
         }
     }
     
-    public function generateRandomString($length = 20) {
+    public function generateRandomString($length) {
         $characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         $charactersLength = strlen($characters);
         $randomString = "";
@@ -207,7 +198,7 @@ class Utility {
         return $bytes;
     }
     
-    public function arrayLike($elements, $like, $flat = false) {
+    public function arrayLike($elements, $like, $flat) {
         $result = Array();
         
         if ($flat == true) {
@@ -236,6 +227,35 @@ class Utility {
         }
         
         return $result;
+    }
+    
+    public function urlParameters($completeUrl, $baseUrl) {
+        $lastPath = substr($completeUrl, strpos($completeUrl, $baseUrl) + strlen($baseUrl));
+        $lastPathExplode = explode("/", $lastPath);
+        array_shift($lastPathExplode);
+        
+        return $lastPathExplode;
+    }
+    
+    public function clientIp() {
+        $ip = "";
+        
+        if (getenv("HTTP_CLIENT_IP"))
+            $ip = getenv("HTTP_CLIENT_IP");
+        else if(getenv("HTTP_X_FORWARDED_FOR"))
+            $ip = getenv("HTTP_X_FORWARDED_FOR");
+        else if(getenv("HTTP_X_FORWARDED"))
+            $ip = getenv("HTTP_X_FORWARDED");
+        else if(getenv("HTTP_FORWARDED_FOR"))
+            $ip = getenv("HTTP_FORWARDED_FOR");
+        else if(getenv("HTTP_FORWARDED"))
+           $ip = getenv("HTTP_FORWARDED");
+        else if(getenv("REMOTE_ADDR"))
+            $ip = getenv("REMOTE_ADDR");
+        else
+            $ip = "UNKNOWN";
+        
+        return $ip;
     }
     
     // Functions private

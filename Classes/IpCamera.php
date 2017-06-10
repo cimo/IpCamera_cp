@@ -5,8 +5,8 @@ require_once(dirname(__DIR__) . "/Classes/Table.php");
 
 class IpCamera {
     // Vars
-    private $utility;
     private $database;
+    private $utility;
     private $ajax;
     private $table;
     
@@ -31,8 +31,8 @@ class IpCamera {
     
     // Functions public
     public function __construct() {
-        $this->utility = new Utility();
         $this->database = new Database();
+        $this->utility = new Utility();
         $this->ajax = new Ajax();
         $this->table = new Table($this->utility);
         
@@ -125,7 +125,7 @@ class IpCamera {
                 unset($scanDirElements[$index]);
             }
             
-            $tableResult = $this->table->request($scanDirElements, 5, "file", true);
+            $tableResult = $this->table->request($scanDirElements, 5, "file", true, false);
             
             $count = 0;
             $list = "";
@@ -201,30 +201,35 @@ class IpCamera {
         $deviceRow = $this->utility->getQuery()->selectDeviceFromDatabase($deviceId);
         
         $content = "framerate 30\n";
-        $content .= "netcam_url $netcamUrl/{$deviceRow['video']}?user=$username&pwd=$password&resolution=$this->resolution\n";
+        $content .= "netcam_url $netcamUrl/{$deviceRow['video']}user=$username&pwd=$password&resolution=$this->resolution\n";
         $content .= "netcam_http 1.0\n";
+        $content .= "netcam_userpass $username:$password\n";
         $content .= "threshold $threshold\n";
         $content .= "ffmpeg_cap_new on\n";
+        $content .= "output_normal off\n";
         $content .= "target_dir /home/user_1/www/motion/camera_$cameraNumber";
         
         file_put_contents("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_$cameraNumber.conf", $content.PHP_EOL);
         
-        // Set threshold
-        $this->curlCommandsUrls(Array(
-                "{$this->settings['server_url']}/$cameraNumber/config/set?threshold=$threshold"
-            )
-        );
+        $this->curlCommandsUrls("{$this->settings['server_url']}/$cameraNumber/config/set?framerate=30");
+        $this->curlCommandsUrls("{$this->settings['server_url']}/$cameraNumber/config/set?netcam_url=$netcamUrl/{$deviceRow['video']}user=$username&pwd=$password&resolution=$this->resolution");
+        $this->curlCommandsUrls("{$this->settings['server_url']}/$cameraNumber/config/set?netcam_http=1.0");
+        $this->curlCommandsUrls("{$this->settings['server_url']}/$cameraNumber/config/set?netcam_userpass=$username:$password");
+        $this->curlCommandsUrls("{$this->settings['server_url']}/$cameraNumber/config/set?threshold=$threshold");
+        $this->curlCommandsUrls("{$this->settings['server_url']}/$cameraNumber/config/set?ffmpeg_cap_new=on");
+        $this->curlCommandsUrls("{$this->settings['server_url']}/$cameraNumber/config/set?output_normal=off");
+        $this->curlCommandsUrls("{$this->settings['server_url']}/$cameraNumber/config/set?target_dir=/home/user_1/www/motion/camera_$cameraNumber");
     }
     
-    private function curlCommandsUrls($urls) {
+    private function curlCommandsUrls($url) {
         $curl = curl_init();
         
-        foreach ($urls as $url)
-            curl_setopt($curl, CURLOPT_URL, $url);
-        
+        curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HEADER, 0);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        
         curl_exec($curl);
+        
         curl_close($curl);
     }
     
@@ -279,13 +284,10 @@ class IpCamera {
             
             $this->profileConfig("", "", "", "", "", "pause", $_SESSION['camera_number']);
             
-            $this->utility->searchInFile("/etc/motion/motion.conf", "thread /home/user_1/www/motion/camera_{$_SESSION['camera_number']}.conf");
+            $this->utility->searchInFile("/etc/motion/motion.conf", "thread /home/user_1/www/motion/camera_{$_SESSION['camera_number']}.conf", null);
             
             // Pause
-            $this->curlCommandsUrls(Array(
-                    "{$this->settings['server_url']}/{$_SESSION['camera_number']}/detection/pause"
-                )
-            );
+            $this->curlCommandsUrls("{$this->settings['server_url']}/{$_SESSION['camera_number']}/detection/pause");
             
             $this->response['messages']['success'] = "New camera created with success.";
         }
@@ -340,10 +342,7 @@ class IpCamera {
         $query->execute();
         
         // Restart
-        $this->curlCommandsUrls(Array(
-                "{$this->settings['server_url']}/{$_SESSION['camera_number']}/action/restart"
-            )
-        );
+        $this->curlCommandsUrls("{$this->settings['server_url']}/{$_SESSION['camera_number']}/action/restart");
         
         $this->response['messages']['success'] = "Settings updated with success.";
     }
@@ -354,7 +353,7 @@ class IpCamera {
         if ($json->event == "picture") {
             curl_setopt($curl, CURLOPT_URL, "{$this->settings['server_url']}/{$_SESSION['camera_number']}/action/snapshot");
             
-            $this->response['messages']['success'] = "Picture taked, please refresh the table.";
+            $this->response['messages']['success'] = "Picture taked.";
         }
         
         curl_setopt($curl, CURLOPT_HEADER, 0);
@@ -367,7 +366,7 @@ class IpCamera {
         $path = "{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}/" . trim($json->name);
         
         if ($json->event == "delete") {
-            if (file_exists($path))
+            if (file_exists($path) == true)
                 unlink($path);
             
             $this->response['messages']['success'] = "File deleted with success!";
@@ -382,7 +381,8 @@ class IpCamera {
     }
     
     private function deleteAction() {
-        $this->utility->removeDirRecursive("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}");
+        $this->utility->removeDirRecursive("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}", true);
+        
         unlink("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}.conf");
         
         $this->utility->searchInFile("/etc/motion/motion.conf", "thread /home/user_1/www/motion/camera_{$_SESSION['camera_number']}.conf", " ");
@@ -395,10 +395,7 @@ class IpCamera {
         $query->execute();
         
         // Quit
-        $this->curlCommandsUrls(Array(
-                "{$this->settings['server_url']}/{$_SESSION['camera_number']}/action/quit"
-            )
-        );
+        $this->curlCommandsUrls("{$this->settings['server_url']}/{$_SESSION['camera_number']}/action/quit");
         
         $_SESSION['camera_number'] = -1;
         
