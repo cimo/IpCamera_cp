@@ -19,3 +19,10 @@
         </li>
     </ul>
 </div>
+<script>
+    var textStatus = {
+        'ipCameraStatusActive': "Active.",
+        'ipCameraStatusNotActive': "Not active.",
+        'ipCameraCreateNew': "You would like create a new camera settings?"
+    };
+</script>

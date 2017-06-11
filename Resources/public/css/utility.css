@@ -144,7 +144,6 @@ legend { width: inherit; padding: 0 10px; border-bottom: none; }
 #progressBar { margin-bottom: 0px !important; }
 #progressBar .progress-bar span { margin-left: 5px; color: #000000; }
 
-#upload { display: none; }
 #upload .file { margin-bottom: 5px; }
 #upload .container_box { display: none; }
 #upload .container_box .text { position: relative; margin: 5px 0px; padding: 10px; }

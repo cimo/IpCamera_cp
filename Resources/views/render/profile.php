@@ -98,3 +98,8 @@ $cameraRows = $utility->getQuery()->selectCameraFromDatabase($cameraNumber);
 
     <button id="camera_deletion" class="btn btn-primary" type="button">Delete</button>
 </div>
+<script>
+    var textProfile = {
+        'ipCameraDelete': "Really delete this camera?"
+    };
+</script>

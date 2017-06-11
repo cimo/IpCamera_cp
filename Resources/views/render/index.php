@@ -129,13 +129,7 @@ $cameraNumber = isset($_SESSION['camera_number']) == true ? $_SESSION['camera_nu
                 'warning': "Warning!",
                 'ok': "Ok",
                 'abort': "Abort",
-                'ajaxConnectionError': "Connection error, please reload the page.",
-                'ipCameraStatusActive': "Active.",
-                'ipCameraStatusNotActive': "Not active.",
-                'ipCameraCreateNew': "You would like create a new camera settings?",
-                'ipCameraDelete': "Really delete this camera?",
-                'ipCameraDeleteFile': "Really delete this file?",
-                'ipCameraDeleteAllFile': "Really delete all files?"
+                'ajaxConnectionError': "Connection error, please reload the page."
             };
             
             var settings = {

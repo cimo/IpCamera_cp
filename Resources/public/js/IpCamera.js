@@ -33,7 +33,7 @@ function IpCamera() {
             if (parseInt($("#form_cameras_selection_id").val()) === 0) {
                 popupEasy.create(
                     window.text.warning,
-                    window.text.ipCameraCreateNew,
+                    window.textStatus.ipCameraCreateNew,
                     function() {
                         popupEasy.close();
 
@@ -233,7 +233,7 @@ function IpCamera() {
         $("#camera_deletion").on("click", "", function() {
             popupEasy.create(
                 window.text.warning,
-                window.text.ipCameraDelete,
+                window.textProfile.ipCameraDelete,
                 function() {
                     popupEasy.close();
 
@@ -305,7 +305,7 @@ function IpCamera() {
         $(document).on("click", "#camera_files_table .delete_all", function() {
             popupEasy.create(
                 window.text.warning,
-                window.text.ipCameraDeleteAllFile,
+                window.textFile.ipCameraDeleteAllFile,
                 function() {
                     popupEasy.close();
                     
@@ -349,7 +349,7 @@ function IpCamera() {
             
             popupEasy.create(
                 window.text.warning,
-                window.text.ipCameraDeleteFile,
+                window.textFile.ipCameraDeleteFile,
                 function() {
                     popupEasy.close();
                     
@@ -386,9 +386,9 @@ function IpCamera() {
         var detectionActiveValue = $("#form_camera_profile_detection_active").val();
         
         if (detectionActiveValue === "start")
-            $("#camera_detection_status").text(window.text.ipCameraStatusActive);
+            $("#camera_detection_status").text(window.textStatus.ipCameraStatusActive);
         else
-            $("#camera_detection_status").text(window.text.ipCameraStatusNotActive);
+            $("#camera_detection_status").text(window.textStatus.ipCameraStatusNotActive);
     }
     
     function move(tag, elements) {
