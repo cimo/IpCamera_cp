@@ -19,8 +19,8 @@ class Utility {
     private $settings;
     
     // Properties
-    public function getQuery() {
-        return $this->query;
+    public function getDatabase() {
+        return $this->database;
     }
     
     public function getPathRoot() {
@@ -61,26 +61,6 @@ class Utility {
         $this->settings = $this->query->selectSettingsFromDatabase();
         
         $this->arrayColumnFix();
-    }
-    
-    public function checkSessionOverTime() {
-        $sessionMaxIdleTime = 3600;
-        
-        if ($sessionMaxIdleTime > 0) {
-            if (isset($_SESSION['LAST_ACTIVITY_TIME']) == true) {
-                $timeLapse = time() - $_SESSION['LAST_ACTIVITY_TIME'];
-                
-                if ($timeLapse > $sessionMaxIdleTime) {
-                    $this->sessionDestroy();
-                    
-                    return "Session time is over, please refresh the page.";
-                }
-            }
-            
-            $_SESSION['LAST_ACTIVITY_TIME'] = time();
-        }
-        
-        return "";
     }
     
     public function generateToken() {
@@ -136,7 +116,7 @@ class Utility {
         fclose($writing);
         
         if ($checked == true) 
-            rename($filePath + ".tmp", $filePath);
+            @rename($filePath + ".tmp", $filePath);
         else
             unlink($filePath + ".tmp");
     }

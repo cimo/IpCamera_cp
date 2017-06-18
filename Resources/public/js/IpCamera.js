@@ -6,7 +6,7 @@ function IpCamera() {
     // Vars
     var self = this;
     
-    var currentId = window.session.ipCameraNumber;
+    var currentId = window.session.cameraNumber;
     
     var videoAreaEnabled = false;
     
@@ -14,6 +14,8 @@ function IpCamera() {
     
     var widthType = "";
     var widthTypeOld = "";
+    
+    var takePictureEnable = true;
     
     // Properties
     
@@ -77,6 +79,12 @@ function IpCamera() {
                 $("#camera_files_result").html("");
             },
             function(xhr) {
+                if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
+                    ajax.reply(xhr, "");
+                    
+                    return;
+                }
+                
                 if (createNew === true) {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                     
@@ -169,26 +177,42 @@ function IpCamera() {
         });
         
         $(".camera_control_picture").on("click", "", function() {
-            ajax.send(
-                true,
-                false,
-                window.url.root + "/Requests/IpCameraRequest.php?controller=controlsAction",
-                "post",
-                JSON.stringify({
-                    'event': "picture",
-                    'token': window.session.token
-                }),
-                "json",
-                false,
-                null,
-                function(xhr) {
-                    ajax.reply(xhr, "");
-                    
-                    $("#camera_files_table .refresh").click();
-                },
-                null,
-                null
-            );
+            if (takePictureEnable === true) {
+                takePictureEnable = false;
+                
+                ajax.send(
+                    true,
+                    false,
+                    window.url.root + "/Requests/IpCameraRequest.php?controller=controlsAction",
+                    "post",
+                    JSON.stringify({
+                        'event': "picture",
+                        'token': window.session.token
+                    }),
+                    "json",
+                    false,
+                    null,
+                    function(xhr) {
+                        if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
+                            ajax.reply(xhr, "");
+
+                            return;
+                        }
+
+                        ajax.reply(xhr, "");
+
+                        setTimeout(
+                            function() {
+                                $("#camera_files_table .refresh").click();
+                                
+                                takePictureEnable = true;
+                            },
+                        1000);
+                    },
+                    null,
+                    null
+                );
+            }
         });
     }
     
@@ -221,6 +245,12 @@ function IpCamera() {
                 false,
                 null,
                 function(xhr) {
+                    if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
+                        ajax.reply(xhr, "");
+
+                        return;
+                    }
+                    
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                     
                     labelStatus();
@@ -249,6 +279,12 @@ function IpCamera() {
                         false,
                         null,
                         function(xhr) {
+                            if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
+                                ajax.reply(xhr, "");
+
+                                return;
+                            }
+
                             ajax.reply(xhr, "");
                             
                             $("#form_cameras_selection_id").find("option[value=" + currentId + "]").remove();
@@ -293,6 +329,12 @@ function IpCamera() {
                 false,
                 null,
                 function(xhr) {
+                    if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
+                        ajax.reply(xhr, "");
+
+                        return;
+                    }
+                    
                     ajax.reply(xhr, "");
                     
                     table.populate(xhr);
@@ -323,6 +365,12 @@ function IpCamera() {
                         false,
                         null,
                         function(xhr) {
+                            if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
+                                ajax.reply(xhr, "");
+
+                                return;
+                            }
+
                             ajax.reply(xhr, "");
                             
                             table.populate(xhr);
@@ -367,6 +415,12 @@ function IpCamera() {
                         false,
                         null,
                         function(xhr) {
+                            if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
+                                ajax.reply(xhr, "");
+
+                                return;
+                            }
+
                             ajax.reply(xhr, "");
                             
                             table.populate(xhr);
@@ -397,7 +451,7 @@ function IpCamera() {
                 event.preventDefault();
                 
                 utility.postIframe(
-                    window.url.ipCameraControl + "&command=" + elements[0],
+                    window.url.cameraControl + "&command=" + elements[0],
                     "post",
                     {
                         'command': elements[0]
@@ -409,7 +463,7 @@ function IpCamera() {
                 event.preventDefault();
                 
                 utility.postIframe(
-                    window.url.ipCameraControl + "&command=" + elements[1],
+                    window.url.cameraControl + "&command=" + elements[1],
                     "post",
                     {
                         'command': elements[1]
@@ -422,7 +476,7 @@ function IpCamera() {
                 event.preventDefault();
                 
                 utility.postIframe(
-                    window.url.ipCameraControl + "&command=" + elements[0],
+                    window.url.cameraControl + "&command=" + elements[0],
                     "post",
                     {
                         'command': elements[0]
@@ -430,7 +484,7 @@ function IpCamera() {
                 );
         
                 utility.postIframe(
-                    window.url.ipCameraControl + "&command=" + elements[2],
+                    window.url.cameraControl + "&command=" + elements[2],
                     "post",
                     {
                         'command': elements[2]
@@ -442,7 +496,7 @@ function IpCamera() {
                 event.preventDefault();
                 
                 utility.postIframe(
-                    window.url.ipCameraControl + "&command=" + elements[1],
+                    window.url.cameraControl + "&command=" + elements[1],
                     "post",
                     {
                         'command': elements[1]
@@ -450,7 +504,7 @@ function IpCamera() {
                 );
                 
                 utility.postIframe(
-                    window.url.ipCameraControl + "&command=" + elements[3],
+                    window.url.cameraControl + "&command=" + elements[3],
                     "post",
                     {
                         'command': elements[3]
@@ -462,7 +516,7 @@ function IpCamera() {
     
     function swipeMoveStart(value) {
         utility.postIframe(
-            window.url.ipCameraControl + "&command=" + value,
+            window.url.cameraControl + "&command=" + value,
             "post",
             {
                 'command': value
@@ -474,7 +528,7 @@ function IpCamera() {
         $("#camera_video_area").on("touchend touchcancel", "", function(event) {
             if (swipeMoveValue !== -1) {
                 utility.postIframe(
-                    window.url.ipCameraControl + "&command=" + swipeMoveValue,
+                    window.url.cameraControl + "&command=" + swipeMoveValue,
                     "post",
                     {
                         'command': swipeMoveValue

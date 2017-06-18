@@ -61,7 +61,7 @@ function Table() {
         var child = delegate === true ? idResult + " .pagination .previous" : "";
         
         $(parent).on("click", child, function() {
-            if (current > 0 && total > 1) {
+            if (total > 1 && current > 0) {
                 current --;
                 
                 send();
@@ -72,7 +72,7 @@ function Table() {
         var child = delegate === true ? idResult + " .pagination .next" : "";
         
         $(parent).on("click", child, function() {
-            if (current < (total - 1) && total > 1) {
+            if (total > 1 && current < (total - 1)) {
                 current ++;
                 
                 send();
@@ -139,11 +139,13 @@ function Table() {
         $(idResult).find(".table_spinner i").addClass("display_none");
         $(idResult).find("table tbody").removeClass("visibility_hidden");
         
-        $(idResult).find(".search_input input").val(xhr.response.values.search.value);
-        $(idResult).find(".pagination .text").html(xhr.response.values.pagination.text);
-        $(idResult).find("table tbody").html(xhr.response.values.list);
-        
-        status();
+        if (xhr.response.values !== undefined) {
+            $(idResult).find(".search_input input").val(xhr.response.values.search.value);
+            $(idResult).find(".pagination .text").html(xhr.response.values.pagination.text);
+            $(idResult).find("table tbody").html(xhr.response.values.list);
+
+            status();
+        }
     };
     
     // Functions private
@@ -152,23 +154,27 @@ function Table() {
         
         if (textHtml !== undefined) {
             var textSplit = textHtml.split("/");
+            var valueA = parseInt($.trim(textSplit[0]));
+            var valueB = parseInt($.trim(textSplit[1]));
             
-            if (current === 0)
-                current = parseInt($.trim(textSplit[0])) - 1;
+            if (valueA > valueB && $(idResult).find("table tbody tr").length === 0)
+                $(idResult).find(".pagination .previous").click();
+            
+            current = valueA - 1;
             
             if (current < 0)
                 current = 0;
             
-            total = parseInt($.trim(textSplit[1]));
+            total = valueB;
         }
         
         $(idResult).find(".pagination .previous").addClass("disabled");
         $(idResult).find(".pagination .next").addClass("disabled");
         
-        if (current > 0 && total > 1)
+        if (total > 1 && current > 0)
             $(idResult).find(".pagination .previous").removeClass("disabled");
         
-        if (current < (total - 1) && total > 1)
+        if (total > 1 && current < (total - 1))
             $(idResult).find(".pagination .next").removeClass("disabled");
         
         $.each($(idResult).find("table thead tr"), function(key, value) {
@@ -186,7 +192,7 @@ function Table() {
         };
         
         ajax.send(
-            true,
+            false,
             true,
             urlRequest,
             "post",
@@ -198,6 +204,12 @@ function Table() {
                 $(idResult).find(".table_spinner i").removeClass("display_none");
             },
             function(xhr) {
+                if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
+                    ajax.reply(xhr, "");
+                    
+                    return;
+                }
+                
                 ajax.reply(xhr, "");
                 
                 if (xhr.response.render !== undefined) {

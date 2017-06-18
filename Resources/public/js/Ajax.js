@@ -13,7 +13,7 @@ function Ajax() {
         if (loaderEnabled === true)
             loader.show();
         
-        if (messageHide === true && window.session.activity === "")
+        if (messageHide === true && window.session.userActivity === "")
             flashBag.hide();
         
         $.ajax({
@@ -131,8 +131,8 @@ function Ajax() {
                 reply += list;
             }
             
-            if (xhr.response.session !== undefined && xhr.response.session.activity !== undefined)
-                window.session.activity = xhr.response.session.activity;
+            if (xhr.response.session !== undefined && xhr.response.session.userActivity !== undefined)
+                window.session.userActivity = xhr.response.session.userActivity;
         }
         
         if (reply !== "")

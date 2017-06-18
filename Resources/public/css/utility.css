@@ -87,6 +87,8 @@ legend { width: inherit; padding: 0 10px; border-bottom: none; }
 
 .table_borderless th, .table_borderless td { border: none !important; }
 
+.table_min_height { min-height: 120px; }
+
 .table_spinner { position: relative; top: 55px; }
 .table_spinner i { position: absolute; left: 45%; z-index: 1; }
 

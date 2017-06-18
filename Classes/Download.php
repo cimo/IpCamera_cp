@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__DIR__) . "/Classes/Utility.php");
+require_once("Utility.php");
 
 class Download {
     // Vars

@@ -1,16 +1,17 @@
 <?php
-require_once(dirname(__DIR__) . "/Classes/Utility.php");
-require_once(dirname(__DIR__) . "/Classes/Ajax.php");
-require_once(dirname(__DIR__) . "/Classes/Table.php");
+require_once("Utility.php");
+require_once("UtilityPrivate.php");
+require_once("Query.php");
+require_once("Ajax.php");
+require_once("Table.php");
 
 class IpCamera {
     // Vars
-    private $database;
     private $utility;
+    private $utilityPrivate;
+    private $query;
     private $ajax;
     private $table;
-    
-    private $settings;
     
     private $videoUrl;
     private $controlUrl;
@@ -31,12 +32,11 @@ class IpCamera {
     
     // Functions public
     public function __construct() {
-        $this->database = new Database();
         $this->utility = new Utility();
+        $this->utilityPrivate = new UtilityPrivate();
+        $this->query = new Query($this->utility->getDatabase());
         $this->ajax = new Ajax();
-        $this->table = new Table($this->utility);
-        
-        $this->settings = $this->utility->getSettings();
+        $this->table = new Table();
         
         $this->videoUrl = "";
         $this->controlUrl = "";
@@ -46,49 +46,57 @@ class IpCamera {
         
         $this->response = Array();
         
-        $cameraNumber = isset($_SESSION['camera_number']) == true ? $_SESSION['camera_number'] : 1;
+        $_SESSION['camera_number'] = isset($_SESSION['camera_number']) == true ? $_SESSION['camera_number'] : 1;
         
-        $this->parameters($cameraNumber);
+        $this->parameters();
     }
     
     public function phpInput() {
-        $sessionActivity = $this->utility->checkSessionOverTime();
+        $this->utilityPrivate->checkSessionOverTime();
         
-        if ($sessionActivity != "")
-            $this->response['session']['activity'] = $sessionActivity;
-        else {
-            $content = file_get_contents("php://input");
-            $json = json_decode($content);
+        if ($_SESSION['user_activity'] != "" ) {
+            $this->response['session']['userActivity'] = $_SESSION['user_activity'];
             
-            if ($json != null) {
-                if (isset($_GET['controller']) == true) {
-                    $token = is_array($json) == true ? end($json)->value : $json->token;
+            echo $this->ajax->response(Array(
+                'response' => $this->response
+            ));
+            
+            $this->utility->getDatabase()->close();
+            
+            return;
+        }
+        
+        $content = file_get_contents("php://input");
+        $json = json_decode($content);
 
-                    if (isset($_SESSION['token']) == true && $token == $_SESSION['token']) {
-                        if ($_GET['controller'] == "selectionAction")
-                            $this->selectionAction($json);
-                        else if ($_GET['controller'] == "profileAction")
-                            $this->profileAction($json);
-                        else if ($_GET['controller'] == "controlsAction")
-                            $this->controlsAction($json);
-                        else if ($_GET['controller'] == "filesAction")
-                            $this->filesAction($json);
-                        else if ($_GET['controller'] == "deleteAction")
-                            $this->deleteAction();
-                    }
+        if ($json != null) {
+            if (isset($_GET['controller']) == true) {
+                $token = is_array($json) == true ? end($json)->value : $json->token;
+
+                if (isset($_SESSION['token']) == true && $token == $_SESSION['token']) {
+                    if ($_GET['controller'] == "selectionAction")
+                        $this->selectionAction($json);
+                    else if ($_GET['controller'] == "profileAction")
+                        $this->profileAction($json);
+                    else if ($_GET['controller'] == "controlsAction")
+                        $this->controlsAction($json);
+                    else if ($_GET['controller'] == "filesAction")
+                        $this->filesAction($json);
+                    else if ($_GET['controller'] == "deleteAction")
+                        $this->deleteAction();
                 }
             }
-            else if (isset($_POST['searchWritten']) == true && isset($_POST['paginationCurrent']) == true)
-                $this->filesList();
-            else
-                $this->response['messages']['error'] = "Json error!";
         }
+        else if (isset($_POST['searchWritten']) == true && isset($_POST['paginationCurrent']) == true)
+            $this->filesList();
+        else
+            $this->response['messages']['error'] = "Json error!";
         
         echo $this->ajax->response(Array(
             'response' => $this->response
         ));
         
-        $this->database->close();
+        $this->utility->getDatabase()->close();
     }
     
     public function generateSelectOptionFromMotionFolders() {
@@ -177,12 +185,10 @@ class IpCamera {
     }
     
     // Functions private
-    private function parameters($cameraNumber) {
-        $_SESSION['camera_number'] = $cameraNumber;
+    private function parameters() {
+        $cameraRow = $this->query->selectCameraFromDatabase($_SESSION['camera_number']);
         
-        $cameraRow = $this->utility->getQuery()->selectCameraFromDatabase($_SESSION['camera_number']);
-        
-        $deviceRow = $this->utility->getQuery()->selectDeviceFromDatabase($cameraRow['device_id']);
+        $deviceRow = $this->query->selectDeviceFromDatabase($cameraRow['device_id']);
         
         $this->resolution = 32;
         $this->rate = 0;
@@ -198,7 +204,7 @@ class IpCamera {
         $netcamUrl = $motionUrl == "" ? $videoUrl : $motionUrl;
         $threshold = $motionDetectionActive == "start" ? "1500" : "0";
         
-        $deviceRow = $this->utility->getQuery()->selectDeviceFromDatabase($deviceId);
+        $deviceRow = $this->query->selectDeviceFromDatabase($deviceId);
         
         $content = "framerate 30\n";
         $content .= "netcam_url $netcamUrl/{$deviceRow['video']}user=$username&pwd=$password&resolution=$this->resolution\n";
@@ -211,14 +217,14 @@ class IpCamera {
         
         file_put_contents("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_$cameraNumber.conf", $content.PHP_EOL);
         
-        $this->curlCommandsUrls("{$this->settings['server_url']}/$cameraNumber/config/set?framerate=30");
-        $this->curlCommandsUrls("{$this->settings['server_url']}/$cameraNumber/config/set?netcam_url=$netcamUrl/{$deviceRow['video']}user=$username&pwd=$password&resolution=$this->resolution");
-        $this->curlCommandsUrls("{$this->settings['server_url']}/$cameraNumber/config/set?netcam_http=1.0");
-        $this->curlCommandsUrls("{$this->settings['server_url']}/$cameraNumber/config/set?netcam_userpass=$username:$password");
-        $this->curlCommandsUrls("{$this->settings['server_url']}/$cameraNumber/config/set?threshold=$threshold");
-        $this->curlCommandsUrls("{$this->settings['server_url']}/$cameraNumber/config/set?ffmpeg_cap_new=on");
-        $this->curlCommandsUrls("{$this->settings['server_url']}/$cameraNumber/config/set?output_normal=off");
-        $this->curlCommandsUrls("{$this->settings['server_url']}/$cameraNumber/config/set?target_dir=/home/user_1/www/motion/camera_$cameraNumber");
+        $this->curlCommandsUrls("{$this->utility->getSettings()['server_url']}/$cameraNumber/config/set?framerate=30");
+        $this->curlCommandsUrls("{$this->utility->getSettings()['server_url']}/$cameraNumber/config/set?netcam_url=$netcamUrl/{$deviceRow['video']}user=$username&pwd=$password&resolution=$this->resolution");
+        $this->curlCommandsUrls("{$this->utility->getSettings()['server_url']}/$cameraNumber/config/set?netcam_http=1.0");
+        $this->curlCommandsUrls("{$this->utility->getSettings()['server_url']}/$cameraNumber/config/set?netcam_userpass=$username:$password");
+        $this->curlCommandsUrls("{$this->utility->getSettings()['server_url']}/$cameraNumber/config/set?threshold=$threshold");
+        $this->curlCommandsUrls("{$this->utility->getSettings()['server_url']}/$cameraNumber/config/set?ffmpeg_cap_new=on");
+        $this->curlCommandsUrls("{$this->utility->getSettings()['server_url']}/$cameraNumber/config/set?output_normal=off");
+        $this->curlCommandsUrls("{$this->utility->getSettings()['server_url']}/$cameraNumber/config/set?target_dir=/home/user_1/www/motion/camera_$cameraNumber");
     }
     
     private function curlCommandsUrls($url) {
@@ -241,7 +247,7 @@ class IpCamera {
             $elements[] = $value->value;
         
         if ($elements[0] == 0) {
-            $cameraRows = $this->utility->getQuery()->selectAllCamerasFromDatabase();
+            $cameraRows = $this->query->selectAllCamerasFromDatabase();
             
             $lastCamera = end($cameraRows);
             $_SESSION['camera_number'] = $lastCamera['camera_number'] + 1;
@@ -253,24 +259,24 @@ class IpCamera {
             $motionUrl = "";
             $motionDetectionActive = "pause";
             
-            $query = $this->database->getPdo()->prepare("INSERT INTO cameras (
-                                                            camera_number,
-                                                            device_id,
-                                                            video_url,
-                                                            username,
-                                                            password,
-                                                            motion_url,
-                                                            motion_detection_active
-                                                        )
-                                                        VALUES (
-                                                            :cameraNumber,
-                                                            :deviceId,
-                                                            :videoUrl,
-                                                            :username,
-                                                            :password,
-                                                            :motionUrl,
-                                                            :motionDetectionActive
-                                                        );");
+            $query = $this->utility->getDatabase()->getPdo()->prepare("INSERT INTO cameras (
+                                                                            camera_number,
+                                                                            device_id,
+                                                                            video_url,
+                                                                            username,
+                                                                            password,
+                                                                            motion_url,
+                                                                            motion_detection_active
+                                                                        )
+                                                                        VALUES (
+                                                                            :cameraNumber,
+                                                                            :deviceId,
+                                                                            :videoUrl,
+                                                                            :username,
+                                                                            :password,
+                                                                            :motionUrl,
+                                                                            :motionDetectionActive
+                                                                        );");
             
             $query->bindValue(":cameraNumber", $_SESSION['camera_number']);
             $query->bindValue(":deviceId", $deviceId);
@@ -287,7 +293,7 @@ class IpCamera {
             $this->utility->searchInFile("/etc/motion/motion.conf", "thread /home/user_1/www/motion/camera_{$_SESSION['camera_number']}.conf", null);
             
             // Pause
-            $this->curlCommandsUrls("{$this->settings['server_url']}/{$_SESSION['camera_number']}/detection/pause");
+            $this->curlCommandsUrls("{$this->utility->getSettings()['server_url']}/{$_SESSION['camera_number']}/detection/pause");
             
             $this->response['messages']['success'] = "New camera created with success.";
         }
@@ -311,7 +317,7 @@ class IpCamera {
             
             if ($key == 5) {
                 $motionDetectionActive = $elements[$key];
-                curl_setopt($curl, CURLOPT_URL, "{$this->settings['server_url']}/{$_SESSION['camera_number']}/detection/$motionDetectionActive");
+                curl_setopt($curl, CURLOPT_URL, "{$this->utility->getSettings()['server_url']}/{$_SESSION['camera_number']}/detection/$motionDetectionActive");
             }
             
             curl_setopt($curl, CURLOPT_HEADER, 0);
@@ -322,14 +328,14 @@ class IpCamera {
         
         $this->profileConfig($elements[0], $elements[1], $elements[2], $elements[3], $elements[4], $motionDetectionActive, $_SESSION['camera_number']);
         
-        $query = $this->database->getPdo()->prepare("UPDATE cameras
-                                                        SET device_id = :deviceId,
-                                                            video_url = :videoUrl,
-                                                            username = :username,
-                                                            password = :password,
-                                                            motion_url = :motionUrl,
-                                                            motion_detection_active = :motionDetectionActive
-                                                        WHERE camera_number = :cameraNumber");
+        $query = $this->utility->getDatabase()->getPdo()->prepare("UPDATE cameras
+                                                                    SET device_id = :deviceId,
+                                                                        video_url = :videoUrl,
+                                                                        username = :username,
+                                                                        password = :password,
+                                                                        motion_url = :motionUrl,
+                                                                        motion_detection_active = :motionDetectionActive
+                                                                    WHERE camera_number = :cameraNumber");
         
         $query->bindValue(":deviceId", $elements[0]);
         $query->bindValue(":videoUrl", $elements[1]);
@@ -342,7 +348,7 @@ class IpCamera {
         $query->execute();
         
         // Restart
-        $this->curlCommandsUrls("{$this->settings['server_url']}/{$_SESSION['camera_number']}/action/restart");
+        $this->curlCommandsUrls("{$this->utility->getSettings()['server_url']}/{$_SESSION['camera_number']}/action/restart");
         
         $this->response['messages']['success'] = "Settings updated with success.";
     }
@@ -351,7 +357,7 @@ class IpCamera {
         $curl = curl_init();
         
         if ($json->event == "picture") {
-            curl_setopt($curl, CURLOPT_URL, "{$this->settings['server_url']}/{$_SESSION['camera_number']}/action/snapshot");
+            curl_setopt($curl, CURLOPT_URL, "{$this->utility->getSettings()['server_url']}/{$_SESSION['camera_number']}/action/snapshot");
             
             $this->response['messages']['success'] = "Picture taked.";
         }
@@ -387,15 +393,15 @@ class IpCamera {
         
         $this->utility->searchInFile("/etc/motion/motion.conf", "thread /home/user_1/www/motion/camera_{$_SESSION['camera_number']}.conf", " ");
         
-        $query = $this->database->getPdo()->prepare("DELETE FROM cameras
-                                                        WHERE camera_number = :cameraNumber");
+        $query = $this->utility->getDatabase()->getPdo()->prepare("DELETE FROM cameras
+                                                                    WHERE camera_number = :cameraNumber");
         
         $query->bindValue(":cameraNumber", $_SESSION['camera_number']);
         
         $query->execute();
         
         // Quit
-        $this->curlCommandsUrls("{$this->settings['server_url']}/{$_SESSION['camera_number']}/action/quit");
+        $this->curlCommandsUrls("{$this->utility->getSettings()['server_url']}/{$_SESSION['camera_number']}/action/quit");
         
         $_SESSION['camera_number'] = -1;
         

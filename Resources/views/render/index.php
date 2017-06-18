@@ -1,17 +1,14 @@
 <?php
 require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Utility.php");
+require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Root.php");
 require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/IpCamera.php");
 
 $utility = new Utility();
-$utility->generateToken();
-$utility->configureCookie("PHPSESSID", 0, isset($_SERVER['HTTPS']), true);
-
-$token = isset($_SESSION['token']) == true ? $_SESSION['token'] : "";
-$sessionActivity = $utility->checkSessionOverTime();
 $settings = $utility->getSettings();
 
+$root = new Root();
+
 $ipCamera = new IpCamera();
-$cameraNumber = isset($_SESSION['camera_number']) == true ? $_SESSION['camera_number'] : -1;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -110,9 +107,9 @@ $cameraNumber = isset($_SESSION['camera_number']) == true ? $_SESSION['camera_nu
         <!-- Javascript -->
         <script type="text/javascript">
             var session = {
-                'token': "<?php echo $token; ?>",
-                'activity': "<?php echo $sessionActivity; ?>",
-                'ipCameraNumber': "<?php echo $cameraNumber; ?>"
+                'token': "<?php echo $_SESSION['token']; ?>",
+                'userActivity': "<?php echo $_SESSION['user_activity']; ?>",
+                'cameraNumber': "<?php echo $_SESSION['camera_number']; ?>"
             };
             
             var path = {
@@ -122,7 +119,7 @@ $cameraNumber = isset($_SESSION['camera_number']) == true ? $_SESSION['camera_nu
             
             var url = {
                 'root': "<?php echo $utility->getUrlRoot(); ?>",
-                'ipCameraControl': "<?php echo $ipCamera->getControlUrl(); ?>"
+                'cameraControl': "<?php echo $ipCamera->getControlUrl(); ?>"
             };
             
             var text = {

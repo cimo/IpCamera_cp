@@ -1,4 +1,6 @@
 <?php
+require_once("Utility.php");
+
 class Table {
     // Vars
     private $searchIndex;
@@ -9,11 +11,11 @@ class Table {
     // Properties
     
     // Functions public
-    public function __construct($utility) {
+    public function __construct() {
         $this->searchIndex = "";
         $this->paginationIndex = "";
         
-        $this->utility = $utility;
+        $this->utility = new Utility();
     }
     
     public function request($rows, $page, $sessionTag, $reverse, $flat) {

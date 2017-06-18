@@ -1,14 +1,15 @@
 <?php
 require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Utility.php");
+require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Query.php");
+require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Root.php");
 
 $utility = new Utility();
 
-$token = isset($_SESSION['token']) == true ? $_SESSION['token'] : "";
-$cameraNumber = isset($_SESSION['camera_number']) == true ? $_SESSION['camera_number'] : -1;
+$query = new Query($utility->getDatabase());
 
-$deviceRows = $utility->getQuery()->selectAllDevicesFromDatabase();
+$deviceRows = $query->selectAllDevicesFromDatabase();
 
-$cameraRows = $utility->getQuery()->selectCameraFromDatabase($cameraNumber);
+$cameraRows = $query->selectCameraFromDatabase($_SESSION['camera_number']);
 ?>
 <form id="form_camera_profile" class="margin_bottom" action="<?php echo $utility->getUrlRoot() ?>/Requests/IpCameraRequest.php?controller=profileAction" method="post" novalidate="novalidate">
     <table class="table table-bordered table-striped">
@@ -87,7 +88,7 @@ $cameraRows = $utility->getQuery()->selectCameraFromDatabase($cameraNumber);
         </tbody>
     </table>
     
-    <input id="form_camera_profile_token" class="form-control" type="hidden" name="form_camera_profile[token]" value="<?php echo $token; ?>"/>
+    <input id="form_camera_profile_token" class="form-control" type="hidden" name="form_camera_profile[token]" value="<?php echo $_SESSION['token']; ?>"/>
     <input class="btn btn-primary" type="submit" value="Update"/>
 </form>
 
