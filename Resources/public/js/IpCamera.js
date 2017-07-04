@@ -24,6 +24,10 @@ function IpCamera() {
         resetView();
     });
     
+    self.init = function() {
+        self.status();
+    };
+    
     self.status = function() {
         var lastValue = parseInt($("#form_cameras_selection_id").find("option").last().val());
 
@@ -123,6 +127,8 @@ function IpCamera() {
     
     function video() {
         resetView();
+        
+        utility.refreshImage("#camera_video");
     }
     
     function controls() {

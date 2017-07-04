@@ -204,12 +204,6 @@ function Table() {
                 $(idResult).find(".table_spinner i").removeClass("display_none");
             },
             function(xhr) {
-                if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
-                    ajax.reply(xhr, "");
-                    
-                    return;
-                }
-                
                 ajax.reply(xhr, "");
                 
                 if (xhr.response.render !== undefined) {

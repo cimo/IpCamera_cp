@@ -1,15 +1,12 @@
 <?php
 require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Utility.php");
 require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Query.php");
-require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Root.php");
 
 $utility = new Utility();
-
 $query = new Query($utility->getDatabase());
 
-$deviceRows = $query->selectAllDevicesFromDatabase();
-
-$cameraRows = $query->selectCameraFromDatabase($_SESSION['camera_number']);
+$deviceRows = $query->selectAllDevicesDatabase();
+$cameraRow = $query->selectCameraDatabase($_SESSION['camera_number']);
 ?>
 <form id="form_camera_profile" class="margin_bottom" action="<?php echo $utility->getUrlRoot() ?>/Requests/IpCameraRequest.php?controller=profileAction" method="post" novalidate="novalidate">
     <table class="table table-bordered table-striped">
@@ -33,7 +30,7 @@ $cameraRows = $query->selectCameraFromDatabase($_SESSION['camera_number']);
                         <option value="0">Select</option>
                         <?php
                         foreach($deviceRows as $key => $value) {
-                            $selected = $value['id'] == $cameraRows['device_id'] ? "selected" : "";
+                            $selected = $value['id'] == $cameraRow['device_id'] ? "selected" : "";
                             
                             echo "<option $selected value=\"{$value['id']}\">{$value['name']}</option>";
                         }
@@ -46,7 +43,7 @@ $cameraRows = $query->selectCameraFromDatabase($_SESSION['camera_number']);
                     Video url
                 </td>
                 <td>
-                    <input id="form_camera_profile_video_url" class="form-control" type="text" name="form_camera_profile[videoUrl]" value="<?php echo $cameraRows['video_url']; ?>" required="required"/>
+                    <input id="form_camera_profile_video_url" class="form-control" type="text" name="form_camera_profile[videoUrl]" value="<?php echo $cameraRow['video_url']; ?>" required="required"/>
                 </td>
             </tr>
             <tr>
@@ -54,7 +51,7 @@ $cameraRows = $query->selectCameraFromDatabase($_SESSION['camera_number']);
                     Username
                 </td>
                 <td>
-                    <input id="form_camera_profile_username" class="form-control" type="text" name="form_camera_profile[username]" value="<?php echo $cameraRows['username']; ?>" required="required"/>
+                    <input id="form_camera_profile_username" class="form-control" type="text" name="form_camera_profile[username]" value="<?php echo $cameraRow['username']; ?>" required="required"/>
                 </td>
             </tr>
             <tr>
@@ -62,7 +59,7 @@ $cameraRows = $query->selectCameraFromDatabase($_SESSION['camera_number']);
                     Password
                 </td>
                 <td>
-                    <input id="form_camera_profile_password" class="form-control" type="password" name="form_camera_profile[password]" value="<?php echo $cameraRows['password']; ?>" required="required"/>
+                    <input id="form_camera_profile_password" class="form-control" type="password" name="form_camera_profile[password]" value="<?php echo $cameraRow['password']; ?>" required="required"/>
                 </td>
             </tr>
             <tr>
@@ -70,7 +67,7 @@ $cameraRows = $query->selectCameraFromDatabase($_SESSION['camera_number']);
                     Motion url
                 </td>
                 <td>
-                    <input id="form_camera_profile_motion_url" class="form-control" type="text" name="form_camera_profile[motionUrl]" value="<?php echo $cameraRows['motion_url']; ?>" required="required"/>
+                    <input id="form_camera_profile_motion_url" class="form-control" type="text" name="form_camera_profile[motionUrl]" value="<?php echo $cameraRow['motion_url']; ?>" required="required"/>
                 </td>
             </tr>
             <tr>
@@ -79,10 +76,10 @@ $cameraRows = $query->selectCameraFromDatabase($_SESSION['camera_number']);
                 </td>
                 <td>
                     <?php
-                    $checked = $cameraRows['motion_detection_active'] == "start" ? "checked" : "";
+                    $checked = $cameraRow['motion_detection_active'] == "start" ? "checked" : "";
                     ?>
-                    <input id="form_camera_profile_detection_active" class="form-control" type="checkbox" name="form_camera_profile[motionDetectionActive]" value="<?php echo $cameraRows['motion_detection_active']; ?>" required="required" <?php echo $checked; ?> data-on-color="success" data-off-color="danger"/>
-                    <input type="hidden" name="form_camera_profile[motionDetectionActive]" value="<?php echo $cameraRows['motion_detection_active']; ?>" required="required"/>
+                    <input id="form_camera_profile_detection_active" class="form-control" type="checkbox" name="form_camera_profile[motionDetectionActive]" value="<?php echo $cameraRow['motion_detection_active']; ?>" required="required" <?php echo $checked; ?> data-on-color="success" data-off-color="danger"/>
+                    <input type="hidden" name="form_camera_profile[motionDetectionActive]" value="<?php echo $cameraRow['motion_detection_active']; ?>" required="required"/>
                 </td>
             </tr>
         </tbody>

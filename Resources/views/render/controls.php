@@ -1,13 +1,3 @@
-<?php
-require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Utility.php");
-require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/IpCamera.php");
-
-$utility = new Utility();
-
-$settings = $utility->getSettings();
-
-$ipCamera = new IpCamera();
-?>
 <div class="row">
     <div class="col-md-12">
         <table class="table table_borderless margin_clear">

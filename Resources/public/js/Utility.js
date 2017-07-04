@@ -6,8 +6,6 @@ function Utility() {
     // Vars
     var self = this;
     
-    var watchExecuted = false;
-    
     var isMobile = false;
     
     var modulePositionValue = "";
@@ -24,15 +22,6 @@ function Utility() {
     };
     
     // Functions public
-    self.watch = function(tag, callback) {
-        if (watchExecuted === false) {
-            if (callback !== undefined)
-                $(tag).bind("DOMSubtreeModified", callback());
-            
-            watchExecuted = true;
-        }
-    };
-    
     self.linkPreventDefault = function() {
         $("a[href^='#']").on("click", "", function(event) {
             event.preventDefault();
@@ -357,6 +346,13 @@ function Utility() {
         
         $("#progressBar").find(".progress-bar").css("width", percentage + "%");
         $("#progressBar").find("span").text(percentage + "%");
+    };
+    
+    self.refreshImage = function(tagRefreshImage) {
+        if (tagRefreshImage !== "") {
+            var src = $(tagRefreshImage).prop("src");
+            $(tagRefreshImage).prop("src", src + "?" + new Date().getTime());
+        }
     };
     
     // Bootstrap fix

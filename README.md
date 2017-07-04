@@ -11,7 +11,7 @@ This is a open source Ip Camera control panel with FFMPEG and motion framework
 | Remote camera control (Move and take picture) |
 | Check status |
 | Profile management |
-| Set motion tracking |
+| Set motion tracking (Take video) |
 | Add and remove camera without write code |
 | Files management |
 
@@ -39,14 +39,14 @@ This is a open source Ip Camera control panel with FFMPEG and motion framework
 	
 	process_id_file /var/run/motion/motion.pid
 
-	output_normal off ! Get image when detecting a movement !
-
-	ffmpeg_cap_new off ! Get video when detecting a movement !
-
+	output_normal off
+	
+	ffmpeg_cap_new off
+	
 	ffmpeg_video_codec msmpeg4
-
+	
 	text_right %Y-%m-%d\n%T | %q
-
+	
 	snapshot_filename %Y-%m-%d_%H:%M:%S_snapshot
 	
 	jpeg_filename %Y-%m-%d_%H:%M:%S_%q
@@ -54,19 +54,19 @@ This is a open source Ip Camera control panel with FFMPEG and motion framework
 	movie_filename %Y-%m-%d_%H:%M:%S
 	
 	timelapse_filename %Y-%m-%d_timelapse
-
+	
 	webcam_port 0
-
+	
 	control_port 32402
-
-	control_localhost on
-
-	control_html_output off
+	
+	control_localhost on ! Active control panel only in local !
+	
+	control_html_output off ! Active reply html raw !
 
 3) Save, close file and on linux, open terminal and write:
 
 	sudo chmod 666 /etc/motion/motion.conf
-
+	
 	sudo nano /etc/default/motion
 
 4) Edit:
@@ -74,19 +74,15 @@ This is a open source Ip Camera control panel with FFMPEG and motion framework
 	start_motion_daemon=yes
 
 5) Save, close file and on linux, open terminal and write:
-
+	
 	sudo mkdir /YOUR_PATH/motion
-
+	
 	sudo chown YOUR_USER:www-data /YOUR_PATH/motion
+	
+	sudo find /YOUR_PATH/motion -type d -exec chmod 775 {} \;
+	
+	sudo find /YOUR_PATH/motion -type f -exec chmod 664 {} \;
 
-	sudo chmod 775 /YOUR_PATH/motion
-
-6) Save, close file and on linux, open terminal and write:
-
-	sudo chmod 777 $(find /YOUR_PATH/motion -type d)
-
-	sudo chmod 664 $(find /YOUR_PATH/motion -type f)
-
-7) Go on your browser and write <b>"http://YOUR_IP/ipcamera_cp/web/index.php"</b>
+6) Go on your browser and write <b>"http://YOUR_IP/ipcamera_cp/web/index.php"</b>
 
 <b>By CIMO - www.reinventsoftware.org</b>

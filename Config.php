@@ -10,15 +10,16 @@ if (session_id() == "")
 
 class Config {
     // Vars
-    private $databaseConnectionFields;
+    private $protocol;
     private $pathRoot;
     private $urlRoot;
     private $file;
+    private $databaseConnectionFields;
     private $name;
     
     // Properties
-    public function getDatabaseConnectionFields() {
-        return $this->databaseConnectionFields;
+    public function getProtocol() {
+        return $this->protocol;
     }
     
     public function getPathRoot() {
@@ -33,17 +34,22 @@ class Config {
         return $this->file;
     }
     
+    public function getDatabaseConnectionFields() {
+        return $this->databaseConnectionFields;
+    }
+    
     public function getName() {
         return $this->name;
     }
     
     // Functions public
     public function __construct() {
-        $this->databaseConnectionFields = Array("mysql:host=localhost;dbname=ipcamera_cp;charset=utf8", "user_1", "Password1");
+        $this->protocol = "http://";
         $this->pathRoot = "/ipcamera_cp";
         $this->urlRoot = "/ipcamera_cp";
         $this->file = "";
-        $this->name = "Ip Camera 1.0";
+        $this->databaseConnectionFields = Array("mysql:host=localhost;dbname=ipcamera_cp;charset=utf8", "user_1", "Password1");
+        $this->name = "Ip Camera CP 1.0";
     }
 
     // Functions private

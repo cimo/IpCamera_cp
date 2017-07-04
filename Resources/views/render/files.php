@@ -3,7 +3,6 @@ require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Utility.php");
 require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/IpCamera.php");
 
 $utility = new Utility();
-
 $ipCamera = new IpCamera();
 
 $files = $ipCamera->filesList();

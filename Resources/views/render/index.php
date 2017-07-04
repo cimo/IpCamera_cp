@@ -1,14 +1,15 @@
 <?php
 require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Utility.php");
+require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Query.php");
 require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Root.php");
 require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/IpCamera.php");
 
 $utility = new Utility();
-$settings = $utility->getSettings();
-
+$query = new Query($utility->getDatabase());
 $root = new Root();
-
 $ipCamera = new IpCamera();
+
+$settingRow = $query->selectSettingDatabase();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +21,7 @@ $ipCamera = new IpCamera();
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <!--<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
         <!-- Favicon -->
-        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settings['template']; ?>/favicon.ico" rel="icon" type="image/x-icon">
+        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settingRow['template']; ?>/favicon.ico" rel="icon" type="image/x-icon">
         <!-- Css -->
         <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/jquery-ui_1.12.1.min.css" rel="stylesheet"/>
         <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/jquery-ui_1.12.1_structure.min.css" rel="stylesheet"/>
@@ -30,18 +31,14 @@ $ipCamera = new IpCamera();
         <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/basic.css" rel="stylesheet"/>
     </head>
     <body class="user_select_none">
-        <div class="container-fluid">
+        <div>
             <p class="logo_desktop display_desktop"><?php echo $utility->getWebsiteName(); ?></p>
             <p class="logo_mobile display_mobile"><?php echo $utility->getWebsiteName(); ?></p>
-            <div class="row">
-                <div class="col-md-12">
-                    <?php
-                    require_once("{$utility->getPathRoot()}/Resources/views/include/loader.php");
-                    require_once("{$utility->getPathRoot()}/Resources/views/include/flashBag.php");
-                    require_once("{$utility->getPathRoot()}/Resources/views/include/popup_easy.php");
-                    ?>
-                </div>
-            </div>
+            <?php
+            require_once("{$utility->getPathRoot()}/Resources/views/include/flashBag.php");
+            ?>
+        </div>
+        <div class="container-fluid">
             <div class="row">
                 <div class="col-md-8">
                     <div class="panel panel-primary">
@@ -104,6 +101,10 @@ $ipCamera = new IpCamera();
                 </div>
             </div>
         </div>
+        <?php
+        require_once("{$utility->getPathRoot()}/Resources/views/include/loader.php");
+        require_once("{$utility->getPathRoot()}/Resources/views/include/popup_easy.php");
+        ?>
         <!-- Javascript -->
         <script type="text/javascript">
             var session = {
@@ -132,8 +133,8 @@ $ipCamera = new IpCamera();
             var settings = {
                 'maxWidth': "992px",
                 'minWidth': "992px",
-                'template': "<?php echo $settings['template']; ?>",
-                'serverUrl': "<?php echo $settings['server_url']; ?>"
+                'template': "<?php echo $settingRow['template']; ?>",
+                'serverUrl': "<?php echo $settingRow['server_url']; ?>"
             };
         </script>
         <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/lib/jquery_3.1.1.min.js"></script>

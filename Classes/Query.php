@@ -10,7 +10,7 @@ class Query {
         $this->database = $database;
     }
     
-    public function selectSettingsFromDatabase() {
+    public function selectSettingDatabase() {
         $query = $this->database->getPdo()->prepare("SELECT * FROM settings
                                                         WHERE id = :id");
         
@@ -21,7 +21,7 @@ class Query {
         return $query->fetch(PDO::FETCH_ASSOC);
     }
     
-    public function selectDeviceFromDatabase($id) {
+    public function selectDeviceDatabase($id) {
         $query = $this->database->getPdo()->prepare("SELECT * FROM devices
                                                         WHERE id = :id");
         
@@ -32,7 +32,7 @@ class Query {
         return $query->fetch(PDO::FETCH_ASSOC);
     }
     
-    public function selectAllDevicesFromDatabase() {
+    public function selectAllDevicesDatabase() {
         $query = $this->database->getPdo()->prepare("SELECT * FROM devices");
         
         $query->execute();
@@ -40,7 +40,7 @@ class Query {
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function selectCameraFromDatabase($cameraNumber) {
+    public function selectCameraDatabase($cameraNumber) {
         $query = $this->database->getPdo()->prepare("SELECT * FROM cameras
                                                         WHERE camera_number = :cameraNumber");
         
@@ -51,7 +51,7 @@ class Query {
         return $query->fetch(PDO::FETCH_ASSOC);
     }
     
-    public function selectAllCamerasFromDatabase() {
+    public function selectAllCamerasDatabase() {
         $query = $this->database->getPdo()->prepare("SELECT * FROM cameras");
         
         $query->execute();

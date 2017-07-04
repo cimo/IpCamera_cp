@@ -15,21 +15,61 @@ class UtilityPrivate {
         $this->query = new Query($this->utility->getDatabase());
     }
     
-    public function checkSessionOverTime() {
-        if (isset($_SESSION['user_activity']) == false)
-            $_SESSION['user_activity'] = "";
+    public function checkToken($token) {
+        if (isset($_SESSION['token']) == true && $token == $_SESSION['token'])
+            return true;
         
-        $sessionMaxIdleTime = 3600;
-        
-        if ($sessionMaxIdleTime > 0) {
-            if (isset($_SESSION['user_last_activity_time']) == true) {
-                $timeLapse = time() - $_SESSION['user_last_activity_time'];
+        return false;
+    }
+    
+    public function checkSessionOverTime($root = false) {
+        if ($root == true) {
+            if (isset($_SESSION['user_activity']) == false) {
+                $_SESSION['user_activity'] = "";
                 
-                if ($timeLapse > $sessionMaxIdleTime)
-                    $_SESSION['user_activity'] = "Session time is over, please refresh the page.";
+                $_SESSION['count_root'] = 0;
             }
-            
-            $_SESSION['user_last_activity_time'] = time();
+        }
+        
+        //if (isset($_SESSION['user']) == true) {
+            if (isset($_SESSION['timestamp']) == false)
+                $_SESSION['timestamp'] = time();
+            else {
+                $timeLapse = time() - $_SESSION['timestamp'];
+
+                if ($timeLapse > $this->utility->getSessionMaxIdleTime()) {
+                    $userActivity = "Session time is over, please refresh the page.";
+                    
+                    if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) == false && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == "xmlhttprequest") {
+                        echo json_encode(Array(
+                            'userActivity' => $userActivity
+                        ));
+
+                        exit();
+                    }
+                    else {
+                        $this->utility->sessionUnset();
+                        
+                        header("location: ../web/index.php");
+                    }
+                    
+                    $_SESSION['user_activity'] = $userActivity;
+                    
+                    unset($_SESSION['timestamp']);
+                }
+                else
+                    $_SESSION['timestamp'] = time();
+            }
+        //}
+        
+        if ($root == true && $_SESSION['user_activity'] != "") {
+            $_SESSION['count_root'] ++;
+
+            if ($_SESSION['count_root'] > 2) {
+                $_SESSION['user_activity'] = "";
+                
+                $_SESSION['count_root'] = 0;
+            }
         }
     }
     

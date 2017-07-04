@@ -5,6 +5,8 @@ require_once("Query.php");
 
 class Utility {
     // Vars
+    private $sessionMaxIdleTime;
+    
     private $config;
     private $database;
     private $query;
@@ -16,9 +18,11 @@ class Utility {
     private $websiteFile;
     private $websiteName;
     
-    private $settings;
-    
     // Properties
+    public function getSessionMaxIdleTime() {
+        return $this->sessionMaxIdleTime;
+    }
+    
     public function getDatabase() {
         return $this->database;
     }
@@ -39,44 +43,26 @@ class Utility {
         return $this->websiteName;
     }
     
-    public function getSettings() {
-        return $this->settings;
-    }
-    
     // Functions public
     public function __construct() {
+        $this->sessionMaxIdleTime = 3600;
+        
         $this->config = new Config();
         $this->database = new Database();
         $this->query = new Query($this->database);
         
-        $protocol = isset($_SERVER['HTTPS']) == true ? "https://" : "http://";
-        
         $this->pathRoot = $_SERVER['DOCUMENT_ROOT'] . $this->config->getPathRoot();
         
-        $this->urlRoot = $protocol . $_SERVER['HTTP_HOST'] . $this->config->getUrlRoot();
+        $this->urlRoot = $this->config->getProtocol() . $_SERVER['HTTP_HOST'] . $this->config->getUrlRoot();
         
         $this->websiteFile = $this->config->getFile();
         $this->websiteName = $this->config->getName();
-        
-        $this->settings = $this->query->selectSettingsFromDatabase();
         
         $this->arrayColumnFix();
     }
     
     public function generateToken() {
         $_SESSION['token'] = bin2hex(openssl_random_pseudo_bytes(21));
-    }
-    
-    public function sessionDestroy() {
-        session_destroy();
-        session_unset();
-        
-        $cookies = Array(
-            'rememberme'
-        );
-        
-        foreach ($cookies as $value)
-            unset($_COOKIE[$value]);
     }
     
     public function configureCookie($name, $lifeTime, $secure, $httpOnly) {
@@ -86,6 +72,17 @@ class Utility {
         
         if (isset($_COOKIE[$name]) == true)
             setcookie($name, $value, $lifeTime, $currentCookieParams['path'], $currentCookieParams['domain'], $secure, $httpOnly);
+    }
+    
+    public function sessionUnset() {
+        session_unset();
+        
+        $cookies = Array(
+            'rememberme'
+        );
+        
+        foreach ($cookies as $value)
+            unset($_COOKIE[$value]);
     }
     
     public function searchInFile($filePath, $word, $replace) {
@@ -125,7 +122,7 @@ class Utility {
         if (file_exists($path) == true) {
             $rdi = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS);
             $rii = new RecursiveIteratorIterator($rdi, RecursiveIteratorIterator::CHILD_FIRST);
-            
+
             foreach($rii as $file) {
                 if (file_exists($file->getRealPath()) == true) {
                     if ($file->isDir() == true)

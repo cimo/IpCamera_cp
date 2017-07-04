@@ -5,9 +5,7 @@ $(document).ready(function() {
     
     utility.mobileCheck(true);
     
-    utility.watch("#flashBag", flashBag.sessionActivity);
-    
     loader.create("font");
     
-    ipCamera.status();
+    ipCamera.init();
 });

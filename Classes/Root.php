@@ -15,17 +15,9 @@ class Root {
         
         $this->utility->generateToken();
         
-        $this->utility->configureCookie("PHPSESSID", 0, isset($_SERVER['HTTPS']), false);
+        $this->utility->configureCookie("ipcamera_cp", 0, false, true);
         
-        $this->utilityPrivate->checkSessionOverTime();
-        
-        if ($_SESSION['user_activity'] != "") {
-            $_SESSION['user_activity'] = "";
-            
-            header("location: ../web/index.php");
-            
-            exit;
-        }
+        $this->utilityPrivate->checkSessionOverTime(true);
     }
     // Functions private
 }
