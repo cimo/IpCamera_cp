@@ -3,7 +3,9 @@
 $(document).ready(function() {
     utility.linkPreventDefault();
     
-    utility.mobileCheck(true);
+    utility.watch("#flashBag", flashBag.sessionActivity);
+    
+    utility.checkMobile(true);
     
     loader.create("font");
     

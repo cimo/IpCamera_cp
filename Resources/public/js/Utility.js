@@ -6,6 +6,8 @@ function Utility() {
     // Vars
     var self = this;
     
+    var watchExecuted = false;
+    
     var isMobile = false;
     
     var modulePositionValue = "";
@@ -28,24 +30,13 @@ function Utility() {
         });
     };
     
-    self.mobileCheck = function(fix) {
-        isMobile = false;
-        
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) === true) {
-            isMobile = true;
+    self.watch = function(tag, callback) {
+        if (watchExecuted === false) {
+            if (callback !== undefined)
+                $(tag).bind("DOMSubtreeModified", callback());
             
-            if (fix === true)
-                swipeFix();
+            watchExecuted = true;
         }
-        
-        return isMobile;
-    };
-    
-    self.widthCheck = function(width) {
-        if (window.matchMedia("(min-width: " + width + "px)").matches === true)
-            return "desktop";
-        else
-            return "mobile";
     };
     
     self.postIframe = function(action, method, elements) {
@@ -348,11 +339,31 @@ function Utility() {
         $("#progressBar").find("span").text(percentage + "%");
     };
     
-    self.refreshImage = function(tagRefreshImage) {
-        if (tagRefreshImage !== "") {
-            var src = $(tagRefreshImage).prop("src");
-            $(tagRefreshImage).prop("src", src + "?" + new Date().getTime());
+    self.refreshImage = function(tag) {
+        if (tag !== "") {
+            var src = $(tag).prop("src");
+            $(tag).prop("src", src + "?" + new Date().getTime());
         }
+    };
+    
+    self.checkMobile = function(fix) {
+        isMobile = false;
+        
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) === true) {
+            isMobile = true;
+            
+            if (fix === true)
+                swipeFix();
+        }
+        
+        return isMobile;
+    };
+    
+    self.checkWidth = function(width) {
+        if (window.matchMedia("(min-width: " + width + "px)").matches === true)
+            return "desktop";
+        else
+            return "mobile";
     };
     
     // Bootstrap fix

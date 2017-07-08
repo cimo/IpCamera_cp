@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generato il: Feb 06, 2017 alle 13:53
--- Versione del server: 5.5.44-0ubuntu0.14.04.1
--- Versione PHP: 5.5.9-1ubuntu4.14
+-- Generato il: Lug 08, 2017 alle 13:31
+-- Versione del server: 5.5.55-0ubuntu0.14.04.1
+-- Versione PHP: 5.5.9-1ubuntu4.21
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -37,6 +37,8 @@ CREATE TABLE IF NOT EXISTS `cameras` (
   `motion_detection_active` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pause',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
 
 --
 -- Struttura della tabella `devices`

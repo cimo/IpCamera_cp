@@ -49,7 +49,7 @@ class Config {
         $this->urlRoot = "/ipcamera_cp";
         $this->file = "";
         $this->databaseConnectionFields = Array("mysql:host=localhost;dbname=ipcamera_cp;charset=utf8", "user_1", "Password1");
-        $this->name = "Ip Camera CP 1.0";
+        $this->name = "Ip Camera cp 1.0";
     }
 
     // Functions private

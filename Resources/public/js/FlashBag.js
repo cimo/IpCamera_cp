@@ -50,7 +50,7 @@ function FlashBag() {
     
     self.sessionActivity = function() {
         if (window.session.userActivity !== "") {
-            $("#flashBag").prop({'class': "alert alert-warning"});
+            $("#flashBag").prop({'class': "alert alert-info"});
             $("#flashBag").find(".content").html(window.session.userActivity);
             
             loader.hide();

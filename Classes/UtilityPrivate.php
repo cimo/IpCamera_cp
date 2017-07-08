@@ -31,7 +31,7 @@ class UtilityPrivate {
             }
         }
         
-        //if (isset($_SESSION['user']) == true) {
+        if (isset($_SESSION['user_id']) == true) {
             if (isset($_SESSION['timestamp']) == false)
                 $_SESSION['timestamp'] = time();
             else {
@@ -60,7 +60,17 @@ class UtilityPrivate {
                 else
                     $_SESSION['timestamp'] = time();
             }
-        //}
+        }
+            
+        if (isset($_SESSION['user_activity']) == true) {
+            if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) == false && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == "xmlhttprequest" && $_SESSION['user_activity'] != "") {
+                echo json_encode(Array(
+                    'userActivity' => $_SESSION['user_activity']
+                ));
+
+                exit;
+            }
+        }
         
         if ($root == true && $_SESSION['user_activity'] != "") {
             $_SESSION['count_root'] ++;

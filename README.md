@@ -59,11 +59,11 @@ This is a open source Ip Camera control panel with FFMPEG and motion framework
 	
 	control_port 32402
 	
-	control_localhost on ! Active control panel only in local !
+	control_localhost on # Active control panel only in local
 	
-	control_html_output off ! Active reply html raw !
+	control_html_output off # Active reply html raw
 
-3) Save, close file and on linux, open terminal and write:
+3) Save, close the file and on linux, open the terminal and write:
 
 	sudo chmod 666 /etc/motion/motion.conf
 	
@@ -73,7 +73,7 @@ This is a open source Ip Camera control panel with FFMPEG and motion framework
 
 	start_motion_daemon=yes
 
-5) Save, close file and on linux, open terminal and write:
+5) Save, close the file and on linux, open the terminal and write:
 	
 	sudo mkdir /YOUR_PATH/motion
 	

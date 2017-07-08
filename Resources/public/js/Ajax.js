@@ -90,6 +90,11 @@ function Ajax() {
 
                     reply = "<p>" + xhr.response.messages.error + "</p>";
                 }
+                else if (xhr.response.messages.info !== undefined) {
+                    $("#flashBag").prop({'class': "alert alert-info"});
+
+                    reply = "<p>" + xhr.response.messages.info + "</p>";
+                }
                 else if (xhr.response.messages.success !== undefined) {
                     $("#flashBag").prop({'class': "alert alert-success"});
 

@@ -128,7 +128,9 @@ function IpCamera() {
     function video() {
         resetView();
         
-        utility.refreshImage("#camera_video");
+        $("#camera_video").on("error", function() {
+            utility.refreshImage("#camera_video");
+        });
     }
     
     function controls() {
@@ -547,7 +549,7 @@ function IpCamera() {
     }
     
     function resetView() {
-        widthType = utility.widthCheck(992);
+        widthType = utility.checkWidth(992);
         
         if (widthType === "desktop" && widthTypeOld !== widthType) {
             $("#camera_video_area").removeClass("touch_disable");

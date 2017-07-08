@@ -32,13 +32,17 @@ $settingRow = $query->selectSettingDatabase();
     </head>
     <body class="user_select_none">
         <div>
-            <p class="logo_desktop display_desktop"><?php echo $utility->getWebsiteName(); ?></p>
-            <p class="logo_mobile display_mobile"><?php echo $utility->getWebsiteName(); ?></p>
-            <?php
-            require_once("{$utility->getPathRoot()}/Resources/views/include/flashBag.php");
-            ?>
+            <p class="logo_big display_desktop"><?php echo $utility->getWebsiteName(); ?></p>
+            <p class="logo_small display_mobile"><?php echo $utility->getWebsiteName(); ?></p>
         </div>
         <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <?php
+                    require_once("{$utility->getPathRoot()}/Resources/views/include/flashBag.php");
+                    ?>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-8">
                     <div class="panel panel-primary">
