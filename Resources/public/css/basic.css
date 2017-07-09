@@ -98,7 +98,7 @@ legend { width: inherit; padding: 0 10px; border-bottom: none; }
 
 .ui-sortable-handle { cursor: move; }
 
-.image_preload { background: url(../images/templates/basic/reload_image.gif) no-repeat 50% 50%; }
+.image_preload { min-height: 40px; min-width: 40px; background: url(../images/templates/basic/reload_image.gif) no-repeat 50% 50%; }
 
 .wordTag_label { display: inline-block; padding: 3px; vertical-align: top; background-color: #f5f5f5; border: 1px solid #d9d9d9; margin: 2px; }
 
@@ -155,13 +155,12 @@ legend { width: inherit; padding: 0 10px; border-bottom: none; }
 #upload .container_controls .container_progressBar { display: inline-block; vertical-align: middle; width: 50%; margin-bottom: 5px; }
 #upload .container_controls .container_buttons { display: inline-block; vertical-align: middle; margin-bottom: 5px; }
 
-.logo_big { display: none; font-family: "acme", sans-serif; font-size: 75px; color: #ffffff; text-shadow: -1px 0 #000000, 0 1px #000000, 1px -1px #000000, 5px 5px #000000; margin: 0; }
+.logo_big { display: none; font-family: "acme", sans-serif; font-size: 75px; color: #ffffff; text-shadow: 2px 0 0 #000000, -2px 0 0 #000000, 0 2px 0 #000000, 0 -2px 0 #000000, 1px 1px #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000; margin: 0px 0px 0px 10px; }
 
-.logo_small { display: none; font-family: "acme", sans-serif; font-size: 24px; color: #ffffff; text-shadow: -1px 0 #000000, 0 1px #000000, 1px -1px #000000, 2px 2px #000000; margin: 0; }
+.logo_small { display: none; font-family: "acme", sans-serif; font-size: 24px; color: #ffffff; text-shadow: 2px 0 0 #000000, -2px 0 0 #000000, 0 2px 0 #000000, 0 -2px 0 #000000, 1px 1px #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000; margin: 0px 0px 0px 10px; }
 
-.logo_message { font-family: "acme", sans-serif; font-size: 40px; text-align: center; margin: 0px; }
+.logo_message { font-family: "acme", sans-serif; font-size: 40px; color: #ffffff; text-shadow: 2px 0 0 #000000, -2px 0 0 #000000, 0 2px 0 #000000, 0 -2px 0 #000000, 1px 1px #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000; text-align: center; margin: 0px; }
 
-/* --- */
 .camera_tab_container { padding: 0 15px; border: 1px solid #dddddd; border-top: 0; }
 
 .camera_controls { width: 50px; cursor: pointer; }

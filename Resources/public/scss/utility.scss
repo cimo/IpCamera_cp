@@ -256,6 +256,8 @@ legend {
 }
 
 .image_preload {
+    min-height: 40px;
+    min-width: 40px;
     background: url(../images/templates/basic/reload_image.gif) no-repeat 50% 50%;
 }
 
