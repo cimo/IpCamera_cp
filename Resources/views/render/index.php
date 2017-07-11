@@ -28,7 +28,7 @@ $settingRow = $query->selectSettingDatabase();
         <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/bootstrap_3.3.7.min.css" rel="stylesheet"/>
         <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/bootstrap-switch_3.3.2.min.css" rel="stylesheet"/>
         <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/font-awesome_4.7.0_custom.min.css" rel="stylesheet">
-        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/basic.css" rel="stylesheet"/>
+        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/<?php echo $settingRow['template']; ?>.css" rel="stylesheet"/>
     </head>
     <body class="user_select_none">
         <div>
