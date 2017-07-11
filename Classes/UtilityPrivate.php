@@ -25,9 +25,8 @@ class UtilityPrivate {
     public function checkSessionOverTime($root = false) {
         if ($root == true) {
             if (isset($_SESSION['user_activity']) == false) {
+                $_SESSION['user_activity_count'] = 0;
                 $_SESSION['user_activity'] = "";
-                
-                $_SESSION['count_root'] = 0;
             }
         }
         
@@ -73,12 +72,11 @@ class UtilityPrivate {
         }
         
         if ($root == true && $_SESSION['user_activity'] != "") {
-            $_SESSION['count_root'] ++;
+            $_SESSION['user_activity_count'] ++;
 
-            if ($_SESSION['count_root'] > 2) {
+            if ($_SESSION['user_activity_count'] > 2) {
+                $_SESSION['user_activity_count'] = 0;
                 $_SESSION['user_activity'] = "";
-                
-                $_SESSION['count_root'] = 0;
             }
         }
     }

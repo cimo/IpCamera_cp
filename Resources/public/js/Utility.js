@@ -86,14 +86,14 @@ function Utility() {
         
         $.each(options, function(key, val) {
             var optionValue = parseInt(val.value);
-            var optionText = val.text;
+            var optionText = val.text.substr(0, val.text.indexOf("-|") + 2);
             var idElementSelected = parseInt(xhr.response.values.id);
             
             if (optionValue === idElementSelected) {
                 disabled = true;
                 optionLength = optionText.length;
             }
-            else if (optionText.length < optionLength)
+            else if (optionText.length <= optionLength)
                 disabled = false;
             
             if (disabled === true)
@@ -373,8 +373,7 @@ function Utility() {
                 event.preventDefault();
                 event.stopPropagation();
                 
-                $(this).parent(".dropdown-menu").children("li.dropdown").find(".open").removeClass("open");
-                $(this).parent(".dropdown-menu").children("li.dropdown").removeClass("open");
+                $(tag).find(".dropdown-menu").parent("li.dropdown").not($(event.target).parents(".dropdown")).removeClass("open");
                 
                 if ($(this).hasClass("open") === false)
                     $(this).addClass("open");

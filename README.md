@@ -7,6 +7,7 @@ This is a open source Ip Camera control panel with FFMPEG and motion framework
 |:---|
 | Full responsive (smartphone, tablet, pc) |
 | Multibrowser (Chrome, firefox, internet explorer, opera, safari) |
+| Work on internet and lan (server, cloud, ...) |
 | Work with a lot model of ip camera |
 | Remote camera control (Move and take picture) |
 | Check status |

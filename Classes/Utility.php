@@ -15,6 +15,8 @@ class Utility {
     
     private $urlRoot;
     
+    private $supportSymlink;
+    
     private $websiteFile;
     private $websiteName;
     
@@ -33,6 +35,10 @@ class Utility {
     
     public function getUrlRoot() {
         return $this->urlRoot;
+    }
+    
+    public function getSupportSymlink() {
+        return $this->supportSymlink;
     }
     
     public function getWebsiteFile() {
@@ -54,6 +60,8 @@ class Utility {
         $this->pathRoot = $_SERVER['DOCUMENT_ROOT'] . $this->config->getPathRoot();
         
         $this->urlRoot = $this->config->getProtocol() . $_SERVER['HTTP_HOST'] . $this->config->getUrlRoot();
+        
+        $this->supportSymlink = $this->config->getSupportSymlink();
         
         $this->websiteFile = $this->config->getFile();
         $this->websiteName = $this->config->getName();

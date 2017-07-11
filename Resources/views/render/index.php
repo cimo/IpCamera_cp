@@ -32,8 +32,14 @@ $settingRow = $query->selectSettingDatabase();
     </head>
     <body class="user_select_none">
         <div>
-            <p class="logo_big display_desktop"><?php echo $utility->getWebsiteName(); ?></p>
-            <p class="logo_small display_mobile"><?php echo $utility->getWebsiteName(); ?></p>
+            <div class="logo_big display_desktop">
+                <img class="display_inline_block" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settingRow['template']; ?>/logo_icon.png"/>
+                <p class="display_inline_block"><?php echo $utility->getWebsiteName(); ?></p>
+            </div>
+            <div class="logo_small display_mobile">
+                <img class="display_inline_block" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settingRow['template']; ?>/logo_icon.png"/>
+                <p class="display_inline_block"><?php echo $utility->getWebsiteName(); ?></p>
+            </div>
         </div>
         <div class="container-fluid">
             <div class="row">
@@ -51,7 +57,7 @@ $settingRow = $query->selectSettingDatabase();
                                 <h3 class="panel-title">Video</h3>
                             </div>
                             <div class="pull-right display_mobile">
-                                <input id="camera_control_swipe_switch" type="checkbox" data-on-color="success" data-off-color="danger"/>
+                                <input id="camera_control_swipe_switch" type="checkbox" data-on-text="Drag on" data-on-color="success" data-off-text="Drag off" data-off-color="danger"/>
                                 <i class="fa fa-camera fa-3x camera_controls camera_control_picture"></i>
                             </div>
                         </div>
