@@ -18,6 +18,7 @@ This is a open source Ip Camera control panel with FFMPEG and motion framework
 
 ## Images
 <img src="screenshots/1.jpg" width="200" alt="1"/>
+<img src="screenshots/2.jpg" width="200" alt="2"/>
 
 ## Instructions:
 1) On linux, open terminal and write:
