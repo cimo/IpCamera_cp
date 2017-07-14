@@ -37,6 +37,12 @@
     }
 }
 
+.image_preload {
+    min-height: 40px;
+    min-width: 40px;
+    background: url(../images/templates/basic/image_preload.gif) no-repeat 50% 50%;
+}
+
 @media(max-width: $maxWidth) {
 }
 @media(min-width: $minWidth) {

@@ -98,8 +98,6 @@ legend { width: inherit; padding: 0 10px; border-bottom: none; }
 
 .ui-sortable-handle { cursor: move; }
 
-.image_preload { min-height: 40px; min-width: 40px; background: url(../images/templates/basic/image_preload.gif) no-repeat 50% 50%; }
-
 .wordTag_label { display: inline-block; padding: 3px; vertical-align: top; background-color: #f5f5f5; border: 1px solid #d9d9d9; margin: 2px; }
 
 .wordTag_close { padding: 3px; cursor: pointer; }
@@ -162,6 +160,8 @@ legend { width: inherit; padding: 0 10px; border-bottom: none; }
 .logo_small { display: none; margin: 10px 0px 10px 15px; }
 .logo_small img { width: 30px; }
 .logo_small p { position: relative; top: 5px; font-family: "acme", sans-serif; font-size: 20px; color: #ffffff; text-shadow: 2px 0 0 #000000, -2px 0 0 #000000, 0 2px 0 #000000, 0 -2px 0 #000000, 1px 1px #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000; margin: 0; }
+
+.image_preload { min-height: 40px; min-width: 40px; background: url(../images/templates/basic/image_preload.gif) no-repeat 50% 50%; }
 
 .camera_tab_container { padding: 0 15px; border: 1px solid #dddddd; border-top: 0; }
 
