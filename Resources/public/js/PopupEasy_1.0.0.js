@@ -15,7 +15,7 @@ function PopupEasy() {
         var clickCancel = null;
         
         if (callbackOk !== null) {
-            buttons += "<a id=\"popup_easy_ok\" class=\"btn btn-primary\" type=\"button\">" + window.text.ok + "</a>";
+            buttons += "<a id=\"popup_easy_ok\" class=\"button_custom\" type=\"button\">" + window.text.ok + "</a>";
             
             clickOk = function() {
                 callbackOk();
@@ -23,7 +23,7 @@ function PopupEasy() {
         }
         
         if (callbackCancel !== null) {
-            buttons += "<a id=\"popup_easy_cancel\" class=\"btn btn-primary\" type=\"button\">" + window.text.abort + "</a>";
+            buttons += "<a id=\"popup_easy_cancel\" class=\"button_custom\" type=\"button\">" + window.text.abort + "</a>";
             
             clickCancel = function() {
                 callbackCancel();
@@ -32,7 +32,7 @@ function PopupEasy() {
         
         if ($("#popup_easy").length > 0) {
             $("#popup_easy").find(".modal-title").html(title);
-            $("#popup_easy").find(".modal-body").html("<p>" + message + "</p>");
+            $("#popup_easy").find(".modal-body").html(message);
             $("#popup_easy").find(".modal-footer").html(buttons);
         }
         

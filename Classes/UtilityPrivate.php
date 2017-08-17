@@ -1,18 +1,53 @@
 <?php
 require_once("Utility.php");
-require_once("Query.php");
 
 class UtilityPrivate {
     // Vars
     private $utility;
-    private $query;
     
     // Properties
     
     // Functions public
     public function __construct() {
         $this->utility = new Utility();
-        $this->query = new Query($this->utility->getDatabase());
+    }
+    
+    public function jsonParametersParse($json) {
+        $parameters = Array();
+        
+        foreach($json as $key => $value) {
+            preg_match('#\[(.*?)\]#', $value->name, $match);
+            
+            if (count($match) == 0)
+                $parameters[$key] = $value;
+            else
+                $parameters[$match[1]] = $value->value;
+        }
+        
+        return $parameters;
+    }
+    
+    public function createTemplatesList() {
+        $templatesPath = "{$this->utility->getPathRoot()}/Resources/public/images/templates";
+        
+        $scanDirElements = scandir($templatesPath);
+        
+        $list = Array();
+        
+        if ($scanDirElements != false) {
+            foreach ($scanDirElements as $key => $value) {
+                if ($value != "." && $value != ".." && $value != ".htaccess" && is_dir("$templatesPath/$value") == true)
+                    $list[$value] = $value;
+            }
+        }
+        
+        return $list;
+    }
+    
+    public function createMotionVersionList() {
+        $list = Array("3.1.12", "4.0.1");
+        
+        return $list;
     }
     
     public function checkToken($token) {

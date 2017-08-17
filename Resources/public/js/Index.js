@@ -7,7 +7,14 @@ $(document).ready(function() {
     
     utility.checkMobile(true);
     
+    utility.checkWidth(window.settings.widthMobile);
+    
     loader.create("font");
     
     ipCamera.init();
+    ipCamera.changeView();
+    
+    $(window).resize(function() {
+        ipCamera.changeView();
+    });
 });

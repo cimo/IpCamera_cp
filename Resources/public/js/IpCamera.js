@@ -12,18 +12,11 @@ function IpCamera() {
     
     var swipeMoveValue = -1;
     
-    var widthType = "";
-    var widthTypeOld = "";
-    
     var takePictureEnable = true;
     
     // Properties
     
     // Functions public
-    $(window).resize(function() {
-        resetView();
-    });
-    
     self.init = function() {
         self.status();
     };
@@ -64,6 +57,26 @@ function IpCamera() {
             $("#form_cameras_selection_id").val(-1);
     };
     
+    self.changeView = function() {
+        if (utility.getWidthType() === "desktop") {
+            $("#camera_video_area").removeClass("touch_disable");
+            $("#camera_video_area").hide();
+            
+            $("#controls_container").show();
+        }
+        else {
+            if (utility.getIsMobile() === false)
+                $("#camera_control_swipe_switch").parents(".bootstrap-switch").hide();
+            else
+                $("#controls_container").hide();
+            
+            if (videoAreaEnabled === true) {
+                $("#camera_video_area").show();
+                $("#camera_video_area").addClass("touch_disable");
+            }
+        }
+    }
+    
     // Functions private
     function statusSend(form, lastValue, createNew) {
         currentId = $("#form_cameras_selection_id").val();
@@ -83,11 +96,11 @@ function IpCamera() {
                 $("#camera_files_result").html("");
             },
             function(xhr) {
-                if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
+                /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
                     ajax.reply(xhr, "");
                     
                     return;
-                }
+                }*/
                 
                 if (createNew === true) {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
@@ -119,6 +132,10 @@ function IpCamera() {
                 $("#camera_files_result").load(window.url.root + "/Resources/views/render/files.php", function() {
                     files();
                 });
+                
+                $("#camera_settings_result").load(window.url.root + "/Resources/views/render/settings.php", function() {
+                    settings();
+                });
             },
             null,
             null
@@ -126,10 +143,8 @@ function IpCamera() {
     }
     
     function video() {
-        resetView();
-        
         $("#camera_video").on("error", function() {
-            utility.refreshImage("#camera_video");
+            utility.imageRefresh("#camera_video", 2);
         });
     }
     
@@ -186,8 +201,6 @@ function IpCamera() {
         
         $(".camera_control_picture").on("click", "", function() {
             if (takePictureEnable === true) {
-                takePictureEnable = false;
-                
                 ajax.send(
                     true,
                     false,
@@ -201,18 +214,18 @@ function IpCamera() {
                     false,
                     null,
                     function(xhr) {
-                        if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
+                        /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
                             ajax.reply(xhr, "");
 
                             return;
-                        }
+                        }*/
+                        
+                        takePictureEnable = false;
 
                         ajax.reply(xhr, "");
 
                         setTimeout(
                             function() {
-                                $("#camera_files_table .refresh").click();
-                                
                                 takePictureEnable = true;
                             },
                         1000);
@@ -227,16 +240,16 @@ function IpCamera() {
     function profile() {
         labelStatus();
         
-        $("#form_camera_profile_detection_active").bootstrapSwitch();
+        $("#form_camera_profile_motionDetectionActive").bootstrapSwitch();
         
-        $("#form_camera_profile_detection_active").on("switchChange.bootstrapSwitch", "", function(event, state) {
+        $("#form_camera_profile_motionDetectionActive").on("switchChange.bootstrapSwitch", "", function(event, state) {
             if (state === true) {
-                $("#form_camera_profile_detection_active").attr("value", "start");
-                $("#form_camera_profile_detection_active").parents(".bootstrap-switch-wrapper").next().attr("value", "start");
+                $("#form_camera_profile_motionDetectionActive").attr("value", "start");
+                $("#form_camera_profile_motionDetectionActive").parents(".bootstrap-switch-wrapper").next().attr("value", "start");
             }
             else {
-                $("#form_camera_profile_detection_active").attr("value", "pause");
-                $("#form_camera_profile_detection_active").parents(".bootstrap-switch-wrapper").next().attr("value", "pause");
+                $("#form_camera_profile_motionDetectionActive").attr("value", "pause");
+                $("#form_camera_profile_motionDetectionActive").parents(".bootstrap-switch-wrapper").next().attr("value", "pause");
             }
         });
         
@@ -253,11 +266,11 @@ function IpCamera() {
                 false,
                 null,
                 function(xhr) {
-                    if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
+                    /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
                         ajax.reply(xhr, "");
 
                         return;
-                    }
+                    }*/
                     
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                     
@@ -287,11 +300,11 @@ function IpCamera() {
                         false,
                         null,
                         function(xhr) {
-                            if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
+                            /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
                                 ajax.reply(xhr, "");
 
                                 return;
-                            }
+                            }*/
 
                             ajax.reply(xhr, "");
                             
@@ -337,11 +350,11 @@ function IpCamera() {
                 false,
                 null,
                 function(xhr) {
-                    if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
+                    /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
                         ajax.reply(xhr, "");
 
                         return;
-                    }
+                    }*/
                     
                     ajax.reply(xhr, "");
                     
@@ -373,11 +386,11 @@ function IpCamera() {
                         false,
                         null,
                         function(xhr) {
-                            if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
+                            /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
                                 ajax.reply(xhr, "");
 
                                 return;
-                            }
+                            }*/
 
                             ajax.reply(xhr, "");
                             
@@ -423,11 +436,11 @@ function IpCamera() {
                         false,
                         null,
                         function(xhr) {
-                            if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
+                            /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
                                 ajax.reply(xhr, "");
 
                                 return;
-                            }
+                            }*/
 
                             ajax.reply(xhr, "");
                             
@@ -444,8 +457,36 @@ function IpCamera() {
         });
     }
     
+    function settings() {
+        $("#form_camera_settings").on("submit", "", function(event) {
+            event.preventDefault();
+
+            ajax.send(
+                true,
+                true,
+                $(this).attr("action"),
+                $(this).attr("method"),
+                JSON.stringify($(this).serializeArray()),
+                "json",
+                false,
+                null,
+                function(xhr) {
+                    /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
+                        ajax.reply(xhr, "");
+
+                        return;
+                    }*/
+                    
+                    ajax.reply(xhr, "");
+                },
+                null,
+                null
+            );
+        });
+    }
+    
     function labelStatus() {
-        var detectionActiveValue = $("#form_camera_profile_detection_active").val();
+        var detectionActiveValue = $("#form_camera_profile_motionDetectionActive").val();
         
         if (detectionActiveValue === "start")
             $("#camera_detection_status").text(window.textStatus.ipCameraStatusActive);
@@ -546,31 +587,5 @@ function IpCamera() {
                 swipeMoveValue = -1;
             }
         });
-    }
-    
-    function resetView() {
-        widthType = utility.checkWidth(992);
-        
-        if (widthType === "desktop" && widthTypeOld !== widthType) {
-            $("#camera_video_area").removeClass("touch_disable");
-            $("#camera_video_area").hide();
-            
-            $("#controls_container").show();
-            
-            widthTypeOld = widthType;
-        }
-        else if (widthType === "mobile" && widthTypeOld !== widthType) {
-            if (utility.getIsMobile() === false)
-                $("#camera_control_swipe_switch").parents(".bootstrap-switch").hide();
-            else
-                $("#controls_container").hide();
-            
-            if (videoAreaEnabled === true) {
-                $("#camera_video_area").show();
-                $("#camera_video_area").addClass("touch_disable");
-            }
-            
-            widthTypeOld = widthType;
-        }
     }
 }

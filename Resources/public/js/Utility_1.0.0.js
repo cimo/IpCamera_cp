@@ -14,6 +14,8 @@ function Utility() {
     
     var touchMove = false;
     
+    var widthType = "";
+    
     // Properties
     self.getIsMobile = function() {
         return isMobile;
@@ -21,6 +23,16 @@ function Utility() {
     
     self.getTouchMove = function() {
         return touchMove;
+    };
+    
+    self.getWidthType = function() {
+        return widthType;
+    };
+    
+    // ---
+    
+    self.setWidthType = function(value) {
+        widthType = value;
     };
     
     // Functions public
@@ -37,6 +49,26 @@ function Utility() {
             
             watchExecuted = true;
         }
+    };
+    
+    self.checkMobile = function(fix) {
+        isMobile = false;
+        
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) === true) {
+            isMobile = true;
+            
+            if (fix === true)
+                swipeFix();
+        }
+        
+        return isMobile;
+    };
+    
+    self.checkWidth = function(width) {
+        if (window.matchMedia("(max-width: " + width + "px)").matches === true)
+            widthType = "mobile";
+        else
+            widthType = "desktop";
     };
     
     self.postIframe = function(action, method, elements) {
@@ -144,29 +176,42 @@ function Utility() {
         var moduleSettingsObject = $(".module_settings");
         
         if (type === true) {
+            var elementUi = null;
+            
             columnsObject.addClass("sortable_column_enabled");
             moduleSettingsObject.show();
             
             columnsObject.sortable({
                 'cursor': "move",
-                cursorAt: {
-                    'top': 0,
-                    'left': 0
-                },
                 'placeholder': "sortable_placeholder",
                 'tolerance': "pointer",
                 'revert': true,
                 'connectWith': ".sortable_column",
                 'handle': ".module_move",
+                cursorAt: {
+                    'top': 0,
+                    'left': 0
+                },
                 start: function(event, ui) {
                     ui.placeholder.height(ui.item.height());
                 },
                 helper: function(event, ui) {
+                    if ($(ui).hasClass("display_desktop") === true) {
+                        elementUi = $(ui);
+                        elementUi.removeClass("display_desktop");
+                    }
+                    else
+                        elementUi = null;
+                    
                     var clone = $(ui).clone();
                     clone.css({'position': "absolute"});
+                    
                     return clone.get(0);
                 },
                 stop: function(event, ui) {
+                    if (elementUi !== null)
+                        elementUi.addClass("display_desktop");
+                    
                     ui.placeholder.height(0);
                 }
             }).disableSelection();
@@ -183,20 +228,20 @@ function Utility() {
                 var center = new Array();
                 var right = new Array();
                 
-                $.each(columnsObject, function(key, value) {
-                    var panels = $(value).children().find(".module_settings").parent();
+                $.each(columnsObject, function(keyA, valueA) {
+                    var panels = $(valueA).children().find(".module_settings").parent();
 
-                    $.each(panels, function(keySub, valueSub) {
-                        if ($(valueSub).parent().hasClass("dropdown-menu") === false) {
-                            var id = valueSub.id.replace("panel_id_", "");
-
-                            if (key === 0)
+                    $.each(panels, function(keyB, valueB) {
+                        if ($(valueB).parent().hasClass("dropdown-menu") === false) {
+                            var id = valueB.id.replace("panel_id_", "");
+                            
+                            if ($(valueA).parents(".container_header").length > 0)
                                 header.push(id);
-                            else if (key === 1)
+                            else if ($(valueA).parents(".container_left").length > 0)
                                 left.push(id);
-                            else if (key === 2)
+                            else if ($(valueA).parents(".container_center").length > 0)
                                 center.push(id);
-                            else if (key === 3)
+                            else if ($(valueA).parents(".container_right").length > 0)
                                 right.push(id);
                         }
                     });
@@ -327,7 +372,7 @@ function Utility() {
         });
     };
     
-    self.progressBar = function(start, end) {
+    self.progressBar = function(id, start, end) {
         if (start !== undefined && end !== undefined) {
             var progress = start / end;
             var percentage = Math.ceil(progress * 100);
@@ -335,107 +380,104 @@ function Utility() {
         else
             percentage = 0;
         
-        $("#progressBar").find(".progress-bar").css("width", percentage + "%");
-        $("#progressBar").find("span").text(percentage + "%");
+        $("#" + id).find(".progress-bar").css("width", percentage + "%");
+        $("#" + id).find("span").text(percentage + "%");
     };
     
-    self.refreshImage = function(tag) {
+    self.imageError = function(elements) {
+        elements.on("error", "", function() {
+            $.each($(this), function(key, value) {
+                $(value).prop("src", window.url.webBundle + "/images/templates/" + window.settings.template + "/error_404.png");
+            });
+        });
+    };
+    
+    self.imageRefresh = function(tag, length) {
         if (tag !== "") {
             var src = $(tag).prop("src");
+            
+            var srcSplit = src.split("?");
+
+            if (srcSplit.length > length)
+                src = srcSplit[0] + "?" + srcSplit[1];
+            
             $(tag).prop("src", src + "?" + new Date().getTime());
         }
     };
     
-    self.checkMobile = function(fix) {
-        isMobile = false;
-        
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) === true) {
-            isMobile = true;
-            
-            if (fix === true)
-                swipeFix();
-        }
-        
-        return isMobile;
-    };
-    
-    self.checkWidth = function(width) {
-        if (window.matchMedia("(min-width: " + width + "px)").matches === true)
-            return "desktop";
-        else
-            return "mobile";
-    };
-    
     // Bootstrap fix
-    self.bootstrapMenuFix = function(tag) {
-        $(tag).find("ul li.dropdown").on("click", "", function(event) {
-            if ($(event.target).hasClass("dropdown-toggle") === true) {
-                event.preventDefault();
-                event.stopPropagation();
-                
-                $(tag).find(".dropdown-menu").parent("li.dropdown").not($(event.target).parents(".dropdown")).removeClass("open");
-                
-                if ($(this).hasClass("open") === false)
-                    $(this).addClass("open");
-                else
-                   $(this).removeClass("open");
-            }
-        });
-    };
-    
-    self.bootstrapMenuActiveFix = function(tags) {
+    self.bootstrapMenuFix = function(tags) {
         var menuButtonsOld = new Array();
         
-        $.each(tags, function(key, value) {
-            var elements = $(value[0]).find("li a");
+        $.each(tags, function(keyA, valueA) {
+            var elements = $(valueA[0]).find("li a");
 
             var url = window.location.href;
 
             var urlElements = url.split("/").reverse();
 
-            $.each(elements, function(keySub, valueSub) {
-                var lastHrefParameter = $(valueSub).prop("href").substring($(valueSub).prop("href").lastIndexOf("/") + 1);
+            $.each(elements, function(keyB, valueB) {
+                var lastHrefParameter = $(valueB).prop("href").substring($(valueB).prop("href").lastIndexOf("/") + 1);
 
                 if (lastHrefParameter !== "" && $.inArray(lastHrefParameter, urlElements) !== -1) {
-                    if ($(valueSub).parents(".dropdown").length > 0)
-                        $(valueSub).parents(".dropdown").addClass("active");
+                    if ($(valueB).parents(".dropdown").length > 0)
+                        $(valueB).parents(".dropdown").addClass("active");
 
-                    $(valueSub).parent().addClass("active");
+                    $(valueB).parent().addClass("active");
 
-                    menuButtonsOld[key] = $(valueSub).parent();
+                    menuButtonsOld[keyA] = $(valueB).parent();
                 }
 
-                if (menuButtonsOld[key] === "" && keySub === (elements.length - 1)) {
+                if (menuButtonsOld[keyA] === "" && keyB === (elements.length - 1)) {
                     $(elements[0]).parent().addClass("active");
 
-                    menuButtonsOld[key] = $(elements[0]).parent();
-                }
-            });
-
-            elements.on("click", "", function() {
-                if ($(this).hasClass("dropdown-toggle") === true) {
-                    if ($(this).parent().hasClass("dropdown") === true)
-                        $(value[0]).find("> ul > li").removeClass("active");
-                    
-                    if ($(this).parent().hasClass("active") === false)
-                        $(this).closest(".dropdown-menu").children(".active").removeClass("active");
+                    menuButtonsOld[keyA] = $(elements[0]).parent();
                 }
             });
             
             var hasClass = false;
             
-            $.each($(value[0]).find("li"), function(keySub, valueSub) {
-                if ($(valueSub).hasClass("active") === true) {
+            $.each($(valueA[0]).find("li"), function(keyB, valueB) {
+                if ($(valueB).hasClass("active") === true) {
                     hasClass = true;
 
                     return false;
                 }
             });
 
-            if (hasClass === false && $(value[0]).find("li").length > 0) {
-                $(value[0]).find("li").eq(0).addClass("active");
+            if (hasClass === false && $(valueA[0]).find("li").length > 0) {
+                $(valueA[0]).find("li").eq(0).addClass("active");
                 
-                menuButtonsOld[0] = $(value[0]).find("li").eq(0);
+                menuButtonsOld[0] = $(valueA[0]).find("li").eq(0);
+            }
+        });
+        
+        $("#menu_root_nav_button").on("click", "", function() {
+            if ($(tags[0][0]).find(".navbar-nav").css("display") === "none") {
+                $(this).removeClass("collapsed");
+                
+                $(tags[0][0]).find(".navbar-nav").show();
+            }
+            else {
+                $(this).addClass("collapsed");
+                
+                $(tags[0][0]).find(".navbar-nav").hide();
+            }
+        });
+        
+        $("#menu_root_navbar").find(".dropdown-menu span").remove();
+        
+        $("#menu_root_navbar").find("ul li.dropdown").on("click", "", function(event) {
+            if ($(event.target).hasClass("dropdown-toggle") === true) {
+                event.preventDefault();
+                event.stopPropagation();
+                
+                $("#menu_root_navbar").find(".dropdown-menu").parent("li.dropdown").not($(event.target).parents(".dropdown")).removeClass("open");
+                
+                if ($(this).hasClass("open") === false)
+                    $(this).addClass("open");
+                else
+                   $(this).removeClass("open");
             }
         });
         
@@ -449,16 +491,18 @@ function Utility() {
             else
                 $(event.target).parents("li").addClass("active");
         });
-        
-        $(window).resize(function() {
-            $.each(menuButtonsOld, function(key, value) {
-                $(tags[key]).find("li").removeClass("open");
-                $(tags[key]).find("li a").blur();
-                
-                $(menuButtonsOld[key]).addClass("active");
-                $(menuButtonsOld[key]).parents(".dropdown").addClass("active");
-            });
-        });
+    };
+    
+    self.bootstrapMenuFixChangeView = function(tag) {
+        if (widthType === "desktop") {
+            $(tag).find(".navbar-nav").show();
+            $(tag).find(".open").removeClass("open");
+        }
+        else {
+            $(tag).parent().find(".navbar-toggle").addClass("collapsed");
+            $(tag).find(".navbar-nav").hide();
+            $(tag).find(".open").removeClass("open");
+        }
     };
     
     // Functions private
@@ -498,10 +542,10 @@ function Utility() {
             'up': $.noop,
             'down': $.noop
         }, isTouch = "ontouchend" in document;
-
+        
         // Fix jquery > 3
         //$.event.props.push("touches");
-
+        
         $.fn.swipe = function(options) {
             options = $.extend({}, defaults, options);
 

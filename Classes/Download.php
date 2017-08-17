@@ -1,25 +1,28 @@
 <?php
 require_once("Utility.php");
+require_once("UtilityPrivate.php");
 
 class Download {
     // Vars
     private $utility;
+    private $utilityPrivate;
     
     // Properties
     
     // Functions public
     public function __construct() {
         $this->utility = new Utility();
+        $this->utilityPrivate = new UtilityPrivate();
     }
     
     public function output() {
         $token = isset($_GET['token']) == true ? $_GET['token'] : "";
         $path = isset($_GET['path']) == true ? $_GET['path'] : "";
-        $name = isset($_GET['name']) == true ? $_GET['name'] : trim($_GET['name']);
+        $name = isset($_GET['name']) == true ? trim($_GET['name']) : "";
         
         $filePath = "$path/$name";
         
-        if (isset($_SESSION['token']) == true && $token == $_SESSION['token']) {
+        if ($this->utilityPrivate->checkToken($token) == true) {
             if (file_exists($filePath) == true) {
                 $mimeContentType = mime_content_type($filePath);
 

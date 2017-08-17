@@ -11,6 +11,7 @@ function Table() {
     var current = 0;
     var total = 0;
     
+    var clickedEvent = false;
     var sortOrderBy = false;
     
     var buttonsStatus = "";
@@ -32,6 +33,8 @@ function Table() {
         
         if (oneElement === true)
             utility.selectOnlyOneElement(idResult + " .table_tbody");
+        
+        resizeColumn();
     };
     
     self.search = function(delegate) {
@@ -39,20 +42,30 @@ function Table() {
         var child = delegate === true ? idResult + " .search_input input" : "";
         
         $(parent).on("keyup", child, function(event) {
+            if (clickedEvent === true)
+                return;
+            
             if (event.which === 13) {
                 current = 0;
                 
                 send();
+                
+                clickedEvent = true;
             }
         });
         
-        var parent = delegate === true ? document : idResult + " .search_input button";
-        var child = delegate === true ? idResult + " .search_input button" : "";
+        var parent = delegate === true ? document : idResult + " .search_input .button_search";
+        var child = delegate === true ? idResult + " .search_input .button_search" : "";
         
         $(parent).on("click", child, function() {
+            if (clickedEvent === true)
+                return;
+            
             current = 0;
             
             send();
+            
+            clickedEvent = true;
         });
     };
     
@@ -61,10 +74,15 @@ function Table() {
         var child = delegate === true ? idResult + " .pagination .previous" : "";
         
         $(parent).on("click", child, function() {
+            if (clickedEvent === true)
+                return;
+            
             if (total > 1 && current > 0) {
                 current --;
                 
                 send();
+                
+                clickedEvent = true;
             }
         });
         
@@ -72,10 +90,15 @@ function Table() {
         var child = delegate === true ? idResult + " .pagination .next" : "";
         
         $(parent).on("click", child, function() {
+            if (clickedEvent === true)
+                return;
+            
             if (total > 1 && current < (total - 1)) {
                 current ++;
                 
                 send();
+                
+                clickedEvent = true;
             }
         });
     };
@@ -220,9 +243,19 @@ function Table() {
                 
                 if (oneElement === true)
                     utility.selectOnlyOneElement(idResult + " .table_tbody");
+                
+                clickedEvent = false;
             },
             null,
             null
         );
+    }
+    
+    function resizeColumn() {
+        $(function() {
+            $(idResult).find("table tbody tr td").resizable({
+                handles: "e"
+            });
+        });
     }
 }

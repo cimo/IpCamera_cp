@@ -9,14 +9,14 @@ function Loader() {
     // Functions public
     self.create = function(type) {
         if (type === "image")
-            $("<div id=\"request_loader\" class=\"display_none shadow\"><img src=\"" + window.url.root + "/Resources/public/images/templates/" + window.settings.template + "/request_loader.gif\" alt=\"request_loader.gif\"/></div>").appendTo("body");
+            $("<div id=\"loader_request\" class=\"display_none shadow\"><img src=\"" + window.url.webBundle + "/images/templates/" + window.settings.template + "/loader_request.gif\" alt=\"loader_request.gif\"/></div>").appendTo("body");
         
         $(window).on("beforeunload", "", function() {
-            if ($("#request_loader").length === 0 || $("#request_loader").css("display") === "none") {
+            if ($("#loader_request").length === 0 || $("#loader_request").css("display") === "none") {
                 if (type === "font")
-                    $("<div id=\"request_loader\" class=\"shadow\"><i class=\"fa fa-refresh fa-spin fa-3x fa-fw\"></i></div>").appendTo("body");
+                    $("<div id=\"loader_request\" class=\"shadow\"><i class=\"fa fa-refresh fa-spin fa-3x fa-fw\"></i></div>").appendTo("body");
                 else if (type === "image")
-                    $("#request_loader").show();
+                    $("#loader_request").show();
             }
         });
     };
@@ -39,8 +39,8 @@ function Loader() {
     
     self.remove = function() {
         var requestLoader = setInterval(function() {
-            if ($("#request_loader").length > 0 || $("#request_loader").css("display") !== "none") {
-                $("#request_loader").remove();
+            if ($("#loader_request").length > 0 || $("#loader_request").css("display") !== "none") {
+                $("#loader_request").remove();
 
                 clearInterval(requestLoader);
             }

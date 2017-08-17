@@ -1,0 +1,52 @@
+@import "utility_1.0.0.scss";
+
+@media(min-width: $widthDesktop) {
+    .search_input {
+        width: 30%;
+    }
+}
+
+.search_input {
+    margin-bottom: 20px;
+    
+    input {
+        padding-left: 35px;
+    }
+}
+
+.table_thead {
+    tr {
+        th {
+            max-width: 400px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: middle !important;
+        }
+    }
+}
+.table_tbody {
+    tr {
+        td {
+            max-width: 400px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: middle !important;
+        }
+    }
+}
+.table_borderless {
+    th, td {
+        border: none !important;
+    }
+}
+.table_spinner {
+    position: relative;
+    left: 50%;
+    
+    i {
+        position: absolute;
+        left: -35px;
+    }
+}

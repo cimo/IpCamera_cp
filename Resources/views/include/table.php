@@ -1,14 +1,12 @@
 <div class="buttons margin_bottom display_none">
-    <button class="btn btn-primary refresh">Refresh</button>
-    <button class="btn btn-danger delete_all">Delete all</button>
+    <button class="button_custom refresh">Refresh</button>
+    <button class="delete_all button_custom_danger">Delete all</button>
 </div>
-<div class="input-group pull-right search_input margin_bottom">
+<div class="input-group pull-right search_input">
+    <div class="button_search">
+        <i class="fa fa-search"></i>
+    </div>
     <input class="form-control" type="text" placeholder="Search" value="<?php echo isset($files['search']) == true ? $files['search']['value'] : ""; ?>"/>
-    <span class="input-group-btn">
-        <button class="btn btn-primary" type="button">
-            <i class="fa fa-search"></i>
-        </button>
-    </span>
 </div>
 <div class="clearfix"></div>
 <ul class="pagination-controle pagination margin_clear">

@@ -29,24 +29,25 @@ $settingRow = $query->selectSettingDatabase();
         <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/bootstrap-switch_3.3.2.min.css" rel="stylesheet"/>
         <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/font-awesome_4.7.0_custom.min.css" rel="stylesheet">
         <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/<?php echo $settingRow['template']; ?>.css" rel="stylesheet"/>
+        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/loader_1.0.0.css" rel="stylesheet"/>
+        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/flashBag_1.0.0.css" rel="stylesheet"/>
+        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/table_1.0.0.css" rel="stylesheet"/>
     </head>
     <body class="user_select_none">
         <div>
             <div class="logo_big display_desktop">
-                <img class="display_inline_block" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settingRow['template']; ?>/logo_icon.png"/>
-                <p class="display_inline_block"><?php echo $utility->getWebsiteName(); ?></p>
+                <img class="logo_svg" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settingRow['template']; ?>/logo.svg"/>
+                <p class="logo_text"><?php echo $utility->getWebsiteName(); ?></p>
             </div>
             <div class="logo_small display_mobile">
-                <img class="display_inline_block" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settingRow['template']; ?>/logo_icon.png"/>
-                <p class="display_inline_block"><?php echo $utility->getWebsiteName(); ?></p>
+                <img class="logo_svg" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settingRow['template']; ?>/logo.svg"/>
+                <p class="logo_text"><?php echo $utility->getWebsiteName(); ?></p>
             </div>
         </div>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <?php
-                    require_once("{$utility->getPathRoot()}/Resources/views/include/flashBag.php");
-                    ?>
+                    <?php require_once("{$utility->getPathRoot()}/Resources/views/include/flashBag.php"); ?>
                 </div>
             </div>
             <div class="row">
@@ -85,24 +86,32 @@ $settingRow = $query->selectSettingDatabase();
                                     <a id="actions_tab_1" data-toggle="tab" href="#actions_tab_content_1">Status</a>
                                 </li>
                                 <li>
-                                    <a id="actions_tab_2" data-toggle="tab" href="#actions_tab_content_3">Profile</a>
+                                    <a id="actions_tab_2" data-toggle="tab" href="#actions_tab_content_2">Profile</a>
                                 </li>
                                 <li>
-                                    <a id="actions_tab_2" data-toggle="tab" href="#actions_tab_content_2">Files</a>
+                                    <a id="actions_tab_3" data-toggle="tab" href="#actions_tab_content_3">Files</a>
+                                </li>
+                                <li>
+                                    <a id="actions_tab_4" data-toggle="tab" href="#actions_tab_content_4">Settings</a>
                                 </li>
                             </ul>
                             <div class="tab-content clearfix camera_tab_container">
                                 <div id="actions_tab_content_1" class="tab-pane active">
                                     <?php require_once("{$utility->getPathRoot()}/Resources/views/render/status.php"); ?>
                                 </div>
-                                <div id="actions_tab_content_3" class="tab-pane">
+                                <div id="actions_tab_content_2" class="tab-pane">
                                     <div class="margin_top overflow_y_hidden">
                                         <div id="camera_profile_result"></div>
                                     </div>
                                 </div>
-                                <div id="actions_tab_content_2" class="tab-pane">
+                                <div id="actions_tab_content_3" class="tab-pane">
                                     <div class="margin_top">
                                         <div id="camera_files_result"></div>
+                                    </div>
+                                </div>
+                                <div id="actions_tab_content_4" class="tab-pane">
+                                    <div class="margin_top">
+                                        <div id="camera_settings_result"></div>
                                     </div>
                                 </div>
                             </div>
@@ -141,8 +150,9 @@ $settingRow = $query->selectSettingDatabase();
             };
             
             var settings = {
-                'maxWidth': "992px",
-                'minWidth': "992px",
+                'widthMiddle': 1300,
+                'widthMobile': 1050,
+                'widthDesktop': 1051,
                 'template': "<?php echo $settingRow['template']; ?>",
                 'serverUrl': "<?php echo $settingRow['server_url']; ?>"
             };
@@ -155,13 +165,13 @@ $settingRow = $query->selectSettingDatabase();
         <!--[if lte IE 9]>
         <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/lib/media-match_2.0.2.min.js"></script>
         <![endif]-->
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Utility.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Ajax.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Loader.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/FlashBag.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/PopupEasy.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Table.js"></script>
-                <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Download.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Utility_1.0.0.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Ajax_1.0.0.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Loader_1.0.0.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/FlashBag_1.0.0.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/PopupEasy_1.0.0.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Table_1.0.0.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Download_1.0.0.js"></script>
         
         <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/IpCamera.js"></script>
         

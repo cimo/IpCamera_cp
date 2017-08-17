@@ -10,23 +10,13 @@ $cameraRow = $query->selectCameraDatabase($_SESSION['camera_number']);
 ?>
 <form id="form_camera_profile" class="margin_bottom" action="<?php echo $utility->getUrlRoot() ?>/Requests/IpCameraRequest.php?controller=profileAction" method="post" novalidate="novalidate">
     <table class="table table-bordered table-striped">
-        <thead class="table_thead">
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Value
-                </th>
-            </tr>
-        </thead>
         <tbody class="table_tbody">
             <tr>
                 <td>
                     Devices
                 </td>
                 <td>
-                    <select id="form_camera_profile_device_id" class="form-control" name="form_camera_profile[deviceId]" required="required">
+                    <select id="form_camera_profile_deviceId" class="form-control" name="form_camera_profile[deviceId]" required="required">
                         <option value="0">Select</option>
                         <?php
                         foreach($deviceRows as $key => $value) {
@@ -43,7 +33,7 @@ $cameraRow = $query->selectCameraDatabase($_SESSION['camera_number']);
                     Video url
                 </td>
                 <td>
-                    <input id="form_camera_profile_video_url" class="form-control" type="text" name="form_camera_profile[videoUrl]" value="<?php echo $cameraRow['video_url']; ?>" required="required"/>
+                    <input id="form_camera_profile_videoUrl" class="form-control" type="text" name="form_camera_profile[videoUrl]" value="<?php echo $cameraRow['video_url']; ?>" required="required"/>
                 </td>
             </tr>
             <tr>
@@ -64,10 +54,10 @@ $cameraRow = $query->selectCameraDatabase($_SESSION['camera_number']);
             </tr>
             <tr>
                 <td>
-                    Motion url
+                    Threshold
                 </td>
                 <td>
-                    <input id="form_camera_profile_motion_url" class="form-control" type="text" name="form_camera_profile[motionUrl]" value="<?php echo $cameraRow['motion_url']; ?>" required="required"/>
+                    <input id="form_camera_profile_threshold" class="form-control" type="text" name="form_camera_profile[threshold]" value="<?php echo $cameraRow['threshold']; ?>" required="required"/>
                 </td>
             </tr>
             <tr>
@@ -78,7 +68,7 @@ $cameraRow = $query->selectCameraDatabase($_SESSION['camera_number']);
                     <?php
                     $checked = $cameraRow['motion_detection_active'] == "start" ? "checked" : "";
                     ?>
-                    <input id="form_camera_profile_detection_active" class="form-control" type="checkbox" name="form_camera_profile[motionDetectionActive]" value="<?php echo $cameraRow['motion_detection_active']; ?>" required="required" <?php echo $checked; ?> data-on-color="success" data-off-color="danger"/>
+                    <input id="form_camera_profile_motionDetectionActive" class="form-control" type="checkbox" name="form_camera_profile[motionDetectionActive]" value="<?php echo $cameraRow['motion_detection_active']; ?>" required="required" <?php echo $checked; ?> data-on-color="success" data-off-color="danger"/>
                     <input type="hidden" name="form_camera_profile[motionDetectionActive]" value="<?php echo $cameraRow['motion_detection_active']; ?>" required="required"/>
                 </td>
             </tr>
@@ -86,7 +76,7 @@ $cameraRow = $query->selectCameraDatabase($_SESSION['camera_number']);
     </table>
     
     <input id="form_camera_profile_token" class="form-control" type="hidden" name="form_camera_profile[token]" value="<?php echo $_SESSION['token']; ?>"/>
-    <input class="btn btn-primary" type="submit" value="Update"/>
+    <input class="button_custom" type="submit" value="Update"/>
 </form>
 
 <div class="margin_bottom">
@@ -94,7 +84,7 @@ $cameraRow = $query->selectCameraDatabase($_SESSION['camera_number']);
 
     <p>Warning! If you delete the camera is impossible return back.</p>
 
-    <button id="camera_deletion" class="btn btn-primary" type="button">Delete</button>
+    <button id="camera_deletion" class="button_custom_danger" type="button">Delete</button>
 </div>
 <script>
     var textProfile = {

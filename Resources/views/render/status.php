@@ -10,7 +10,7 @@
         </div>
         
         <input id="form_cameras_selection_token" class="form-control" type="hidden" name="form_cameras_selection[token]" value="<?php echo $_SESSION['token']; ?>"/>
-        <input class="btn btn-primary" type="submit" value="Send"/>
+        <input class="button_custom" type="submit" value="Send"/>
     </form>
     
     <ul class="margin_bottom">

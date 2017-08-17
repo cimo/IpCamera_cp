@@ -128,8 +128,8 @@ function Ajax() {
                                 
                                 if ($(object).parents(".form-group").find("label").html() !== undefined)
                                     label = $(object).parents(".form-group").find("label").html();
-                                else if ($($(object).parents(".form-group").find("*[name*='"+ key + "']")).attr("placeholder") !== undefined)
-                                    label = $($(object).parents(".form-group").find("*[name*='"+ key + "']")).attr("placeholder");
+                                else if ($($(object).parents(".form-group").find("*[name*='"+ key + "']")).prop("placeholder") !== undefined)
+                                    label = $($(object).parents(".form-group").find("*[name*='"+ key + "']")).prop("placeholder");
                                 
                                 list += "<li>" + icon + " <b>" + label + "</b>: " + value[0] + "</li>";
                             }

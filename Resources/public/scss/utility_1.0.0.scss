@@ -1,5 +1,10 @@
-$maxWidth: "992px";
-$minWidth: "992px";
+$widthMiddle: "1640px";
+$widthMobile: "1050px";
+$widthDesktop: "1051px";
+
+$panelShadow: 0px 5px 5px #474747;
+$panelShadowStrength: 5;
+$panelShadowColor: #474747;
 
 @mixin fontFace($family, $src, $weight: normal, $style: normal) {
     @font-face {
@@ -19,9 +24,9 @@ $minWidth: "992px";
 }
 
 @include fontFace("pt_sans", "../fonts/pt_sans");
-@include fontFace("acme", "../fonts/acme");
+@include fontFace("archivo_black", "../fonts/archivo_black");
 
-@media(max-width: $maxWidth) {
+@media(max-width: $widthMobile) {
     .display_desktop {
         display: none !important;
     }
@@ -29,7 +34,7 @@ $minWidth: "992px";
         display: block !important;
     }
 }
-@media(min-width: $minWidth) {
+@media(min-width: $widthDesktop) {
     .display_desktop {
         display: block !important;
     }
@@ -60,9 +65,9 @@ html {
 }
 
 body {
-    font-family: "pt_sans", sans-serif;
     margin: 0px auto;
     overflow-x: hidden;
+    z-index: 1;
 }
 
 fieldset {
@@ -75,6 +80,11 @@ legend {
     width: inherit;
     padding: 0 10px;
     border-bottom: none;
+}
+
+.user_touch_none {
+    -ms-touch-action: none;
+    touch-action: none;
 }
 
 .user_select_none {
@@ -102,11 +112,11 @@ legend {
 }
 
 .shadow {
-    -webkit-box-shadow: 0px 0px 20px #444444;
-    -moz-box-shadow: 0px 0px 20px #444444;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=20, Direction=0, Color='#444444')";
-    filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=20, Direction=0, Color='#444444')";
-    box-shadow: 0px 0px 20px #444444;
+    -webkit-box-shadow: $panelShadow;
+    -moz-box-shadow: $panelShadow;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=" + $panelShadowStrength + ", Direction=0, Color='" + $panelShadowColor + "')" !important;
+    filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=" + $panelShadowStrength + ", Direction=0, Color='" + $panelShadowColor + "')" !important;
+    box-shadow: $panelShadow;
 }
 
 .position_relative {
@@ -118,6 +128,11 @@ legend {
 
 .float_right {
     float: right;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
 }
 
 .visibility_hidden {
@@ -200,47 +215,6 @@ legend {
     overflow-y: auto;
 }
 
-.table_thead {
-    tr {
-        th {
-            max-width: 400px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            vertical-align: middle !important;
-        }
-    }
-}
-.table_tbody {
-    tr {
-        td {
-            max-width: 400px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            vertical-align: middle !important;
-        }
-    }
-}
-.table_borderless {
-    th, td {
-        border: none !important;
-    }
-}
-.table_min_height {
-    min-height: 120px;
-}
-.table_spinner {
-    position: relative;
-    top: 55px;
-    
-    i {
-        position: absolute;
-        left: 45%;
-        z-index: 1;
-    }
-}
-
 .sortable_column_enabled {
     border: 1px solid red;
     margin: 10px;
@@ -276,24 +250,17 @@ legend {
     background-color: #ffffff;
     border: 1px solid;
     padding: 3px;
-    z-index: 1001;
+    z-index: 1004;
 }
 
-.captcha {
-    text-align: center;
-    margin-bottom: 10px;
+.progressBar {
+    margin-bottom: 0px !important;
     
-    .icon {
-        position: relative;
-        top: 2px;
-        cursor: pointer;
-    }
-    img {
-        border: 1px solid #000000;
-    }
-    input {
-        position: relative;
-        top: 1px;
+    .progress-bar {
+        span {
+            margin-left: 5px;
+            color: #000000;
+        }
     }
 }
 
@@ -326,156 +293,6 @@ legend {
     transform: rotate(315deg);
 }
 
-#backdrop {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    opacity: 0.5;
-    background-color: #000;
-    z-index: 1040;
-}
-
-#loader {
-    display: none;
-    position: fixed;
-    top: 35%;
-    right: 0;
-    left: 0;
-    margin: 30px auto;
-    width: 200px;
-    height: 50px;
-    padding-top: 8px;
-    text-align: center;
-    border: 1px solid #000000;
-    background-color: #ffffff;
-    overflow: hidden;
-    -webkit-overflow-scrolling: touch;
-    outline: 0;
-    z-index: 1050;
-}
-#loader {
-    .text {
-        display: inline-block;
-        margin: 0;
-        vertical-align: middle;
-    }
-}
-#loader {
-    .image {
-        display: inline-block;
-    }
-}
-
-#request_loader {
-    position: fixed;
-    bottom: 1px;
-    left: 0;
-    z-index: 1050;
-    background-color: #000000;
-    border: 1px solid #ffffff;
-}
-#request_loader {
-    i {
-        color: #ffffff;
-        padding: 10px;
-    }
-}
-#request_loader {
-    img {
-        border: 1px solid #000000;
-    }
-}
-
-#flashBag {
-    display: none;
-    position: relative;
-    
-    p {
-        margin: 0;
-    }
-    ul {
-        margin-bottom: 0;
-    }
-    .fa-close {
-        cursor: pointer;
-        position: absolute;
-        top: 10px;
-        right: 10px;
-    }
-}
-
-#flashBag_popup {
-    display: none;
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    z-index: 1050;
-    border-radius: 0;
-    
-    p {
-        margin: 0;
-    }
-    ul {
-        margin-bottom: 0;
-    }
-    .fa-close {
-        cursor: pointer;
-        position: absolute;
-        top: 10px;
-        right: 10px;
-    }
-}
-
-#progressBar {
-    margin-bottom: 0px !important;
-    
-    .progress-bar {
-        span {
-            margin-left: 5px;
-            color: #000000;
-        }
-    }
-}
-
-#upload {
-    .file {
-        margin-bottom: 5px;
-    }
-    .container_box {
-        display: none;
-        
-        .text {
-            position: relative;
-            margin: 5px 0px;
-            padding: 10px;
-            
-            p {
-                margin: 0;
-            }
-            .fa-close {
-                cursor: pointer;
-                position: absolute;
-                top: 10px;
-                right: 10px;
-            }
-        }
-    }
-    .container_controls {
-        display: none;
-        
-        .container_progressBar {
-            display: inline-block;
-            vertical-align: middle;
-            width: 50%;
-            margin-bottom: 5px;
-        }
-        .container_buttons {
-            display: inline-block;
-            vertical-align: middle;
-            margin-bottom: 5px;
-        }
-    }
+.ui-resizable-e {
+    width: 15px;
 }

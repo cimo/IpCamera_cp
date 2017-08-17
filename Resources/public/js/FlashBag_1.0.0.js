@@ -49,7 +49,7 @@ function FlashBag() {
     };
     
     self.sessionActivity = function() {
-        if (window.session.userActivity !== "") {
+        if ($("#flashBag").find(".content").html().trim() === "" && window.session.userActivity !== "") {
             $("#flashBag").prop({'class': "alert alert-info"});
             $("#flashBag").find(".content").html(window.session.userActivity);
             

@@ -1,39 +1,102 @@
-@import "utility.scss";
+@import "utility_1.0.0.scss";
+
+$logoTextColor: #4089c9;
+
+$buttonCustomBackgroundColor: #337ab7;
+$buttonCustomColor: #ffffff;
+$buttonCustomBorder: 1px solid #2e6da4;
+$buttonCustomBorderRadius: 4px;
+$buttonCustomHoverBackgroundColor: #286090;
+$buttonCustomHoverColor: #ffffff;
+$buttonCustomHoverBorderColor: #204d74;
+$buttonCustomActiveBackgroundColor: #204d74;
+$buttonCustomActiveColor: #ffffff;
+$buttonCustomActiveBorderColor: #122b40;
+$buttonCustomFocusColor: #ffffff;
+
+$buttonCustomSuccessBackgroundColor: #5cb85c;
+$buttonCustomSuccessColor: #ffffff;
+$buttonCustomSuccessBorder: 1px solid #4cae4c;
+$buttonCustomSuccessBorderRadius: 4px;
+$buttonCustomSuccessHoverBackgroundColor: #449d44;
+$buttonCustomSuccessHoverColor: #ffffff;
+$buttonCustomSuccessHoverBorderColor: #398439;
+$buttonCustomSuccessActiveBackgroundColor: #449d44;
+$buttonCustomSuccessActiveColor: #ffffff;
+$buttonCustomSuccessActiveBorderColor: #398439;
+$buttonCustomSuccessFocusColor: #ffffff;
+
+$buttonCustomDangerBackgroundColor: #d9534f;
+$buttonCustomDangerColor: #ffffff;
+$buttonCustomDangerBorder: 1px solid #d43f3a;
+$buttonCustomDangerBorderRadius: 4px;
+$buttonCustomDangerHoverBackgroundColor: #c9302c;
+$buttonCustomDangerHoverColor: #ffffff;
+$buttonCustomDangerHoverBorderColor: #ac2925;
+$buttonCustomDangerActiveBackgroundColor: #c9302c;
+$buttonCustomDangerActiveColor: #ffffff;
+$buttonCustomDangerActiveBorderColor: #ac2925;
+$buttonCustomDangerFocusColor: #ffffff;
+
+$buttonSearchBackgroundColor: #000000;
+$buttonSearchColor: #ffffff;
+
+@media(max-width: $widthMiddle) {
+}
+@media(max-width: $widthMobile) {
+}
+@media(min-width: $widthDesktop) {
+}
+
+body {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    min-height: 100%;
+    
+    font-family: "pt_sans", sans-serif;
+    font-size: 14px;
+}
+
+table, .table {
+    font-family: "pt_sans", sans-serif;
+    font-size: 14px;
+}
+
+p {
+    margin: 0;
+}
 
 .logo_big {
-    display: none;
-    margin: 0px 0px 0px 10px;
-    
-    img {
+    .logo_svg {
         width: 100px;
     }
     
-    p {
+    .logo_text {
+        font-family: "archivo_black", sans-serif;
+        display: inline-block;
         position: relative;
-        top: 15px;
-        font-family: "acme", sans-serif;
-        font-size: 50px;
-        color: #ffffff;
-        text-shadow: 2px 0 0 #000000, -2px 0 0 #000000, 0 2px 0 #000000, 0 -2px 0 #000000, 1px 1px #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000;
-        margin: 0;
+        top: 14px;
+        font-size: 40px;
+        color: $logoTextColor;
+        text-transform: uppercase;
+        font-weight: bold;
     }
 }
 .logo_small {
-    display: none;
-    margin: 10px 0px 10px 15px;
-    
-    img {
+    .logo_svg {
         width: 30px;
     }
     
-    p {
+    .logo_text {
+        font-family: "archivo_black", sans-serif;
+        display: inline-block;
         position: relative;
-        top: 5px;
-        font-family: "acme", sans-serif;
-        font-size: 20px;
-        color: #ffffff;
-        text-shadow: 2px 0 0 #000000, -2px 0 0 #000000, 0 2px 0 #000000, 0 -2px 0 #000000, 1px 1px #000000, -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000;
-        margin: 0;
+        font-size: 10px;
+        color: $logoTextColor;
+        text-transform: uppercase;
+        font-weight: bold;
     }
 }
 
@@ -43,9 +106,107 @@
     background: url(../images/templates/basic/image_preload.gif) no-repeat 50% 50%;
 }
 
-@media(max-width: $maxWidth) {
+.button_custom {
+    display: inline-block;
+    padding: 5px 12px;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 2px;
+    margin-right: 2px;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    text-decoration: none;
+    outline: 0;
+    background-color: $buttonCustomBackgroundColor;
+    color: $buttonCustomColor;
+    border: $buttonCustomBorder;
+    border-radius: $buttonCustomBorderRadius;
+
+    &:hover {
+        text-decoration: none;
+        background-color: $buttonCustomHoverBackgroundColor;
+        color: $buttonCustomHoverColor;
+        border-color: $buttonCustomHoverBorderColor;
+    }
+    &:active {
+        text-decoration: none;
+        background-color: $buttonCustomActiveBackgroundColor;
+        color: $buttonCustomActiveColor;
+        border-color: $buttonCustomActiveBorderColor;
+    }
+    &:focus {
+        text-decoration: none;
+        color: $buttonCustomFocusColor;
+    }
 }
-@media(min-width: $minWidth) {
+.button_custom_success {
+    @extend .button_custom;
+    
+    background-color: $buttonCustomSuccessBackgroundColor;
+    color: $buttonCustomSuccessColor;
+    border: $buttonCustomSuccessBorder;
+    border-radius: $buttonCustomSuccessBorderRadius;
+
+    &:hover {
+        text-decoration: none;
+        background-color: $buttonCustomSuccessHoverBackgroundColor;
+        color: $buttonCustomSuccessHoverColor;
+        border-color: $buttonCustomSuccessHoverBorderColor;
+    }
+    &:active {
+        text-decoration: none;
+        background-color: $buttonCustomSuccessActiveBackgroundColor;
+        color: $buttonCustomSuccessActiveColor;
+        border-color: $buttonCustomSuccessActiveBorderColor;
+    }
+    &:focus {
+        text-decoration: none;
+        color: $buttonCustomSuccessFocusColor;
+    }
+}
+.button_custom_danger {
+    @extend .button_custom;
+    
+    background-color: $buttonCustomDangerBackgroundColor;
+    color: $buttonCustomDangerColor;
+    border: $buttonCustomDangerBorder;
+    border-radius: $buttonCustomDangerBorderRadius;
+
+    &:hover {
+        text-decoration: none;
+        background-color: $buttonCustomDangerHoverBackgroundColor;
+        color: $buttonCustomDangerHoverColor;
+        border-color: $buttonCustomDangerHoverBorderColor;
+    }
+    &:active {
+        text-decoration: none;
+        background-color: $buttonCustomDangerActiveBackgroundColor;
+        color: $buttonCustomDangerActiveColor;
+        border-color: $buttonCustomDangerActiveBorderColor;
+    }
+    &:focus {
+        text-decoration: none;
+        color: $buttonCustomDangerFocusColor;
+    }
+}
+
+.button_search {
+    cursor: pointer;
+    position: absolute;
+    width: 33px;
+    height: 34px;
+    background-color: $buttonSearchBackgroundColor;
+    border-radius: 4px;
+    z-index: 4;
+
+    i {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: $buttonSearchColor;
+    }
 }
 
 .camera_tab_container {
