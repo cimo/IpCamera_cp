@@ -18,7 +18,6 @@ $settingRow = $query->selectSettingDatabase();
                 </td>
                 <td>
                     <select id="form_camera_settings_template" class="form-control" name="form_camera_settings[template]" required="required">
-                        <option value="0">Select</option>
                         <?php
                         foreach($utilityPrivate->createTemplatesList() as $key => $value) {
                             $selected = $value == $settingRow['template'] ? "selected" : "";
@@ -43,7 +42,6 @@ $settingRow = $query->selectSettingDatabase();
                 </td>
                 <td>
                     <select id="form_camera_settings_motionVersion" class="form-control" name="form_camera_settings[motionVersion]" required="required">
-                        <option value="0">Select</option>
                         <?php
                         foreach($utilityPrivate->createMotionVersionList() as $key => $value) {
                             $selected = $value == $settingRow['motion_version'] ? "selected" : "";
