@@ -1,18 +1,15 @@
 <?php
 require_once("Utility.php");
-require_once("UtilityPrivate.php");
 
 class Download {
     // Vars
     private $utility;
-    private $utilityPrivate;
     
     // Properties
     
     // Functions public
     public function __construct() {
         $this->utility = new Utility();
-        $this->utilityPrivate = new UtilityPrivate();
     }
     
     public function output() {
@@ -22,7 +19,7 @@ class Download {
         
         $filePath = "$path/$name";
         
-        if ($this->utilityPrivate->checkToken($token) == true) {
+        if ($this->utility->checkToken($token) == true) {
             if (file_exists($filePath) == true) {
                 $mimeContentType = mime_content_type($filePath);
 

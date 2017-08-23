@@ -1,6 +1,5 @@
 <?php
 require_once("Utility.php");
-require_once("UtilityPrivate.php");
 
 class Root {
     // Vars
@@ -11,13 +10,12 @@ class Root {
     // Functions public
     public function __construct() {
         $this->utility = new Utility();
-        $this->utilityPrivate = new UtilityPrivate();
         
         $this->utility->generateToken();
         
-        $this->utility->configureCookie("ipcamera_cp", 0, false, true);
+        $this->utility->configureCookie(session_name(), 0, false, true);
         
-        $this->utilityPrivate->checkSessionOverTime(true);
+        $this->utility->checkSessionOverTime(true);
     }
     // Functions private
 }

@@ -1,12 +1,12 @@
 /* global utility, ajax */
 
-function Table() {
+function TableAndPagination() {
     // Vars
     var self = this;
     
     var urlRequest = "";
     var idResult = "";
-    var oneElement = "";
+    var selectOnlyOne = "";
     
     var current = 0;
     var total = 0;
@@ -22,16 +22,16 @@ function Table() {
     };
     
     // Functions public
-    self.init = function(url, id, single) {
+    self.init = function(url, id, singleSelection) {
         urlRequest = url;
         idResult = id;
-        oneElement = single;
+        selectOnlyOne = singleSelection;
         
         status();
         
         utility.linkPreventDefault();
         
-        if (oneElement === true)
+        if (selectOnlyOne === true)
             utility.selectOnlyOneElement(idResult + " .table_tbody");
         
         resizeColumn();
@@ -168,6 +168,8 @@ function Table() {
             $(idResult).find("table tbody").html(xhr.response.values.list);
 
             status();
+            
+            resizeColumn();
         }
     };
     
@@ -241,8 +243,10 @@ function Table() {
                 
                 utility.linkPreventDefault();
                 
-                if (oneElement === true)
+                if (selectOnlyOne === true)
                     utility.selectOnlyOneElement(idResult + " .table_tbody");
+                
+                resizeColumn();
                 
                 clickedEvent = false;
             },

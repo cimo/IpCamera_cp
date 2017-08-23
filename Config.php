@@ -49,7 +49,7 @@ class Config {
     
     // Functions public
     public function __construct() {
-        $this->databaseConnectionFields = Array("mysql:host=localhost;dbname=ipcamera_cp;charset=utf8", "user_1", null);
+        $this->databaseConnectionFields = Array("mysql:host=localhost;dbname=ipcamera_cp;charset=utf8", "user_1", "");
         $this->protocol = "http://";
         $this->pathRoot = "/ipcamera_cp";
         $this->urlRoot = "/ipcamera_cp";

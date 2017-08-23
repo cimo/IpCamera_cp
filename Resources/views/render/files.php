@@ -9,7 +9,7 @@ $files = $ipCamera->filesList();
 ?>
 <div id="camera_files_table" class="margin_bottom">
     <?php
-    require_once("{$utility->getPathRoot()}/Resources/views/include/table.php");
+    require_once("{$utility->getPathRoot()}/Resources/views/include/table_and_pagination.php");
     ?>
     <div class="overflow_y_hidden table_min_height">
         <table class="table table-bordered table-striped">

@@ -328,12 +328,12 @@ function IpCamera() {
     }
     
     function files() {
-        var table = new Table();
-        table.setButtonsStatus("show");
-        table.init(window.url.root + "/Requests/IpCameraRequest.php", "#camera_files_table", true);
-        table.search(true);
-        table.pagination(true);
-        table.sort(true);
+        var tableAndPagination = new TableAndPagination();
+        tableAndPagination.setButtonsStatus("show");
+        tableAndPagination.init(window.url.root + "/Requests/IpCameraRequest.php", "#camera_files_table", true);
+        tableAndPagination.search(true);
+        tableAndPagination.pagination(true);
+        tableAndPagination.sort(true);
         
         $(document).on("click", "#camera_files_table .refresh", function() {
             ajax.send(
@@ -343,7 +343,6 @@ function IpCamera() {
                 "post",
                 JSON.stringify({
                     'event': "refresh",
-                    'name': "",
                     'token': window.session.token
                 }),
                 "json",
@@ -358,7 +357,7 @@ function IpCamera() {
                     
                     ajax.reply(xhr, "");
                     
-                    table.populate(xhr);
+                    tableAndPagination.populate(xhr);
                 },
                 null,
                 null
@@ -379,7 +378,6 @@ function IpCamera() {
                         "post",
                         JSON.stringify({
                             'event': "deleteAll",
-                            'name': "",
                             'token': window.session.token
                         }),
                         "json",
@@ -394,7 +392,7 @@ function IpCamera() {
 
                             ajax.reply(xhr, "");
                             
-                            table.populate(xhr);
+                            tableAndPagination.populate(xhr);
                         },
                         null,
                         null
@@ -444,7 +442,7 @@ function IpCamera() {
 
                             ajax.reply(xhr, "");
                             
-                            table.populate(xhr);
+                            tableAndPagination.populate(xhr);
                         },
                         null,
                         null

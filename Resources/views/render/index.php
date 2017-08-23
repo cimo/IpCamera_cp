@@ -31,7 +31,7 @@ $settingRow = $query->selectSettingDatabase();
         <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/<?php echo $settingRow['template']; ?>.css" rel="stylesheet"/>
         <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/loader_1.0.0.css" rel="stylesheet"/>
         <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/flashBag_1.0.0.css" rel="stylesheet"/>
-        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/table_1.0.0.css" rel="stylesheet"/>
+        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/table_and_pagination_1.0.0.css" rel="stylesheet"/>
     </head>
     <body class="user_select_none">
         <div>
@@ -170,7 +170,7 @@ $settingRow = $query->selectSettingDatabase();
         <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Loader_1.0.0.js"></script>
         <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/FlashBag_1.0.0.js"></script>
         <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/PopupEasy_1.0.0.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Table_1.0.0.js"></script>
+        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/TableAndPagination_1.0.0.js"></script>
         <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Download_1.0.0.js"></script>
         
         <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/IpCamera.js"></script>

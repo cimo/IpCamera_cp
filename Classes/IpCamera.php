@@ -1,19 +1,17 @@
 <?php
 require_once("Utility.php");
-require_once("UtilityPrivate.php");
 require_once("Query.php");
 require_once("Ajax.php");
-require_once("Table.php");
+require_once("TableAndPagination.php");
 
 class IpCamera {
     // Vars
     private $response;
     
     private $utility;
-    private $utilityPrivate;
     private $query;
     private $ajax;
-    private $table;
+    private $tableAndPagination;
     
     private $videoUrl;
     private $controlUrl;
@@ -37,10 +35,9 @@ class IpCamera {
         $this->response = Array();
         
         $this->utility = new Utility();
-        $this->utilityPrivate = new UtilityPrivate();
         $this->query = new Query($this->utility->getDatabase());
         $this->ajax = new Ajax();
-        $this->table = new Table();
+        $this->tableAndPagination = new TableAndPagination();
         
         $this->settingRow = $this->query->selectSettingDatabase();
         
@@ -58,7 +55,7 @@ class IpCamera {
     }
     
     public function phpInput() {
-        $this->utilityPrivate->checkSessionOverTime();
+        $this->utility->checkSessionOverTime();
         
         $content = file_get_contents("php://input");
         $json = json_decode($content);
@@ -67,8 +64,8 @@ class IpCamera {
             if (isset($_GET['controller']) == true) {
                 $token = is_array($json) == true ? end($json)->value : $json->token;
 
-                if ($this->utilityPrivate->checkToken($token) == true) {
-                    $parameters = $this->utilityPrivate->jsonParametersParse($json);
+                if ($this->utility->checkToken($token) == true) {
+                    $parameters = $this->utility->requestParametersParse($json);
                     
                     if ($_GET['controller'] == "selectionAction")
                         $this->selectionAction($parameters);
@@ -131,12 +128,12 @@ class IpCamera {
                 unset($scanDirElements[$index]);
             }
             
-            $tableResult = $this->table->request($scanDirElements, 5, "file", true, false);
+            $tableAndPagination = $this->tableAndPagination->request($scanDirElements, 5, "file", true, false);
             
             $count = 0;
             $list = "";
             
-            foreach ($tableResult['list'] as $key => $value) {
+            foreach ($tableAndPagination['list'] as $key => $value) {
                 $count ++;
                 
                 $list .= "<tr>
@@ -158,8 +155,8 @@ class IpCamera {
                 </tr>";
             }
             
-            $this->response['values']['search'] = $tableResult['search'];
-            $this->response['values']['pagination'] = $tableResult['pagination'];
+            $this->response['values']['search'] = $tableAndPagination['search'];
+            $this->response['values']['pagination'] = $tableAndPagination['pagination'];
             $this->response['values']['list'] = $list;
             
             return Array(
@@ -333,15 +330,17 @@ class IpCamera {
     }
     
     private function filesAction($parameters) {
-        $path = "{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}/" . trim($parameters['name']);
-        
         if ($parameters['event'] == "delete") {
+            $path = "{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}/" . trim($parameters['name']);
+            
             if (file_exists($path) == true)
                 unlink($path);
             
             $this->response['messages']['success'] = "File deleted with success!";
         }
         else if ($parameters['event'] == "deleteAll") {
+            $path = "{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}/";
+            
             $this->utility->removeDirRecursive($path, false);
             
             $this->response['messages']['success'] = "All files deleted with success!";
