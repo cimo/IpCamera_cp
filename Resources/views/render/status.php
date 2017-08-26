@@ -1,8 +1,8 @@
 <div class="margin_top overflow_y_hidden">
     <form id="form_cameras_selection" class="margin_bottom" action="<?php echo $utility->getUrlRoot() ?>/Requests/IpCameraRequest.php?controller=selectionAction" method="post" novalidate="novalidate">
         <div class="form-group">
-            <label class="control-label required" for="form_cameras_selection_id">Cameras</label>
-            <select id="form_cameras_selection_id" class="form-control" name="form_cameras_selection[id]" required="required">
+            <label class="control-label required" for="form_cameras_selection_cameraNumber">Cameras</label>
+            <select id="form_cameras_selection_cameraNumber" class="form-control" name="form_cameras_selection[cameraNumber]" required="required">
                 <option value="-1">Select</option>
                 <option value="0">New</option>
                 <?php $ipCamera->generateSelectOptionFromMotionFolders(); ?>
@@ -21,8 +21,8 @@
 </div>
 <script>
     var textStatus = {
-        'ipCameraStatusActive': "Active.",
-        'ipCameraStatusNotActive': "Not active.",
-        'ipCameraCreateNew': "You would like create a new camera settings?"
+        'active': "Active.",
+        'notActive': "Not active.",
+        'createNew': "You would like create a new camera settings?"
     };
 </script>

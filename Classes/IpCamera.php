@@ -71,14 +71,14 @@ class IpCamera {
                         $this->selectionAction($parameters);
                     else if ($_GET['controller'] == "profileAction")
                         $this->profileAction($parameters);
+                    else if ($_GET['controller'] == "deleteAction")
+                        $this->deleteAction();
                     else if ($_GET['controller'] == "controlsAction")
                         $this->controlsAction($parameters);
                     else if ($_GET['controller'] == "filesAction")
                         $this->filesAction($parameters);
                     else if ($_GET['controller'] == "settingsAction")
                         $this->settingsAction($parameters);
-                    else if ($_GET['controller'] == "deleteAction")
-                        $this->deleteAction();
                 }
             }
         }
@@ -181,18 +181,22 @@ class IpCamera {
     
     // Functions private
     private function curlCommandsUrls($url) {
+        $response = "";
+        
         $curl = curl_init();
         
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HEADER, 0);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         
-        curl_exec($curl);
+        $response = curl_exec($curl);
         
         curl_close($curl);
+        
+        return $response;
     }
     
-    private function profileConfig($deviceId, $videoUrl, $username, $password, $threshold, $motionDetectionActive) {
+    private function profileConfig($deviceId, $videoUrl, $username, $password, $threshold, $motionDetectionStatus) {
         @mkdir("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}");
         @chmod("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}", 0777);
         
@@ -233,23 +237,19 @@ class IpCamera {
             $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/config/set?output_debug_pictures=off");
         }
         
-        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/detection/$motionDetectionActive");
+        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/detection/$motionDetectionStatus");
     }
     
     // Controllers
     private function selectionAction($parameters) {
-        if ($parameters['id'] == 0) {
+        if (isset($parameters['cameraNumber']) == false)
+            return;
+        
+        if ($parameters['cameraNumber'] == 0) {
             $cameraRows = $this->query->selectAllCamerasDatabase();
             
             $lastCamera = end($cameraRows);
             $_SESSION['camera_number'] = $lastCamera['camera_number'] + 1;
-            
-            $deviceId = "";
-            $videoUrl = "";
-            $username = "";
-            $password = "";
-            $threshold = "";
-            $motionDetectionActive = "pause";
             
             $query = $this->utility->getDatabase()->getPdo()->prepare("INSERT INTO cameras (
                                                                             camera_number,
@@ -258,7 +258,7 @@ class IpCamera {
                                                                             username,
                                                                             password,
                                                                             threshold,
-                                                                            motion_detection_active
+                                                                            motion_detection_status
                                                                         )
                                                                         VALUES (
                                                                             :cameraNumber,
@@ -267,16 +267,16 @@ class IpCamera {
                                                                             :username,
                                                                             :password,
                                                                             :threshold,
-                                                                            :motionDetectionActive
+                                                                            :motionDetectionStatus
                                                                         );");
             
             $query->bindValue(":cameraNumber", $_SESSION['camera_number']);
-            $query->bindValue(":deviceId", $deviceId);
-            $query->bindValue(":videoUrl", $videoUrl);
-            $query->bindValue(":username", $username);
-            $query->bindValue(":password", $password);
-            $query->bindValue(":threshold", $threshold);
-            $query->bindValue(":motionDetectionActive", $motionDetectionActive);
+            $query->bindValue(":deviceId", "");
+            $query->bindValue(":videoUrl", "");
+            $query->bindValue(":username", "");
+            $query->bindValue(":password", "");
+            $query->bindValue(":threshold", "");
+            $query->bindValue(":motionDetectionStatus", "pause");
             
             $query->execute();
             
@@ -286,15 +286,22 @@ class IpCamera {
             
             $this->response['messages']['success'] = "New camera created with success.";
         }
-        else if ($parameters['id'] > 0) {
-            $_SESSION['camera_number'] = $parameters['id'];
+        else if ($parameters['cameraNumber'] > 0) {
+            $_SESSION['camera_number'] = $parameters['cameraNumber'];
             
-            $this->response = "ok";
+            $motionDetectionStatus = "pause";
+            
+            $status = $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/detection/status");
+            
+            if (strpos($status, "Detection status PAUSE") === false)
+                $motionDetectionStatus = "start";
+            
+            $this->response['values']['motionDetectionStatus'] = $motionDetectionStatus;
         }
     }
     
     private function profileAction($parameters) {
-        $this->profileConfig($parameters['deviceId'], $parameters['videoUrl'], $parameters['username'], $parameters['password'], $parameters['threshold'], $parameters['motionDetectionActive']);
+        $this->profileConfig($parameters['deviceId'], $parameters['videoUrl'], $parameters['username'], $parameters['password'], $parameters['threshold'], $parameters['motionDetectionStatus']);
         
         $query = $this->utility->getDatabase()->getPdo()->prepare("UPDATE cameras
                                                                     SET device_id = :deviceId,
@@ -302,7 +309,7 @@ class IpCamera {
                                                                         username = :username,
                                                                         password = :password,
                                                                         threshold = :threshold,
-                                                                        motion_detection_active = :motionDetectionActive
+                                                                        motion_detection_status = :motionDetectionStatus
                                                                     WHERE camera_number = :cameraNumber");
         
         $query->bindValue(":deviceId", $parameters['deviceId']);
@@ -310,15 +317,35 @@ class IpCamera {
         $query->bindValue(":username", $parameters['username']);
         $query->bindValue(":password", $parameters['password']);
         $query->bindValue(":threshold", $parameters['threshold']);
-        $query->bindValue(":motionDetectionActive", $parameters['motionDetectionActive']);
+        $query->bindValue(":motionDetectionStatus", $parameters['motionDetectionStatus']);
         $query->bindValue(":cameraNumber", $_SESSION['camera_number']);
         
         $query->execute();
         
-        // Restart
         $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/action/restart");
         
         $this->response['messages']['success'] = "Profile updated with success.";
+    }
+    
+    private function deleteAction() {
+        $this->utility->removeDirRecursive("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}", true);
+        
+        unlink("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}.conf");
+        
+        $this->utility->searchInFile("/etc/motion/motion.conf", "thread {$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}.conf", " ");
+        
+        $query = $this->utility->getDatabase()->getPdo()->prepare("DELETE FROM cameras
+                                                                    WHERE camera_number = :cameraNumber");
+        
+        $query->bindValue(":cameraNumber", $_SESSION['camera_number']);
+        
+        $query->execute();
+        
+        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/action/quit");
+        
+        $_SESSION['camera_number'] = -1;
+        
+        $this->response['messages']['success'] = "Camera deleted with success!";
     }
     
     private function controlsAction($parameters) {
@@ -364,27 +391,5 @@ class IpCamera {
         $query->execute();
         
         $this->response['messages']['success'] = "Settings updated with success.";
-    }
-    
-    private function deleteAction() {
-        $this->utility->removeDirRecursive("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}", true);
-        
-        unlink("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}.conf");
-        
-        $this->utility->searchInFile("/etc/motion/motion.conf", "thread {$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}.conf", " ");
-        
-        $query = $this->utility->getDatabase()->getPdo()->prepare("DELETE FROM cameras
-                                                                    WHERE camera_number = :cameraNumber");
-        
-        $query->bindValue(":cameraNumber", $_SESSION['camera_number']);
-        
-        $query->execute();
-        
-        // Quit
-        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/action/quit");
-        
-        $_SESSION['camera_number'] = -1;
-        
-        $this->response['messages']['success'] = "Camera deleted with success!";
     }
 }

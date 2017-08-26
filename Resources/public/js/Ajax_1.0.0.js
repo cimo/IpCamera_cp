@@ -131,7 +131,10 @@ function Ajax() {
                                 else if ($($(object).parents(".form-group").find("*[name*='"+ key + "']")).prop("placeholder") !== undefined)
                                     label = $($(object).parents(".form-group").find("*[name*='"+ key + "']")).prop("placeholder");
                                 
-                                list += "<li>" + icon + " <b>" + label + "</b>: " + value[0] + "</li>";
+                                if (Array.isArray(value) === true)
+                                    list += "<li>" + icon + " <b>" + label + "</b>: " + value[0] + "</li>";
+                                else
+                                    list += "<li>" + icon + " <b>" + label + "</b>: " + value + "</li>";
                             }
                         }
                     });

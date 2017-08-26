@@ -50,7 +50,7 @@ $files = $ipCamera->filesList();
 </div>
 <script>
     var textFile = {
-        'ipCameraDeleteFile': "Really delete this file?",
-        'ipCameraDeleteAllFile': "Really delete all files?"
+        'deleteFile': "Really delete this file?",
+        'deleteAllFile': "Really delete all files?"
     };
 </script>

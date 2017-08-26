@@ -66,10 +66,10 @@ $cameraRow = $query->selectCameraDatabase($_SESSION['camera_number']);
                 </td>
                 <td>
                     <?php
-                    $checked = $cameraRow['motion_detection_active'] == "start" ? "checked" : "";
+                    $checked = $cameraRow['motion_detection_status'] == "start" ? "checked" : "";
                     ?>
-                    <input id="form_camera_profile_motionDetectionActive" class="form-control" type="checkbox" name="form_camera_profile[motionDetectionActive]" value="<?php echo $cameraRow['motion_detection_active']; ?>" required="required" <?php echo $checked; ?> data-on-color="success" data-off-color="danger"/>
-                    <input type="hidden" name="form_camera_profile[motionDetectionActive]" value="<?php echo $cameraRow['motion_detection_active']; ?>" required="required"/>
+                    <input id="form_camera_profile_motionDetectionStatus" class="form-control" type="checkbox" name="form_camera_profile[motionDetectionStatus]" value="<?php echo $cameraRow['motion_detection_status']; ?>" required="required" <?php echo $checked; ?> data-on-color="success" data-off-color="danger"/>
+                    <input type="hidden" name="form_camera_profile[motionDetectionStatus]" value="<?php echo $cameraRow['motion_detection_status']; ?>" required="required"/>
                 </td>
             </tr>
         </tbody>
@@ -88,6 +88,6 @@ $cameraRow = $query->selectCameraDatabase($_SESSION['camera_number']);
 </div>
 <script>
     var textProfile = {
-        'ipCameraDelete': "Really delete this camera?"
+        'delete': "Really delete this camera?"
     };
 </script>

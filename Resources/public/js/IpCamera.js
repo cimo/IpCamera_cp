@@ -6,7 +6,9 @@ function IpCamera() {
     // Vars
     var self = this;
     
-    var currentId = window.session.cameraNumber;
+    var cameraNumber = window.session.cameraNumber;
+    
+    var detectionStatus = "";
     
     var videoAreaEnabled = false;
     
@@ -22,23 +24,23 @@ function IpCamera() {
     };
     
     self.status = function() {
-        var lastValue = parseInt($("#form_cameras_selection_id").find("option").last().val());
+        var lastSelectOption = parseInt($("#form_cameras_selection_cameraNumber").find("option").last().val());
 
         $("#form_cameras_selection").on("submit", "", function(event) {
             event.preventDefault();
 
             var form = $(this);
 
-            if (parseInt($("#form_cameras_selection_id").val()) === 0) {
+            if (parseInt($("#form_cameras_selection_cameraNumber").val()) === 0) {
                 popupEasy.create(
                     window.text.warning,
-                    window.textStatus.ipCameraCreateNew,
+                    window.textStatus.createNew,
                     function() {
                         popupEasy.close();
 
                         createNew = true;
 
-                        statusSend(form, lastValue, true);
+                        statusSend(form, lastSelectOption, true);
                     },
                     function() {
                         popupEasy.close();
@@ -46,15 +48,15 @@ function IpCamera() {
                 );
             }
             else
-                statusSend(form, lastValue, false);
+                statusSend(form, lastSelectOption, false);
         });
 
-        if (lastValue > 0) {
-            $("#form_cameras_selection_id").val(currentId);
+        if (lastSelectOption > 0) {
+            $("#form_cameras_selection_cameraNumber").val(cameraNumber);
             $("#form_cameras_selection").submit();
         }
         else
-            $("#form_cameras_selection_id").val(-1);
+            $("#form_cameras_selection_cameraNumber").val(-1);
     };
     
     self.changeView = function() {
@@ -78,8 +80,8 @@ function IpCamera() {
     }
     
     // Functions private
-    function statusSend(form, lastValue, createNew) {
-        currentId = $("#form_cameras_selection_id").val();
+    function statusSend(form, lastSelectOption, createNew) {
+        cameraNumber = $("#form_cameras_selection_cameraNumber").val();
         
         ajax.send(
             true,
@@ -105,17 +107,21 @@ function IpCamera() {
                 if (createNew === true) {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                     
-                    currentId = lastValue + 1;
+                    cameraNumber = lastSelectOption + 1;
                     
                     $("<option>", {
-                        'value': currentId,
-                        'text': "Camera " + currentId
-                    }).appendTo($("#form_cameras_selection_id"));
+                        'value': cameraNumber,
+                        'text': "Camera " + cameraNumber
+                    }).appendTo($("#form_cameras_selection_cameraNumber"));
                     
-                    $("#form_cameras_selection_id").val(currentId);
+                    $("#form_cameras_selection_camera_cameraNumber").val(cameraNumber);
                 }
-                else
+                else {
                     ajax.reply(xhr, "");
+                    
+                    if (xhr.response.values.motionDetectionStatus !== undefined)
+                        labelStatus(xhr.response.values.motionDetectionStatus);
+                }
 
                 $("#camera_video_result").load(window.url.root + "/Resources/views/render/video.php", function() {
                     video();
@@ -238,19 +244,12 @@ function IpCamera() {
     }
     
     function profile() {
-        labelStatus();
+        $("#form_camera_profile_motionDetectionStatus").bootstrapSwitch();
         
-        $("#form_camera_profile_motionDetectionActive").bootstrapSwitch();
+        switchStatus(detectionStatus);
         
-        $("#form_camera_profile_motionDetectionActive").on("switchChange.bootstrapSwitch", "", function(event, state) {
-            if (state === true) {
-                $("#form_camera_profile_motionDetectionActive").attr("value", "start");
-                $("#form_camera_profile_motionDetectionActive").parents(".bootstrap-switch-wrapper").next().attr("value", "start");
-            }
-            else {
-                $("#form_camera_profile_motionDetectionActive").attr("value", "pause");
-                $("#form_camera_profile_motionDetectionActive").parents(".bootstrap-switch-wrapper").next().attr("value", "pause");
-            }
+        $("#form_camera_profile_motionDetectionStatus").on("switchChange.bootstrapSwitch", "", function(event, state) {
+            switchStatus(state);
         });
         
         $("#form_camera_profile").on("submit", "", function(event) {
@@ -284,7 +283,7 @@ function IpCamera() {
         $("#camera_deletion").on("click", "", function() {
             popupEasy.create(
                 window.text.warning,
-                window.textProfile.ipCameraDelete,
+                window.textProfile.delete,
                 function() {
                     popupEasy.close();
 
@@ -308,8 +307,8 @@ function IpCamera() {
 
                             ajax.reply(xhr, "");
                             
-                            $("#form_cameras_selection_id").find("option[value=" + currentId + "]").remove();
-                            $("#form_cameras_selection_id").val(-1);
+                            $("#form_cameras_selection_cameraNumber").find("option[value=" + cameraNumber + "]").remove();
+                            $("#form_cameras_selection_cameraNumber").val(-1);
                             
                             $("#camera_video_result").html("");
                             $("#camera_controls_result").html("");
@@ -367,7 +366,7 @@ function IpCamera() {
         $(document).on("click", "#camera_files_table .delete_all", function() {
             popupEasy.create(
                 window.text.warning,
-                window.textFile.ipCameraDeleteAllFile,
+                window.textFile.deleteAllFile,
                 function() {
                     popupEasy.close();
                     
@@ -405,7 +404,7 @@ function IpCamera() {
         });
         
         $(document).on("click", "#camera_files_table .camera_files_download", function() {
-            var path = window.path.documentRoot + "/motion/camera_" + currentId;
+            var path = window.path.documentRoot + "/motion/camera_" + cameraNumber;
             var name = $(this).parents("tr").find(".name_column").text();
             
             download.send(path, name);
@@ -416,7 +415,7 @@ function IpCamera() {
             
             popupEasy.create(
                 window.text.warning,
-                window.textFile.ipCameraDeleteFile,
+                window.textFile.deleteFile,
                 function() {
                     popupEasy.close();
                     
@@ -483,13 +482,27 @@ function IpCamera() {
         });
     }
     
-    function labelStatus() {
-        var detectionActiveValue = $("#form_camera_profile_motionDetectionActive").val();
-        
-        if (detectionActiveValue === "start")
-            $("#camera_detection_status").text(window.textStatus.ipCameraStatusActive);
+    function labelStatus(value) {
+        if (value === undefined)
+            detectionStatus = $("#form_camera_profile_motionDetectionStatus").val();
         else
-            $("#camera_detection_status").text(window.textStatus.ipCameraStatusNotActive);
+            detectionStatus = value;
+        
+        if (detectionStatus === "start")
+            $("#camera_detection_status").text(window.textStatus.active);
+        else
+            $("#camera_detection_status").text(window.textStatus.notActive);
+    }
+    
+    function switchStatus(value) {
+        if (value === true || value === "start") {
+            $("#form_camera_profile_motionDetectionStatus").attr("value", "start");
+            $("#form_camera_profile_motionDetectionStatus").parents(".bootstrap-switch-wrapper").next().attr("value", "start");
+        }
+        else {
+            $("#form_camera_profile_motionDetectionStatus").attr("value", "pause");
+            $("#form_camera_profile_motionDetectionStatus").parents(".bootstrap-switch-wrapper").next().attr("value", "pause");
+        }
     }
     
     function move(tag, elements) {

@@ -34,7 +34,7 @@ CREATE TABLE `cameras` (
   `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `threshold` int(4) NOT NULL DEFAULT '10000',
-  `motion_detection_active` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pause'
+  `motion_detection_status` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pause'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
