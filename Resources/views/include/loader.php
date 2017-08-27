@@ -9,5 +9,5 @@ $settingRow = $query->selectSettingDatabase();
 ?>
 <div id="loader">
     <p class="text">Loading...</p>
-    <img class="image" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settingRow['template']; ?>/loading.gif" alt="loading.gif"/>
+    <img class="image" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settingRow['template']; ?>/loader_loading.gif" alt="loading.gif"/>
 </div>

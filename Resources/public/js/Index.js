@@ -1,13 +1,13 @@
 /* global utility, loader, flashBag, ipCamera */
 
 $(document).ready(function() {
-    utility.linkPreventDefault();
-    
-    utility.watch("#flashBag", flashBag.sessionActivity);
-    
     utility.checkMobile(true);
     
     utility.checkWidth(window.settings.widthMobile);
+    
+    utility.linkPreventDefault();
+    
+    utility.watch("#flashBag", flashBag.sessionActivity);
     
     loader.create("font");
     

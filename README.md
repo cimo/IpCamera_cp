@@ -1,7 +1,7 @@
 IpCamera cp
 ==============
 
-This is a open source IpCamera control panel with FFMPEG and motion framework
+This is a open source IpCamera control panel with FFMPEG and motion framework.
 
 | Features |
 |:---|
