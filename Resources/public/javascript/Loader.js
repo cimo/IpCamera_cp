@@ -1,3 +1,5 @@
+// Version 1.0.0
+
 var loader = new Loader();
 
 function Loader() {

@@ -110,17 +110,4 @@ legend { width: inherit; padding: 0 10px; border-bottom: none; }
 
 .ui-resizable-e { width: 15px; }
 
-@media (min-width: 1051px) { .search_input { width: 30%; } }
-.search_input { margin-bottom: 20px; }
-.search_input input { padding-left: 35px; }
-
-.table_thead tr th { max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle !important; }
-
-.table_tbody tr td { max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle !important; }
-
-.table_borderless th, .table_borderless td { border: none !important; }
-
-.table_spinner { position: relative; left: 50%; }
-.table_spinner i { position: absolute; left: -35px; }
-
-/*# sourceMappingURL=table_and_pagination_1.0.0.css.map */
+/*# sourceMappingURL=utility.css.map */

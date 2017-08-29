@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__DIR__) . "/Config.php");
+require_once(dirname(dirname(__DIR__)) . "/Config.php");
 
 class Database {
     // Vars

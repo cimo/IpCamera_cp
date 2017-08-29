@@ -1,53 +1,47 @@
 <?php
-require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Utility.php");
-require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Query.php");
-require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Root.php");
-require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/IpCamera.php");
+require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/System/Root.php");
 
-$utility = new Utility();
-$query = new Query($utility->getDatabase());
 $root = new Root();
-$ipCamera = new IpCamera();
 
-$settingRow = $query->selectSettingDatabase();
+$settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
 ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title><?php echo $utility->getWebsiteName(); ?></title>
+        <title><?php echo $root->getUtility()->getWebsiteName(); ?></title>
         <!-- Meta -->
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <!--<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
         <!-- Favicon -->
-        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settingRow['template']; ?>/favicon.ico" rel="icon" type="image/x-icon">
+        <link href="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settingRow['template']; ?>/favicon.ico" rel="icon" type="image/x-icon">
         <!-- Css -->
-        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/jquery-ui_1.12.1.min.css" rel="stylesheet"/>
-        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/jquery-ui_1.12.1_structure.min.css" rel="stylesheet"/>
-        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/bootstrap_3.3.7.min.css" rel="stylesheet"/>
-        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/bootstrap-switch_3.3.2.min.css" rel="stylesheet"/>
-        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/lib/font-awesome_4.7.0_custom.min.css" rel="stylesheet">
-        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/<?php echo $settingRow['template']; ?>.css" rel="stylesheet"/>
-        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/loader_1.0.0.css" rel="stylesheet"/>
-        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/flashBag_1.0.0.css" rel="stylesheet"/>
-        <link href="<?php echo $utility->getUrlRoot(); ?>/Resources/public/css/table_and_pagination_1.0.0.css" rel="stylesheet"/>
+        <link href="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/css/library/jquery-ui_1.12.1.min.css" rel="stylesheet"/>
+        <link href="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/css/library/jquery-ui_1.12.1_structure.min.css" rel="stylesheet"/>
+        <link href="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/css/library/bootstrap_3.3.7.min.css" rel="stylesheet"/>
+        <link href="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/css/library/bootstrap-switch_3.3.2.min.css" rel="stylesheet"/>
+        <link href="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/css/library/font-awesome_4.7.0_custom.min.css" rel="stylesheet">
+        <link href="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/css/system/<?php echo $settingRow['template']; ?>.css" rel="stylesheet"/>
+        <link href="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/css/loader.css" rel="stylesheet"/>
+        <link href="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/css/flashBag.css" rel="stylesheet"/>
+        <link href="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/css/table_and_pagination.css" rel="stylesheet"/>
     </head>
     <body class="user_select_none">
         <div>
             <div class="logo_big display_desktop">
-                <img class="logo_svg" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settingRow['template']; ?>/logo.svg"/>
-                <p class="logo_text"><?php echo $utility->getWebsiteName(); ?></p>
+                <img class="logo_svg" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settingRow['template']; ?>/logo.svg"/>
+                <p class="logo_text"><?php echo $root->getUtility()->getWebsiteName(); ?></p>
             </div>
             <div class="logo_small display_mobile">
-                <img class="logo_svg" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settingRow['template']; ?>/logo.svg"/>
-                <p class="logo_text"><?php echo $utility->getWebsiteName(); ?></p>
+                <img class="logo_svg" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/images/templates/<?php echo $settingRow['template']; ?>/logo.svg"/>
+                <p class="logo_text"><?php echo $root->getUtility()->getWebsiteName(); ?></p>
             </div>
         </div>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <?php require_once("{$utility->getPathRoot()}/Resources/views/include/flashBag.php"); ?>
+                    <?php require_once("{$root->getUtility()->getPathRoot()}/Resources/views/include/flashBag.php"); ?>
                 </div>
             </div>
             <div class="row">
@@ -97,7 +91,7 @@ $settingRow = $query->selectSettingDatabase();
                             </ul>
                             <div class="tab-content clearfix camera_tab_container">
                                 <div id="actions_tab_content_1" class="tab-pane active">
-                                    <?php require_once("{$utility->getPathRoot()}/Resources/views/render/status.php"); ?>
+                                    <?php require_once("{$root->getUtility()->getPathRoot()}/Resources/views/render/status.php"); ?>
                                 </div>
                                 <div id="actions_tab_content_2" class="tab-pane">
                                     <div class="margin_top overflow_y_hidden">
@@ -121,8 +115,8 @@ $settingRow = $query->selectSettingDatabase();
             </div>
         </div>
         <?php
-        require_once("{$utility->getPathRoot()}/Resources/views/include/loader.php");
-        require_once("{$utility->getPathRoot()}/Resources/views/include/popup_easy.php");
+        require_once("{$root->getUtility()->getPathRoot()}/Resources/views/include/loader.php");
+        require_once("{$root->getUtility()->getPathRoot()}/Resources/views/include/popup_easy.php");
         ?>
         <!-- Javascript -->
         <script type="text/javascript">
@@ -134,12 +128,12 @@ $settingRow = $query->selectSettingDatabase();
             
             var path = {
                 'documentRoot': "<?php echo $_SERVER['DOCUMENT_ROOT']; ?>",
-                'root': "<?php echo $utility->getPathRoot(); ?>"
+                'root': "<?php echo $root->getUtility()->getPathRoot(); ?>"
             };
             
             var url = {
-                'root': "<?php echo $utility->getUrlRoot(); ?>",
-                'cameraControl': "<?php echo $ipCamera->getControlUrl(); ?>"
+                'root': "<?php echo $root->getUtility()->getUrlRoot(); ?>",
+                'cameraControl': "<?php echo $root->getIpCamera()->getControlUrl(); ?>"
             };
             
             var text = {
@@ -157,24 +151,24 @@ $settingRow = $query->selectSettingDatabase();
                 'serverUrl': "<?php echo $settingRow['server_url']; ?>"
             };
         </script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/lib/jquery_3.1.1.min.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/lib/jquery-ui_1.12.1.min.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/lib/jquery-mobile_1.5.0.min.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/lib/bootstrap_3.3.7.min.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/lib/bootstrap-switch_3.3.2.min.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/library/jquery_3.1.1.min.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/library/jquery-ui_1.12.1.min.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/library/jquery-mobile_1.5.0.min.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/library/bootstrap_3.3.7.min.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/library/bootstrap-switch_3.3.2.min.js"></script>
         <!--[if lte IE 9]>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/lib/media-match_2.0.2.min.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/library/media-match_2.0.2.min.js"></script>
         <![endif]-->
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Utility_1.0.0.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Ajax_1.0.0.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Loader_1.0.0.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/FlashBag_1.0.0.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/PopupEasy_1.0.0.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/TableAndPagination_1.0.0.js"></script>
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Download_1.0.0.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/system/Utility.js"></script>
         
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/IpCamera.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/Ajax.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/Loader.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/FlashBag.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/PopupEasy.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/TableAndPagination.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/Download.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/IpCamera.js"></script>
         
-        <script type="text/javascript" src="<?php echo $utility->getUrlRoot(); ?>/Resources/public/js/Index.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/system/Index.js"></script>
     </body>
 </html>

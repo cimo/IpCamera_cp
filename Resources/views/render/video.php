@@ -1,7 +1,7 @@
 <?php
-require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/IpCamera.php");
+require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/System/Root.php");
 
-$ipCamera = new IpCamera();
+$root = new Root();
 ?>
-<img id="camera_video" class="img-responsive margin_auto image_preload" src="<?php echo $ipCamera->getVideoUrl(); ?>" alt="Video"/>
+<img id="camera_video" class="img-responsive margin_auto image_preload" src="<?php echo $root->getIpCamera()->getVideoUrl(); ?>" alt="Video"/>
 <div id="camera_video_area"></div>

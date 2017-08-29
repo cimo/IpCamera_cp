@@ -1,14 +1,12 @@
 <?php
-require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Utility.php");
-require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Query.php");
+require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/System/Root.php");
 
-$utility = new Utility();
-$query = new Query($utility->getDatabase());
+$root = new Root();
 
-$deviceRows = $query->selectAllDevicesDatabase();
-$cameraRow = $query->selectCameraDatabase($_SESSION['camera_number']);
+$deviceRows = $root->getUtility()->getQuery()->selectAllDevicesDatabase();
+$cameraRow = $root->getUtility()->getQuery()->selectCameraDatabase($_SESSION['camera_number']);
 ?>
-<form id="form_camera_profile" class="margin_bottom" action="<?php echo $utility->getUrlRoot() ?>/Requests/IpCameraRequest.php?controller=profileAction" method="post" novalidate="novalidate">
+<form id="form_camera_profile" class="margin_bottom" action="<?php echo $root->getUtility()->getUrlRoot() ?>/Requests/IpCameraRequest.php?controller=profileAction" method="post" novalidate="novalidate">
     <table class="table table-bordered table-striped">
         <tbody class="table_tbody">
             <tr>
@@ -65,9 +63,7 @@ $cameraRow = $query->selectCameraDatabase($_SESSION['camera_number']);
                     Motion detection
                 </td>
                 <td>
-                    <?php
-                    $checked = $cameraRow['motion_detection_status'] == "start" ? "checked" : "";
-                    ?>
+                    <?php $checked = $cameraRow['motion_detection_status'] == "start" ? "checked" : ""; ?>
                     <input id="form_camera_profile_motionDetectionStatus" class="form-control" type="checkbox" name="form_camera_profile[motionDetectionStatus]" value="<?php echo $cameraRow['motion_detection_status']; ?>" required="required" <?php echo $checked; ?> data-on-color="success" data-off-color="danger"/>
                     <input type="hidden" name="form_camera_profile[motionDetectionStatus]" value="<?php echo $cameraRow['motion_detection_status']; ?>" required="required"/>
                 </td>

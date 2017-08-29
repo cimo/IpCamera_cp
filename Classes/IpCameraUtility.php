@@ -1,7 +1,9 @@
 <?php
-require_once("Utility.php");
+// Version 1.0.0
 
-class UtilityPrivate {
+require_once("System/Utility.php");
+
+class IpCameraUtility {
     // Vars
     private $utility;
     

@@ -1,3 +1,5 @@
+// Version 1.0.0
+
 /* global loader */
 
 var download = new Download();

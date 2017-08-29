@@ -1,15 +1,11 @@
 <?php
-require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Utility.php");
-require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/UtilityPrivate.php");
-require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Query.php");
+require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/System/Root.php");
 
-$utility = new Utility();
-$utilityPrivate = new UtilityPrivate();
-$query = new Query($utility->getDatabase());
+$root = new Root();
 
-$settingRow = $query->selectSettingDatabase();
+$settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
 ?>
-<form id="form_camera_settings" class="margin_bottom" action="<?php echo $utility->getUrlRoot() ?>/Requests/IpCameraRequest.php?controller=settingsAction" method="post" novalidate="novalidate">
+<form id="form_camera_settings" class="margin_bottom" action="<?php echo $root->getUtility()->getUrlRoot() ?>/Requests/IpCameraRequest.php?controller=settingsAction" method="post" novalidate="novalidate">
     <table class="table table-bordered table-striped">
         <tbody class="table_tbody">
             <tr>
@@ -19,7 +15,7 @@ $settingRow = $query->selectSettingDatabase();
                 <td>
                     <select id="form_camera_settings_template" class="form-control" name="form_camera_settings[template]" required="required">
                         <?php
-                        foreach($utilityPrivate->createTemplatesList() as $key => $value) {
+                        foreach($root->getIpCameraUtility()->createTemplatesList() as $key => $value) {
                             $selected = $value == $settingRow['template'] ? "selected" : "";
                             
                             echo "<option $selected value=\"{$key}\">{$value}</option>";
@@ -43,7 +39,7 @@ $settingRow = $query->selectSettingDatabase();
                 <td>
                     <select id="form_camera_settings_motionVersion" class="form-control" name="form_camera_settings[motionVersion]" required="required">
                         <?php
-                        foreach($utilityPrivate->createMotionVersionList() as $key => $value) {
+                        foreach($root->getIpCameraUtility()->createMotionVersionList() as $key => $value) {
                             $selected = $value == $settingRow['motion_version'] ? "selected" : "";
                             
                             echo "<option $selected value=\"{$value}\">{$value}</option>";

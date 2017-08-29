@@ -1,4 +1,6 @@
-@import "utility_1.0.0.scss";
+// Version 1.0.0
+
+@import "system/utility.scss";
 
 @media(min-width: $widthDesktop) {
     .search_input {

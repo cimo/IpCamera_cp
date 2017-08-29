@@ -1,4 +1,4 @@
-@import "utility_1.0.0.scss";
+@import "utility.scss";
 
 $logoTextColor: #4089c9;
 
@@ -103,7 +103,7 @@ p {
 .image_preload {
     min-height: 40px;
     min-width: 40px;
-    background: url(../images/templates/basic/image_preload.gif) no-repeat 50% 50%;
+    background: url(../../images/templates/basic/image_preload.gif) no-repeat 50% 50%;
 }
 
 .button_custom {

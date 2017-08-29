@@ -1,6 +1,8 @@
 <?php
-require_once("Utility.php");
-require_once("Query.php");
+// Version 1.0.0
+
+require_once("System/Utility.php");
+require_once("System/Query.php");
 require_once("Ajax.php");
 require_once("TableAndPagination.php");
 
@@ -83,7 +85,7 @@ class IpCamera {
             }
         }
         else if (isset($_POST['searchWritten']) == true && isset($_POST['paginationCurrent']) == true)
-            $this->filesList();
+            $this->createHtmlFiles();
         else
             $this->response['messages']['error'] = "Json error!";
         
@@ -114,7 +116,7 @@ class IpCamera {
         }
     }
     
-    public function filesList() {
+    public function createHtmlFiles() {
         $motionFolderPath = "{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}";
         
         $scanDirElements = @scandir($motionFolderPath);
@@ -373,7 +375,7 @@ class IpCamera {
             $this->response['messages']['success'] = "All files deleted with success!";
         }
         
-        $this->filesList();
+        $this->createHtmlFiles();
     }
     
     private function settingsAction($parameters) {

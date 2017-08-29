@@ -1,16 +1,12 @@
 <?php
-require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/Utility.php");
-require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/IpCamera.php");
+require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/System/Root.php");
 
-$utility = new Utility();
-$ipCamera = new IpCamera();
+$root = new Root();
 
-$files = $ipCamera->filesList();
+$htmlFiles = $root->getIpCamera()->createHtmlFiles();
 ?>
 <div id="camera_files_table" class="margin_bottom">
-    <?php
-    require_once("{$utility->getPathRoot()}/Resources/views/include/table_and_pagination.php");
-    ?>
+    <?php require_once("{$root->getUtility()->getPathRoot()}/Resources/views/include/table_and_pagination.php"); ?>
     <div class="overflow_y_hidden table_min_height">
         <table class="table table-bordered table-striped">
             <thead class="table_thead">
@@ -43,7 +39,7 @@ $files = $ipCamera->filesList();
                 </tr>
             </thead>
             <tbody class="table_tbody">
-                <?php echo isset($files['list']) == true ? $files['list'] : ""; ?>
+                <?php echo isset($htmlFiles['list']) == true ? $htmlFiles['list'] : ""; ?>
             </tbody>
         </table>
     </div>

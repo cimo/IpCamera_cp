@@ -122,7 +122,7 @@ p { margin: 0; }
 .logo_small .logo_svg { width: 30px; }
 .logo_small .logo_text { font-family: "archivo_black", sans-serif; display: inline-block; position: relative; font-size: 10px; color: #4089c9; text-transform: uppercase; font-weight: bold; }
 
-.image_preload { min-height: 40px; min-width: 40px; background: url(../images/templates/basic/image_preload.gif) no-repeat 50% 50%; }
+.image_preload { min-height: 40px; min-width: 40px; background: url(../../images/templates/basic/image_preload.gif) no-repeat 50% 50%; }
 
 .button_custom, .button_custom_success, .button_custom_danger { display: inline-block; padding: 5px 12px; margin-top: 0; margin-bottom: 0; margin-left: 2px; margin-right: 2px; text-align: center; white-space: nowrap; vertical-align: middle; cursor: pointer; text-decoration: none; outline: 0; background-color: #337ab7; color: #ffffff; border: 1px solid #2e6da4; border-radius: 4px; }
 .button_custom:hover, .button_custom_success:hover, .button_custom_danger:hover { text-decoration: none; background-color: #286090; color: #ffffff; border-color: #204d74; }

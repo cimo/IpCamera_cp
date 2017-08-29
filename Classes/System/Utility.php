@@ -1,7 +1,5 @@
 <?php
-// Version 1.0.0
-
-require_once(dirname(__DIR__) . "/Config.php");
+require_once(dirname(dirname(__DIR__)) . "/Config.php");
 require_once("Database.php");
 require_once("Query.php");
 
@@ -29,6 +27,10 @@ class Utility {
     
     public function getDatabase() {
         return $this->database;
+    }
+    
+    public function getQuery() {
+        return $this->query;
     }
     
     public function getPathRoot() {
@@ -234,7 +236,14 @@ class Utility {
             else {
                 preg_match('#\[(.*?)\]#', $value->name, $match);
                 
-                $parameters[$match[1]] = $value->value;
+                $keyTmp = "";
+                
+                if (count($match) === 0)
+                    $keyTmp = $value->name;
+                else
+                    $keyTmp = $match[1];
+                    
+                $parameters[$keyTmp] = $value->value;
             }
         }
         

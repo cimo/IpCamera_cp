@@ -1,5 +1,3 @@
-/* global url, settings */
-
 var utility = new Utility();
 
 function Utility() {

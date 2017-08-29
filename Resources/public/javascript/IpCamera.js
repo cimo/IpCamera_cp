@@ -1,3 +1,5 @@
+// Version 1.0.0
+
 /* global utility, ajax, popupEasy, download */
 
 var ipCamera = new IpCamera();

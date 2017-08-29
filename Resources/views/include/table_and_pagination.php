@@ -6,7 +6,7 @@
     <div class="button_search">
         <i class="fa fa-search"></i>
     </div>
-    <input class="form-control" type="text" placeholder="Search" value="<?php echo isset($files['search']) == true ? $files['search']['value'] : ""; ?>"/>
+    <input class="form-control" type="text" placeholder="Search" value="<?php echo isset($htmlFiles['search']) == true ? $htmlFiles['search']['value'] : ""; ?>"/>
 </div>
 <div class="clearfix"></div>
 <ul class="pagination-controle pagination margin_clear">
@@ -14,7 +14,7 @@
         <a href="#">Previous</a>
     </li>
     <li>
-        <span class="text"><?php echo isset($files['search']) == true ? $files['pagination']['text'] : ""; ?></span>
+        <span class="text"><?php echo isset($htmlFiles['search']) == true ? $htmlFiles['pagination']['text'] : ""; ?></span>
     </li>
     <li class="next">
         <a href="#">Next</a>

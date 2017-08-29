@@ -1,3 +1,5 @@
+// Version 1.0.0
+
 /* global flashBag */
 
 var popupEasy = new PopupEasy();
