@@ -192,6 +192,16 @@ p {
     }
 }
 
+.accordion_container {
+    .title {
+        cursor: pointer;
+    }
+    
+    .content {
+        display: none;
+    }
+}
+
 .button_search {
     cursor: pointer;
     position: absolute;
