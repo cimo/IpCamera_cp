@@ -36,7 +36,7 @@ function IpCamera() {
             if (parseInt($("#form_cameras_selection_cameraNumber").val()) === 0) {
                 popupEasy.create(
                     window.text.warning,
-                    window.textStatus.createNew,
+                    "You would like create a new camera settings?",
                     function() {
                         popupEasy.close();
 
@@ -285,7 +285,7 @@ function IpCamera() {
         $("#camera_deletion").on("click", "", function() {
             popupEasy.create(
                 window.text.warning,
-                window.textProfile.delete,
+                "Really delete this camera?",
                 function() {
                     popupEasy.close();
 
@@ -368,7 +368,7 @@ function IpCamera() {
         $(document).on("click", "#camera_files_table .delete_all", function() {
             popupEasy.create(
                 window.text.warning,
-                window.textFile.deleteAllFile,
+                "Really delete all files?",
                 function() {
                     popupEasy.close();
                     
@@ -417,7 +417,7 @@ function IpCamera() {
             
             popupEasy.create(
                 window.text.warning,
-                window.textFile.deleteFile,
+                "Really delete this file?",
                 function() {
                     popupEasy.close();
                     
@@ -491,9 +491,9 @@ function IpCamera() {
             detectionStatus = value;
         
         if (detectionStatus === "start")
-            $("#camera_detection_status").text(window.textStatus.active);
+            $("#camera_detection_status").text("Active.");
         else
-            $("#camera_detection_status").text(window.textStatus.notActive);
+            $("#camera_detection_status").text("Not active.");
     }
     
     function switchStatus(value) {

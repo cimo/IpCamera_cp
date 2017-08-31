@@ -44,9 +44,3 @@ $htmlFiles = $root->getIpCamera()->createHtmlFiles();
         </table>
     </div>
 </div>
-<script>
-    var textFile = {
-        'deleteFile': "Really delete this file?",
-        'deleteAllFile': "Really delete all files?"
-    };
-</script>

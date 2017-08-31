@@ -82,8 +82,3 @@ $cameraRow = $root->getUtility()->getQuery()->selectCameraDatabase($_SESSION['ca
 
     <button id="camera_deletion" class="button_custom_danger" type="button">Delete</button>
 </div>
-<script>
-    var textProfile = {
-        'delete': "Really delete this camera?"
-    };
-</script>

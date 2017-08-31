@@ -2,7 +2,6 @@
 // Version 1.0.0
 
 require_once("System/Utility.php");
-require_once("System/Query.php");
 require_once("Ajax.php");
 require_once("TableAndPagination.php");
 
@@ -37,7 +36,7 @@ class IpCamera {
         $this->response = Array();
         
         $this->utility = new Utility();
-        $this->query = new Query($this->utility->getDatabase());
+        $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax();
         $this->tableAndPagination = new TableAndPagination();
         

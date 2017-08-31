@@ -19,10 +19,3 @@
         </li>
     </ul>
 </div>
-<script>
-    var textStatus = {
-        'active': "Active.",
-        'notActive': "Not active.",
-        'createNew': "You would like create a new camera settings?"
-    };
-</script>
