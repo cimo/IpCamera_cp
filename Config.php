@@ -55,7 +55,7 @@ class Config {
         $this->urlRoot = "/ipcamera_cp";
         $this->supportSymlink = true;
         $this->file = "";
-        $this->name = "IpCamera cp 1.0";
+        $this->name = "IpCamera cp 1.0.0";
     }
 
     // Functions private
