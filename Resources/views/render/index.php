@@ -144,7 +144,6 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
             };
             
             var settings = {
-                'widthMiddle': 1300,
                 'widthMobile': 1050,
                 'widthDesktop': 1051,
                 'template': "<?php echo $settingRow['template']; ?>",

@@ -41,8 +41,9 @@ $buttonCustomDangerFocusColor: #ffffff;
 $buttonSearchBackgroundColor: #000000;
 $buttonSearchColor: #ffffff;
 
-@media(max-width: $widthMiddle) {
-}
+@include fontFace("pt_sans", "../../fonts/pt_sans");
+@include fontFace("archivo_black", "../../fonts/archivo_black");
+
 @media(max-width: $widthMobile) {
 }
 @media(min-width: $widthDesktop) {
@@ -103,7 +104,7 @@ p {
 .image_preload {
     min-height: 40px;
     min-width: 40px;
-    background: url(../../images/templates/basic/image_preload.gif) no-repeat 50% 50%;
+    background: url("../../images/templates/basic/image_preload.gif") no-repeat 50% 50%;
 }
 
 .button_custom {

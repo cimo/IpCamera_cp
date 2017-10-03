@@ -1,4 +1,3 @@
-$widthMiddle: "1640px";
 $widthMobile: "1050px";
 $widthDesktop: "1051px";
 
@@ -22,9 +21,6 @@ $panelShadowColor: #474747;
     filter: alpha(opacity=$msOpacity);
     opacity: $value;
 }
-
-@include fontFace("pt_sans", "../fonts/pt_sans");
-@include fontFace("archivo_black", "../fonts/archivo_black");
 
 @media(max-width: $widthMobile) {
     .display_desktop {

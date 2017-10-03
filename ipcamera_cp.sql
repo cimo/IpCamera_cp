@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Creato il: Ago 17, 2017 alle 17:02
+-- Creato il: Ott 03, 2017 alle 11:34
 -- Versione del server: 5.7.19-0ubuntu0.16.04.1
 -- Versione PHP: 7.0.22-0ubuntu0.16.04.1
 
@@ -36,6 +36,14 @@ CREATE TABLE `cameras` (
   `threshold` int(4) NOT NULL DEFAULT '10000',
   `motion_detection_status` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pause'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dump dei dati per la tabella `cameras`
+--
+
+INSERT INTO `cameras` (`id`, `camera_number`, `device_id`, `video_url`, `username`, `password`, `threshold`, `motion_detection_status`) VALUES
+(1, 1, 1, 'http://home-cs.ddns.net:1000', 'admin', 'Hd20Jgl7', 10000, 'start'),
+(2, 2, 2, 'http://home-rm.ddns.net:1000', 'admin', 'Kd73Sge1', 10000, 'pause');
 
 -- --------------------------------------------------------
 
