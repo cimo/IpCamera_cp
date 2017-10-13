@@ -110,8 +110,8 @@ legend {
 .shadow {
     -webkit-box-shadow: $panelShadow;
     -moz-box-shadow: $panelShadow;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=" + $panelShadowStrength + ", Direction=0, Color='" + $panelShadowColor + "')" !important;
-    filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=" + $panelShadowStrength + ", Direction=0, Color='" + $panelShadowColor + "')" !important;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=" + $panelShadowStrength + ", Direction=0, Color='" + $panelShadowColor + "')";
+    filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=" + $panelShadowStrength + ", Direction=0, Color='" + $panelShadowColor + "')";
     box-shadow: $panelShadow;
 }
 

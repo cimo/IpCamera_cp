@@ -25,7 +25,7 @@ legend { width: inherit; padding: 0 10px; border-bottom: none; }
 
 .word_break { -ms-word-break: break-all; word-break: break-all; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; }
 
-.shadow { -webkit-box-shadow: 0px 5px 5px #474747; -moz-box-shadow: 0px 5px 5px #474747; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=0, Color='#474747')" !important; filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=0, Color='#474747')" !important; box-shadow: 0px 5px 5px #474747; }
+.shadow { -webkit-box-shadow: 0px 5px 5px #474747; -moz-box-shadow: 0px 5px 5px #474747; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=0, Color='#474747')"; filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=0, Color='#474747')"; box-shadow: 0px 5px 5px #474747; }
 
 .position_relative { position: relative; }
 
