@@ -8,8 +8,6 @@ function Utility() {
     
     var isMobile = false;
     
-    var modulePositionValue = "";
-    
     var touchMove = false;
     
     var widthType = "";
@@ -253,24 +251,31 @@ function Utility() {
         }
     };
     
-    self.sortableButtonModules = function(containerId, elementsId) {
-        var containerTag = containerId.replace("#", "");
+    self.selectSortable = function(tagSelect, buttonTarget, tagInput, isCreation) {
+        var selected = $(tagSelect).find("option:selected");
         
-        sortModulesFieldsAssignment(containerTag, elementsId);
-
-        $(containerId + "_button_up").on("click", "", function() {
-            var current = $(containerId).find("input:checked").parent();
-            current.prev().before(current);
-
-            sortModulesFieldsAssignment(containerTag, elementsId);
-        });
-
-        $(containerId + "_button_down").on("click", "", function() {
-            var current = $(containerId).find("input:checked").parent();
-            current.next().after(current);
-
-            sortModulesFieldsAssignment(containerTag, elementsId);
-        });
+        $(tagSelect).find("option").prop("disabled", "disabled");
+        
+        if (isCreation === true && buttonTarget === null) {
+            selected = $(tagSelect).find("option[value='']");
+            
+            $(tagSelect).find("option[value='']").appendTo("#form_page_positionInMenu");
+        }
+        
+        $(tagSelect).find("option[value='" + selected.val() + "']").not(":selected").remove();
+        
+        if (selected.length > 0) {
+            if (buttonTarget !== null)
+                (buttonTarget.prop("id").indexOf("up") !== -1) ? selected.first().prev().before(selected) : selected.last().next().after(selected);
+            
+            var list = "";
+            
+            $.each($(tagSelect).find("option"), function(key, value) {
+                list += $(value).val() + ",";
+            });
+            
+            $(tagInput).val(list);
+        }
     };
     
     self.selectOnlyOneElement = function(tag) {
@@ -504,31 +509,6 @@ function Utility() {
     };
     
     // Functions private
-    function sortModulesFieldsAssignment(containerTag, elementsId) {
-        var sortParentList = $("#" + containerTag).find("li");
-        var sortListElements = new Array();
-        
-        $.each(sortParentList, function(key, value) {
-            var id = $(value).prop("id").replace(containerTag + "_", "");
-            
-            sortListElements.push(id);
-        });
-        
-        if ($("#" + containerTag).parent().css("display") === "none") {
-            modulePositionValue = $(elementsId[0]).find("option:selected").val();
-            
-            $(elementsId[0]).find("option").removeAttr("selected");
-            $(elementsId[1]).val("");
-        }
-        else {
-            if (modulePositionValue !== "")
-                $(elementsId[0]).find("option[value='" + modulePositionValue + "']").prop("selected", true);
-            
-            $(elementsId[1]).val(sortListElements);
-        }
-    }
-    
-    // Jquery mobile fix
     function swipeFix() {
         var defaults = {
             min: {
@@ -540,9 +520,6 @@ function Utility() {
             'up': $.noop,
             'down': $.noop
         }, isTouch = "ontouchend" in document;
-        
-        // Fix jquery > 3
-        //$.event.props.push("touches");
         
         $.fn.swipe = function(options) {
             options = $.extend({}, defaults, options);

@@ -41,6 +41,7 @@ class Root {
         
         $this->utility->checkSessionOverTime(true);
         
+        // Logic
         $event = isset($_POST['event']) == true ? $_POST['event'] : "";
         
         if ($event == "your_event") {
