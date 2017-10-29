@@ -62,7 +62,7 @@ function IpCamera() {
     };
     
     self.changeView = function() {
-        if (utility.getWidthType() === "desktop") {
+        if (utility.checkWidth() === "desktop") {
             $("#camera_video_area").removeClass("touch_disable");
             $("#camera_video_area").hide();
             
