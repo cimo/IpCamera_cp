@@ -40,65 +40,67 @@ function TableAndPagination() {
     };
     
     self.search = function(delegate) {
-        var parent = delegate === true ? document : idResult + " .search_input input";
-        var child = delegate === true ? idResult + " .search_input input" : "";
+        var parentButton = delegate === true ? document : idResult + " .search_input .button_search";
+        var childButton = delegate === true ? idResult + " .search_input .button_search" : "";
         
-        $(parent).on("keyup", child, function(event) {
+        var parentField = delegate === true ? document : idResult + " .search_input input";
+        var childField = delegate === true ? idResult + " .search_input input" : "";
+        
+        $(parentField).on("keyup", childField, function(event) {
             if (clickedEvent === true)
                 return;
             
             if (event.which === 13) {
                 current = 0;
                 
-                send();
+                send(childButton);
                 
                 clickedEvent = true;
             }
         });
         
-        var parent = delegate === true ? document : idResult + " .search_input .button_search";
-        var child = delegate === true ? idResult + " .search_input .button_search" : "";
-        
-        $(parent).on("click", child, function() {
+        $(parentButton).on("click", childButton, function() {
             if (clickedEvent === true)
                 return;
             
             current = 0;
             
-            send();
+            send(childButton);
             
             clickedEvent = true;
         });
     };
     
     self.pagination = function(delegate) {
-        var parent = delegate === true ? document : idResult + " .pagination .previous";
-        var child = delegate === true ? idResult + " .pagination .previous" : "";
+        var parentPrevious = delegate === true ? document : idResult + " .pagination .previous";
+        var childPrevious = delegate === true ? idResult + " .pagination .previous" : "";
         
-        $(parent).on("click", child, function() {
+        var parentNext = delegate === true ? document : idResult + " .pagination .next";
+        var childNext = delegate === true ? idResult + " .pagination .next" : "";
+        
+        $(parentPrevious).on("click", childPrevious, function() {
             if (clickedEvent === true)
                 return;
             
             if (total > 1 && current > 0) {
                 current --;
                 
-                send();
+                send(childPrevious);
                 
                 clickedEvent = true;
             }
         });
         
-        var parent = delegate === true ? document : idResult + " .pagination .next";
-        var child = delegate === true ? idResult + " .pagination .next" : "";
         
-        $(parent).on("click", child, function() {
+        
+        $(parentNext).on("click", childNext, function() {
             if (clickedEvent === true)
                 return;
             
             if (total > 1 && current < (total - 1)) {
                 current ++;
                 
-                send();
+                send(childNext);
                 
                 clickedEvent = true;
             }
@@ -161,13 +163,16 @@ function TableAndPagination() {
     };
     
     self.populate = function(xhr) {
-        $(idResult).find(".table_spinner i").addClass("display_none");
         $(idResult).find("table tbody").removeClass("visibility_hidden");
         
         if (xhr.response.values !== undefined) {
             $(idResult).find(".search_input input").val(xhr.response.values.search.value);
             $(idResult).find(".pagination .text").html(xhr.response.values.pagination.text);
-            $(idResult).find("table tbody").html(xhr.response.values.list);
+            
+            if ($(idResult).find("table tbody").length > 0)
+                $(idResult).find("table tbody").html(xhr.response.values.listHtml);
+            else
+                $(idResult).find(".container_list").html(xhr.response.values.listHtml);
 
             status();
             
@@ -212,7 +217,16 @@ function TableAndPagination() {
             $(idResult).find(".buttons").removeClass("display_none");
     }
     
-    function send() {
+    function send(child) {
+        if ($(child).find("i").length > 1) {
+            $(child).find("i").eq(0).hide();
+            $(child).find("i").eq(1).show();
+        }
+        else if ($(child).find("i").length === 1)
+            $(child).find("i").show();
+        else
+            $(child).parent().find("i").show();
+        
         var data = {
             'searchWritten': $(idResult).find(".search_input input").val(),
             'paginationCurrent': current,
@@ -229,7 +243,6 @@ function TableAndPagination() {
             false,
             function() {
                 $(idResult).find("table tbody").addClass("visibility_hidden");
-                $(idResult).find(".table_spinner i").removeClass("display_none");
             },
             function(xhr) {
                 ajax.reply(xhr, "");
@@ -243,6 +256,15 @@ function TableAndPagination() {
                     if (xhr.response.values !== undefined)
                         self.populate(xhr);
                 }
+                
+                if ($(child).find("i").length > 1) {
+                    $(child).find("i").eq(0).show();
+                    $(child).find("i").eq(1).hide();
+                }
+                else if ($(child).find("i").length === 1)
+                    $(child).find("i").hide();
+                else
+                    $(child).parent().find("i").hide();
                 
                 utility.linkPreventDefault();
                 

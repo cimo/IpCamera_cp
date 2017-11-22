@@ -1,131 +1,171 @@
--- phpMyAdmin SQL Dump
--- version 4.5.4.1deb2ubuntu2
--- http://www.phpmyadmin.net
+-- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: localhost
--- Creato il: Ott 03, 2017 alle 11:34
--- Versione del server: 5.7.19-0ubuntu0.16.04.1
--- Versione PHP: 7.0.22-0ubuntu0.16.04.1
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
+-- Host: 127.0.0.1    Database: ipcamera_cp
+-- ------------------------------------------------------
+-- Server version	5.7.20-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Database: `ipcamera_cp`
+-- Table structure for table `cameras`
 --
 
--- --------------------------------------------------------
-
---
--- Struttura della tabella `cameras`
---
-
+DROP TABLE IF EXISTS `cameras`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cameras` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `camera_number` int(255) NOT NULL DEFAULT '0',
   `device_id` int(11) NOT NULL,
   `video_url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `threshold` int(4) NOT NULL DEFAULT '10000',
-  `motion_detection_status` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pause'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `motion_detection_status` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pause',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dump dei dati per la tabella `cameras`
+-- Dumping data for table `cameras`
 --
 
-INSERT INTO `cameras` (`id`, `camera_number`, `device_id`, `video_url`, `username`, `password`, `threshold`, `motion_detection_status`) VALUES
-(1, 1, 1, 'http://home-cs.ddns.net:1000', 'admin', 'Hd20Jgl7', 10000, 'start'),
-(2, 2, 2, 'http://home-rm.ddns.net:1000', 'admin', 'Kd73Sge1', 10000, 'pause');
-
--- --------------------------------------------------------
+LOCK TABLES `cameras` WRITE;
+/*!40000 ALTER TABLE `cameras` DISABLE KEYS */;
+INSERT INTO `cameras` VALUES (1,1,1,'http://home-cs.ddns.net:1000','admin','Gu12Lei1',10000,'pause');
+/*!40000 ALTER TABLE `cameras` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Struttura della tabella `devices`
+-- Table structure for table `devices`
 --
 
+DROP TABLE IF EXISTS `devices`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `devices` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `video` varchar(255) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `video` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dump dei dati per la tabella `devices`
+-- Dumping data for table `devices`
 --
 
-INSERT INTO `devices` (`id`, `name`, `video`) VALUES
-(1, 'AGPtek', 'media/?action=stream&'),
-(2, 'Apexis', 'videostream.cgi?');
-
--- --------------------------------------------------------
+LOCK TABLES `devices` WRITE;
+/*!40000 ALTER TABLE `devices` DISABLE KEYS */;
+INSERT INTO `devices` VALUES (1,'AGPtek','media/?action=stream&'),(2,'Apexis','videostream.cgi?');
+/*!40000 ALTER TABLE `devices` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Struttura della tabella `settings`
+-- Table structure for table `roles_users`
 --
 
+DROP TABLE IF EXISTS `roles_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `roles_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `level` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'ROLE_USER',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `roles_users`
+--
+
+LOCK TABLES `roles_users` WRITE;
+/*!40000 ALTER TABLE `roles_users` DISABLE KEYS */;
+INSERT INTO `roles_users` VALUES (1,'ROLE_USER'),(2,'ROLE_ADMIN'),(3,'ROLE_MODERATOR');
+/*!40000 ALTER TABLE `roles_users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `settings`
+--
+
+DROP TABLE IF EXISTS `settings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `settings` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `template` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'basic',
+  `login_attempt_time` int(11) NOT NULL DEFAULT '15',
+  `login_attempt_count` int(11) NOT NULL DEFAULT '3',
   `server_url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `motion_version` varchar(255) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `motion_version` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dump dei dati per la tabella `settings`
+-- Dumping data for table `settings`
 --
 
-INSERT INTO `settings` (`id`, `template`, `server_url`, `motion_version`) VALUES
-(1, 'basic', 'http://127.0.0.1:32402', '4.0.1');
+LOCK TABLES `settings` WRITE;
+/*!40000 ALTER TABLE `settings` DISABLE KEYS */;
+INSERT INTO `settings` VALUES (1,'basic',15,3,'http://127.0.0.1:32402','4.0.1');
+/*!40000 ALTER TABLE `settings` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Indici per le tabelle scaricate
+-- Table structure for table `users`
 --
 
---
--- Indici per le tabelle `cameras`
---
-ALTER TABLE `cameras`
-  ADD PRIMARY KEY (`id`);
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_user_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '1,',
+  `username` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `not_locked` tinyint(1) NOT NULL DEFAULT '0',
+  `date_current_login` varchar(19) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date_last_login` varchar(19) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `help_code` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `ip` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `attempt_login` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Indici per le tabelle `devices`
---
-ALTER TABLE `devices`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indici per le tabelle `settings`
---
-ALTER TABLE `settings`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT per le tabelle scaricate
+-- Dumping data for table `users`
 --
 
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'1,2,','admin','','$2y$10$JhdTt2OkDZbp35HjbqnAZeFDMBh/1MAT2Bc70XyWzxMHmc6rCmAQC',1,'2017-11-20 21:27:52','2017-11-20 21:15:55',NULL,'79.51.52.39',0);
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
 --
--- AUTO_INCREMENT per la tabella `cameras`
+-- Dumping routines for database 'ipcamera_cp'
 --
-ALTER TABLE `cameras`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT per la tabella `devices`
---
-ALTER TABLE `devices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT per la tabella `settings`
---
-ALTER TABLE `settings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2017-11-20 21:29:22

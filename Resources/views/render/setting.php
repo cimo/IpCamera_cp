@@ -5,15 +5,15 @@ $root = new Root();
 
 $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
 ?>
-<form id="form_camera_settings" class="margin_bottom" action="<?php echo $root->getUtility()->getUrlRoot() ?>/Requests/IpCameraRequest.php?controller=settingsAction" method="post" novalidate="novalidate">
-    <table class="table table-bordered table-striped">
+<form id="form_camera_setting" action="<?php echo $root->getUtility()->getUrlRoot() ?>/Requests/IpCameraRequest.php?controller=settingAction" method="post" novalidate="novalidate">
+    <table class="table table-bordered table-striped margin_bottom">
         <tbody class="table_tbody">
             <tr>
                 <td>
                     Template
                 </td>
                 <td>
-                    <select id="form_camera_settings_template" class="form-control" name="form_camera_settings[template]" required="required">
+                    <select id="form_camera_setting_template" class="form-control" name="form_camera_setting[template]" required="required">
                         <?php
                         foreach($root->getIpCameraUtility()->createTemplatesList() as $key => $value) {
                             $selected = $value == $settingRow['template'] ? "selected" : "";
@@ -29,7 +29,7 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                     Server url
                 </td>
                 <td>
-                    <input id="form_camera_settings_serverUrl" class="form-control" type="text" name="form_camera_settings[serverUrl]" value="<?php echo $settingRow['server_url']; ?>" required="required"/>
+                    <input id="form_camera_setting_serverUrl" class="form-control" type="text" name="form_camera_setting[serverUrl]" value="<?php echo $settingRow['server_url']; ?>" required="required"/>
                 </td>
             </tr>
             <tr>
@@ -37,7 +37,7 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                     Motion version
                 </td>
                 <td>
-                    <select id="form_camera_settings_motionVersion" class="form-control" name="form_camera_settings[motionVersion]" required="required">
+                    <select id="form_camera_setting_motionVersion" class="form-control" name="form_camera_setting[motionVersion]" required="required">
                         <?php
                         foreach($root->getIpCameraUtility()->createMotionVersionList() as $key => $value) {
                             $selected = $value == $settingRow['motion_version'] ? "selected" : "";
@@ -51,6 +51,6 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
         </tbody>
     </table>
     
-    <input id="form_camera_settings_token" class="form-control" type="hidden" name="form_camera_settings[token]" value="<?php echo $_SESSION['token']; ?>"/>
-    <input class="button_custom" type="submit" value="Update"/>
+    <input id="form_camera_setting_token" class="form-control" type="hidden" name="form_camera_setting[token]" value="<?php echo $_SESSION['token']; ?>"/>
+    <input class="button_custom margin_bottom" type="submit" value="Update"/>
 </form>

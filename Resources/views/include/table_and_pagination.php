@@ -5,8 +5,9 @@
 <div class="input-group pull-right search_input">
     <div class="button_search">
         <i class="fa fa-search"></i>
+        <i class="fa fa-circle-o-notch fa-spin display_none"></i>
     </div>
-    <input class="form-control" type="text" placeholder="Search" value="<?php echo isset($htmlFiles['search']) == true ? $htmlFiles['search']['value'] : ""; ?>"/>
+    <input class="form-control" type="text" placeholder="Search" value="<?php echo isset($htmlTable['search']) == true ? $htmlTable['search']['value'] : ""; ?>"/>
 </div>
 <div class="clearfix"></div>
 <ul class="pagination-controle pagination margin_clear">
@@ -14,12 +15,12 @@
         <a href="#">Previous</a>
     </li>
     <li>
-        <span class="text"><?php echo isset($htmlFiles['search']) == true ? $htmlFiles['pagination']['text'] : ""; ?></span>
+        <span class="text"><?php echo isset($htmlTable['search']) == true ? $htmlTable['pagination']['text'] : ""; ?></span>
     </li>
     <li class="next">
         <a href="#">Next</a>
     </li>
+    <li class="loading">
+        <i class="fa fa-circle-o-notch fa-spin display_none"></i>
+    </li>
 </ul>
-<div class="table_spinner">
-    <i class="display_none fa fa-cog fa-spin fa-5x"></i>
-</div>

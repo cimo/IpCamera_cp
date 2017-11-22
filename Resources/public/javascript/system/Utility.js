@@ -51,7 +51,7 @@ function Utility() {
     self.checkWidth = function() {
         var widthType = "";
         
-        if (window.matchMedia("(max-width: " + window.settings.widthMobile + "px)").matches === true)
+        if (window.matchMedia("(max-width: " + window.setting.widthMobile + "px)").matches === true)
             widthType = "mobile";
         else
             widthType = "desktop";
@@ -251,7 +251,7 @@ function Utility() {
         if (isCreation === true && buttonTarget === null) {
             selected = $(tagSelect).find("option[value='']");
             
-            $(tagSelect).find("option[value='']").appendTo("#form_page_positionInMenu");
+            $(tagSelect).find("option[value='']").appendTo(tagSelect);
         }
         
         $(tagSelect).find("option[value='" + selected.val() + "']").not(":selected").remove();
@@ -382,7 +382,7 @@ function Utility() {
     self.imageError = function(elements) {
         elements.on("error", "", function() {
             $.each($(this), function(key, value) {
-                $(value).prop("src", window.url.root + "/bundles/uebusaito/images/templates/" + window.settings.template + "/error_404.png");
+                $(value).prop("src", window.url.root + "/Resources/public/images/templates/" + window.setting.template + "/error_404.png");
             });
         });
     };
@@ -398,6 +398,12 @@ function Utility() {
             
             $(tag).prop("src", src + "?" + new Date().getTime());
         }
+    };
+    
+    self.goToAnchor = function(tag) {
+        $("html, body").animate({
+            scrollTop: $(tag).offset().top
+        }, 1000);
     };
     
     // Bootstrap fix

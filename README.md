@@ -10,11 +10,13 @@ This is a open source IpCamera control panel with FFMPEG and motion framework.
 | Work on internet and lan (server, cloud, ...) |
 | Work with a lot model of ipcamera |
 | Remote camera control (Move and take picture) |
-| Check status |
-| Profile management |
-| Set motion tracking (Take video) |
+| Set motion tracking (Take automatic video) |
 | Add and remove camera without write code |
+| Check status |
+| Apparatus profile management |
 | Files management |
+| Settings management |
+| User profile management |
 | Scss style |
 
 ## Images

@@ -32,7 +32,7 @@ class Query {
         return $query->fetch(PDO::FETCH_ASSOC);
     }
     
-    public function selectAllDevicesDatabase() {
+    public function selectAllDeviceDatabase() {
         $query = $this->database->getPdo()->prepare("SELECT * FROM devices");
         
         $query->execute();
@@ -51,12 +51,56 @@ class Query {
         return $query->fetch(PDO::FETCH_ASSOC);
     }
     
-    public function selectAllCamerasDatabase() {
+    public function selectAllCameraDatabase() {
         $query = $this->database->getPdo()->prepare("SELECT * FROM cameras");
         
         $query->execute();
         
         return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function selectUserDatabase($value) {
+        if (is_numeric($value) == true) {
+            $query = $this->database->getPdo()->prepare("SELECT * FROM users
+                                                            WHERE id = :value");
+
+            $query->bindValue(":value", $value);
+        }
+        else {
+            $query = $this->database->getPdo()->prepare("SELECT * FROM users
+                                                            WHERE username = :value");
+
+            $query->bindValue(":value", $value);
+        }
+        
+        $query->execute();
+        
+        return $query->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    public function selectRoleUserDatabase($roleId, $modify = false) {
+        $roleIdExplode = explode(",", $roleId);
+        array_pop($roleIdExplode);
+        
+        $level = Array();
+        
+        foreach($roleIdExplode as $key => $value) {
+            $query = $this->database->getPdo()->prepare("SELECT level FROM roles_users
+                                                            WHERE id = :value");
+            
+            $query->bindValue(":value", $value);
+            
+            $query->execute();
+            
+            $row = $query->fetch(PDO::FETCH_ASSOC);
+            
+            if ($modify == true)
+                array_push($level, ucfirst(strtolower(str_replace("ROLE_", "", $row['level']))));
+            else
+                array_push($level, $row['level']);
+        }
+        
+        return $level;
     }
     
     // Functions private

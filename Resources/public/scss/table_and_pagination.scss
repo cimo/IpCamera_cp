@@ -16,6 +16,14 @@
     }
 }
 
+.pagination-controle {
+    .loading i {
+        position: relative;
+        top: 7px;
+        left: 10px;
+    }
+}
+
 .table_thead {
     tr {
         th {
@@ -41,14 +49,5 @@
 .table_borderless {
     th, td {
         border: none !important;
-    }
-}
-.table_spinner {
-    position: relative;
-    left: 50%;
-    
-    i {
-        position: absolute;
-        left: -35px;
     }
 }

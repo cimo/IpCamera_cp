@@ -1,4 +1,4 @@
-/* global utility, loader, flashBag, ipCamera */
+/* global utility, loader, flashBag, authentication, ipCamera */
 
 $(document).ready(function() {
     utility.checkMobile(true);
@@ -8,6 +8,8 @@ $(document).ready(function() {
     utility.watch("#flashBag", flashBag.sessionActivity);
     
     loader.create("font");
+    
+    authentication.init();
     
     ipCamera.init();
     ipCamera.changeView();

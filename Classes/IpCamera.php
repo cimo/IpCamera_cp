@@ -4,6 +4,7 @@
 require_once("System/Utility.php");
 require_once("Ajax.php");
 require_once("TableAndPagination.php");
+require_once("IpCameraUtility.php");
 
 class IpCamera {
     // Vars
@@ -13,6 +14,7 @@ class IpCamera {
     private $query;
     private $ajax;
     private $tableAndPagination;
+    private $ipCameraUtility;
     
     private $videoUrl;
     private $controlUrl;
@@ -39,6 +41,7 @@ class IpCamera {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax();
         $this->tableAndPagination = new TableAndPagination();
+        $this->ipCameraUtility = new IpCameraUtility();
         
         $this->settingRow = $this->query->selectSettingDatabase();
         
@@ -70,21 +73,23 @@ class IpCamera {
                     
                     if ($_GET['controller'] == "selectionAction")
                         $this->selectionAction($parameters);
-                    else if ($_GET['controller'] == "profileAction")
-                        $this->profileAction($parameters);
-                    else if ($_GET['controller'] == "deleteAction")
-                        $this->deleteAction();
-                    else if ($_GET['controller'] == "controlsAction")
-                        $this->controlsAction($parameters);
-                    else if ($_GET['controller'] == "filesAction")
-                        $this->filesAction($parameters);
-                    else if ($_GET['controller'] == "settingsAction")
-                        $this->settingsAction($parameters);
+                    else if ($_GET['controller'] == "controlAction")
+                        $this->controlAction($parameters);
+                    else if ($_GET['controller'] == "apparatusProfileAction")
+                        $this->apparatusProfileAction($parameters);
+                    else if ($_GET['controller'] == "apparatusProfileDeleteAction")
+                        $this->apparatusProfileDeleteAction();
+                    else if ($_GET['controller'] == "fileAction")
+                        $this->fileAction($parameters);
+                    else if ($_GET['controller'] == "userProfilePasswordAction")
+                        $this->userProfilePasswordAction($parameters);
+                    else if ($_GET['controller'] == "settingAction")
+                        $this->settingAction($parameters);
                 }
             }
         }
         else if (isset($_POST['searchWritten']) == true && isset($_POST['paginationCurrent']) == true)
-            $this->createHtmlFiles();
+            $this->createListHtml();
         else
             $this->response['messages']['error'] = "Json error!";
         
@@ -95,7 +100,7 @@ class IpCamera {
         $this->utility->getDatabase()->close();
     }
     
-    public function generateSelectOptionFromMotionFolders() {
+    public function generateSelectOptionFromMotionConfig() {
         $motionFolderPath = "{$_SERVER['DOCUMENT_ROOT']}/motion";
         
         $scanDirElements = @scandir($motionFolderPath, 1);
@@ -106,16 +111,18 @@ class IpCamera {
             $count = 0;
             
             foreach ($scanDirElements as $key => $value) {
-                if ($value != "." && $value != ".." && $value != ".htaccess" && is_dir("$motionFolderPath/$value") == true) {
-                    $count ++;
-                    
-                    echo "<option value=\"$count\">Camera $count</option>";
+                if ($value != "." && $value != ".." && $value != ".htaccess" && is_file("$motionFolderPath/$value") == true) {
+                    if (pathinfo("$motionFolderPath/$value", PATHINFO_EXTENSION) == "conf") {
+                        $count ++;
+
+                        echo "<option value=\"$count\">Camera $count</option>";
+                    }
                 }
             }
         }
     }
     
-    public function createHtmlFiles() {
+    public function createListHtml() {
         $motionFolderPath = "{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}";
         
         $scanDirElements = @scandir($motionFolderPath);
@@ -132,12 +139,12 @@ class IpCamera {
             $tableAndPagination = $this->tableAndPagination->request($scanDirElements, 5, "file", true, false);
             
             $count = 0;
-            $list = "";
+            $listHtml = "";
             
-            foreach ($tableAndPagination['list'] as $key => $value) {
+            foreach ($tableAndPagination['listHtml'] as $key => $value) {
                 $count ++;
                 
-                $list .= "<tr>
+                $listHtml .= "<tr>
                     <td>
                         $count
                     </td>
@@ -148,22 +155,22 @@ class IpCamera {
                         {$this->utility->sizeUnits(filesize("$motionFolderPath/$value"))}
                     </td>
                     <td class=\"horizontal_center\">
-                        <button class=\"camera_files_download button_custom\"><i class=\"fa fa-download\"></i></button>
+                        <button class=\"camera_file_download button_custom\"><i class=\"fa fa-download\"></i></button>
                     </td>
                     <td class=\"horizontal_center\">
-                        <button class=\"camera_files_delete button_custom_danger\"><i class=\"fa fa-remove\"></i></button>
+                        <button class=\"camera_file_delete button_custom_danger\"><i class=\"fa fa-remove\"></i></button>
                     </td>
                 </tr>";
             }
             
             $this->response['values']['search'] = $tableAndPagination['search'];
             $this->response['values']['pagination'] = $tableAndPagination['pagination'];
-            $this->response['values']['list'] = $list;
+            $this->response['values']['listHtml'] = $listHtml;
             
             return Array(
                 'search' => $this->response['values']['search'],
                 'pagination' => $this->response['values']['pagination'],
-                'list' => $this->response['values']['list']
+                'listHtml' => $this->response['values']['listHtml']
             );
         }
         
@@ -175,7 +182,7 @@ class IpCamera {
                 'pagination' => ""
             ),
             Array(
-                'list' => ""
+                'listHtml' => ""
             )
         );
     }
@@ -197,7 +204,7 @@ class IpCamera {
         return $response;
     }
     
-    private function profileConfig($deviceId, $videoUrl, $username, $password, $threshold, $motionDetectionStatus) {
+    private function apparatusProfileConfig($deviceId, $videoUrl, $username, $password, $threshold, $motionDetectionStatus) {
         @mkdir("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}");
         @chmod("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}", 0777);
         
@@ -221,6 +228,7 @@ class IpCamera {
         $content .= "target_dir {$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}";
         
         file_put_contents("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}.conf", $content.PHP_EOL);
+        @chmod("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}.conf", 0664);
         
         $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/config/set?target_dir={$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}");
         $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/config/set?framerate=30");
@@ -247,7 +255,7 @@ class IpCamera {
             return;
         
         if ($parameters['cameraNumber'] == 0) {
-            $cameraRows = $this->query->selectAllCamerasDatabase();
+            $cameraRows = $this->query->selectAllCameraDatabase();
             
             $lastCamera = end($cameraRows);
             $_SESSION['camera_number'] = $lastCamera['camera_number'] + 1;
@@ -283,7 +291,7 @@ class IpCamera {
             
             $this->utility->searchInFile("/etc/motion/motion.conf", "thread {$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}.conf", null);
             
-            $this->profileConfig("", "", "", "", "", "pause");
+            $this->apparatusProfileConfig("", "", "", "", "", "pause");
             
             $this->response['messages']['success'] = "New camera created with success.";
         }
@@ -299,10 +307,20 @@ class IpCamera {
             
             $this->response['values']['motionDetectionStatus'] = $motionDetectionStatus;
         }
+        else
+            $this->response['messages']['error'] = "No camera selected!";
     }
     
-    private function profileAction($parameters) {
-        $this->profileConfig($parameters['deviceId'], $parameters['videoUrl'], $parameters['username'], $parameters['password'], $parameters['threshold'], $parameters['motionDetectionStatus']);
+    private function controlAction($parameters) {
+        if ($parameters['event'] == "picture") {
+            $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/action/snapshot");
+            
+            $this->response['messages']['success'] = "Picture taked.";
+        }
+    }
+    
+    private function apparatusProfileAction($parameters) {
+        $this->apparatusProfileConfig($parameters['deviceId'], $parameters['videoUrl'], $parameters['username'], $parameters['password'], $parameters['threshold'], $parameters['motionDetectionStatus']);
         
         $query = $this->utility->getDatabase()->getPdo()->prepare("UPDATE cameras
                                                                     SET device_id = :deviceId,
@@ -328,7 +346,7 @@ class IpCamera {
         $this->response['messages']['success'] = "Profile updated with success.";
     }
     
-    private function deleteAction() {
+    private function apparatusProfileDeleteAction() {
         $this->utility->removeDirRecursive("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}", true);
         
         unlink("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}.conf");
@@ -349,15 +367,7 @@ class IpCamera {
         $this->response['messages']['success'] = "Camera deleted with success!";
     }
     
-    private function controlsAction($parameters) {
-        if ($parameters['event'] == "picture") {
-            $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/action/snapshot");
-            
-            $this->response['messages']['success'] = "Picture taked.";
-        }
-    }
-    
-    private function filesAction($parameters) {
+    private function fileAction($parameters) {
         if ($parameters['event'] == "delete") {
             $path = "{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}/" . trim($parameters['name']);
             
@@ -374,10 +384,29 @@ class IpCamera {
             $this->response['messages']['success'] = "All files deleted with success!";
         }
         
-        $this->createHtmlFiles();
+        $this->createListHtml();
     }
     
-    private function settingsAction($parameters) {
+    private function userProfilePasswordAction($parameters) {
+        $messagePassword = $this->ipCameraUtility->assigUserPassword("withOld", $_SESSION['userLogged'], $parameters);
+
+        if (isset($messagePassword['password']) == true) {
+            $query = $this->utility->getDatabase()->getPdo()->prepare("UPDATE users
+                                                                        SET password = :password
+                                                                        WHERE id = :id");
+
+            $query->bindValue(":password", $messagePassword['password']);
+            $query->bindValue(":id", $_SESSION['userLogged']['id']);
+
+            $query->execute();
+
+            $this->response['messages']['success'] = "Password modified.";
+        }
+        else
+            $this->response['messages']['error'] = $messagePassword['error'];
+    }
+    
+    private function settingAction($parameters) {
         $query = $this->utility->getDatabase()->getPdo()->prepare("UPDATE settings
                                                                     SET template = :template,
                                                                         server_url = :serverUrl,

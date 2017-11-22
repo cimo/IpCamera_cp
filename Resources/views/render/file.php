@@ -3,12 +3,12 @@ require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/System/Root.php");
 
 $root = new Root();
 
-$htmlFiles = $root->getIpCamera()->createHtmlFiles();
+$htmlTable = $root->getIpCamera()->createListHtml();
 ?>
-<div id="camera_files_table" class="margin_bottom">
+<div id="camera_file_table" class="margin_bottom">
     <?php require_once("{$root->getUtility()->getPathRoot()}/Resources/views/include/table_and_pagination.php"); ?>
     <div class="overflow_y_hidden table_min_height">
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-striped margin_bottom">
             <thead class="table_thead">
                 <tr>
                     <th class="cursor_pointer">
@@ -39,7 +39,7 @@ $htmlFiles = $root->getIpCamera()->createHtmlFiles();
                 </tr>
             </thead>
             <tbody class="table_tbody">
-                <?php echo isset($htmlFiles['list']) == true ? $htmlFiles['list'] : ""; ?>
+                <?php echo isset($htmlTable['listHtml']) == true ? $htmlTable['listHtml'] : ""; ?>
             </tbody>
         </table>
     </div>

@@ -2,6 +2,11 @@
 
 $logoTextColor: #4089c9;
 
+$panelBackgroundColor: #ffffff;
+$panelBorder: 1px solid transparent;
+$panelHeadingBorder: 1px solid #e7e7e7;
+$panelBodyBorder: 1px solid #e7e7e7;
+
 $buttonCustomBackgroundColor: #337ab7;
 $buttonCustomColor: #ffffff;
 $buttonCustomBorder: 1px solid #2e6da4;
@@ -41,12 +46,20 @@ $buttonCustomDangerFocusColor: #ffffff;
 $buttonSearchBackgroundColor: #000000;
 $buttonSearchColor: #ffffff;
 
+$authenticationBackgroundColor: #f4f4f4;
+
 @include fontFace("pt_sans", "../../fonts/pt_sans");
 @include fontFace("archivo_black", "../../fonts/archivo_black");
 
 @media(max-width: $widthMobile) {
+    #camera_file_table .search_input {
+        width: 100%;
+    }
 }
 @media(min-width: $widthDesktop) {
+    #camera_file_table .search_input {
+        width: 50%;
+    }
 }
 
 body {
@@ -63,6 +76,7 @@ body {
 table, .table {
     font-family: "pt_sans", sans-serif;
     font-size: 14px;
+    margin-bottom: 0;
 }
 
 p {
@@ -78,7 +92,7 @@ p {
         font-family: "archivo_black", sans-serif;
         display: inline-block;
         position: relative;
-        top: 14px;
+        top: 10px;
         font-size: 40px;
         color: $logoTextColor;
         text-transform: uppercase;
@@ -105,6 +119,38 @@ p {
     min-height: 40px;
     min-width: 40px;
     background: url("../../images/templates/basic/image_preload.gif") no-repeat 50% 50%;
+}
+
+.form_title {
+    visibility: hidden;
+    margin: 0;
+    font-size: initial;
+}
+
+.panel {
+    position: relative;
+    background-color: $panelBackgroundColor;
+    border: $panelBorder;
+    padding-right: 0;
+    padding-left: 0;
+    
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    -ms-filter: none;
+    filter: none;
+    box-shadow: none;
+}
+.panel_clean {
+    position: relative;
+}
+
+.panel-heading {
+    padding: 10px 15px;
+    border-bottom: $panelHeadingBorder;
+}
+.panel-body {
+    padding: 15px;
+    border: $panelBodyBorder;
 }
 
 .button_custom {
@@ -193,16 +239,6 @@ p {
     }
 }
 
-.accordion_container {
-    .title {
-        cursor: pointer;
-    }
-    
-    .content {
-        display: none;
-    }
-}
-
 .button_search {
     cursor: pointer;
     position: absolute;
@@ -220,23 +256,57 @@ p {
     }
 }
 
+.authentication {
+    display: block;
+    position: initial;
+    width: 250px;
+    margin: auto;
+    background-color: $authenticationBackgroundColor;
+    padding-right: 15px;
+    padding-left: 15px;
+    
+    .panel-heading {
+        padding: 10px 0;
+    }
+    
+    .panel-body {
+        border: none !important;
+        padding: 15px 0;
+    }
+}
+
+.remember_me_fix {
+    margin: 5px 0 5px 10px !important;
+    display: inline-block !important;
+}
+
+.accordion_container {
+    .title {
+        cursor: pointer;
+    }
+    
+    .content {
+        display: none;
+    }
+}
+
 .camera_tab_container {
     padding: 0 15px;
     border: 1px solid #dddddd;
     border-top: 0;
 }
 
-.camera_controls {
+.camera_control {
     width: 50px;
     cursor: pointer;
 }
 
-.bootstrap-switch-id-camera_control_swipe_switch {
-    margin-right: 20px;
-}
-
 .camera_control_picture {
     vertical-align: middle;
+}
+
+.bootstrap-switch-id-camera_control_swipe_switch {
+    margin-right: 20px;
 }
 
 #camera_video_area {
@@ -252,4 +322,10 @@ p {
 
 #camera_video_result {
     position: relative;
+}
+
+#control_container {
+    .panel-body {
+        min-height: 206px;
+    }
 }

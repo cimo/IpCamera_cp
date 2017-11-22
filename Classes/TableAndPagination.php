@@ -21,10 +21,7 @@ class TableAndPagination {
     }
     
     public function request($rows, $page, $sessionTag, $reverse, $flat) {
-        $newRows = $rows;
-        
-        if ($reverse == true)
-            $newRows = array_reverse($rows, true);
+        $newRows = $reverse == true ? array_reverse($rows, true) : $rows;
         
         // Search
         $searchWritten = isset($_POST['searchWritten']) == true ? $_POST['searchWritten'] : -1;
@@ -34,12 +31,12 @@ class TableAndPagination {
         // Pagination
         $paginationCurrent = isset($_POST['paginationCurrent']) == true ? $_POST['paginationCurrent'] : -1;
         $pagination = $this->pagination($sessionTag . "Pagination", $paginationCurrent, count($elements), $page);
-        $list = array_slice($elements, $pagination['offset'], $pagination['show']);
+        $listHtml = array_slice($elements, $pagination['offset'], $pagination['show']);
         
         return Array(
             'search' => $search,
             'pagination' => $pagination,
-            'list' => $list
+            'listHtml' => $listHtml
         );
     }
     

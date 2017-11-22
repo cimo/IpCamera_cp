@@ -55,7 +55,7 @@ class Utility {
     
     // Functions public
     public function __construct() {
-        $this->sessionMaxIdleTime = 1200;
+        $this->sessionMaxIdleTime = 3600;
         
         $this->config = new Config();
         $this->database = new Database();
@@ -143,6 +143,8 @@ class Utility {
                     else
                         unlink($file->getRealPath());
                 }
+                else if (is_link($file->getPathName()) === true)
+                    unlink($file->getPathName());
             }
 
             if ($parent == true)
@@ -179,9 +181,9 @@ class Utility {
         else if ($bytes >= 1024)
             $bytes = number_format($bytes / 1024, 2) . " KB";
         else if ($bytes > 1)
-            $bytes = $bytes . " bytes";
+            $bytes = "$bytes bytes";
         else if ($bytes == 1)
-            $bytes = $bytes . " byte";
+            $bytes = "$bytes byte";
         else
             $bytes = "0 bytes";
 
@@ -276,6 +278,23 @@ class Utility {
         return $ip;
     }
     
+    public function dateFormat($date) {
+        $newData = Array("", "");
+        
+        $dateExplode = explode(" ", $date);
+        
+        if (count($dateExplode) == 0)
+            $dateExplode = $newData;
+        else {
+            $languageDate = isset($_SESSION['language_date']) == false ? "Y-m-d" : $_SESSION['language_date'];
+            
+            if (strpos($dateExplode[0], "0000") === false)
+                $dateExplode[0] = date($languageDate, strtotime($dateExplode[0]));
+        }
+        
+        return $dateExplode;
+    }
+    
     public function checkToken($token) {
         if (isset($_SESSION['token']) == true && $token == $_SESSION['token'])
             return true;
@@ -292,7 +311,7 @@ class Utility {
     
     public function checkSessionOverTime($root = false) {
         if ($root == true) {
-            if (isset($_SESSION['user_activity']) == false) {
+            if (isset($_SESSION['user_activity_count']) == false || isset($_SESSION['user_activity']) == false) {
                 $_SESSION['user_activity_count'] = 0;
                 $_SESSION['user_activity'] = "";
             }
@@ -340,12 +359,12 @@ class Utility {
         }
         
         if ($root == true && $_SESSION['user_activity'] != "") {
-            $_SESSION['user_activity_count'] ++;
-
-            if ($_SESSION['user_activity_count'] > 2) {
+            if ($_SESSION['user_activity_count'] > 1) {
                 $_SESSION['user_activity_count'] = 0;
                 $_SESSION['user_activity'] = "";
             }
+            
+            $_SESSION['user_activity_count'] ++;
         }
     }
     

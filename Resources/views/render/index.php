@@ -44,75 +44,99 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                     <?php require_once("{$root->getUtility()->getPathRoot()}/Resources/views/include/flashBag.php"); ?>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading clearfix">
-                            <div class="pull-left">
-                                <h3 class="panel-title">Video</h3>
+            <?php
+            if (isset($_SESSION['userLogged']) == false && empty($_SESSION['userLogged']) == true)
+                require_once("{$root->getUtility()->getPathRoot()}/Resources/views/render/module/authentication.php");
+            else {
+            ?>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading clearfix">
+                                <div class="pull-left">
+                                    <h3 class="panel-title">Video</h3>
+                                </div>
+                                <div class="pull-right display_mobile">
+                                    <input id="camera_control_swipe_switch" type="checkbox" data-on-text="Drag on" data-on-color="success" data-off-text="Drag off" data-off-color="danger"/>
+                                    <i class="fa fa-camera fa-3x camera_control camera_control_picture"></i>
+                                </div>
                             </div>
-                            <div class="pull-right display_mobile">
-                                <input id="camera_control_swipe_switch" type="checkbox" data-on-text="Drag on" data-on-color="success" data-off-text="Drag off" data-off-color="danger"/>
-                                <i class="fa fa-camera fa-3x camera_controls camera_control_picture"></i>
+                            <div class="panel-body overflow_hidden padding_clear">
+                                <div id="camera_video_result"></div>
                             </div>
                         </div>
-                        <div class="panel-body overflow_hidden padding_clear">
-                            <div id="camera_video_result"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div id="control_container" class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Controls</h3>
+                            </div>
+                            <div class="panel-body overflow_hidden">
+                                <div id="camera_control_result"></div>
+                            </div>
+                        </div>
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Actions</h3>
+                            </div>
+                            <div class="panel-body overflow_hidden">
+                                <ul class="nav nav-tabs">
+                                    <li class="active">
+                                        <a id="actions_tab_1" data-toggle="tab" href="#actions_tab_content_1">Status</a>
+                                    </li>
+                                    <li>
+                                        <a id="actions_tab_2" data-toggle="tab" href="#actions_tab_content_2">Apparatus profile</a>
+                                    </li>
+                                    <li>
+                                        <a id="actions_tab_3" data-toggle="tab" href="#actions_tab_content_3">Files</a>
+                                    </li>
+                                    <li>
+                                        <a id="actions_tab_4" data-toggle="tab" href="#actions_tab_content_4">User profile</a>
+                                    </li>
+                                    <li>
+                                        <a id="actions_tab_5" data-toggle="tab" href="#actions_tab_content_5">Users management</a>
+                                    </li>
+                                    <li>
+                                        <a id="actions_tab_6" data-toggle="tab" href="#actions_tab_content_6">Settings</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content clearfix camera_tab_container">
+                                    <div id="actions_tab_content_1" class="tab-pane active">
+                                        <?php require_once("{$root->getUtility()->getPathRoot()}/Resources/views/render/status.php"); ?>
+                                    </div>
+                                    <div id="actions_tab_content_2" class="tab-pane">
+                                        <div class="margin_top overflow_y_hidden">
+                                            <div id="camera_apparatusProfile_result"></div>
+                                        </div>
+                                    </div>
+                                    <div id="actions_tab_content_3" class="tab-pane">
+                                        <div class="margin_top">
+                                            <div id="camera_file_result"></div>
+                                        </div>
+                                    </div>
+                                    <div id="actions_tab_content_4" class="tab-pane">
+                                        <div class="margin_top margin_bottom">
+                                            <div id="camera_userProfile_result"></div>
+                                        </div>
+                                    </div>
+                                    <div id="actions_tab_content_5" class="tab-pane">
+                                        <div class="margin_top margin_bottom">
+                                            <div id="camera_userManagement_result"></div>
+                                        </div>
+                                    </div>
+                                    <div id="actions_tab_content_6" class="tab-pane">
+                                        <div class="margin_top">
+                                            <div id="camera_setting_result"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div id="controls_container" class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Controls</h3>
-                        </div>
-                        <div class="panel-body overflow_hidden">
-                            <div id="camera_controls_result"></div>
-                        </div>
-                    </div>
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Actions</h3>
-                        </div>
-                        <div class="panel-body overflow_hidden">
-                            <ul class="nav nav-tabs">
-                                <li class="active">
-                                    <a id="actions_tab_1" data-toggle="tab" href="#actions_tab_content_1">Status</a>
-                                </li>
-                                <li>
-                                    <a id="actions_tab_2" data-toggle="tab" href="#actions_tab_content_2">Profile</a>
-                                </li>
-                                <li>
-                                    <a id="actions_tab_3" data-toggle="tab" href="#actions_tab_content_3">Files</a>
-                                </li>
-                                <li>
-                                    <a id="actions_tab_4" data-toggle="tab" href="#actions_tab_content_4">Settings</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content clearfix camera_tab_container">
-                                <div id="actions_tab_content_1" class="tab-pane active">
-                                    <?php require_once("{$root->getUtility()->getPathRoot()}/Resources/views/render/status.php"); ?>
-                                </div>
-                                <div id="actions_tab_content_2" class="tab-pane">
-                                    <div class="margin_top overflow_y_hidden">
-                                        <div id="camera_profile_result"></div>
-                                    </div>
-                                </div>
-                                <div id="actions_tab_content_3" class="tab-pane">
-                                    <div class="margin_top">
-                                        <div id="camera_files_result"></div>
-                                    </div>
-                                </div>
-                                <div id="actions_tab_content_4" class="tab-pane">
-                                    <div class="margin_top">
-                                        <div id="camera_settings_result"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <?php
+            }
+            ?>
         </div>
         <?php
         require_once("{$root->getUtility()->getPathRoot()}/Resources/views/include/loader.php");
@@ -143,9 +167,9 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                 'ajaxConnectionError': "Connection error, please reload the page."
             };
             
-            var settings = {
-                'widthMobile': 1050,
-                'widthDesktop': 1051,
+            var setting = {
+                'widthMobile': 991,
+                'widthDesktop': 992,
                 'template': "<?php echo $settingRow['template']; ?>",
                 'serverUrl': "<?php echo $settingRow['server_url']; ?>"
             };
@@ -166,6 +190,7 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
         <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/PopupEasy.js"></script>
         <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/TableAndPagination.js"></script>
         <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/Download.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/Authentication.js"></script>
         <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/IpCamera.js"></script>
         
         <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/system/Index.js"></script>
