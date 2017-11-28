@@ -24,15 +24,16 @@ DROP TABLE IF EXISTS `cameras`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cameras` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `camera_number` int(255) NOT NULL DEFAULT '0',
+  `number` int(255) NOT NULL DEFAULT '0',
+  `label` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'camera',
   `device_id` int(11) NOT NULL,
   `video_url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `threshold` int(4) NOT NULL DEFAULT '10000',
+  `threshold` int(5) NOT NULL DEFAULT '10000',
   `motion_detection_status` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pause',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +42,7 @@ CREATE TABLE `cameras` (
 
 LOCK TABLES `cameras` WRITE;
 /*!40000 ALTER TABLE `cameras` DISABLE KEYS */;
-INSERT INTO `cameras` VALUES (1,1,1,'http://home-cs.ddns.net:1000','admin','Gu12Lei1',10000,'pause');
+INSERT INTO `cameras` VALUES (1,1,'Cosenza - Salone',1,'http://home-cs.ddns.net:1000','admin','Gu12Lei1',10000,'pause');
 /*!40000 ALTER TABLE `cameras` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -142,7 +143,7 @@ CREATE TABLE `users` (
   `ip` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `attempt_login` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -151,7 +152,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'1,2,','admin','','$2y$10$JhdTt2OkDZbp35HjbqnAZeFDMBh/1MAT2Bc70XyWzxMHmc6rCmAQC',1,'2017-11-20 21:27:52','2017-11-20 21:15:55',NULL,'79.51.52.39',0);
+INSERT INTO `users` VALUES (1,'1,2,','admin','','$2y$10$JhdTt2OkDZbp35HjbqnAZeFDMBh/1MAT2Bc70XyWzxMHmc6rCmAQC',1,'2017-11-26 18:52:36','2017-11-26 18:34:17',NULL,'79.51.52.39',0),(2,'1,','leonardo','test@test.it','$2y$10$OShdar0KWaBQo0eJj50FeOxBgqbhHhd3RbQnoO2aLPYYLzeleX1MS',1,'2017-11-26 18:47:08','2017-11-26 18:43:27',NULL,'79.51.52.39',0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,4 +169,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-20 21:29:22
+-- Dump completed on 2017-11-26 18:57:11

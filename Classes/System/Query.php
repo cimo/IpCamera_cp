@@ -40,11 +40,11 @@ class Query {
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function selectCameraDatabase($cameraNumber) {
+    public function selectCameraDatabase($number) {
         $query = $this->database->getPdo()->prepare("SELECT * FROM cameras
-                                                        WHERE camera_number = :cameraNumber");
+                                                        WHERE number = :number");
         
-        $query->bindValue(":cameraNumber", $cameraNumber);
+        $query->bindValue(":number", $number);
         
         $query->execute();
         
@@ -78,6 +78,17 @@ class Query {
         return $query->fetch(PDO::FETCH_ASSOC);
     }
     
+    public function selectAllUserDatabase($idExclude = 0) {
+        $query = $this->database->getPdo()->prepare("SELECT * FROM users
+                                                        WHERE id != :idExclude");
+        
+        $query->bindValue(":idExclude", $idExclude);
+        
+        $query->execute();
+        
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
     public function selectRoleUserDatabase($roleId, $modify = false) {
         $roleIdExplode = explode(",", $roleId);
         array_pop($roleIdExplode);
@@ -101,6 +112,24 @@ class Query {
         }
         
         return $level;
+    }
+    
+    public function selectAllRoleUserDatabase($change = false) {
+        $query = $this->database->getPdo()->prepare("SELECT * FROM roles_users");
+        
+        $query->execute();
+        
+        $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+        
+        if ($change == true) {
+            foreach ($rows as &$value) {
+                $value = str_replace("ROLE_", "", $value);
+                $value = array_map("strtolower", $value);
+                $value = array_map("ucfirst", $value);
+            }
+        }
+        
+        return $rows;
     }
     
     // Functions private

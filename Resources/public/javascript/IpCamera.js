@@ -36,12 +36,10 @@ function IpCamera() {
             if (parseInt($("#form_camera_selection_cameraNumber").val()) === 0) {
                 popupEasy.create(
                     window.text.warning,
-                    "You would like create a new camera settings?",
+                    "You would like create a new camera?",
                     function() {
                         popupEasy.close();
-
-                        createNew = true;
-
+                        
                         statusSend(form, lastSelectOption, true);
                     },
                     function() {
@@ -102,12 +100,6 @@ function IpCamera() {
                 $("#camera_file_result").html("");
             },
             function(xhr) {
-                /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
-                    ajax.reply(xhr, "");
-                    
-                    return;
-                }*/
-                
                 if (createNew === true) {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                     
@@ -234,12 +226,6 @@ function IpCamera() {
                     false,
                     null,
                     function(xhr) {
-                        /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
-                            ajax.reply(xhr, "");
-
-                            return;
-                        }*/
-                        
                         takePictureEnable = false;
 
                         ajax.reply(xhr, "");
@@ -279,12 +265,6 @@ function IpCamera() {
                 false,
                 null,
                 function(xhr) {
-                    /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
-                        ajax.reply(xhr, "");
-
-                        return;
-                    }*/
-                    
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                     
                     labelStatus();
@@ -313,12 +293,6 @@ function IpCamera() {
                         false,
                         null,
                         function(xhr) {
-                            /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
-                                ajax.reply(xhr, "");
-
-                                return;
-                            }*/
-
                             ajax.reply(xhr, "");
                             
                             $("#form_camera_selection_cameraNumber").find("option[value=" + cameraNumber + "]").remove();
@@ -362,12 +336,6 @@ function IpCamera() {
                 false,
                 null,
                 function(xhr) {
-                    /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
-                        ajax.reply(xhr, "");
-
-                        return;
-                    }*/
-                    
                     ajax.reply(xhr, "");
                     
                     tableAndPagination.populate(xhr);
@@ -397,12 +365,6 @@ function IpCamera() {
                         false,
                         null,
                         function(xhr) {
-                            /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
-                                ajax.reply(xhr, "");
-
-                                return;
-                            }*/
-
                             ajax.reply(xhr, "");
                             
                             tableAndPagination.populate(xhr);
@@ -447,12 +409,6 @@ function IpCamera() {
                         false,
                         null,
                         function(xhr) {
-                            /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
-                                ajax.reply(xhr, "");
-
-                                return;
-                            }*/
-
                             ajax.reply(xhr, "");
                             
                             tableAndPagination.populate(xhr);
@@ -493,25 +449,74 @@ function IpCamera() {
     }
     
     function userManagement() {
-        $("#form_cp_user_selection").on("submit", "", function(event) {
+        $("#form_user_management_selection").on("submit", "", function(event) {
             event.preventDefault();
             
-            ajax.send(
-                true,
-                true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                JSON.stringify($(this).serializeArray()),
-                "json",
-                false,
-                null,
-                function(xhr) {
-                    ajax.reply(xhr, "#" + event.currentTarget.id);
-                },
-                null,
-                null
-            );
+            var form = $(this);
+            
+            if (parseInt($("#form_user_management_selection_id").val()) === 0) {
+                popupEasy.create(
+                    window.text.warning,
+                    "You would like create a new user?",
+                    function() {
+                        popupEasy.close();
+
+                        userManagementLogic(form);
+                    },
+                    function() {
+                        popupEasy.close();
+                    }
+                );
+            }
+            else
+                userManagementLogic(form);
         });
+    }
+    
+    function userManagementLogic(form) {
+        ajax.send(
+            true,
+            true,
+            form.prop("action"),
+            form.prop("method"),
+            JSON.stringify(form.serializeArray()),
+            "json",
+            false,
+            function() {
+                $("#user_management_selection_result").html("");
+            },
+            function(xhr) {
+                ajax.reply(xhr, "#" + event.currentTarget.id);
+
+                if (xhr.response.render !== undefined) {
+                    $("#user_management_selection_result").load(window.url.root + "/Resources/views/render/" + xhr.response.render, function() {
+                        utility.wordTag("#form_user_management_roleUserId");
+
+                        $("#form_user_management").on("submit", "", function(event) {
+                            event.preventDefault();
+
+                            ajax.send(
+                                true,
+                                true,
+                                $(this).prop("action"),
+                                $(this).prop("method"),
+                                JSON.stringify($(this).serializeArray()),
+                                "json",
+                                false,
+                                null,
+                                function(xhr) {
+                                    ajax.reply(xhr, "#" + event.currentTarget.id);
+                                },
+                                null,
+                                null
+                            );
+                        });
+                    });
+                }
+            },
+            null,
+            null
+        );
     }
     
     function setting() {
@@ -528,12 +533,6 @@ function IpCamera() {
                 false,
                 null,
                 function(xhr) {
-                    /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
-                        ajax.reply(xhr, "");
-
-                        return;
-                    }*/
-                    
                     ajax.reply(xhr, "");
                 },
                 null,

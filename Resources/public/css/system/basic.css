@@ -128,13 +128,13 @@ p { margin: 0; }
 
 .form_title { visibility: hidden; margin: 0; font-size: initial; }
 
-.panel { position: relative; background-color: #ffffff; border: 1px solid transparent; padding-right: 0; padding-left: 0; -webkit-box-shadow: none; -moz-box-shadow: none; -ms-filter: none; filter: none; box-shadow: none; }
+.panel { position: relative; background-color: #ffffff; border: none; padding-right: 0; padding-left: 0; -webkit-box-shadow: none; -moz-box-shadow: none; -ms-filter: none; filter: none; box-shadow: none; }
 
 .panel_clean { position: relative; }
 
 .panel-heading { padding: 10px 15px; border-bottom: 1px solid #e7e7e7; }
 
-.panel-body { padding: 15px; border: 1px solid #e7e7e7; }
+.panel-body { padding: 15px; border: none; }
 
 .button_custom, .button_custom_success, .button_custom_danger { display: inline-block; padding: 5px 12px; margin-top: 0; margin-bottom: 0; margin-left: 2px; margin-right: 2px; text-align: center; white-space: nowrap; vertical-align: middle; cursor: pointer; text-decoration: none; outline: 0; background-color: #337ab7; color: #ffffff; border: 1px solid #2e6da4; border-radius: 4px; }
 .button_custom:hover, .button_custom_success:hover, .button_custom_danger:hover { text-decoration: none; background-color: #286090; color: #ffffff; border-color: #204d74; }

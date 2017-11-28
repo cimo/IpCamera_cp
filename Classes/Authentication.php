@@ -69,8 +69,11 @@ class Authentication {
                 $checkAttemptLogin = $this->ipCameraUtility->checkAttemptLogin("success", $userRow['id'], $this->settingRow);
                 
                 if ($checkAttemptLogin[0] == true) {
-                    $_SESSION['userLogged'] = $userRow;
-                    $_SESSION['userLogged']['userRoleRow'] = $this->query->selectRoleUserDatabase($_SESSION['userLogged']['role_user_id'], true);
+                    if (isset($parameters['_remember_me']) == true)
+                        setcookie(session_name() . "_REMEMBERME", $parameters['_remember_me'], time() + 3600 * 24 * 365, "/");
+                    
+                    $_SESSION['user_logged'] = $userRow;
+                    $_SESSION['user_logged']['userRoleRow'] = $this->query->selectRoleUserDatabase($_SESSION['user_logged']['role_user_id'], true);
 
                     $this->response['values'] = "logged";
                 }
@@ -95,7 +98,12 @@ class Authentication {
     }
     
     private function authenticationExitCheckAction() {
-        unset($_SESSION['userLogged']);
+        if (isset($_COOKIE[session_name() . '_REMEMBERME']) == true) {
+            unset($_COOKIE[session_name() . '_REMEMBERME']);
+            setcookie(session_name() . "_REMEMBERME", null, -1, "/");
+        }
+        
+        unset($_SESSION['user_logged']);
         
         $this->response['values'] = "unlogged";
     }

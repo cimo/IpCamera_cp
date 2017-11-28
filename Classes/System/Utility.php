@@ -91,7 +91,7 @@ class Utility {
         session_unset();
         
         $cookies = Array(
-            'rememberme'
+            session_name() . '_REMEMBERME'
         );
         
         foreach ($cookies as $value)
@@ -317,7 +317,7 @@ class Utility {
             }
         }
         
-        if (isset($_SESSION['user_id']) == true) {
+        if (isset($_COOKIE[session_name() . '_REMEMBERME']) == false && isset($_SESSION['user_logged']) == true) {
             if (isset($_SESSION['timestamp']) == false)
                 $_SESSION['timestamp'] = time();
             else {
@@ -336,7 +336,11 @@ class Utility {
                     else {
                         $this->sessionUnset();
                         
+                        $this->generateToken();
+                        
                         header("location: ../web/index.php");
+                        
+                        exit();
                     }
                     
                     $_SESSION['user_activity'] = $userActivity;
@@ -354,7 +358,7 @@ class Utility {
                     'userActivity' => $_SESSION['user_activity']
                 ));
 
-                exit;
+                exit();
             }
         }
         

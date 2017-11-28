@@ -288,8 +288,6 @@ function Utility() {
     };
     
     self.wordTag = function(tag, type) {
-        $(tag).hide();
-        
         if ($(tag).val() !== undefined) {
             var inputValueSplit = $(tag).val().split(",");
             inputValueSplit.pop();
@@ -299,6 +297,8 @@ function Utility() {
                 
                 if (type !== "input")
                     value = $(tag + "_field").find("option").eq(index).text();
+                
+                $(tag + "_field").parent().find(".wordTag_label").remove();
                 
                 $(tag + "_field").before("<span id=\"wordTag_" + index + "\" class=\"wordTag_label\"><div class=\"display_inline\">" + value + "</div><i id=\"wordTag_close_" + index + "\" class=\"wordTag_close fa fa-remove\"></i></span>");
             

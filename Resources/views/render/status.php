@@ -4,8 +4,15 @@
             <label class="control-label required" for="form_camera_selection_cameraNumber">Cameras</label>
             <select id="form_camera_selection_cameraNumber" class="form-control" name="form_camera_selection[cameraNumber]" required="required">
                 <option value="-1">Select</option>
-                <option value="0">New</option>
-                <?php $root->getIpCamera()->generateSelectOptionFromMotionConfig(); ?>
+                <?php
+                if ($checkRoleUser == true) {
+                ?>
+                    <option value="0">New</option>
+                <?php
+                }
+                
+                $root->getIpCamera()->generateSelectOptionFromMotionConfig();
+                ?>
             </select>
         </div>
         

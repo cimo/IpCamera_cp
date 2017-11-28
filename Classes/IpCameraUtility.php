@@ -39,6 +39,20 @@ class IpCameraUtility {
         return $list;
     }
     
+    public function createRoleUserHtml($selectId, $isRequired = false) {
+        $rows = $this->query->selectAllRoleUserDatabase();
+        
+        $required = $isRequired == true ? "required=\"required\"" : "";
+        
+        $html = "<select id=\"$selectId\" class=\"form-control\" $required>
+            <option value=\"\">Select</option>";
+            foreach($rows as $key => $value)
+                $html .= "<option value=\"{$value['id']}\">{$value['level']}</option>";
+        $html .= "</select>";
+        
+        return $html;
+    }
+    
     public function checkAttemptLogin($type, $userValue, $settingRow) {
         $row = $this->query->selectUserDatabase($userValue);
         
@@ -111,6 +125,20 @@ class IpCameraUtility {
         return Array(true, $result[0], $result[1]);
     }
     
+    public function checkRoleUser($roleName, $roleId) {
+        $row = $this->query->selectRoleUserDatabase($roleId);
+        
+        foreach ($roleName as $key => $value) {
+            if (in_array($value, $row) == true) {
+                return true;
+
+                break;
+            }
+        }
+        
+        return false;
+    }
+    
     public function checkInRoleUser($roleIdFirst, $roleIdSecond) {
         $roleIdFirstExplode = explode(",", $roleIdFirst);
         array_pop($roleIdFirstExplode);
@@ -125,32 +153,34 @@ class IpCameraUtility {
     }
     
     public function assigUserPassword($type, $user, $parameters) {
-        $result = Array("error");
-        
-        $row = $this->query->selectUserDatabase($user['id']);
+        $result = Array();
         
         if ($type == "withOld") {
+            $row = $this->query->selectUserDatabase($user['id']);
+            
             if (password_verify($parameters['old'], $row['password']) == false)
                 $result['error'] = "Old password doesn't match!";
             else if ($parameters['new'] == "" || $parameters['newConfirm'] == "" || $parameters['new'] != $parameters['newConfirm'])
                 $result['error'] = "New password and New confirm password doesn't match!";
             else
-                $result['password'] = $this->createPasswordEncoder($type, $user, $parameters);
+                $result['password'] = $this->createPasswordEncoder($type, $parameters);
         }
         else if ($type == "withoutOld") {
             if ($parameters['password'] != "" || $parameters['passwordConfirm'] != "") {
-                if ($parameters['password'] != $parameters['passwordConfirm'])
+                if ($parameters['password'] == "" || $parameters['passwordConfirm'] == "" || $parameters['password'] != $parameters['passwordConfirm'])
                     $result['error'] = "Password and Confirm password doesn't match!";
-                
-                $result['password'] = $this->createPasswordEncoder($type, $user, $parameters);
+                else
+                    $result['password'] = $this->createPasswordEncoder($type, $parameters);
             }
+            else
+                $result['password'] = "";
         }
         
         return $result;
     }
     
     // Functions private
-    private function createPasswordEncoder($type, $user, $parameters) {
+    private function createPasswordEncoder($type, $parameters) {
         if ($type == "withOld")
             return password_hash($parameters['new'], PASSWORD_DEFAULT);
         else if ($type == "withoutOld")

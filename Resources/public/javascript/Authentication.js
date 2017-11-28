@@ -25,12 +25,6 @@ function Authentication() {
                 false,
                 null,
                 function(xhr) {
-                    /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
-                        ajax.reply(xhr, "");
-
-                        return;
-                    }*/
-                    
                     ajax.reply(xhr, "");
                     
                     if (xhr.response.values !== undefined && xhr.response.values === "logged")
@@ -55,12 +49,6 @@ function Authentication() {
                 false,
                 null,
                 function(xhr) {
-                    /*if (xhr.response.session !== undefined && xhr.response.session.userActivity !== "") {
-                        ajax.reply(xhr, "");
-
-                        return;
-                    }*/
-                    
                     ajax.reply(xhr, "");
                     
                     if (xhr.response.values !== undefined && xhr.response.values === "unlogged")

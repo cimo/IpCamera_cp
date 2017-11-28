@@ -3,6 +3,10 @@ require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/System/Root.php");
 
 $root = new Root();
 
+$userLoggedRoleUserId = isset($_SESSION['user_logged']) == true ? $_SESSION['user_logged']['role_user_id'] : 0;
+
+$checkRoleUser = $root->getIpCameraUtility()->checkRoleUser(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $userLoggedRoleUserId);
+
 $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
 ?>
 <!DOCTYPE html>
@@ -45,13 +49,13 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                 </div>
             </div>
             <?php
-            if (isset($_SESSION['userLogged']) == false && empty($_SESSION['userLogged']) == true)
+            if (isset($_SESSION['user_logged']) == false)
                 require_once("{$root->getUtility()->getPathRoot()}/Resources/views/render/module/authentication.php");
             else {
             ?>
                 <div class="row">
                     <div class="col-md-8">
-                        <div class="panel panel-primary">
+                        <div class="panel panel-primary shadow">
                             <div class="panel-heading clearfix">
                                 <div class="pull-left">
                                     <h3 class="panel-title">Video</h3>
@@ -67,7 +71,7 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div id="control_container" class="panel panel-primary">
+                        <div id="control_container" class="panel panel-primary shadow">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Controls</h3>
                             </div>
@@ -75,7 +79,7 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                                 <div id="camera_control_result"></div>
                             </div>
                         </div>
-                        <div class="panel panel-primary">
+                        <div class="panel panel-primary shadow">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Actions</h3>
                             </div>
@@ -93,12 +97,18 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                                     <li>
                                         <a id="actions_tab_4" data-toggle="tab" href="#actions_tab_content_4">User profile</a>
                                     </li>
-                                    <li>
-                                        <a id="actions_tab_5" data-toggle="tab" href="#actions_tab_content_5">Users management</a>
-                                    </li>
-                                    <li>
-                                        <a id="actions_tab_6" data-toggle="tab" href="#actions_tab_content_6">Settings</a>
-                                    </li>
+                                    <?php
+                                    if ($checkRoleUser == true) {
+                                    ?>
+                                        <li>
+                                            <a id="actions_tab_5" data-toggle="tab" href="#actions_tab_content_5">Users management</a>
+                                        </li>
+                                        <li>
+                                            <a id="actions_tab_6" data-toggle="tab" href="#actions_tab_content_6">Settings</a>
+                                        </li>
+                                    <?php
+                                    }
+                                    ?>
                                 </ul>
                                 <div class="tab-content clearfix camera_tab_container">
                                     <div id="actions_tab_content_1" class="tab-pane active">
@@ -119,16 +129,22 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                                             <div id="camera_userProfile_result"></div>
                                         </div>
                                     </div>
-                                    <div id="actions_tab_content_5" class="tab-pane">
-                                        <div class="margin_top margin_bottom">
-                                            <div id="camera_userManagement_result"></div>
+                                    <?php
+                                    if ($checkRoleUser == true) {
+                                    ?>
+                                        <div id="actions_tab_content_5" class="tab-pane">
+                                            <div class="margin_top margin_bottom">
+                                                <div id="camera_userManagement_result"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div id="actions_tab_content_6" class="tab-pane">
-                                        <div class="margin_top">
-                                            <div id="camera_setting_result"></div>
+                                        <div id="actions_tab_content_6" class="tab-pane">
+                                            <div class="margin_top">
+                                                <div id="camera_setting_result"></div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    <?php
+                                    }
+                                    ?>
                                 </div>
                             </div>
                         </div>

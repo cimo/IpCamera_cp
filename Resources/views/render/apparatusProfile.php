@@ -1,7 +1,14 @@
 <?php
 require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/System/Root.php");
 
+if (isset($_SESSION['user_logged']) == false)
+    return;
+
 $root = new Root();
+
+$userLoggedRoleUserId = isset($_SESSION['user_logged']) == true ? $_SESSION['user_logged']['role_user_id'] : 0;
+
+$checkRoleUser = $root->getIpCameraUtility()->checkRoleUser(Array("ROLE_ADMIN"), $userLoggedRoleUserId);
 
 $deviceRows = $root->getUtility()->getQuery()->selectAllDeviceDatabase();
 $cameraRow = $root->getUtility()->getQuery()->selectCameraDatabase($_SESSION['camera_number']);
@@ -9,6 +16,14 @@ $cameraRow = $root->getUtility()->getQuery()->selectCameraDatabase($_SESSION['ca
 <form id="form_camera_apparatusProfile" action="<?php echo $root->getUtility()->getUrlRoot() ?>/Requests/IpCameraRequest.php?controller=apparatusProfileAction" method="post" novalidate="novalidate">
     <table class="table table-bordered table-striped margin_bottom">
         <tbody class="table_tbody">
+            <tr>
+                <td>
+                    Label
+                </td>
+                <td>
+                    <input id="form_camera_apparatusProfile_label" class="form-control" type="text" name="form_camera_apparatusProfile[label]" value="<?php echo $cameraRow['label']; ?>" required="required"/>
+                </td>
+            </tr>
             <tr>
                 <td>
                     Devices
@@ -75,10 +90,16 @@ $cameraRow = $root->getUtility()->getQuery()->selectCameraDatabase($_SESSION['ca
     <input class="button_custom" type="submit" value="Update"/>
 </form>
 
-<div class="margin_bottom">
-    <h3>Camera deletion</h3>
+<?php
+if ($checkRoleUser == true) {
+?>
+    <div class="margin_bottom">
+        <h3>Camera deletion</h3>
 
-    <p>Warning! If you delete the camera is impossible return back.</p>
+        <p>Warning! If you delete the camera is impossible return back.</p>
 
-    <button id="camera_deletion" class="button_custom_danger" type="button">Delete</button>
-</div>
+        <button id="camera_deletion" class="button_custom_danger" type="button">Delete</button>
+    </div>
+<?php
+}
+?>

@@ -5,7 +5,7 @@
     </div>
     <div class="panel-body">
         <div class="authentication_container">
-            <?php if (isset($_SESSION['userLogged']) == false && empty($_SESSION['userLogged']) == true) { ?>
+            <?php if (isset($_SESSION['user_logged']) == false) { ?>
                 <form id="form_user_authentication" action="<?php echo $root->getUtility()->getUrlRoot() ?>/Requests/AuthenticationRequest.php?controller=authenticationEnterCheckAction" method="post" novalidate="novalidate">
                     <div class="form-group">
                         <label class="control-label required" for="_username">Username</label>
@@ -33,20 +33,20 @@
             else {
             ?>
                 <p class="margin_clear"><b>Welcome:</b></p>
-                <p class="margin_clear"><?php echo $_SESSION['userLogged']['username']; ?></p>
+                <p class="margin_clear"><?php echo $_SESSION['user_logged']['username']; ?></p>
                 <p class="margin_clear"><b>Role:</b></p>
                 <p class="margin_clear">
                     <?php
                     $role = "";
                     
-                    foreach ($_SESSION['userLogged']['userRoleRow'] as $key => $value)
+                    foreach ($_SESSION['user_logged']['userRoleRow'] as $key => $value)
                         $role .= " - $value";
                     
                     echo $role;
                     ?>
                 </p>
                 <p class="margin_clear"><b>Last login:</b></p>
-                <p class="margin_clear"><?php echo $_SESSION['userLogged']['date_last_login']; ?></p>
+                <p class="margin_clear"><?php echo $_SESSION['user_logged']['date_last_login']; ?></p>
                 <div class="margin_top horizontal_center">
                     <a id="button_user_logout" class="button_custom btn-block logout_button" href="#">Logout</a>
                 </div>

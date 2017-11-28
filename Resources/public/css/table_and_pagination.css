@@ -114,9 +114,9 @@ legend { width: inherit; padding: 0 10px; border-bottom: none; }
 
 .pagination-controle .loading i { position: relative; top: 7px; left: 10px; }
 
-.table_thead tr th { max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle !important; }
+.table_thead tr th { max-width: 400px; overflow: hidden; text-overflow: ellipsis; vertical-align: middle !important; }
 
-.table_tbody tr td { max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: middle !important; }
+.table_tbody tr td { max-width: 400px; overflow: hidden; text-overflow: ellipsis; vertical-align: middle !important; }
 
 .table_borderless th, .table_borderless td { border: none !important; }
 

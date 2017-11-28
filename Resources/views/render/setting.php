@@ -1,6 +1,9 @@
 <?php
 require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/System/Root.php");
 
+if (isset($_SESSION['user_logged']) == false)
+    return;
+
 $root = new Root();
 
 $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
