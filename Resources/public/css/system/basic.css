@@ -110,8 +110,8 @@ legend { width: inherit; padding: 0 10px; border-bottom: none; }
 
 @font-face { font-family: "pt_sans"; src: url("../../fonts/pt_sans.eot"), url("../../fonts/pt_sans.eot?#iefix") format("embedded-opentype"), url("../../fonts/pt_sans.woff2") format("woff2"), url("../../fonts/pt_sans.woff") format("woff"), url("../../fonts/pt_sans.ttf") format("truetype"); font-weight: normal; font-style: normal; }
 @font-face { font-family: "archivo_black"; src: url("../../fonts/archivo_black.eot"), url("../../fonts/archivo_black.eot?#iefix") format("embedded-opentype"), url("../../fonts/archivo_black.woff2") format("woff2"), url("../../fonts/archivo_black.woff") format("woff"), url("../../fonts/archivo_black.ttf") format("truetype"); font-weight: normal; font-style: normal; }
-@media (max-width: 991px) { #camera_file_table .search_input { width: 100%; } }
-@media (min-width: 992px) { #camera_file_table .search_input { width: 50%; } }
+@media (max-width: 991px) { #apparatus_file_table .search_input { width: 100%; } }
+@media (min-width: 992px) { #apparatus_file_table .search_input { width: 50%; } }
 body { position: absolute; top: 0; right: 0; left: 0; min-height: 100%; font-family: "pt_sans", sans-serif; font-size: 14px; }
 
 table, .table { font-family: "pt_sans", sans-serif; font-size: 14px; margin-bottom: 0; }
@@ -163,17 +163,19 @@ p { margin: 0; }
 .accordion_container .title { cursor: pointer; }
 .accordion_container .content { display: none; }
 
-.camera_tab_container { padding: 0 15px; border: 1px solid #dddddd; border-top: 0; }
+.apparatus_tab_container { padding: 0 15px; border: 1px solid #dddddd; border-top: 0; }
 
-.camera_control { width: 50px; cursor: pointer; }
+.apparatus_control { width: 50px; cursor: pointer; }
 
-.camera_control_picture { vertical-align: middle; }
+.apparatus_control_picture { vertical-align: middle; }
 
-.bootstrap-switch-id-camera_control_swipe_switch { margin-right: 20px; }
+.bootstrap-switch-id-apparatus_control_swipe_switch { margin-right: 20px; }
 
-#camera_video_area { display: none; position: absolute; top: 0; left: 50%; width: 100%; height: 100%; background-color: #ff0000; -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; filter: alpha(opacity=50); opacity: 0.5; }
+#recover_password { width: 300px; margin: auto; }
 
-#camera_video_result { position: relative; }
+#apparatus_video_area { display: none; position: absolute; top: 0; left: 50%; width: 100%; height: 100%; background-color: #ff0000; -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; filter: alpha(opacity=50); opacity: 0.5; }
+
+#apparatus_video_result { position: relative; }
 
 #control_container .panel-body { min-height: 206px; }
 

@@ -8,7 +8,7 @@ function IpCamera() {
     // Vars
     var self = this;
     
-    var cameraNumber = window.session.cameraNumber;
+    var apparatusNumber = window.session.apparatusNumber;
     
     var detectionStatus = "";
     
@@ -26,14 +26,14 @@ function IpCamera() {
     };
     
     self.status = function() {
-        var lastSelectOption = parseInt($("#form_camera_selection_cameraNumber").find("option").last().val());
+        var lastSelectOption = parseInt($("#form_apparatus_selection_number").find("option").last().val());
 
-        $("#form_camera_selection").on("submit", "", function(event) {
+        $("#form_apparatus_selection").on("submit", "", function(event) {
             event.preventDefault();
 
             var form = $(this);
 
-            if (parseInt($("#form_camera_selection_cameraNumber").val()) === 0) {
+            if (parseInt($("#form_apparatus_selection_number").val()) === 0) {
                 popupEasy.create(
                     window.text.warning,
                     "You would like create a new camera?",
@@ -51,39 +51,39 @@ function IpCamera() {
                 statusSend(form, lastSelectOption, false);
         });
 
-        if (cameraNumber > 0)
-            $("#form_camera_selection_cameraNumber").val(cameraNumber);
+        if (apparatusNumber > 0)
+            $("#form_apparatus_selection_number").val(apparatusNumber);
         else
-            $("#form_camera_selection_cameraNumber").val(-1);
+            $("#form_apparatus_selection_number").val(-1);
         
-        $("#form_camera_selection").submit();
+        $("#form_apparatus_selection").submit();
     };
     
     self.changeView = function() {
         if (utility.checkWidth() === "desktop") {
-            $("#camera_video_area").removeClass("touch_disable");
-            $("#camera_video_area").hide();
+            $("#apparatus_video_area").removeClass("touch_disable");
+            $("#apparatus_video_area").hide();
             
             $("#control_container").show();
         }
         else {
             if (utility.getIsMobile() === false) {
-                $("#camera_control_swipe_switch").parents(".bootstrap-switch").hide();
-                $(".panel-heading").find(".camera_control_picture").hide();
+                $("#apparatus_control_swipe_switch").parents(".bootstrap-switch").hide();
+                $(".panel-heading").find(".apparatus_control_picture").hide();
             }
             else
                 $("#control_container").hide();
             
             if (videoAreaEnabled === true) {
-                $("#camera_video_area").show();
-                $("#camera_video_area").addClass("touch_disable");
+                $("#apparatus_video_area").show();
+                $("#apparatus_video_area").addClass("touch_disable");
             }
         }
     };
     
     // Functions private
     function statusSend(form, lastSelectOption, createNew) {
-        cameraNumber = $("#form_camera_selection_cameraNumber").val();
+        apparatusNumber = $("#form_apparatus_selection_number").val();
         
         ajax.send(
             true,
@@ -94,23 +94,23 @@ function IpCamera() {
             "json",
             false,
             function() {
-                $("#camera_video_result").html("");
-                $("#camera_control_result").html("");
-                $("#camera_apparatusProfile_result").html("");
-                $("#camera_file_result").html("");
+                $("#apparatus_video_result").html("");
+                $("#apparatus_control_result").html("");
+                $("#apparatus_profile_result").html("");
+                $("#apparatus_file_result").html("");
             },
             function(xhr) {
                 if (createNew === true) {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                     
-                    cameraNumber = lastSelectOption + 1;
+                    apparatusNumber = lastSelectOption + 1;
                     
                     $("<option>", {
-                        'value': cameraNumber,
-                        'text': "Camera " + cameraNumber
-                    }).appendTo($("#form_camera_selection_cameraNumber"));
+                        'value': apparatusNumber,
+                        'text': "Camera " + apparatusNumber
+                    }).appendTo($("#form_apparatus_selection_number"));
                     
-                    $("#form_camera_selection_cameraNumber").val(cameraNumber);
+                    $("#form_apparatus_selection_number").val(apparatusNumber);
                 }
                 else {
                     ajax.reply(xhr, "");
@@ -121,31 +121,31 @@ function IpCamera() {
                         labelStatus();
                 }
 
-                $("#camera_video_result").load(window.url.root + "/Resources/views/render/video.php", function() {
+                $("#apparatus_video_result").load(window.url.root + "/Resources/views/render/video.php", function() {
                     video();
                 });
 
-                $("#camera_control_result").load(window.url.root + "/Resources/views/render/control.php", function() {
+                $("#apparatus_control_result").load(window.url.root + "/Resources/views/render/control.php", function() {
                     control();
                 });
 
-                $("#camera_apparatusProfile_result").load(window.url.root + "/Resources/views/render/apparatusProfile.php", function() {
+                $("#apparatus_profile_result").load(window.url.root + "/Resources/views/render/apparatus_profile.php", function() {
                     apparatusProfile();
                 });
 
-                $("#camera_file_result").load(window.url.root + "/Resources/views/render/file.php", function() {
+                $("#apparatus_file_result").load(window.url.root + "/Resources/views/render/file.php", function() {
                     file();
                 });
                 
-                $("#camera_userProfile_result").load(window.url.root + "/Resources/views/render/userProfile.php", function() {
+                $("#apparatus_userProfile_result").load(window.url.root + "/Resources/views/render/userProfile.php", function() {
                     userProfile();
                 });
                 
-                $("#camera_userManagement_result").load(window.url.root + "/Resources/views/render/userManagement.php", function() {
+                $("#apparatus_userManagement_result").load(window.url.root + "/Resources/views/render/userManagement.php", function() {
                     userManagement();
                 });
                 
-                $("#camera_setting_result").load(window.url.root + "/Resources/views/render/setting.php", function() {
+                $("#apparatus_setting_result").load(window.url.root + "/Resources/views/render/setting.php", function() {
                     setting();
                 });
             },
@@ -155,34 +155,34 @@ function IpCamera() {
     }
     
     function video() {
-        $("#camera_video").on("error", function() {
-            utility.imageRefresh("#camera_video", 2);
+        $("#apparatus_video").on("error", function() {
+            utility.imageRefresh("#apparatus_video", 2);
         });
     }
     
     function control() {
-        $("#camera_control_swipe_switch").bootstrapSwitch("state", false);
+        $("#apparatus_control_swipe_switch").bootstrapSwitch("state", false);
         
         if (utility.getIsMobile() === false)
-            $("#camera_control_swipe_switch").parents(".bootstrap-switch").hide();
+            $("#apparatus_control_swipe_switch").parents(".bootstrap-switch").hide();
         
-        move("#camera_control_move_up", new Array(0, 1));
-        move("#camera_control_move_right_up", new Array(6, 7, 0, 1));
-        move("#camera_control_move_right", new Array(6, 7));
-        move("#camera_control_move_right_down", new Array(6, 7, 2, 3));
-        move("#camera_control_move_down", new Array(2, 3));
-        move("#camera_control_move_left_down", new Array(4, 5, 2, 3));
-        move("#camera_control_move_left", new Array(4, 5));
-        move("#camera_control_move_left_up", new Array(4, 5, 0, 1));
+        move("#apparatus_control_move_up", new Array(0, 1));
+        move("#apparatus_control_move_right_up", new Array(6, 7, 0, 1));
+        move("#apparatus_control_move_right", new Array(6, 7));
+        move("#apparatus_control_move_right_down", new Array(6, 7, 2, 3));
+        move("#apparatus_control_move_down", new Array(2, 3));
+        move("#apparatus_control_move_left_down", new Array(4, 5, 2, 3));
+        move("#apparatus_control_move_left", new Array(4, 5));
+        move("#apparatus_control_move_left_up", new Array(4, 5, 0, 1));
         
-        $("#camera_control_swipe_switch").on("switchChange.bootstrapSwitch", "", function(event, state) {
+        $("#apparatus_control_swipe_switch").on("switchChange.bootstrapSwitch", "", function(event, state) {
             if (state === true && utility.getIsMobile() === true) {
                 videoAreaEnabled = true;
                 
-                $("#camera_video_area").show();
-                $("#camera_video_area").addClass("touch_disable");
+                $("#apparatus_video_area").show();
+                $("#apparatus_video_area").addClass("touch_disable");
                 
-                $("#camera_video_area").swipe({
+                $("#apparatus_video_area").swipe({
                     left: function() {
                         swipeMoveStart(6);
                         swipeMoveValue = 7;
@@ -206,12 +206,12 @@ function IpCamera() {
             else {
                 videoAreaEnabled = false;
                 
-                $("#camera_video_area").removeClass("touch_disable");
-                $("#camera_video_area").hide();
+                $("#apparatus_video_area").removeClass("touch_disable");
+                $("#apparatus_video_area").hide();
             }
         });
         
-        $(".camera_control_picture").on("click", "", function() {
+        $(".apparatus_control_picture").on("click", "", function() {
             if (takePictureEnable === true) {
                 ajax.send(
                     true,
@@ -244,15 +244,17 @@ function IpCamera() {
     }
     
     function apparatusProfile() {
-        $("#form_camera_apparatusProfile_motionDetectionStatus").bootstrapSwitch();
+        utility.wordTag("#form_apparatus_profile_userId");
         
-        $("#form_camera_apparatusProfile_motionDetectionStatus").on("switchChange.bootstrapSwitch", "", function(event, state) {
+        $("#form_apparatus_profile_motionDetectionStatus").bootstrapSwitch();
+        
+        $("#form_apparatus_profile_motionDetectionStatus").on("switchChange.bootstrapSwitch", "", function(event, state) {
             switchStatus(state);
         });
         
         switchStatus(detectionStatus);
         
-        $("#form_camera_apparatusProfile").on("submit", "", function(event) {
+        $("#form_apparatus_profile").on("submit", "", function(event) {
             event.preventDefault();
 
             ajax.send(
@@ -274,7 +276,7 @@ function IpCamera() {
             );
         });
         
-        $("#camera_deletion").on("click", "", function() {
+        $("#apparatus_deletion").on("click", "", function() {
             popupEasy.create(
                 window.text.warning,
                 "Really delete this camera?",
@@ -295,13 +297,13 @@ function IpCamera() {
                         function(xhr) {
                             ajax.reply(xhr, "");
                             
-                            $("#form_camera_selection_cameraNumber").find("option[value=" + cameraNumber + "]").remove();
-                            $("#form_camera_selection_cameraNumber").val(-1);
+                            $("#form_apparatus_selection_number").find("option[value=" + apparatusNumber + "]").remove();
+                            $("#form_apparatus_selection_number").val(-1);
                             
-                            $("#camera_video_result").html("");
-                            $("#camera_control_result").html("");
-                            $("#camera_apparatusProfile_result").html("");
-                            $("#camera_file_result").html("");
+                            $("#apparatus_video_result").html("");
+                            $("#apparatus_control_result").html("");
+                            $("#apparatus_profile_result").html("");
+                            $("#apparatus_file_result").html("");
                         },
                         null,
                         null
@@ -317,12 +319,12 @@ function IpCamera() {
     function file() {
         var tableAndPagination = new TableAndPagination();
         tableAndPagination.setButtonsStatus("show");
-        tableAndPagination.init(window.url.root + "/Requests/IpCameraRequest.php", "#camera_file_table", true);
+        tableAndPagination.init(window.url.root + "/Requests/IpCameraRequest.php", "#apparatus_file_table", true);
         tableAndPagination.search(true);
         tableAndPagination.pagination(true);
         tableAndPagination.sort(true);
         
-        $(document).on("click", "#camera_file_table .refresh", function() {
+        $(document).on("click", "#apparatus_file_table .refresh", function() {
             ajax.send(
                 true,
                 false,
@@ -345,7 +347,7 @@ function IpCamera() {
             );
         });
         
-        $(document).on("click", "#camera_file_table .delete_all", function() {
+        $(document).on("click", "#apparatus_file_table .delete_all", function() {
             popupEasy.create(
                 window.text.warning,
                 "Really delete all files?",
@@ -379,14 +381,14 @@ function IpCamera() {
             );
         });
         
-        $(document).on("click", "#camera_file_table .camera_file_download", function() {
-            var path = window.path.documentRoot + "/motion/camera_" + cameraNumber;
+        $(document).on("click", "#apparatus_file_table .apparatus_file_download", function() {
+            var path = window.path.documentRoot + "/motion/camera_" + apparatusNumber;
             var name = $(this).parents("tr").find(".name_column").text();
             
             download.send(path, name);
         });
         
-        $(document).on("click", "#camera_file_table .camera_file_delete", function() {
+        $(document).on("click", "#apparatus_file_table .apparatus_file_delete", function() {
             var name = $.trim($(this).parents("tr").find(".name_column").text());
             
             popupEasy.create(
@@ -426,6 +428,26 @@ function IpCamera() {
     
     function userProfile() {
         utility.accordion();
+        
+        $("#form_userProfile_data").on("submit", "", function(event) {
+            event.preventDefault();
+            
+            ajax.send(
+                true,
+                true,
+                $(this).prop("action"),
+                $(this).prop("method"),
+                JSON.stringify($(this).serializeArray()),
+                "json",
+                false,
+                null,
+                function(xhr) {
+                    ajax.reply(xhr, "#" + event.currentTarget.id);
+                },
+                null,
+                null
+            );
+        });
         
         $("#form_userProfile_password").on("submit", "", function(event) {
             event.preventDefault();
@@ -520,7 +542,7 @@ function IpCamera() {
     }
     
     function setting() {
-        $("#form_camera_setting").on("submit", "", function(event) {
+        $("#form_apparatus_setting").on("submit", "", function(event) {
             event.preventDefault();
 
             ajax.send(
@@ -543,30 +565,30 @@ function IpCamera() {
     
     function labelStatus(value) {
         if (value === undefined)
-            detectionStatus = $("#form_camera_apparatusProfile_motionDetectionStatus").val();
+            detectionStatus = $("#form_apparatus_profile_motionDetectionStatus").val();
         else
             detectionStatus = value;
         
         if (detectionStatus === "start")
-            $("#camera_detection_status").text("Active.");
+            $("#apparatus_detection_status").text("Active.");
         else
-            $("#camera_detection_status").text("Not active.");
+            $("#apparatus_detection_status").text("Not active.");
     }
     
     function switchStatus(value) {
         if (value === true || value === "start") {
-            if ($("#form_camera_apparatusProfile_motionDetectionStatus").val() === "" || $("#form_camera_apparatusProfile_motionDetectionStatus").val() === "pause")
-                $("#form_camera_apparatusProfile_motionDetectionStatus").click();
+            if ($("#form_apparatus_profile_motionDetectionStatus").val() === "" || $("#form_apparatus_profile_motionDetectionStatus").val() === "pause")
+                $("#form_apparatus_profile_motionDetectionStatus").click();
             
-            $("#form_camera_apparatusProfile_motionDetectionStatus").prop("value", "start");
-            $("#form_camera_apparatusProfile_motionDetectionStatus").parents(".bootstrap-switch-wrapper").next().prop("value", "start");
+            $("#form_apparatus_profile_motionDetectionStatus").prop("value", "start");
+            $("#form_apparatus_profile_motionDetectionStatus").parents(".bootstrap-switch-wrapper").next().prop("value", "start");
         }
         else {
-            if ($("#form_camera_apparatusProfile_motionDetectionStatus").val() === "start")
-                $("#form_camera_apparatusProfile_motionDetectionStatus").click();
+            if ($("#form_apparatus_profile_motionDetectionStatus").val() === "start")
+                $("#form_apparatus_profile_motionDetectionStatus").click();
             
-            $("#form_camera_apparatusProfile_motionDetectionStatus").prop("value", "pause");
-            $("#form_camera_apparatusProfile_motionDetectionStatus").parents(".bootstrap-switch-wrapper").next().prop("value", "pause");
+            $("#form_apparatus_profile_motionDetectionStatus").prop("value", "pause");
+            $("#form_apparatus_profile_motionDetectionStatus").parents(".bootstrap-switch-wrapper").next().prop("value", "pause");
         }
     }
     
@@ -576,7 +598,7 @@ function IpCamera() {
                 event.preventDefault();
                 
                 utility.postIframe(
-                    window.url.cameraControl + "&command=" + elements[0],
+                    window.url.apparatusControl + "&command=" + elements[0],
                     "post",
                     {
                         'command': elements[0]
@@ -588,7 +610,7 @@ function IpCamera() {
                 event.preventDefault();
                 
                 utility.postIframe(
-                    window.url.cameraControl + "&command=" + elements[1],
+                    window.url.apparatusControl + "&command=" + elements[1],
                     "post",
                     {
                         'command': elements[1]
@@ -601,7 +623,7 @@ function IpCamera() {
                 event.preventDefault();
                 
                 utility.postIframe(
-                    window.url.cameraControl + "&command=" + elements[0],
+                    window.url.apparatusControl + "&command=" + elements[0],
                     "post",
                     {
                         'command': elements[0]
@@ -609,7 +631,7 @@ function IpCamera() {
                 );
         
                 utility.postIframe(
-                    window.url.cameraControl + "&command=" + elements[2],
+                    window.url.apparatusControl + "&command=" + elements[2],
                     "post",
                     {
                         'command': elements[2]
@@ -621,7 +643,7 @@ function IpCamera() {
                 event.preventDefault();
                 
                 utility.postIframe(
-                    window.url.cameraControl + "&command=" + elements[1],
+                    window.url.apparatusControl + "&command=" + elements[1],
                     "post",
                     {
                         'command': elements[1]
@@ -629,7 +651,7 @@ function IpCamera() {
                 );
                 
                 utility.postIframe(
-                    window.url.cameraControl + "&command=" + elements[3],
+                    window.url.apparatusControl + "&command=" + elements[3],
                     "post",
                     {
                         'command': elements[3]
@@ -641,7 +663,7 @@ function IpCamera() {
     
     function swipeMoveStart(value) {
         utility.postIframe(
-            window.url.cameraControl + "&command=" + value,
+            window.url.apparatusControl + "&command=" + value,
             "post",
             {
                 'command': value
@@ -650,10 +672,10 @@ function IpCamera() {
     }
     
     function swipeMoveEnd() {
-        $("#camera_video_area").on("touchend touchcancel", "", function(event) {
+        $("#apparatus_video_area").on("touchend touchcancel", "", function(event) {
             if (swipeMoveValue !== -1) {
                 utility.postIframe(
-                    window.url.cameraControl + "&command=" + swipeMoveValue,
+                    window.url.apparatusControl + "&command=" + swipeMoveValue,
                     "post",
                     {
                         'command': swipeMoveValue

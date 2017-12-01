@@ -45,14 +45,14 @@ class IpCamera {
         
         $this->settingRow = $this->query->selectSettingDatabase();
         
-        $_SESSION['camera_number'] = isset($_SESSION['camera_number']) == true ? $_SESSION['camera_number'] : 1;
+        $_SESSION['apparatus_number'] = isset($_SESSION['apparatus_number']) == true ? $_SESSION['apparatus_number'] : 1;
         
-        $cameraRow = $this->query->selectCameraDatabase($_SESSION['camera_number']);
+        $apparatusRow = $this->query->selectApparatusDatabase($_SESSION['apparatus_number']);
         
-        $deviceRow = $this->query->selectDeviceDatabase($cameraRow['device_id']);
+        $deviceRow = $this->query->selectDeviceDatabase($apparatusRow['device_id']);
         
-        $this->videoUrl = "{$cameraRow['video_url']}/{$deviceRow['video']}user={$cameraRow['username']}&pwd={$cameraRow['password']}&resolution=$this->resolution&rate=$this->rate";
-        $this->controlUrl = "{$cameraRow['video_url']}/decoder_control.cgi?user={$cameraRow['username']}&pwd={$cameraRow['password']}";
+        $this->videoUrl = "{$apparatusRow['video_url']}/{$deviceRow['video']}user={$apparatusRow['username']}&pwd={$apparatusRow['password']}&resolution=$this->resolution&rate=$this->rate";
+        $this->controlUrl = "{$apparatusRow['video_url']}/decoder_control.cgi?user={$apparatusRow['username']}&pwd={$apparatusRow['password']}";
         
         $this->resolution = 32;
         $this->rate = 0;
@@ -81,6 +81,8 @@ class IpCamera {
                         $this->apparatusProfileDeleteAction();
                     else if ($_GET['controller'] == "fileAction")
                         $this->fileAction($parameters);
+                    else if ($_GET['controller'] == "userProfileDataAction")
+                        $this->userProfileDataAction($parameters);
                     else if ($_GET['controller'] == "userProfilePasswordAction")
                         $this->userProfilePasswordAction($parameters);
                     else if ($_GET['controller'] == "userManagementSelectionAction")
@@ -118,8 +120,9 @@ class IpCamera {
                 if ($value != "." && $value != ".." && $value != ".htaccess" && is_file("$motionFolderPath/$value") == true) {
                     if (pathinfo("$motionFolderPath/$value", PATHINFO_EXTENSION) == "conf") {
                         $count ++;
-
-                        echo "<option value=\"$count\">Camera $count</option>";
+                        
+                        if ($this->ipCameraUtility->checkApparatusUserId() == true)
+                            echo "<option value=\"$count\">Camera $count</option>";
                     }
                 }
             }
@@ -136,7 +139,7 @@ class IpCamera {
     }
     
     public function createListHtml() {
-        $motionFolderPath = "{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}";
+        $motionFolderPath = "{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['apparatus_number']}";
         
         $scanDirElements = @scandir($motionFolderPath);
         
@@ -168,10 +171,10 @@ class IpCamera {
                         {$this->utility->sizeUnits(filesize("$motionFolderPath/$value"))}
                     </td>
                     <td class=\"horizontal_center\">
-                        <button class=\"camera_file_download button_custom\"><i class=\"fa fa-download\"></i></button>
+                        <button class=\"apparatus_file_download button_custom\"><i class=\"fa fa-download\"></i></button>
                     </td>
                     <td class=\"horizontal_center\">
-                        <button class=\"camera_file_delete button_custom_danger\"><i class=\"fa fa-remove\"></i></button>
+                        <button class=\"apparatus_file_delete button_custom_danger\"><i class=\"fa fa-remove\"></i></button>
                     </td>
                 </tr>";
             }
@@ -216,8 +219,8 @@ class IpCamera {
     }
     
     private function apparatusProfileConfig($deviceId, $videoUrl, $username, $password, $threshold, $motionDetectionStatus) {
-        @mkdir("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}");
-        @chmod("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}", 0777);
+        @mkdir("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['apparatus_number']}");
+        @chmod("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['apparatus_number']}", 0777);
         
         $deviceRow = $this->query->selectDeviceDatabase($deviceId);
         
@@ -236,46 +239,44 @@ class IpCamera {
             $content .= "output_debug_pictures off\n";
         }
         
-        $content .= "target_dir {$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}";
+        $content .= "target_dir {$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['apparatus_number']}";
         
-        file_put_contents("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}.conf", $content.PHP_EOL);
-        @chmod("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}.conf", 0664);
+        file_put_contents("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['apparatus_number']}.conf", $content.PHP_EOL);
+        @chmod("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['apparatus_number']}.conf", 0664);
         
-        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/config/set?target_dir={$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}");
-        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/config/set?framerate=10");
-        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/config/set?netcam_url=$videoUrl/{$deviceRow['video']}user=$username&pwd=$password&resolution=$this->resolution");
-        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/config/set?netcam_userpass=$username:$password");
-        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/config/set?threshold=$threshold");
+        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?target_dir={$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['apparatus_number']}");
+        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?framerate=10");
+        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?netcam_url=$videoUrl/{$deviceRow['video']}user=$username&pwd=$password&resolution=$this->resolution");
+        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?netcam_userpass=$username:$password");
+        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?threshold=$threshold");
         
         if ($this->settingRow['motion_version'] === "3.1.12") {
-            $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/config/set?netcam_http=1.0");
-            $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/config/set?ffmpeg_cap_new=on");
-            $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/config/set?output_normal=off");
+            $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?netcam_http=1.0");
+            $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?ffmpeg_cap_new=on");
+            $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?output_normal=off");
         }
         else if ($this->settingRow['motion_version'] === "4.0.1") {
-            $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/config/set?ffmpeg_output_movies=on");
-            $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/config/set?output_debug_pictures=off");
+            $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?ffmpeg_output_movies=on");
+            $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?output_debug_pictures=off");
         }
         
-        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/detection/$motionDetectionStatus");
+        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/detection/$motionDetectionStatus");
     }
     
     // Controllers
     private function selectionAction($parameters) {
-        $this->utility->checkSessionOverTime();
-        
-        if (isset($parameters['cameraNumber']) == false)
+        if (isset($parameters['number']) == false)
             return;
         
         $checkRoleUser = $this->ipCameraUtility->checkRoleUser(Array("ROLE_ADMIN"), $_SESSION['user_logged']['role_user_id']);
         
-        if ($parameters['cameraNumber'] == 0 && $checkRoleUser == true) {
-            $cameraRows = $this->query->selectAllCameraDatabase();
+        if ($parameters['number'] == 0 && $checkRoleUser == true) {
+            $apparatusRows = $this->query->selectAllApparatusDatabase();
             
-            $lastCamera = end($cameraRows);
-            $_SESSION['camera_number'] = $lastCamera['number'] + 1;
+            $lastCamera = end($apparatusRows);
+            $_SESSION['apparatus_number'] = $lastCamera['number'] + 1;
             
-            $query = $this->utility->getDatabase()->getPdo()->prepare("INSERT INTO cameras (
+            $query = $this->utility->getDatabase()->getPdo()->prepare("INSERT INTO apparatus (
                                                                             number,
                                                                             device_id,
                                                                             video_url,
@@ -290,7 +291,7 @@ class IpCamera {
                                                                             :password
                                                                         );");
             
-            $query->bindValue(":number", $_SESSION['camera_number']);
+            $query->bindValue(":number", $_SESSION['apparatus_number']);
             $query->bindValue(":deviceId", "");
             $query->bindValue(":videoUrl", "");
             $query->bindValue(":username", "");
@@ -298,18 +299,18 @@ class IpCamera {
             
             $query->execute();
             
-            $this->utility->searchInFile("/etc/motion/motion.conf", "thread {$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}.conf", null);
+            $this->utility->searchInFile("/etc/motion/motion.conf", "thread {$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['apparatus_number']}.conf", null);
             
             $this->apparatusProfileConfig("", "", "", "", "", "pause");
             
             $this->response['messages']['success'] = "New camera created with success.";
         }
-        else if ($parameters['cameraNumber'] > 0) {
-            $_SESSION['camera_number'] = $parameters['cameraNumber'];
+        else if ($parameters['number'] > 0) {
+            $_SESSION['apparatus_number'] = $parameters['number'];
             
             $motionDetectionStatus = "pause";
             
-            $status = $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/detection/status");
+            $status = $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/detection/status");
             
             if (strpos($status, "Detection status PAUSE") === false)
                 $motionDetectionStatus = "start";
@@ -322,17 +323,13 @@ class IpCamera {
     
     private function controlAction($parameters) {
         if ($parameters['event'] == "picture") {
-            $this->utility->checkSessionOverTime();
-            
-            $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/action/snapshot");
+            $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/action/snapshot");
             
             $this->response['messages']['success'] = "Picture taked.";
         }
     }
     
     private function apparatusProfileAction($parameters) {
-        $this->utility->checkSessionOverTime();
-        
         $this->apparatusProfileConfig($parameters['deviceId'],
                                         $parameters['videoUrl'],
                                         $parameters['username'],
@@ -340,14 +337,15 @@ class IpCamera {
                                         $parameters['threshold'],
                                         $parameters['motionDetectionStatus']);
         
-        $query = $this->utility->getDatabase()->getPdo()->prepare("UPDATE cameras
+        $query = $this->utility->getDatabase()->getPdo()->prepare("UPDATE apparatus
                                                                     SET label = :label,
                                                                         device_id = :deviceId,
                                                                         video_url = :videoUrl,
                                                                         username = :username,
                                                                         password = :password,
                                                                         threshold = :threshold,
-                                                                        motion_detection_status = :motionDetectionStatus
+                                                                        motion_detection_status = :motionDetectionStatus,
+                                                                        user_id = :userId
                                                                     WHERE number = :number");
         
         $query->bindValue(":label", $parameters['label']);
@@ -357,53 +355,50 @@ class IpCamera {
         $query->bindValue(":password", $parameters['password']);
         $query->bindValue(":threshold", $parameters['threshold']);
         $query->bindValue(":motionDetectionStatus", $parameters['motionDetectionStatus']);
-        $query->bindValue(":number", $_SESSION['camera_number']);
+        $query->bindValue(":userId", $parameters['userId']);
+        $query->bindValue(":number", $_SESSION['apparatus_number']);
         
         $query->execute();
         
-        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/action/restart");
+        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/action/restart");
         
         $this->response['messages']['success'] = "Profile updated with success.";
     }
     
     private function apparatusProfileDeleteAction() {
-        $this->utility->checkSessionOverTime();
-        
         $checkRoleUser = $this->ipCameraUtility->checkRoleUser(Array("ROLE_ADMIN"), $_SESSION['user_logged']['role_user_id']);
         
         if ($checkRoleUser == false)
             return;
         
-        $this->utility->removeDirRecursive("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}", true);
+        $this->utility->removeDirRecursive("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['apparatus_number']}", true);
         
-        unlink("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}.conf");
+        unlink("{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['apparatus_number']}.conf");
         
-        $this->utility->searchInFile("/etc/motion/motion.conf", "thread {$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}.conf", " ");
+        $this->utility->searchInFile("/etc/motion/motion.conf", "thread {$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['apparatus_number']}.conf", " ");
         
-        $query = $this->utility->getDatabase()->getPdo()->prepare("DELETE FROM cameras
+        $query = $this->utility->getDatabase()->getPdo()->prepare("DELETE FROM apparatus
                                                                     WHERE number = :number");
         
-        $query->bindValue(":number", $_SESSION['camera_number']);
+        $query->bindValue(":number", $_SESSION['apparatus_number']);
         
         $query->execute();
         
-        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['camera_number']}/action/quit");
+        $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/action/quit");
         
-        $_SESSION['camera_number'] = -1;
+        $_SESSION['apparatus_number'] = -1;
         
         $this->response['messages']['success'] = "Camera deleted with success!";
     }
     
     private function fileAction($parameters) {
-        $this->utility->checkSessionOverTime();
-        
         $checkRoleUser = $this->ipCameraUtility->checkRoleUser(Array("ROLE_ADMIN"), $_SESSION['user_logged']['role_user_id']);
         
         if ($checkRoleUser == false)
             return;
         
         if ($parameters['event'] == "delete") {
-            $path = "{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}/" . trim($parameters['name']);
+            $path = "{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['apparatus_number']}/" . trim($parameters['name']);
             
             if (file_exists($path) == true)
                 unlink($path);
@@ -411,7 +406,7 @@ class IpCamera {
             $this->response['messages']['success'] = "File deleted with success!";
         }
         else if ($parameters['event'] == "deleteAll") {
-            $path = "{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['camera_number']}/";
+            $path = "{$_SERVER['DOCUMENT_ROOT']}/motion/camera_{$_SESSION['apparatus_number']}/";
             
             $this->utility->removeDirRecursive($path, false);
             
@@ -421,8 +416,29 @@ class IpCamera {
         $this->createListHtml();
     }
     
+    private function userProfileDataAction($parameters) {
+        $checkRoleUser = $this->ipCameraUtility->checkRoleUser(Array("ROLE_USER"), $_SESSION['user_logged']['role_user_id']);
+        
+        if ($checkRoleUser == false)
+            return;
+        
+        $query = $this->utility->getDatabase()->getPdo()->prepare("UPDATE users
+                                                                    SET email = :email
+                                                                    WHERE id = :id");
+
+        $query->bindValue(":email", $parameters['email']);
+        $query->bindValue(":id", $_SESSION['user_logged']['id']);
+
+        $query->execute();
+
+        $this->response['messages']['success'] = "Profile modified.";
+    }
+    
     private function userProfilePasswordAction($parameters) {
-        $this->utility->checkSessionOverTime();
+        $checkRoleUser = $this->ipCameraUtility->checkRoleUser(Array("ROLE_USER"), $_SESSION['user_logged']['role_user_id']);
+        
+        if ($checkRoleUser == false)
+            return;
         
         $messagePassword = $this->ipCameraUtility->assigUserPassword("withOld", $_SESSION['user_logged'], $parameters);
 
@@ -443,8 +459,6 @@ class IpCamera {
     }
     
     private function userManagementSelectionAction($parameters) {
-        $this->utility->checkSessionOverTime();
-        
         $checkRoleUser = $this->ipCameraUtility->checkRoleUser(Array("ROLE_ADMIN"), $_SESSION['user_logged']['role_user_id']);
         
         if ($checkRoleUser == false)
@@ -469,15 +483,13 @@ class IpCamera {
     }
     
     private function userManagementProfileAction($parameters) {
-        $this->utility->checkSessionOverTime();
-        
         $checkRoleUser = $this->ipCameraUtility->checkRoleUser(Array("ROLE_ADMIN"), $_SESSION['user_logged']['role_user_id']);
         
         if ($checkRoleUser == false)
             return;
         
         if (isset($_SESSION['user_management']) == true) {
-            $messagePassword = $this->ipCameraUtility->assigUserPassword("withoutOld", $_SESSION['user_management'], $parameters);
+            $messagePassword = $this->ipCameraUtility->assigUserPassword("withoutOld", null, $parameters);
             
             if (isset($messagePassword['password']) == true) {
                 if ($_SESSION['user_management'] == "new") {
@@ -540,8 +552,6 @@ class IpCamera {
     }
     
     private function settingAction($parameters) {
-        $this->utility->checkSessionOverTime();
-        
         $checkRoleUser = $this->ipCameraUtility->checkRoleUser(Array("ROLE_ADMIN"), $_SESSION['user_logged']['role_user_id']);
         
         if ($checkRoleUser == false)

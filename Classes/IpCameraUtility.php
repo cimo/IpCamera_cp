@@ -53,6 +53,20 @@ class IpCameraUtility {
         return $html;
     }
     
+    public function createUserHtml($selectId, $isRequired = false) {
+        $rows = $this->query->selectAllUserDatabase();
+        
+        $required = $isRequired == true ? "required=\"required\"" : "";
+        
+        $html = "<select id=\"$selectId\" class=\"form-control\" $required>
+            <option value=\"\">Select</option>";
+            foreach($rows as $key => $value)
+                $html .= "<option value=\"{$value['id']}\">{$value['username']}</option>";
+        $html .= "</select>";
+        
+        return $html;
+    }
+    
     public function checkAttemptLogin($type, $userValue, $settingRow) {
         $row = $this->query->selectUserDatabase($userValue);
         
@@ -139,14 +153,19 @@ class IpCameraUtility {
         return false;
     }
     
-    public function checkInRoleUser($roleIdFirst, $roleIdSecond) {
-        $roleIdFirstExplode = explode(",", $roleIdFirst);
-        array_pop($roleIdFirstExplode);
+    public function checkApparatusUserId() {
+        $apparatusRow = $this->query->selectApparatusDatabase($_SESSION['apparatus_number']);
+        $elementsExplode = explode(",", $apparatusRow['user_id']);
+        array_pop($elementsExplode);
 
-        $roleIdSecondExplode =  explode(",", $roleIdSecond);
-        array_pop($roleIdSecondExplode);
+        if (in_array($_SESSION['user_logged']['id'], $elementsExplode) == true)
+            return true;
         
-        if ($this->utility->valueInSubArray($roleIdFirstExplode, $roleIdSecondExplode) == true)
+        return false;
+    }
+    
+    public function checkRoute($parameter) {
+        if (isset($_GET[$parameter]) == true && $_GET[$parameter] == true)
             return true;
         
         return false;

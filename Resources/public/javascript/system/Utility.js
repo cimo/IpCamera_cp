@@ -292,13 +292,13 @@ function Utility() {
             var inputValueSplit = $(tag).val().split(",");
             inputValueSplit.pop();
             
+            $(tag + "_field").parent().find(".wordTag_label").remove();
+            
             $.each(inputValueSplit, function(key, value) {
                 var index = value;
                 
                 if (type !== "input")
                     value = $(tag + "_field").find("option").eq(index).text();
-                
-                $(tag + "_field").parent().find(".wordTag_label").remove();
                 
                 $(tag + "_field").before("<span id=\"wordTag_" + index + "\" class=\"wordTag_label\"><div class=\"display_inline\">" + value + "</div><i id=\"wordTag_close_" + index + "\" class=\"wordTag_close fa fa-remove\"></i></span>");
             
@@ -348,6 +348,8 @@ function Utility() {
                     $(event.target).parents(".wordTag_label").remove();
                 });
             }
+            
+            $(this).val($(this).find("option").eq(0).val());
         });
     };
     

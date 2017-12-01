@@ -52,12 +52,12 @@ $authenticationBackgroundColor: #f4f4f4;
 @include fontFace("archivo_black", "../../fonts/archivo_black");
 
 @media(max-width: $widthMobile) {
-    #camera_file_table .search_input {
+    #apparatus_file_table .search_input {
         width: 100%;
     }
 }
 @media(min-width: $widthDesktop) {
-    #camera_file_table .search_input {
+    #apparatus_file_table .search_input {
         width: 50%;
     }
 }
@@ -290,26 +290,31 @@ p {
     }
 }
 
-.camera_tab_container {
+.apparatus_tab_container {
     padding: 0 15px;
     border: 1px solid #dddddd;
     border-top: 0;
 }
 
-.camera_control {
+.apparatus_control {
     width: 50px;
     cursor: pointer;
 }
 
-.camera_control_picture {
+.apparatus_control_picture {
     vertical-align: middle;
 }
 
-.bootstrap-switch-id-camera_control_swipe_switch {
+.bootstrap-switch-id-apparatus_control_swipe_switch {
     margin-right: 20px;
 }
 
-#camera_video_area {
+#recover_password {
+    width: 300px;
+    margin: auto;
+}
+
+#apparatus_video_area {
     display: none;
     position: absolute;
     top: 0;
@@ -320,7 +325,7 @@ p {
     @include opacity(0.5);
 }
 
-#camera_video_result {
+#apparatus_video_result {
     position: relative;
 }
 

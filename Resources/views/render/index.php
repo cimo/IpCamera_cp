@@ -5,7 +5,7 @@ $root = new Root();
 
 $userLoggedRoleUserId = isset($_SESSION['user_logged']) == true ? $_SESSION['user_logged']['role_user_id'] : 0;
 
-$checkRoleUser = $root->getIpCameraUtility()->checkRoleUser(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $userLoggedRoleUserId);
+$checkRoleUser = $root->getIpCameraUtility()->checkRoleUser(Array("ROLE_ADMIN"), $userLoggedRoleUserId);
 
 $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
 ?>
@@ -49,8 +49,12 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                 </div>
             </div>
             <?php
-            if (isset($_SESSION['user_logged']) == false)
-                require_once("{$root->getUtility()->getPathRoot()}/Resources/views/render/module/authentication.php");
+            if (isset($_SESSION['user_logged']) == false) {
+                if ($root->getIpCameraUtility()->checkRoute("routeRecoverPassword") == true)
+                    require_once("{$root->getUtility()->getPathRoot()}/Resources/views/render/recover_password.php");
+                else
+                    require_once("{$root->getUtility()->getPathRoot()}/Resources/views/render/module/authentication.php");
+            }
             else {
             ?>
                 <div class="row">
@@ -61,12 +65,12 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                                     <h3 class="panel-title">Video</h3>
                                 </div>
                                 <div class="pull-right display_mobile">
-                                    <input id="camera_control_swipe_switch" type="checkbox" data-on-text="Drag on" data-on-color="success" data-off-text="Drag off" data-off-color="danger"/>
-                                    <i class="fa fa-camera fa-3x camera_control camera_control_picture"></i>
+                                    <input id="apparatus_control_swipe_switch" type="checkbox" data-on-text="Drag on" data-on-color="success" data-off-text="Drag off" data-off-color="danger"/>
+                                    <i class="fa fa-camera fa-3x apparatus_control apparatus_control_picture"></i>
                                 </div>
                             </div>
                             <div class="panel-body overflow_hidden padding_clear">
-                                <div id="camera_video_result"></div>
+                                <div id="apparatus_video_result"></div>
                             </div>
                         </div>
                     </div>
@@ -76,7 +80,7 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                                 <h3 class="panel-title">Controls</h3>
                             </div>
                             <div class="panel-body overflow_hidden">
-                                <div id="camera_control_result"></div>
+                                <div id="apparatus_control_result"></div>
                             </div>
                         </div>
                         <div class="panel panel-primary shadow">
@@ -110,23 +114,23 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                                     }
                                     ?>
                                 </ul>
-                                <div class="tab-content clearfix camera_tab_container">
+                                <div class="tab-content clearfix apparatus_tab_container">
                                     <div id="actions_tab_content_1" class="tab-pane active">
                                         <?php require_once("{$root->getUtility()->getPathRoot()}/Resources/views/render/status.php"); ?>
                                     </div>
                                     <div id="actions_tab_content_2" class="tab-pane">
                                         <div class="margin_top overflow_y_hidden">
-                                            <div id="camera_apparatusProfile_result"></div>
+                                            <div id="apparatus_profile_result"></div>
                                         </div>
                                     </div>
                                     <div id="actions_tab_content_3" class="tab-pane">
                                         <div class="margin_top">
-                                            <div id="camera_file_result"></div>
+                                            <div id="apparatus_file_result"></div>
                                         </div>
                                     </div>
                                     <div id="actions_tab_content_4" class="tab-pane">
                                         <div class="margin_top margin_bottom">
-                                            <div id="camera_userProfile_result"></div>
+                                            <div id="apparatus_userProfile_result"></div>
                                         </div>
                                     </div>
                                     <?php
@@ -134,12 +138,12 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                                     ?>
                                         <div id="actions_tab_content_5" class="tab-pane">
                                             <div class="margin_top margin_bottom">
-                                                <div id="camera_userManagement_result"></div>
+                                                <div id="apparatus_userManagement_result"></div>
                                             </div>
                                         </div>
                                         <div id="actions_tab_content_6" class="tab-pane">
                                             <div class="margin_top">
-                                                <div id="camera_setting_result"></div>
+                                                <div id="apparatus_setting_result"></div>
                                             </div>
                                         </div>
                                     <?php
@@ -163,7 +167,7 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
             var session = {
                 'token': "<?php echo $_SESSION['token']; ?>",
                 'userActivity': "<?php echo $_SESSION['user_activity']; ?>",
-                'cameraNumber': "<?php echo $_SESSION['camera_number']; ?>"
+                'apparatusNumber': "<?php echo $_SESSION['apparatus_number']; ?>"
             };
             
             var path = {
@@ -173,7 +177,7 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
             
             var url = {
                 'root': "<?php echo $root->getUtility()->getUrlRoot(); ?>",
-                'cameraControl': "<?php echo $root->getIpCamera()->getControlUrl(); ?>"
+                'apparatusControl': "<?php echo $root->getIpCamera()->getControlUrl(); ?>"
             };
             
             var text = {
@@ -207,6 +211,7 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
         <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/TableAndPagination.js"></script>
         <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/Download.js"></script>
         <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/Authentication.js"></script>
+        <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/RecoverPassword.js"></script>
         <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/IpCamera.js"></script>
         
         <script type="text/javascript" src="<?php echo $root->getUtility()->getUrlRoot(); ?>/Resources/public/javascript/system/Index.js"></script>

@@ -19,7 +19,7 @@ $root = new Root();
                     </select>
                 </div>
 
-                <input type="hidden" id="form_user_management_selection__token" name="form_user_management_selection[_token]" value="<?php echo $_SESSION['token']; ?>">
+                <input id="form_user_management_selection__token" type="hidden" name="form_user_management_selection[_token]" value="<?php echo $_SESSION['token']; ?>">
 
                 <input class="button_custom" type="submit" value="Send">
             </form>

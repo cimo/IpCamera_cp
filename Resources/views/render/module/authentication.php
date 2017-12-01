@@ -9,24 +9,25 @@
                 <form id="form_user_authentication" action="<?php echo $root->getUtility()->getUrlRoot() ?>/Requests/AuthenticationRequest.php?controller=authenticationEnterCheckAction" method="post" novalidate="novalidate">
                     <div class="form-group">
                         <label class="control-label required" for="_username">Username</label>
-                        <input type="text" id="_username" name="_username" required="required" class="form-control">
+                        <input id="_username" class="form-control" type="text" name="_username" value="" required="required">
                     </div>
                     <div class="form-group">
                         <label class="control-label required" for="_password">Password</label>
-                        <input type="password" id="_password" name="_password" required="required" class="form-control">
+                        <input id="_password" class="form-control" type="password" name="_password" value="" required="required">
                     </div>
                     <div class="form-group">
                         <div class="input-group">
                             <input class="button_custom" type="submit" value="Login">
                             <div class="checkbox remember_me_fix">
-                                <label><input type="checkbox" id="_remember_me" name="_remember_me" value="1"> Remember me</label>
+                                <label><input id="_remember_me" type="checkbox" name="_remember_me" value="1"> Remember me</label>
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" id="_token" name="_token" value="<?php echo $_SESSION['token']; ?>">
+                    
+                    <input id="_token" type="hidden" name="_token" value="<?php echo $_SESSION['token']; ?>">
                 </form>
                 <div class="horizontal_center">
-                    <a class="button_custom btn-block" href="#">Forgot password?</a>
+                    <a class="button_custom btn-block" href="?routeRecoverPassword=true">Forgot password?</a>
                 </div>
             <?php
             }

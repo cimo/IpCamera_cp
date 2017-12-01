@@ -1,4 +1,4 @@
-/* global utility, loader, flashBag, authentication, ipCamera */
+/* global utility, loader, flashBag, authentication, recoverPassword, ipCamera */
 
 $(document).ready(function() {
     utility.checkMobile(true);
@@ -10,6 +10,8 @@ $(document).ready(function() {
     loader.create("font");
     
     authentication.init();
+    
+    recoverPassword.init();
     
     ipCamera.init();
     ipCamera.changeView();

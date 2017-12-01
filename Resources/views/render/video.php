@@ -5,6 +5,9 @@ if (isset($_SESSION['user_logged']) == false)
     return;
 
 $root = new Root();
+
+if ($root->getIpCameraUtility()->checkApparatusUserId() == false)
+    return;
 ?>
-<img id="camera_video" class="img-responsive margin_auto image_preload" src="<?php echo $root->getIpCamera()->getVideoUrl(); ?>" alt="Video"/>
-<div id="camera_video_area"></div>
+<img id="apparatus_video" class="img-responsive margin_auto image_preload" src="<?php echo $root->getIpCamera()->getVideoUrl(); ?>" alt="Video"/>
+<div id="apparatus_video_area"></div>

@@ -40,8 +40,8 @@ class Query {
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function selectCameraDatabase($number) {
-        $query = $this->database->getPdo()->prepare("SELECT * FROM cameras
+    public function selectApparatusDatabase($number) {
+        $query = $this->database->getPdo()->prepare("SELECT * FROM apparatus
                                                         WHERE number = :number");
         
         $query->bindValue(":number", $number);
@@ -51,8 +51,8 @@ class Query {
         return $query->fetch(PDO::FETCH_ASSOC);
     }
     
-    public function selectAllCameraDatabase() {
-        $query = $this->database->getPdo()->prepare("SELECT * FROM cameras");
+    public function selectAllApparatusDatabase() {
+        $query = $this->database->getPdo()->prepare("SELECT * FROM apparatus");
         
         $query->execute();
         
@@ -62,15 +62,21 @@ class Query {
     public function selectUserDatabase($value) {
         if (is_numeric($value) == true) {
             $query = $this->database->getPdo()->prepare("SELECT * FROM users
-                                                            WHERE id = :value");
-
-            $query->bindValue(":value", $value);
+                                                            WHERE id = :id");
+            
+            $query->bindValue(":id", $value);
+        }
+        else if (filter_var($value, FILTER_VALIDATE_EMAIL) !== false) {
+            $query = $this->database->getPdo()->prepare("SELECT * FROM users
+                                                            WHERE email = :email");
+            
+            $query->bindValue(":email", $value);
         }
         else {
             $query = $this->database->getPdo()->prepare("SELECT * FROM users
-                                                            WHERE username = :value");
-
-            $query->bindValue(":value", $value);
+                                                            WHERE username = :username");
+            
+            $query->bindValue(":username", $value);
         }
         
         $query->execute();
@@ -87,6 +93,18 @@ class Query {
         $query->execute();
         
         return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function selectUserWithHelpCodeDatabase($helpCode) {
+        $query = $this->database->getPdo()->prepare("SELECT * FROM users
+                                                        WHERE help_code IS NOT NULL
+                                                        AND help_code = :helpCode");
+        
+        $query->bindValue(":helpCode", $helpCode);
+        
+        $query->execute();
+        
+        return $query->fetch(PDO::FETCH_ASSOC);
     }
     
     public function selectRoleUserDatabase($roleId, $modify = false) {

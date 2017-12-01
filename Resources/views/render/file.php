@@ -8,7 +8,7 @@ $root = new Root();
 
 $htmlTable = $root->getIpCamera()->createListHtml();
 ?>
-<div id="camera_file_table" class="margin_bottom">
+<div id="apparatus_file_table" class="margin_bottom">
     <?php require_once("{$root->getUtility()->getPathRoot()}/Resources/views/include/table_and_pagination.php"); ?>
     <div class="overflow_y_hidden table_min_height">
         <table class="table table-bordered table-striped margin_bottom">

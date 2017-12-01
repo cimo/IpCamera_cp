@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `cameras`
+-- Table structure for table `apparatus`
 --
 
-DROP TABLE IF EXISTS `cameras`;
+DROP TABLE IF EXISTS `apparatus`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cameras` (
+CREATE TABLE `apparatus` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `number` int(255) NOT NULL DEFAULT '0',
   `label` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'camera',
@@ -32,18 +32,19 @@ CREATE TABLE `cameras` (
   `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `threshold` int(5) NOT NULL DEFAULT '10000',
   `motion_detection_status` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pause',
+  `user_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '1,',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `cameras`
+-- Dumping data for table `apparatus`
 --
 
-LOCK TABLES `cameras` WRITE;
-/*!40000 ALTER TABLE `cameras` DISABLE KEYS */;
-INSERT INTO `cameras` VALUES (1,1,'Cosenza - Salone',1,'http://home-cs.ddns.net:1000','admin','Gu12Lei1',10000,'pause');
-/*!40000 ALTER TABLE `cameras` ENABLE KEYS */;
+LOCK TABLES `apparatus` WRITE;
+/*!40000 ALTER TABLE `apparatus` DISABLE KEYS */;
+INSERT INTO `apparatus` VALUES (1,1,'Cosenza - Salone',1,'http://home-cs.ddns.net:1000','admin','Gu12Lei1',10000,'pause','1,2,');
+/*!40000 ALTER TABLE `apparatus` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -152,7 +153,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'1,2,','admin','','$2y$10$JhdTt2OkDZbp35HjbqnAZeFDMBh/1MAT2Bc70XyWzxMHmc6rCmAQC',1,'2017-11-26 18:52:36','2017-11-26 18:34:17',NULL,'79.51.52.39',0),(2,'1,','leonardo','test@test.it','$2y$10$OShdar0KWaBQo0eJj50FeOxBgqbhHhd3RbQnoO2aLPYYLzeleX1MS',1,'2017-11-26 18:47:08','2017-11-26 18:43:27',NULL,'79.51.52.39',0);
+INSERT INTO `users` VALUES (1,'1,2,','admin','simone.dagostino@gmail.com','$2y$10$yTv2kktC7aRxrGyrvNVxku7Jum2aAW6DUl4d6woHHIqvJY/FUWu0K',1,'2017-12-01 21:22:01','2017-12-01 21:21:58',NULL,'79.51.52.39',0),(2,'1,','leonardo','leonardodagostino@alice.it','$2y$10$np9LRCnP.FZQSkPBYE6fI.agnGAXzXKK6ODsE1.5QNtnrs6M5bjKu',1,'2017-11-28 08:31:37','2017-11-26 19:09:25',NULL,'79.51.52.39',0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -169,4 +170,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-26 18:57:11
+-- Dump completed on 2017-12-01 21:26:09
