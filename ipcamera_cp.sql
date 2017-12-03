@@ -153,7 +153,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'1,2,','admin','simone.dagostino@gmail.com','$2y$10$yTv2kktC7aRxrGyrvNVxku7Jum2aAW6DUl4d6woHHIqvJY/FUWu0K',1,'2017-12-01 21:22:01','2017-12-01 21:21:58',NULL,'79.51.52.39',0),(2,'1,','leonardo','leonardodagostino@alice.it','$2y$10$np9LRCnP.FZQSkPBYE6fI.agnGAXzXKK6ODsE1.5QNtnrs6M5bjKu',1,'2017-11-28 08:31:37','2017-11-26 19:09:25',NULL,'79.51.52.39',0);
+INSERT INTO `users` VALUES (1,'1,2,','admin','simone.dagostino@gmail.com','$2y$10$yTv2kktC7aRxrGyrvNVxku7Jum2aAW6DUl4d6woHHIqvJY/FUWu0K',1,'2017-12-03 12:24:50','2017-12-03 12:24:45',NULL,'79.51.52.39',0),(2,'1,','leonardo','dagostinoleonardo54@gmail.com','$2y$10$np9LRCnP.FZQSkPBYE6fI.agnGAXzXKK6ODsE1.5QNtnrs6M5bjKu',1,'2017-11-28 08:31:37','2017-11-26 19:09:25',NULL,'79.51.52.39',0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -170,4 +170,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-01 21:26:09
+-- Dump completed on 2017-12-03 13:05:16

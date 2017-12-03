@@ -229,12 +229,12 @@ class IpCamera {
         $content .= "netcam_userpass $username:$password\n";
         $content .= "threshold $threshold\n";
         
-        if ($this->settingRow['motion_version'] === "3.1.12") {
+        if ($this->settingRow['motion_version'] == "3.1.12") {
             $content .= "netcam_http 1.0\n";
             $content .= "ffmpeg_cap_new on\n";
             $content .= "output_normal off\n";
         }
-        else if ($this->settingRow['motion_version'] === "4.0.1") {
+        else if ($this->settingRow['motion_version'] == "4.0.1") {
             $content .= "ffmpeg_output_movies on\n";
             $content .= "output_debug_pictures off\n";
         }
@@ -250,12 +250,12 @@ class IpCamera {
         $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?netcam_userpass=$username:$password");
         $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?threshold=$threshold");
         
-        if ($this->settingRow['motion_version'] === "3.1.12") {
+        if ($this->settingRow['motion_version'] == "3.1.12") {
             $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?netcam_http=1.0");
             $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?ffmpeg_cap_new=on");
             $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?output_normal=off");
         }
-        else if ($this->settingRow['motion_version'] === "4.0.1") {
+        else if ($this->settingRow['motion_version'] == "4.0.1") {
             $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?ffmpeg_output_movies=on");
             $this->curlCommandsUrls("{$this->settingRow['server_url']}/{$_SESSION['apparatus_number']}/config/set?output_debug_pictures=off");
         }
@@ -265,7 +265,15 @@ class IpCamera {
     
     // Controllers
     private function selectionAction($parameters) {
-        if (isset($parameters['number']) == false)
+        $error = false;
+        
+        if (isset($parameters['number']) == false) {
+            $this->response['errors']['number'] = "This value should not be blank.";
+            
+            $error = true;
+        }
+        
+        if ($error == true)
             return;
         
         $checkRoleUser = $this->ipCameraUtility->checkRoleUser(Array("ROLE_ADMIN"), $_SESSION['user_logged']['role_user_id']);
@@ -330,6 +338,32 @@ class IpCamera {
     }
     
     private function apparatusProfileAction($parameters) {
+        $error = false;
+        
+        if ($parameters['videoUrl'] == "") {
+            $this->response['errors']['videoUrl'] = "This value should not be blank.";
+            
+            $error = true;
+        }
+        
+        if ($parameters['username'] == "") {
+            $this->response['errors']['username'] = "This value should not be blank.";
+            
+            $error = true;
+        }
+        
+        if ($parameters['password'] == "") {
+            $this->response['errors']['password'] = "This value should not be blank.";
+            
+            $error = true;
+        }
+        
+        if ($error == true) {
+            $this->response['messages']['error'] = "Profile not updated!";
+            
+            return;
+        }
+        
         $this->apparatusProfileConfig($parameters['deviceId'],
                                         $parameters['videoUrl'],
                                         $parameters['username'],
@@ -422,6 +456,20 @@ class IpCamera {
         if ($checkRoleUser == false)
             return;
         
+        $error = false;
+        
+        if ($parameters['email'] == "") {
+            $this->response['errors']['email'] = "This value should not be blank.";
+            
+            $error = true;
+        }
+        
+        if ($error == true) {
+            $this->response['messages']['error'] = "Profile not modified!";
+            
+            return;
+        }
+        
         $query = $this->utility->getDatabase()->getPdo()->prepare("UPDATE users
                                                                     SET email = :email
                                                                     WHERE id = :id");
@@ -439,6 +487,32 @@ class IpCamera {
         
         if ($checkRoleUser == false)
             return;
+        
+        $error = false;
+        
+        if ($parameters['old'] == "") {
+            $this->response['errors']['old'] = "This value should not be blank.";
+            
+            $error = true;
+        }
+        
+        if ($parameters['new'] == "") {
+            $this->response['errors']['new'] = "This value should not be blank.";
+            
+            $error = true;
+        }
+        
+        if ($parameters['newConfirm'] == "") {
+            $this->response['errors']['newConfirm'] = "This value should not be blank.";
+            
+            $error = true;
+        }
+        
+        if ($error == true) {
+            $this->response['messages']['error'] = "Password not modified!";
+            
+            return;
+        }
         
         $messagePassword = $this->ipCameraUtility->assigUserPassword("withOld", $_SESSION['user_logged'], $parameters);
 
@@ -488,67 +562,92 @@ class IpCamera {
         if ($checkRoleUser == false)
             return;
         
-        if (isset($_SESSION['user_management']) == true) {
-            $messagePassword = $this->ipCameraUtility->assigUserPassword("withoutOld", null, $parameters);
+        $error = false;
+        
+        if ($parameters['roleUserId'] == "") {
+            $this->response['errors']['roleUserId'] = "This value should not be blank.";
             
-            if (isset($messagePassword['password']) == true) {
-                if ($_SESSION['user_management'] == "new") {
-                    $query = $this->utility->getDatabase()->getPdo()->prepare("INSERT INTO users (
-                                                                                    role_user_id,
-                                                                                    username,
-                                                                                    email,
-                                                                                    password,
-                                                                                    not_locked
-                                                                                )
-                                                                                VALUES (
-                                                                                    :roleUserId,
-                                                                                    :username,
-                                                                                    :email,
-                                                                                    :password,
-                                                                                    :notLocked
-                                                                                );");
-
-                    $query->bindValue(":roleUserId", $parameters['roleUserId']);
-                    $query->bindValue(":username", $parameters['username']);
-                    $query->bindValue(":email", $parameters['email']);
-                    $query->bindValue(":password", $messagePassword['password']);
-                    $query->bindValue(":notLocked", "1");
-
-                    $query->execute();
-
-                    $this->response['messages']['success'] = "User created with success.";
-                }
-                else {
-                    $query = $this->utility->getDatabase()->getPdo()->prepare("UPDATE users
-                                                                                SET role_user_id = :roleUserId,
-                                                                                    username = :username,
-                                                                                    email = :email,
-                                                                                    password = :password,
-                                                                                    not_locked = :notLocked
-                                                                                WHERE id = :id");
-
-                    $query->bindValue(":roleUserId", $parameters['roleUserId']);
-                    $query->bindValue(":username", $parameters['username']);
-                    $query->bindValue(":email", $parameters['email']);
-                    
-                    if ($messagePassword['password'] == "")
-                        $query->bindValue(":password", $_SESSION['user_management']['password']);
-                    else
-                        $query->bindValue(":password", $messagePassword['password']);
-                    
-                    $query->bindValue(":notLocked", $parameters['notLocked']);
-                    $query->bindValue(":id", $_SESSION['user_management']['id']);
-
-                    $query->execute();
-                    
-                    $this->response['messages']['success'] = "User updated with success.";
-                }
-            }
+            $error = true;
+        }
+        
+        if ($parameters['username'] == "") {
+            $this->response['errors']['username'] = "This value should not be blank.";
+            
+            $error = true;
+        }
+        
+        if ($parameters['email'] == "") {
+            $this->response['errors']['email'] = "This value should not be blank.";
+            
+            $error = true;
+        }
+        
+        if ($error == true) {
+            if ($_SESSION['user_management'] == "new")
+                $this->response['messages']['error'] = "User not created!";
             else
-                $this->response['messages']['error'] = $messagePassword['error'];
+                $this->response['messages']['error'] = "User not updated!";
+            
+            return;
+        }
+        
+        $messagePassword = $this->ipCameraUtility->assigUserPassword("withoutOld", null, $parameters);
+
+        if (isset($messagePassword['password']) == true) {
+            if ($_SESSION['user_management'] == "new") {
+                $query = $this->utility->getDatabase()->getPdo()->prepare("INSERT INTO users (
+                                                                                role_user_id,
+                                                                                username,
+                                                                                email,
+                                                                                password,
+                                                                                not_locked
+                                                                            )
+                                                                            VALUES (
+                                                                                :roleUserId,
+                                                                                :username,
+                                                                                :email,
+                                                                                :password,
+                                                                                :notLocked
+                                                                            );");
+
+                $query->bindValue(":roleUserId", $parameters['roleUserId']);
+                $query->bindValue(":username", $parameters['username']);
+                $query->bindValue(":email", $parameters['email']);
+                $query->bindValue(":password", $messagePassword['password']);
+                $query->bindValue(":notLocked", "1");
+
+                $query->execute();
+
+                $this->response['messages']['success'] = "User created with success.";
+            }
+            else {
+                $query = $this->utility->getDatabase()->getPdo()->prepare("UPDATE users
+                                                                            SET role_user_id = :roleUserId,
+                                                                                username = :username,
+                                                                                email = :email,
+                                                                                password = :password,
+                                                                                not_locked = :notLocked
+                                                                            WHERE id = :id");
+
+                $query->bindValue(":roleUserId", $parameters['roleUserId']);
+                $query->bindValue(":username", $parameters['username']);
+                $query->bindValue(":email", $parameters['email']);
+
+                if ($messagePassword['password'] == "")
+                    $query->bindValue(":password", $_SESSION['user_management']['password']);
+                else
+                    $query->bindValue(":password", $messagePassword['password']);
+
+                $query->bindValue(":notLocked", $parameters['notLocked']);
+                $query->bindValue(":id", $_SESSION['user_management']['id']);
+
+                $query->execute();
+
+                $this->response['messages']['success'] = "User updated with success.";
+            }
         }
         else
-            $this->response['messages']['error'] = "User not create!";
+            $this->response['messages']['error'] = $messagePassword['error'];
     }
     
     private function settingAction($parameters) {
@@ -556,6 +655,32 @@ class IpCamera {
         
         if ($checkRoleUser == false)
             return;
+        
+        $error = false;
+        
+        if ($parameters['template'] == "") {
+            $this->response['errors']['template'] = "This value should not be blank.";
+            
+            $error = true;
+        }
+        
+        if ($parameters['serverUrl'] == "") {
+            $this->response['errors']['serverUrl'] = "This value should not be blank.";
+            
+            $error = true;
+        }
+        
+        if ($parameters['motionVersion'] == "") {
+            $this->response['errors']['motionVersion'] = "This value should not be blank.";
+            
+            $error = true;
+        }
+        
+        if ($error == true) {
+            $this->response['messages']['error'] = "Settings not updated!";
+            
+            return;
+        }
         
         $query = $this->utility->getDatabase()->getPdo()->prepare("UPDATE settings
                                                                     SET template = :template,
