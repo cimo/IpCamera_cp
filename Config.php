@@ -17,6 +17,7 @@ class Config {
     private $supportSymlink;
     private $file;
     private $name;
+    private $curlLogin;
     
     // Properties
     public function getDatabaseConnectionFields() {
@@ -47,15 +48,29 @@ class Config {
         return $this->name;
     }
     
+    public function getCurlLogin() {
+        return $this->curlLogin;
+    }
+    
     // Functions public
     public function __construct() {
-        $this->databaseConnectionFields = Array("mysql:host=localhost;dbname=ipcamera_cp;charset=utf8", "user_1", "");
+        $this->databaseConnectionFields = Array(
+            "mysql:host=localhost;dbname=ipcamera_cp;charset=utf8",
+            "user_1",
+            "",
+            Array(
+                PDO::ATTR_EMULATE_PREPARES => false,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+            )
+        );
         $this->protocol = "https://";
         $this->pathRoot = "/ipcamera_cp";
         $this->urlRoot = "/ipcamera_cp";
         $this->supportSymlink = true;
         $this->file = "";
         $this->name = "IpCamera cp 1.0.0";
+        $this->curlLogin = Array("user_1", "");
     }
 
     // Functions private

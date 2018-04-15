@@ -1,17 +1,17 @@
 <?php
 require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/System/Root.php");
 
-if (isset($_SESSION['user_logged']) == false)
+if (isset($_SESSION['userLogged']) == false)
     return;
 
 $root = new Root();
 
-$userLoggedRoleUserId = isset($_SESSION['user_logged']) == true ? $_SESSION['user_logged']['role_user_id'] : 0;
+$userLoggedRoleUserId = isset($_SESSION['userLogged']) == true ? $_SESSION['userLogged']['role_user_id'] : 0;
 
-$checkRoleUser = $root->getIpCameraUtility()->checkRoleUser(Array("ROLE_ADMIN"), $userLoggedRoleUserId);
+$checkUserRole = $root->getUtility()->checkUserRole(Array("ROLE_ADMIN"), $userLoggedRoleUserId);
 
 $deviceRows = $root->getUtility()->getQuery()->selectAllDeviceDatabase();
-$apparatusRow = $root->getUtility()->getQuery()->selectApparatusDatabase($_SESSION['apparatus_number']);
+$apparatusRow = $root->getUtility()->getQuery()->selectApparatusDatabase($_SESSION['apparatusNumber']);
 ?>
 <form id="form_apparatus_profile" action="<?php echo $root->getUtility()->getUrlRoot() ?>/Requests/IpCameraRequest.php?controller=apparatusProfileAction" method="post" novalidate="novalidate">
     <div class="form-group">
@@ -50,6 +50,10 @@ $apparatusRow = $root->getUtility()->getQuery()->selectApparatusDatabase($_SESSI
         </div>
     </div>
     <div class="form-group">
+        <label class="control-label required" for="form_apparatus_profile_framerate">Framerate</label>
+        <input id="form_apparatus_profile_framerate" class="form-control" type="text" name="form_apparatus_profile[framerate]" value="<?php echo $apparatusRow['framerate']; ?>" required="required"/>
+    </div>
+    <div class="form-group">
         <label class="control-label required" for="form_apparatus_profile_threshold">Threshold</label>
         <input id="form_apparatus_profile_threshold" class="form-control" type="text" name="form_apparatus_profile[threshold]" value="<?php echo $apparatusRow['threshold']; ?>" required="required"/>
     </div>
@@ -62,14 +66,14 @@ $apparatusRow = $root->getUtility()->getQuery()->selectApparatusDatabase($_SESSI
         </div>
     </div>
     <?php
-    if ($checkRoleUser == true) {
+    if ($checkUserRole == true) {
     ?>
         <div id="apparatus_profile_userId_wordTag_container" class="form-group">
             <label class="control-label required" for="form_apparatus_profile_userId">User</label>
             <input id="form_apparatus_profile_userId" class="form-control" type="hidden" name="form_apparatus_profile[userId]" value="<?php echo $apparatusRow['user_id']; ?>" required="required">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-tags"></i></span>
-                <?php echo $root->getIpCameraUtility()->createUserHtml("form_apparatus_profile_userId_field", true); ?>
+                <?php echo $root->getUtility()->createUserHtml("form_apparatus_profile_userId_field", true); ?>
             </div>
         </div>
     <?php
@@ -81,7 +85,7 @@ $apparatusRow = $root->getUtility()->getQuery()->selectApparatusDatabase($_SESSI
 </form>
 
 <?php
-if ($checkRoleUser == true) {
+if ($checkUserRole == true) {
 ?>
     <div class="margin_bottom">
         <h3>Camera deletion</h3>

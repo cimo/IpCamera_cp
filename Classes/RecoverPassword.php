@@ -3,7 +3,6 @@
 
 require_once("System/Utility.php");
 require_once("Ajax.php");
-require_once("IpCameraUtility.php");
 
 class RecoverPassword {
     // Vars
@@ -12,7 +11,6 @@ class RecoverPassword {
     private $utility;
     private $query;
     private $ajax;
-    private $ipCameraUtility;
     
     // Properties
     
@@ -23,7 +21,6 @@ class RecoverPassword {
         $this->utility = new Utility();
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax();
-        $this->ipCameraUtility = new IpCameraUtility();
     }
     
     public function phpInput() {
@@ -91,7 +88,7 @@ class RecoverPassword {
         $userRow = $this->query->selectUserWithHelpCodeDatabase($parameters['helpCode']);
         
         if ($userRow != false) {
-            $messagePassword = $this->ipCameraUtility->assigUserPassword("withoutOld", null, $parameters);
+            $messagePassword = $this->utility->assigUserPassword("withoutOld", null, $parameters);
             
             if (isset($messagePassword['password']) == true) {
                 $query = $this->utility->getDatabase()->getPdo()->prepare("UPDATE users

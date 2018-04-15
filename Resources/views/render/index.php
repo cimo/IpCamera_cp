@@ -3,9 +3,9 @@ require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/System/Root.php");
 
 $root = new Root();
 
-$userLoggedRoleUserId = isset($_SESSION['user_logged']) == true ? $_SESSION['user_logged']['role_user_id'] : 0;
+$userLoggedRoleUserId = isset($_SESSION['userLogged']) == true ? $_SESSION['userLogged']['role_user_id'] : 0;
 
-$checkRoleUser = $root->getIpCameraUtility()->checkRoleUser(Array("ROLE_ADMIN"), $userLoggedRoleUserId);
+$checkUserRole = $root->getUtility()->checkUserRole(Array("ROLE_ADMIN"), $userLoggedRoleUserId);
 
 $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
 ?>
@@ -49,8 +49,8 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                 </div>
             </div>
             <?php
-            if (isset($_SESSION['user_logged']) == false) {
-                if ($root->getIpCameraUtility()->checkRoute("routeRecoverPassword") == true)
+            if (isset($_SESSION['userLogged']) == false) {
+                if ($root->getUtility()->checkRoute("routeRecoverPassword") == true)
                     require_once("{$root->getUtility()->getPathRoot()}/Resources/views/render/recover_password.php");
                 else
                     require_once("{$root->getUtility()->getPathRoot()}/Resources/views/render/module/authentication.php");
@@ -102,7 +102,7 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                                         <a id="actions_tab_4" data-toggle="tab" href="#actions_tab_content_4">User profile</a>
                                     </li>
                                     <?php
-                                    if ($checkRoleUser == true) {
+                                    if ($checkUserRole == true) {
                                     ?>
                                         <li>
                                             <a id="actions_tab_5" data-toggle="tab" href="#actions_tab_content_5">Users management</a>
@@ -134,7 +134,7 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
                                         </div>
                                     </div>
                                     <?php
-                                    if ($checkRoleUser == true) {
+                                    if ($checkUserRole == true) {
                                     ?>
                                         <div id="actions_tab_content_5" class="tab-pane">
                                             <div class="margin_top margin_bottom">
@@ -166,8 +166,8 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
         <script type="text/javascript">
             var session = {
                 'token': "<?php echo $_SESSION['token']; ?>",
-                'userActivity': "<?php echo $_SESSION['user_activity']; ?>",
-                'apparatusNumber': "<?php echo $_SESSION['apparatus_number']; ?>"
+                'userActivity': "<?php echo $_SESSION['userActivity']; ?>",
+                'apparatusNumber': "<?php echo $_SESSION['apparatusNumber']; ?>"
             };
             
             var path = {

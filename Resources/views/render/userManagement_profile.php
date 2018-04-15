@@ -1,12 +1,12 @@
 <?php
 require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/System/Root.php");
 
-if (isset($_SESSION['user_logged']) == false)
+if (isset($_SESSION['userLogged']) == false)
     return;
 
 $root = new Root();
 
-$id = isset($_SESSION['user_management']['id']) == true ? $_SESSION['user_management']['id'] : 0;
+$id = isset($_SESSION['userManagement']['id']) == true ? $_SESSION['userManagement']['id'] : 0;
 
 $userRow = $root->getUtility()->getQuery()->selectUserDatabase($id);
 ?>
@@ -16,7 +16,7 @@ $userRow = $root->getUtility()->getQuery()->selectUserDatabase($id);
         <input id="form_user_management_roleUserId" class="form-control" type="hidden" name="form_user_management[roleUserId]" value="<?php echo $userRow['role_user_id']; ?>" required="required">
         <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-tags"></i></span>
-            <?php echo $root->getIpCameraUtility()->createRoleUserHtml("form_user_management_roleUserId_field", true); ?>
+            <?php echo $root->getUtility()->createUserRoleHtml("form_user_management_roleUserId_field", true); ?>
         </div>
     </div>
     <div class="form-group">

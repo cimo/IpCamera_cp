@@ -60,14 +60,14 @@ function IpCamera() {
     };
     
     self.changeView = function() {
-        if (utility.checkWidth() === "desktop") {
+        if (utility.checkWidthType() === "desktop") {
             $("#apparatus_video_area").removeClass("touch_disable");
             $("#apparatus_video_area").hide();
             
             $("#control_container").show();
         }
         else {
-            if (utility.getIsMobile() === false) {
+            if (utility.checkMobile() === false) {
                 $("#apparatus_control_swipe_switch").parents(".bootstrap-switch").hide();
                 $(".panel-heading").find(".apparatus_control_picture").hide();
             }
@@ -163,7 +163,7 @@ function IpCamera() {
     function control() {
         $("#apparatus_control_swipe_switch").bootstrapSwitch("state", false);
         
-        if (utility.getIsMobile() === false)
+        if (utility.checkMobile() === false)
             $("#apparatus_control_swipe_switch").parents(".bootstrap-switch").hide();
         
         move("#apparatus_control_move_up", new Array(0, 1));
@@ -176,7 +176,7 @@ function IpCamera() {
         move("#apparatus_control_move_left_up", new Array(4, 5, 0, 1));
         
         $("#apparatus_control_swipe_switch").on("switchChange.bootstrapSwitch", "", function(event, state) {
-            if (state === true && utility.getIsMobile() === true) {
+            if (state === true && utility.checkMobile() === true) {
                 videoAreaEnabled = true;
                 
                 $("#apparatus_video_area").show();

@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/System/Root.php");
 
-if (isset($_SESSION['user_logged']) == false)
+if (isset($_SESSION['userLogged']) == false)
     return;
 
 $root = new Root();
@@ -13,7 +13,7 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
         <label class="control-label required" for="form_apparatus_setting_template">Template</label>
         <select id="form_apparatus_setting_template" class="form-control" name="form_apparatus_setting[template]" required="required">
             <?php
-            foreach($root->getIpCameraUtility()->createTemplatesList() as $key => $value) {
+            foreach($root->getUtility()->createTemplateList() as $key => $value) {
                 $selected = $value == $settingRow['template'] ? "selected" : "";
 
                 echo "<option $selected value=\"{$key}\">{$value}</option>";
@@ -29,10 +29,10 @@ $settingRow = $root->getUtility()->getQuery()->selectSettingDatabase();
         <label class="control-label required" for="form_apparatus_setting_serverUrl">Motion version</label>
         <select id="form_apparatus_setting_motionVersion" class="form-control" name="form_apparatus_setting[motionVersion]" required="required">
             <?php
-            foreach($root->getIpCameraUtility()->createMotionVersionList() as $key => $value) {
-                $selected = $value == $settingRow['motion_version'] ? "selected" : "";
+            foreach($root->getUtility()->createMotionVersionList() as $key => $value) {
+                $selected = $key == $settingRow['motion_version'] ? "selected" : "";
 
-                echo "<option $selected value=\"{$value}\">{$value}</option>";
+                echo "<option $selected value=\"{$key}\">{$value}</option>";
             }
             ?>
         </select>

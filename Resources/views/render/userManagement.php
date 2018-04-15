@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/System/Root.php");
 
-if (isset($_SESSION['user_logged']) == false)
+if (isset($_SESSION['userLogged']) == false)
     return;
 
 $root = new Root();  

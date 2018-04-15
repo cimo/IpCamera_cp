@@ -1,12 +1,12 @@
 <?php
 require_once(dirname(dirname(dirname(__DIR__))) . "/Classes/System/Root.php");
 
-if (isset($_SESSION['user_logged']) == false)
+if (isset($_SESSION['userLogged']) == false)
     return;
 
 $root = new Root();
 
-$id = isset($_SESSION['user_logged']['id']) == true ? $_SESSION['user_logged']['id'] : 0;
+$id = isset($_SESSION['userLogged']['id']) == true ? $_SESSION['userLogged']['id'] : 0;
 
 $userRow = $root->getUtility()->getQuery()->selectUserDatabase($id);
 ?>
@@ -17,7 +17,7 @@ $userRow = $root->getUtility()->getQuery()->selectUserDatabase($id);
     <?php
     $role = "";
 
-    foreach ($_SESSION['user_logged']['userRoleRow'] as $key => $value)
+    foreach ($_SESSION['userLogged']['userRoleRow'] as $key => $value)
         $role .= " - $value";
 
     echo $role;

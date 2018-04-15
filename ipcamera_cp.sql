@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: ipcamera_cp
 -- ------------------------------------------------------
--- Server version	5.7.20-0ubuntu0.16.04.1
+-- Server version	5.7.21-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -30,22 +30,13 @@ CREATE TABLE `apparatus` (
   `video_url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `framerate` int(3) NOT NULL DEFAULT '100',
   `threshold` int(5) NOT NULL DEFAULT '10000',
   `motion_detection_status` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pause',
   `user_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '1,',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `apparatus`
---
-
-LOCK TABLES `apparatus` WRITE;
-/*!40000 ALTER TABLE `apparatus` DISABLE KEYS */;
-INSERT INTO `apparatus` VALUES (1,1,'Cosenza - Salone',1,'http://home-cs.ddns.net:1000','admin','Gu12Lei1',10000,'pause','1,2,');
-/*!40000 ALTER TABLE `apparatus` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `devices`
@@ -109,7 +100,7 @@ CREATE TABLE `settings` (
   `login_attempt_time` int(11) NOT NULL DEFAULT '15',
   `login_attempt_count` int(11) NOT NULL DEFAULT '3',
   `server_url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `motion_version` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `motion_version` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -120,7 +111,7 @@ CREATE TABLE `settings` (
 
 LOCK TABLES `settings` WRITE;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
-INSERT INTO `settings` VALUES (1,'basic',15,3,'http://127.0.0.1:32402','4.0.1');
+INSERT INTO `settings` VALUES (1,'basic',15,3,'http://127.0.0.1',1);
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -153,7 +144,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'1,2,','admin','simone.dagostino@gmail.com','$2y$10$yTv2kktC7aRxrGyrvNVxku7Jum2aAW6DUl4d6woHHIqvJY/FUWu0K',1,'2017-12-03 12:24:50','2017-12-03 12:24:45',NULL,'79.51.52.39',0),(2,'1,','leonardo','dagostinoleonardo54@gmail.com','$2y$10$np9LRCnP.FZQSkPBYE6fI.agnGAXzXKK6ODsE1.5QNtnrs6M5bjKu',1,'2017-11-28 08:31:37','2017-11-26 19:09:25',NULL,'79.51.52.39',0);
+INSERT INTO `users` VALUES (1,'1,2,','admin','cimo@reinventsoftware.org','$2y$13$dwkh0OFE.Jz2PxvlxUvjIO4kQM92elYrRTDB4VEy1LGALx0bOuVj6',1,'2018-04-15 04:51:22','2018-04-14 13:50:17',NULL,NULL,0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -170,4 +161,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-12-03 13:05:16
+-- Dump completed on 2018-04-15 12:02:23

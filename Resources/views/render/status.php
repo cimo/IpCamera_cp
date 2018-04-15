@@ -5,7 +5,7 @@
             <select id="form_apparatus_selection_number" class="form-control" name="form_apparatus_selection[number]" required="required">
                 <option value="-1">Select</option>
                 <?php
-                if ($checkRoleUser == true) {
+                if ($checkUserRole == true) {
                 ?>
                     <option value="0">New</option>
                 <?php

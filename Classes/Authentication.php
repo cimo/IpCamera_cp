@@ -3,7 +3,6 @@
 
 require_once("System/Utility.php");
 require_once("Ajax.php");
-require_once("IpCameraUtility.php");
 
 class Authentication {
     // Vars
@@ -12,7 +11,6 @@ class Authentication {
     private $utility;
     private $query;
     private $ajax;
-    private $ipCameraUtility;
     
     private $settingRow;
     
@@ -25,7 +23,6 @@ class Authentication {
         $this->utility = new Utility();
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax();
-        $this->ipCameraUtility = new IpCameraUtility();
         
         $this->settingRow = $this->query->selectSettingDatabase();
     }
@@ -66,14 +63,14 @@ class Authentication {
         
         if ($userRow != false) {
             if (password_verify($parameters['_password'], $userRow['password']) == true) {
-                $checkAttemptLogin = $this->ipCameraUtility->checkAttemptLogin("success", $userRow['id'], $this->settingRow);
+                $checkAttemptLogin = $this->utility->checkAttemptLogin("success", $userRow['id'], $this->settingRow);
                 
                 if ($checkAttemptLogin[0] == true) {
                     if (isset($parameters['_remember_me']) == true)
                         setcookie(session_name() . "_REMEMBERME", $parameters['_remember_me'], time() + 3600 * 24 * 365, "/");
                     
-                    $_SESSION['user_logged'] = $userRow;
-                    $_SESSION['user_logged']['userRoleRow'] = $this->query->selectRoleUserDatabase($_SESSION['user_logged']['role_user_id'], true);
+                    $_SESSION['userLogged'] = $userRow;
+                    $_SESSION['userLogged']['userRoleRow'] = $this->query->selectRoleUserDatabase($_SESSION['userLogged']['role_user_id'], true);
 
                     $this->response['values'] = "logged";
                 }
@@ -83,12 +80,16 @@ class Authentication {
                 }
             }
             else {
-                $checkAttemptLogin = $this->ipCameraUtility->checkAttemptLogin("failure", $userRow['username'], $this->settingRow);
-                
-                if ($checkAttemptLogin[1] == "lock")
-                    $message = "A lot attempts, wait {$checkAttemptLogin[2]} minutes before retrying.";
-                else if ($checkAttemptLogin[1] == "try")
-                    $message = "Attempt: {$checkAttemptLogin[2]} / {$this->settingRow['login_attempt_count']}";
+                if ($this->utility->checkUserNotLocked($userRow['username']) == false)
+                    $message = "Your account is locked.";
+                else {
+                    $checkAttemptLogin = $this->utility->checkAttemptLogin("failure", $userRow['username'], $this->settingRow);
+
+                    if ($checkAttemptLogin[1] == "lock")
+                        $message = "A lot attempts, wait {$checkAttemptLogin[2]} minutes before retrying.";
+                    else if ($checkAttemptLogin[1] == "try")
+                        $message = "Attempt: {$checkAttemptLogin[2]} / {$this->settingRow['login_attempt_count']}";
+                }
                 
                 $this->response['messages']['error'] = $message;
             }
@@ -100,10 +101,11 @@ class Authentication {
     private function authenticationExitCheckAction() {
         if (isset($_COOKIE[session_name() . '_REMEMBERME']) == true) {
             unset($_COOKIE[session_name() . '_REMEMBERME']);
+            
             setcookie(session_name() . "_REMEMBERME", null, -1, "/");
         }
         
-        unset($_SESSION['user_logged']);
+        unset($_SESSION['userLogged']);
         
         $this->response['values'] = "unlogged";
     }

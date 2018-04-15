@@ -1,14 +1,12 @@
 <?php
 require_once("Utility.php");
 require_once(dirname(__DIR__) . "/Ajax.php");
-require_once(dirname(__DIR__) . "/IpCameraUtility.php");
 require_once(dirname(__DIR__) . "/IpCamera.php");
 
 class Root {
     // Vars
     private $utility;
     private $ajax;
-    private $ipCameraUtility;
     private $ipCamera;
     
     // Properties
@@ -20,10 +18,6 @@ class Root {
         return $this->ajax;
     }
     
-    public function getIpCameraUtility() {
-        return $this->ipCameraUtility;
-    }
-    
     public function getIpCamera() {
         return $this->ipCamera;
     }
@@ -32,7 +26,6 @@ class Root {
     public function __construct() {
         $this->utility = new Utility();
         $this->ajax = new Ajax();
-        $this->ipCameraUtility = new IpCameraUtility();
         $this->ipCamera = new IpCamera();
         
         $this->utility->generateToken();
