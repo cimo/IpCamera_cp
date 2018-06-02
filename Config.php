@@ -57,7 +57,7 @@ class Config {
         $this->databaseConnectionFields = Array(
             "mysql:host=localhost;dbname=ipcamera_cp;charset=utf8",
             "user_1",
-            "",
+            "Password1",
             Array(
                 PDO::ATTR_EMULATE_PREPARES => false,
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -70,7 +70,7 @@ class Config {
         $this->supportSymlink = true;
         $this->file = "";
         $this->name = "IpCamera cp 1.0.0";
-        $this->curlLogin = Array("user_1", "");
+        $this->curlLogin = Array("", "");
     }
 
     // Functions private
