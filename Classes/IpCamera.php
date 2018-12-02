@@ -217,8 +217,10 @@ class IpCamera {
         
         $curlLogin = $this->utility->getCurlLogin();
         
-        if ($curlLogin[0] != "" && $curlLogin[1] != "")
+        if ($curlLogin[0] != "" && $curlLogin[1] != "") {
+            curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
             curl_setopt($curl, CURLOPT_USERPWD, "{$curlLogin[0]}:{$curlLogin[1]}");
+        }
         
         if ($this->utility->getProtocol() == "https://") {
             $httpHostExplode = explode(".", $_SERVER['HTTP_HOST']);
@@ -229,7 +231,7 @@ class IpCamera {
         
         $response = curl_exec($curl);
         
-        if($response == false)
+        if ($response == false)
             error_log("Error - curl: " . curl_error($curl) . " - Code: " . curl_errno($curl));
         
         curl_close($curl);

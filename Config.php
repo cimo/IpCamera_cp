@@ -3,7 +3,7 @@ date_default_timezone_set("Europe/Rome");
 
 session_write_close();
 session_name("ipcamera_cp");
-session_save_path(__DIR__ . "/sessions");
+//session_save_path(__DIR__ . "/sessions");
 
 if (session_id() == "")
     session_start();
