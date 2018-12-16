@@ -64,13 +64,13 @@ class Config {
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
             )
         );
-        $this->protocol = "https://";
-        $this->pathRoot = "/ipcamera_cp";
-        $this->urlRoot = "/ipcamera_cp";
+        $this->protocol = isset($_SERVER['HTTPS']) == true ? "https://" : "http://";
+        $this->pathRoot = "/ipcamera_cp/root";
+        $this->urlRoot = "/ipcamera_cp/root";
         $this->supportSymlink = true;
-        $this->file = "";
-        $this->name = "IpCamera cp 1.0.0";
-        $this->curlLogin = Array("", "");
+        $this->file = "index.php";
+        $this->name = "IpC.cp 1.0.0";
+        $this->curlLogin = Array("", "", "");
     }
 
     // Functions private
