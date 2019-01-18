@@ -65,11 +65,11 @@ class Config {
             )
         );
         $this->protocol = isset($_SERVER['HTTPS']) == true ? "https://" : "http://";
-        $this->pathRoot = "/ipcamera_cp/root";
-        $this->urlRoot = "/ipcamera_cp/root";
+        $this->pathRoot = "/projects/ipcamera_cp/root";
+        $this->urlRoot = "/projects/ipcamera_cp/root";
         $this->supportSymlink = true;
         $this->file = "index.php";
-        $this->name = "IpC.cp 1.0.0";
+        $this->name = "IpCamera cp 1.0.0";
         $this->curlLogin = Array("", "", "");
     }
 
