@@ -1,25 +1,26 @@
-Uebusaito
+IpCamera cp
 ==============
 
-This is a open source cms with symfony framework.
+Framework for management your IpCamera.
+Based on Uebusaito, you can record video and/or image, setting your IpCamera and use a motion detection.
 
-| Features |
+| INFO |
 |:---|
-| Full responsive (pc, tablet, smartphone) |
-| Cross-browser (Chrome, firefox, internet explorer, opera, safari) |
+| Cross browser and responsive (Chrome, Firefox, Edge, Opera, Safari) |
+| Cross platform (Windows, Linux, Mac, Android, Ios ) |
 | Dynamic multi language |
 | Login, registration, recover password and profile |
+| Multiple roles system |
 | Search in website |
 | Credit and paypal payment |
 | Upload file chunk system |
 | Wysiwyg page creation (create page without code) |
 | Page comments |
-| Scss style |
 | Microservice (Deploy and api) |
 | Integration with: Slack, line |
 | Extend with module system |
 
-| Control panel |
+| ELEMENTS |
 |:---|
 | System info |
 | Payments |
@@ -30,9 +31,10 @@ This is a open source cms with symfony framework.
 | Settings |
 | Slack |
 | Line |
-| Microservice (Deploy - Api) |
+| Microservice |
 
-## Images
+| IMAGES |
+|:---|
 <img src="screenshots/1.png" width="200" alt="1.png"/>
 <img src="screenshots/2.png" width="200" alt="2.png"/>
 
@@ -90,5 +92,9 @@ This is a open source cms with symfony framework.
         sudo -u www-data php bin/console cache:clear --no-warmup --env=dev
 
 7) For admin login use <b>"cimo, Password1"</b>.
+
+| LIBRARY |
+|:---|
+FFmpeg https://www.ffmpeg.org/
 
 <b>By CIMO - https://www.reinventsoftware.org</b>
