@@ -1,0 +1,16 @@
+{% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
+
+<form id="form_cp_payment_user_select" action="{{path("cp_payment_user_select", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+    <fieldset class="accordion_container">
+        <legend>{% trans %}paymentUserSelect_1{% endtrans %}</legend>
+        <p>{% trans %}paymentUserSelect_2{% endtrans %}</p>
+        <button class="mdc-button mdc-button--dense mdc-button--raised button_accordion" type="button">{% trans %}index_9{% endtrans %}</button>
+        <div class="accordion">
+            {{form_row(form.userId)}}
+
+            {{form_widget(form._token)}}
+
+            {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+        </div>
+    </fieldset>
+</form>

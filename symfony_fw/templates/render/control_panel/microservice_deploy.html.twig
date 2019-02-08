@@ -1,0 +1,16 @@
+<fieldset>
+    <legend>{% trans %}microserviceDeployRender_1{% endtrans %}</legend>
+    <p>{% trans %}microserviceDeployRender_2{% endtrans %}</p>
+    
+    {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
+
+    <form id="form_cp_microservice_deploy_render" action="{{path("cp_microservice_deploy_render", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+        {{form_row(form.id)}}
+
+        {{form_widget(form._token)}}
+
+        {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+    </form>
+    <div id="cp_microservice_deploy_render_result"></div>
+    <div id="cp_microservice_deploy_ssh_connection_result"></div>
+</fieldset>

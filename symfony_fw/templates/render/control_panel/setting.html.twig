@@ -1,0 +1,127 @@
+{% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
+
+<form id="form_cp_setting_save" action="{{path("cp_setting_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+    <fieldset class="accordion_container">
+        <legend>{% trans %}setting_1{% endtrans %}</legend>
+        <p>{% trans %}setting_2{% endtrans %}</p>
+        <button class="mdc-button mdc-button--dense mdc-button--raised button_accordion" type="button">{% trans %}index_9{% endtrans %}</button>    
+        <div class="accordion">
+            {{form_row(form.template)}}
+
+            <div class="form_row template_column">
+                <p>{% trans %}setting_3{% endtrans %}</p>
+                {% for key, value in form.templateColumn %}
+                    <div>
+                        {{form_widget(value)}}
+                        <img src="{{asset("images/templates/" ~ settingRow['template'] ~ "/template_column_" ~ key ~ ".png")}}" alt="{{"template_column_" ~ key ~ ".png"}}"/>
+                    </div>
+                {% endfor %}
+                {{form_errors(form.templateColumn)}}
+            </div>
+            
+            {{form_row(form.pageDate)}}
+            {{form_row(form.pageComment)}}
+            {{form_row(form.pageCommentActive)}}
+        </div>
+    </fieldset>
+    <fieldset class="accordion_container">
+        <legend>{% trans %}setting_4{% endtrans %}</legend>
+        <p>{% trans %}setting_5{% endtrans %}</p>
+        <button class="mdc-button mdc-button--dense mdc-button--raised button_accordion" type="button">{% trans %}index_9{% endtrans %}</button>
+        <div class="accordion">
+            <div>
+                {{form_row(form.language)}}
+                <i id="setting_language_manage_modify" class="material-icons cursor_custom">create</i>
+                <i id="setting_language_manage_create" class="material-icons cursor_custom">add</i>
+                <i id="setting_language_manage_delete" class="material-icons cursor_custom">remove</i>
+            </div>
+            <div id="setting_language_manage_container">
+                <p>{% trans %}setting_6{% endtrans %}</p>
+                <div class="form_row">
+                    <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon mdc-text-field--dense">
+                        <input id="form_setting_languageManageCode" class="mdc-text-field__input" type="text" name="form_setting[languageManageCode]" value="" autocomplete="off" aria-label="label"/>
+                        <i class="material-icons mdc-text-field__icon" tabindex="0" role="button">language</i>
+                        <label class="mdc-floating-label">{% trans %}setting_7{% endtrans %}</label>
+                        <div class="mdc-notched-outline">
+                            <svg>
+                                <path class="mdc-notched-outline__path"/>
+                            </svg>
+                        </div>
+                        <div class="mdc-notched-outline__idle"></div>
+                    </div>
+                    <p class="mdc-text-field-helper-text" aria-hidden="true"></p>
+                </div>
+                <div class="form_row">
+                    <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon mdc-text-field--dense">
+                        <input id="form_setting_languageManageDate" class="mdc-text-field__input" type="text" name="form_setting[languageManageDate]" value="" autocomplete="off" aria-label="label"/>
+                        <i class="material-icons mdc-text-field__icon" tabindex="0" role="button">language</i>
+                        <label class="mdc-floating-label">{% trans %}setting_8{% endtrans %}</label>
+                        <div class="mdc-notched-outline">
+                            <svg>
+                                <path class="mdc-notched-outline__path"/>
+                            </svg>
+                        </div>
+                        <div class="mdc-notched-outline__idle"></div>
+                    </div>
+                    <p class="mdc-text-field-helper-text" aria-hidden="true"></p>
+                </div>
+                <div class="form_row">
+                    <div class="mdc-select">
+                        <select id="form_setting_languageManageActive" class="mdc-select__native-control" name="form_setting[languageManageActive]" value="" aria-label="label">
+                            <option value=""></option>
+                            <option value="0">{% trans %}setting_10{% endtrans %}</option>
+                            <option value="1">{% trans %}setting_11{% endtrans %}</option>
+                        </select>
+                        <label class="mdc-floating-label">{% trans %}setting_9{% endtrans %}</label>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                </div>
+                <i id="setting_language_manage_confirm" class="material-icons cursor_custom">check_circle_outline</i>
+                <i id="setting_language_manage_close" class="material-icons cursor_custom">highlight_off</i>
+            </div>
+            
+            {{form_row(form.emailAdmin, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "email"})}}
+            {{form_row(form.websiteActive)}}
+            
+            <div id="setting_roleUserId" class="wordTag_container">
+                {{form_row(form.roleUserId)}}
+                {{response.values.userRoleSelectHtml|raw}}
+                <div class="wordTag_result"></div>
+            </div>
+
+            {{form_row(form.https)}}
+            {{form_row(form.registrationUserConfirmAdmin)}}
+            {{form_row(form.loginAttemptTime, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+            {{form_row(form.loginAttemptCount, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+            {{form_row(form.registration)}}
+            {{form_row(form.recoverPassword)}}
+            {{form_row(form.captcha)}}
+            {{form_row(form.useType)}}
+            {{form_row(form.secretPassphrase, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        </div>
+    </fieldset>
+    <fieldset class="accordion_container">
+        <legend>{% trans %}setting_12{% endtrans %}</legend>
+        <p>{% trans %}setting_13{% endtrans %}</p>
+        <button class="mdc-button mdc-button--dense mdc-button--raised button_accordion" type="button">{% trans %}index_9{% endtrans %}</button>
+        <div class="accordion">
+            {{form_row(form.payment)}}
+            {{form_row(form.credit, {'dense': "", 'styleType': "outlinedTrailing"})}}
+        </div>
+    </fieldset>
+    <fieldset class="accordion_container">
+        <legend>{% trans %}setting_14{% endtrans %}</legend>
+        <p>{% trans %}setting_15{% endtrans %}</p>
+        <button class="mdc-button mdc-button--dense mdc-button--raised button_accordion" type="button">{% trans %}index_9{% endtrans %}</button>
+        <div class="accordion">
+            {{form_row(form.payPalSandbox)}}
+            {{form_row(form.payPalBusiness, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+            {{form_row(form.payPalCurrencyCode, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+            {{form_row(form.payPalCreditAmount, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        </div>
+    </fieldset>
+    
+    {{form_widget(form._token)}}
+
+    {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+</form>

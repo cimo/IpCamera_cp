@@ -1,0 +1,100 @@
+$widthMobile: "839px";
+$widthDesktop: "840px";
+
+$mdc-theme-primary: #1976d2;
+$mdc-theme-on-primary: #ffffff;
+$mdc-theme-secondary: #d50000;
+$mdc-theme-on-secondary: #ffffff;
+$mdc-theme-background: #ffffff;
+$mdc-theme-surface: #ffffff;
+$mdc-theme-on-surface: #000000b3;
+
+@mixin opacity($value) {
+    $msOpacity: $value * 100;
+    
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$msOpacity})";
+    filter: alpha(opacity=$msOpacity);
+    opacity: $value;
+}
+
+@media(max-width: $widthMobile) {
+    .display_desktop {
+        display: none !important;
+    }
+    .display_mobile {
+        display: block !important;
+    }
+}
+@media(min-width: $widthDesktop) {
+    .display_desktop {
+        display: block !important;
+    }
+    .display_mobile {
+        display: none !important;
+    }
+}
+
+@-webkit-viewport {
+    width: device-width;
+}
+@-moz-viewport {
+    width: device-width;
+}
+@-ms-viewport {
+    width: device-width;
+}
+@-o-viewport {
+    width: device-width;
+}
+@viewport {
+    width: device-width;
+}
+
+@mixin user_select_none {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.user_select_none {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+@mixin user_select_text {
+    -webkit-touch-callout: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+.user_select_text {
+    -webkit-touch-callout: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+.user_touch_none {
+    -ms-touch-action: none;
+    touch-action: none;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+}
+
+.material-icons.md-14 {font-size: 14px !important;}
+.material-icons.primary {color: $mdc-theme-primary !important;}
+.material-icons.secondary {color: $mdc-theme-secondary !important;}
+
+.material-icons.md-dark {color: rgba(0, 0, 0, 0.70) !important;}
+.material-icons.md-dark.md-inactive {color: rgba(0, 0, 0, 0.3) !important;}
+
+.material-icons.md-light {color: rgba(255, 255, 255, 1) !important;}
+.material-icons.md-light.md-inactive {color: rgba(255, 255, 255, 0.3) !important;}

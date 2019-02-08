@@ -1,0 +1,10 @@
+{% if settingRow.captcha == true %}
+    <div class="captcha">
+        <div class="mdc-text-field mdc-text-field__basic mdc-text-field--dense">
+            <input id="captcha" class="mdc-text-field__input" type="text" name="captcha" size="9" maxlength="7" value="" autocomplete="off" aria-label="label"/>
+            <label class="mdc-floating-label" for="captcha">Captcha</label>
+            <div class="mdc-line-ripple"></div>
+        </div>
+        <img src="" alt="Captcha"/>
+    </div>
+{% endif %}

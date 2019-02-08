@@ -1,0 +1,21 @@
+{% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
+
+<a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_api"})}}">
+    {% trans %}microserviceApiCreate_1{% endtrans %}
+</a>
+<br><br>
+<fieldset>
+    <legend>{% trans %}microserviceApiCreate_2{% endtrans %}</legend>
+    <p>{% trans %}microserviceApiCreate_3{% endtrans %}</p>
+    <form id="form_cp_microservice_api_create" action="{{path("cp_microservice_api_create", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+        {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        {{form_row(form.controllerName, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        {{form_row(form.description, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        {{form_row(form.image)}}
+        {{form_row(form.active)}}
+
+        {{form_widget(form._token)}}
+
+        {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+    </form>
+</fieldset>

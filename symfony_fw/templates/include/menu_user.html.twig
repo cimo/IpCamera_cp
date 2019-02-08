@@ -1,0 +1,30 @@
+<div class="mdc-menu-anchor">
+    <a href="javascript:void(0)" class="material-icons mdc-top-app-bar__action-item" aria-label="label">account_circle</a>
+    <div class="mdc-menu" tabindex="-1">
+        <ul id="menu_user" class="mdc-menu__items mdc-list" role="menu" aria-hidden="true">
+            {% if app.user %}
+                {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true or is_granted("ROLE_MICROSERVICE") == true %}
+                    <li class="mdc-list-item control_panel" role="menuitem">
+                        <span>{% trans %}menuUser_1{% endtrans %}</span>
+                    </li>
+                {% endif %}
+                <li class="mdc-list-item myPage" role="menuitem">
+                    <span>{% trans %}menuUser_2{% endtrans %}</span>
+                </li>
+                <li class="mdc-list-item logout" role="menuitem">
+                    <span>{% trans %}menuUser_3{% endtrans %}</span>
+                </li>
+            {% else %}
+                <li class="mdc-list-item login" role="menuitem">
+                    <span>{% trans %}menuUser_4{% endtrans %}</span>
+                </li>
+                <li class="mdc-list-item registration" role="menuitem">
+                    <span>{% trans %}menuUser_5{% endtrans %}</span>
+                </li>
+                <li class="mdc-list-item recover_password" role="menuitem">
+                    <span>{% trans %}menuUser_6{% endtrans %}</span>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>

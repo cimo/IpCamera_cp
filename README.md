@@ -1,87 +1,94 @@
-IpCamera cp
+Uebusaito
 ==============
 
-This is a open source IpCamera control panel with FFMPEG and motion framework.
+This is a open source cms with symfony framework.
 
 | Features |
 |:---|
-| Full responsive (smartphone, tablet, pc) |
+| Full responsive (pc, tablet, smartphone) |
 | Cross-browser (Chrome, firefox, internet explorer, opera, safari) |
-| Work on internet and lan (server, cloud, ...) |
-| Work with a lot model of ipcamera |
-| Remote camera control (Move and take picture) |
-| Set motion tracking (Take automatic video) |
-| Add and remove camera without write code |
-| Check status |
-| Apparatus profile management |
-| Files management |
-| Settings management |
-| User profile management |
+| Dynamic multi language |
+| Login, registration, recover password and profile |
+| Search in website |
+| Credit and paypal payment |
+| Upload file chunk system |
+| Wysiwyg page creation (create page without code) |
+| Page comments |
 | Scss style |
+| Microservice (Deploy and api) |
+| Integration with: Slack, line |
+| Extend with module system |
+
+| Control panel |
+|:---|
+| System info |
+| Payments |
+| Pages |
+| Users |
+| Modules |
+| Roles |
+| Settings |
+| Slack |
+| Line |
+| Microservice (Deploy - Api) |
 
 ## Images
-<img src="screenshots/1.png" width="200" alt="1"/>
-<img src="screenshots/2.png" width="200" alt="2"/>
+<img src="screenshots/1.png" width="200" alt="1.png"/>
+<img src="screenshots/2.png" width="200" alt="2.png"/>
 
 ## Instructions:
-1) Download from "https://github.com/Motion-Project/motion/releases" the "xenial_motion_4.0.1-1_amd64.deb" package and upload this file on your server.
+1) Copy files on your server.
 
-2) On linux, open terminal and write:
+2) Write on terminal:
 
-	sudo dpkg -i /YOUR_USER_PATH/xenial_motion_4.0.1-1_amd64.deb; sudo apt-get -f install
-	
-	sudo nano /etc/motion/motion.conf
+        cd /home/user_1/www/symfony_fw
+        
+        sudo nano .env
 
-3) Edit:
+3) Modify:
 
-	daemon on
-	
-	process_id_file /var/run/motion/motion.pid
-	
-	log_level 4
-	
-	output_pictures off
-	
-	ffmpeg_output_movies off
-	
-	ffmpeg_video_codec mpeg4
-	
-	text_right %Y-%m-%d\n%T | %q
-	
-	snapshot_filename %Y-%m-%d_%H:%M:%S_snapshot
-	
-	picture_filename %Y-%m-%d_%H:%M:%S_%q
-	
-	movie_filename %Y-%m-%d_%H:%M:%S
-	
-	timelapse_filename %Y-%m-%d_timelapse
-	
-	stream_port 0
-	
-	webcontrol_port 32402
+        APP_ENV=dev
+        
+        DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name
 
-4) Save, close the file and on linux, open the terminal and write:
+4) Save, close the file and write on terminal:
 
-	sudo chmod 666 /etc/motion/motion.conf
-	
-	sudo nano /etc/default/motion
+        sudo nano /config/packages/framework.yaml
 
-5) Edit:
+5) In "session:" modify:
 
-	start_motion_daemon=yes
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+        
+        name: new_name
+        
+        cookie_domain: .domain_name.xxx
 
-6) Save, close the file and on linux, open the terminal and write:
-	
-	sudo mkdir /YOUR_PATH/motion
-	
-	sudo chown -R www-data:motion /YOUR_PATH/motion
-	
-	sudo find /YOUR_PATH/motion -type d -exec chmod 775 {} \;
-	
-	sudo find /YOUR_PATH/motion -type f -exec chmod 664 {} \;
-	
-	sudo service motion restart
+6) Save, close the file and write on terminal:
 
-7) Go on your browser and write <b>"http://YOUR_IP/ipcamera_cp/web/index.php"</b>
+        sudo cp /src/Config.php.dist /src/Config.php
+        
+        sudo nano /src/Config.php
 
-<b>By CIMO - www.reinventsoftware.org</b>
+7) Change variables for adapt the framework to the your system.
+
+8) Save, close the file and write on terminal:
+
+        sudo rm -rf vendor var/cache composer.lock
+        
+        sudo composer install
+        
+        sudo composer update
+        
+        sudo chmod 775 /home/user_1/www/symfony_fw
+        
+        sudo chown -R user_1:www-data /home/user_1/www/symfony_fw
+        
+        sudo find /home/user_1/www/symfony_fw -type d -exec chmod 775 {} \;
+        
+        sudo find /home/user_1/www/symfony_fw -type f -exec chmod 664 {} \;
+        
+        sudo -u www-data php bin/console cache:clear --no-warmup --env=dev
+
+7) For admin login use <b>"cimo, Password1"</b>.
+
+<b>By CIMO - https://www.reinventsoftware.org</b>

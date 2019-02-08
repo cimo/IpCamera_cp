@@ -1,0 +1,45 @@
+<p>{% trans %}myPage_1{% endtrans %}</p>
+<nav class="mdc-tab-bar mdc-tab-bar--icons-with-text">
+    <a class="mdc-tab mdc-tab--with-icon-and-text" href="{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': 1, 'urlExtra': "mp_profile"})}}">
+        <i class="material-icons mdc-tab__icon">person</i>
+        <span class="mdc-tab__icon-text">{% trans %}myPage_2{% endtrans %}</span>
+    </a>
+    {% if (settingRow['payment'] == true) %}
+            <a class="mdc-tab mdc-tab--with-icon-and-text" href="{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': 1, 'urlExtra': "mp_payment"})}}">
+                <i class="material-icons mdc-tab__icon">account_balance</i>
+                <span class="mdc-tab__icon-text">{% trans %}myPage_3{% endtrans %}</span>
+            </a>
+    {% endif %}
+    <span class="mdc-tab-bar__indicator"></span>
+</nav>
+
+{% if urlExtra is empty or urlExtra == "myPage" or urlExtra == "mp_profile" %}
+    {{-render(controller("App\\Controller\\MyPage\\MyPageProfileController::profileAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+    {{-render(controller("App\\Controller\\MyPage\\MyPageProfileController::passwordAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+
+    {% if settingRow['credit'] == true %}
+        {{-render(controller("App\\Controller\\MyPage\\MyPageProfileController::creditAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+    {% endif %}
+{% elseif urlExtra == "mp_payment" and settingRow['payment'] == true %}
+    {{-render(controller("App\\Controller\\MyPage\\MyPagePaymentController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+{% endif %}
+
+<script>
+    window.addEventListener("load", function() {
+        myPageProfile.init();
+        
+        myPagePayment.init();
+        myPagePayment.changeView();
+    }, false);
+    
+    window.addEventListener("resize", function() {
+        myPagePayment.changeView();
+    }, false);
+    
+    var textPayment = {
+        'label_1': "{{"myPage_4"|trans}}",
+        'label_2': "{{"myPage_5"|trans}}"
+    };
+</script>
+<script src="{{asset("javascript/system/my_page/MyPageProfile.min.js")}}"></script>
+<script src="{{asset("javascript/system/my_page/MyPagePayment.min.js")}}"></script>

@@ -1,0 +1,8 @@
+# Date
+date.day: d-m-Y
+date.time: H:i:s
+
+# Lang
+"en": "en"
+"jp": "jp"
+"it": "it"

@@ -1,0 +1,54 @@
+{% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
+
+<a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_deploy"})}}">
+    {% trans %}microserviceDeployCreate_1{% endtrans %}
+</a>
+<br><br>
+<fieldset>
+    <legend>{% trans %}microserviceDeployCreate_2{% endtrans %}</legend>
+    <p>{% trans %}microserviceDeployCreate_3{% endtrans %}</p>
+    <form id="form_cp_microservice_deploy_create" action="{{path("cp_microservice_deploy_create", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+        {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        {{form_row(form.description, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        {{form_row(form.systemUser, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        
+        <div>
+            <p class="info_field">{% trans %}microserviceDeployFormType_4_i{% endtrans %}</p>
+            {{form_row(form.sshUsername, {'dense': "", 'styleType': "outlinedTrailing"})}}
+            {{form_row(form.sshPassword, {'dense': "", 'styleType': "outlinedTrailing"})}}
+        </div>
+        
+        <div class="microservice_deploy_group">
+            <div class="container">
+                {{form_row(form.keyPublic, {'label': "microserviceDeployFormType_6"})}}
+                {{form_row(form.removeKeyPublic)}}
+            </div>
+            <div class="container">
+                {{form_row(form.keyPrivate, {'label': "microserviceDeployFormType_8"})}}
+                {{form_row(form.removeKeyPrivate)}}
+            </div>
+        </div>
+        
+        {{form_row(form.keyPrivatePassword, {'dense': "", 'styleType': "outlinedTrailing"})}}
+        {{form_row(form.ip, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        {{form_row(form.gitUserEmail, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        {{form_row(form.gitUserName, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        
+        <p class="info_field">{% trans %}microserviceDeployFormType_14_i{% endtrans %}</p>
+        {{form_row(form.gitCloneUrl, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        
+        {{form_row(form.gitCloneUrlUsername, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        {{form_row(form.gitCloneUrlPassword, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        {{form_row(form.gitClonePath, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        {{form_row(form.userGitScript, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        {{form_row(form.userWebScript, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        {{form_row(form.rootWebPath, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        
+        <p class="info_field">{% trans %}microserviceDeployFormType_21_i{% endtrans %}</p>
+        {{form_row(form.command, {'dense': "", 'styleType': "outlinedTrailing"})}}
+        
+        {{form_widget(form._token)}}
+        
+        {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+    </form>
+</fieldset>

@@ -1,0 +1,9 @@
+twig:
+    # cimo :
+    paths:
+        '%kernel.project_dir%/templates': templateRoot
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    # cimo +
+    globals:
+        urlRoot: '%kernel.project_dir%/public'

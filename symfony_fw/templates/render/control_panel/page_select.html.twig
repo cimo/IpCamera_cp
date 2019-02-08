@@ -1,0 +1,78 @@
+<fieldset>
+    <legend>{% trans %}pageSelect_1{% endtrans %}</legend>
+    <p>{% trans %}pageSelect_2{% endtrans %}</p>
+    <div id="cp_page_select_desktop" class="display_desktop">
+        <div id="cp_page_select_result_desktop">
+            
+            {{-include("@templateRoot/include/table_and_pagination.html.twig")-}}
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            <span>{% trans %}pageSelect_3{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}pageSelect_4{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}pageSelect_5{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}pageSelect_6{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}pageSelect_7{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}pageSelect_8{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}pageSelect_9{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}pageSelect_10{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}pageSelect_11{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{response.values.listHtml|raw}}
+                </tbody>
+            </table>
+        </div>
+        <button id="cp_page_select_button_desktop" class="mdc-button mdc-button--dense mdc-button--raised" type="button">{% trans %}pageSelect_12{% endtrans %}</button>
+    </div>
+    <div id="cp_page_select_mobile" class="display_mobile">
+        {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
+
+        <form id="form_cp_page_select_mobile" action="{{path("cp_page_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+            {{form_row(form.id)}}
+
+            {{form_widget(form._token)}}
+
+            {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+        </form>
+    </div>
+    <div id="cp_page_select_result"></div>
+</fieldset>

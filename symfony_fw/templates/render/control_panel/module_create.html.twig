@@ -1,0 +1,35 @@
+{% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
+
+<fieldset>
+    <legend>{% trans %}moduleCreate_1{% endtrans %}</legend>
+    <p>{% trans %}moduleCreate_2{% endtrans %}</p>
+    <form id="form_cp_module_create" action="{{path("cp_module_create", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+        {{form_row(form.position)}}
+        
+        <div id="module_rankColumnSort" class="sort_container">
+            <p>{% trans %}moduleCreate_3{% endtrans %} <i class="material-icons">list</i></p>
+            <div class="sort_result">
+                {{response.values.moduleSortListHtml|raw}}
+            </div>
+            <div class="sort_control">
+                <button class="mdc-button mdc-button--dense mdc-button--raised" type="button">
+                    <i class="material-icons mdc-button__icon button_up">arrow_drop_up</i>
+                    {% trans %}moduleCreate_4{% endtrans %}
+                </button>
+                <button class="mdc-button mdc-button--dense mdc-button--raised" type="button">
+                    <i class="material-icons mdc-button__icon button_down">arrow_drop_down</i>
+                    {% trans %}moduleCreate_5{% endtrans %}
+                </button>
+            </div>
+            {{form_row(form.rankColumnSort)}}
+        </div>
+        
+        {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        {{form_row(form.label, {'dense': "", 'styleType': "outlinedTrailing"})}}
+        {{form_row(form.controllerName, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "toll"})}}
+
+        {{form_widget(form._token)}}
+        
+        {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+    </form>
+</fieldset>

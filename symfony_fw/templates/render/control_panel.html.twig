@@ -1,0 +1,411 @@
+{% extends "@templateRoot/layout/layout_site.html.twig" %}
+
+{% import _self as macro %}
+
+{% block headerContainer %}
+    <header class="mdc-top-app-bar">
+        <div class="mdc-top-app-bar__row">
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <a class="material-icons mdc-top-app-bar__navigation-icon menu_root_mobile display_mobile" href="javascript:void(0)">menu</a>
+                <div class="display_desktop">
+                    <img class="logo_main_big" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/logo.svg")}}" alt="logo.svg"/>
+                    <span class="mdc-top-app-bar__title">{{websiteName}}</span>
+                </div>
+                <span class="mdc-top-app-bar__title display_mobile">
+                    <img class="logo_main_small" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/logo.svg")}}" alt="logo.svg"/>
+                </span>
+            </section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+                {{-render(controller("App\\Controller\\SearchController::moduleAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                {{-render(controller("App\\Controller\\LanguageController::textAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                {{-include("@templateRoot/include/menu_user.html.twig")-}}
+            </section>
+        </div>
+        <aside class="mdc-drawer mdc-drawer--temporary mdc-typography cp_menu">
+            <nav class="mdc-drawer__drawer">
+                <header class="mdc-drawer__header">
+                    <div class="mdc-drawer__header-content">
+                        <img class="logo_main_big" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/logo.svg")}}" alt="logo.svg"/>
+                        <span>{{websiteName}}</span>
+                    </div>
+                </header>
+                <nav class="mdc-drawer__content mdc-list">
+                    {{macro.menuControlPanel(urlLocale)}}
+                </nav>
+            </nav>
+        </aside>
+    </header>
+{% endblock %}
+
+{% block columnLeftContainer %}
+    {% if app.user %}
+        <div class="sortable_column">
+            <nav class="mdc-drawer mdc-drawer--permanent mdc-typography cp_menu">
+                <div class="mdc-drawer__content">
+                    <nav class="mdc-list">
+                        {{macro.menuControlPanel(urlLocale)}}
+                    </nav>
+                </div>
+            </nav>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block columnCenterContainer %}
+    {% if app.user %}
+        <div class="sortable_column user_select_text">
+            {% if urlExtra is empty or urlExtra == "cp_sytem_info" %}
+                {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
+                    <ul class="mdc-list mdc-list--two-line mdc-list--avatar-list cp_system_info">
+                        {% for key, value in response.output.phpinfo %}
+                            <li class="mdc-list-item">
+                                <span class="mdc-list-item__graphic material-icons">info</span>
+                                <span class="mdc-list-item__text">
+                                    {{key}}
+                                    <span class="mdc-list-item__secondary-text">
+                                        {% for keySub, valueSub in value %}
+                                            {% if valueSub is not iterable %}
+                                                {{keySub}}: {{valueSub}}<br>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </span>
+                            </li>
+                            <li role="separator" class="mdc-list-divider"></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% elseif urlExtra == "cp_payment" %}
+                {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
+                    <p>{% trans %}controlPanelPayment_1{% endtrans %}</p>
+
+                    {{-render(controller("App\\Controller\\ControlPanel\\PaymentController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    
+                    <script>
+                        window.addEventListener("load", function() {
+                            controlPanelPayment.init();
+                            controlPanelPayment.changeView();
+                        }, false);
+                        
+                        window.addEventListener("resize", function() {
+                            controlPanelPayment.changeView();
+                        }, false);
+                        
+                        var textPayment = {
+                            'label_1': "{{"controlPanelPayment_2"|trans}}",
+                            'label_2': "{{"controlPanelPayment_3"|trans}}"
+                        };
+                    </script>
+                    <script src="{{asset("javascript/system/control_panel/Payment.min.js")}}"></script>
+                {% endif %}
+            {% elseif urlExtra == "cp_page" or urlExtra == "cp_page_create" or urlExtra == "cp_page_select" %}
+                {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
+                    <p>{% trans %}controlPanelPage_1{% endtrans %}</p>
+                    <div class="cp_section_button">
+                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_page_create"})}}" type="button">{% trans %}controlPanel_1{% endtrans %}</a>
+                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_page_select"})}}" type="button">{% trans %}controlPanel_2{% endtrans %}</a>
+                    </div>
+
+                    {% if urlExtra == "cp_page_create" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\PageController::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% elseif urlExtra == "cp_page_select" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\PageController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% endif %}
+                    
+                    <script>
+                        window.addEventListener("load", function() {
+                            controlPanelPage.init();
+                            controlPanelPage.changeView();
+                        }, false);
+                        
+                        window.addEventListener("resize", function() {
+                            controlPanelPage.changeView();
+                        }, false);
+
+                        var textPage = {
+                            'label_1': "{{"controlPanelPage_2"|trans}}",
+                            'label_2': "{{"controlPanelPage_3"|trans}}"
+                        };
+                    </script>
+                    <script src="{{asset("javascript/system/control_panel/Page.min.js")}}"></script>
+                {% endif %}
+            {% elseif urlExtra == "cp_user" or urlExtra == "cp_user_create" or urlExtra == "cp_user_select" %}
+                {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
+                    <p>{% trans %}controlPanelUser_1{% endtrans %}</p>
+                    <div class="cp_section_button">
+                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_user_create"})}}" type="button">{% trans %}controlPanel_1{% endtrans %}</a>
+                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_user_select"})}}" type="button">{% trans %}controlPanel_2{% endtrans %}</a>
+                    </div>
+
+                    {% if urlExtra == "cp_user_create" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\UserController::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% elseif urlExtra == "cp_user_select" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\UserController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% endif %}
+                    
+                    <script>
+                        window.addEventListener("load", function() {
+                            controlPanelUser.init();
+                            controlPanelUser.changeView();
+                        }, false);
+                        
+                        window.addEventListener("resize", function() {
+                            controlPanelUser.changeView();
+                        }, false);
+
+                        var textUser = {
+                            'label_1': "{{"controlPanelUser_2"|trans}}",
+                            'label_2': "{{"controlPanelUser_3"|trans}}"
+                        };
+                    </script>
+                    <script src="{{asset("javascript/system/control_panel/User.min.js")}}"></script>
+                {% endif %}
+            {% elseif urlExtra == "cp_module" or urlExtra == "cp_module_create" or urlExtra == "cp_module_select" %}
+                {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
+                    <p>{% trans %}controlPanelModule_1{% endtrans %}</p>
+                    <div class="cp_section_button">
+                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_module_create"})}}" type="button">{% trans %}controlPanel_1{% endtrans %}</a>
+                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_module_select"})}}" type="button">{% trans %}controlPanel_2{% endtrans %}</a>
+                    </div>
+
+                    {% if urlExtra == "cp_module_create" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\ModuleController::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% elseif urlExtra == "cp_module_select" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\ModuleController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% endif %}
+                    
+                    <script>
+                        window.addEventListener("load", function() {
+                            controlPanelModule.init();
+                            controlPanelModule.changeView();
+                        }, false);
+                        
+                        window.addEventListener("resize", function() {
+                            controlPanelModule.changeView();
+                        }, false);
+
+                        var textModule = {
+                            'label_1': "{{"controlPanelModule_2"|trans}}",
+                            'label_2': "{{"controlPanelModule_3"|trans}}"
+                        };
+                    </script>
+                    <script src="{{asset("javascript/system/control_panel/Module.min.js")}}"></script>
+                {% endif %}
+            {% elseif urlExtra == "cp_role" or urlExtra == "cp_role_create" or urlExtra == "cp_role_select" %}
+                {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
+                    <p>{% trans %}controlPanelRole_1{% endtrans %}</p>
+                    <div class="cp_section_button">
+                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_role_create"})}}">{% trans %}controlPanel_1{% endtrans %}</a>
+                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_role_select"})}}">{% trans %}controlPanel_2{% endtrans %}</a>
+                    </div>
+
+                    {% if urlExtra == "cp_role_create" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\RoleUserController::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% elseif urlExtra == "cp_role_select" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\RoleUserController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% endif %}
+                    
+                    <script>
+                        window.addEventListener("load", function() {
+                            controlPanelRoleUser.init();
+                            controlPanelRoleUser.changeView();
+                        }, false);
+                        
+                        window.addEventListener("resize", function() {
+                            controlPanelRoleUser.changeView();
+                        }, false);
+
+                        var textRole = {
+                            'label_1': "{{"controlPanelRole_2"|trans}}",
+                            'label_2': "{{"controlPanelRole_3"|trans}}"
+                        };
+                    </script>
+                    <script src="{{asset("javascript/system/control_panel/RoleUser.min.js")}}"></script>
+                {% endif %}
+            {% elseif urlExtra == "cp_setting" %}
+                {% if is_granted("ROLE_ADMIN") == true %}
+                    <p>{% trans %}controlPanelSetting_1{% endtrans %}</p>
+
+                    {{-render(controller("App\\Controller\\ControlPanel\\SettingController::saveAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    
+                    <script>
+                        window.addEventListener("load", function() {
+                            controlPanelSetting.init();
+                        }, false);
+                        
+                        var textSetting = {
+                            'label_1': "{{"controlPanelSetting_2"|trans}}",
+                            'label_2': "{{"controlPanelSetting_3"|trans}}",
+                            'label_3': "{{"settingController_10"|trans}}",
+                            'label_4': "{{"settingController_11"|trans}}"
+                        };
+                    </script>
+                    <script src="{{asset("javascript/system/control_panel/Setting.min.js")}}"></script>
+                {% endif %}
+            {% elseif urlExtra == "cp_setting_slack_iw" %}
+                {% if is_granted("ROLE_ADMIN") == true %}
+                    <p>{% trans %}controlPanelSettingSlack_1{% endtrans %}</p>
+
+                    {{-render(controller("App\\Controller\\ControlPanel\\SettingSlackIwController::renderAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    
+                    <script>
+                        window.addEventListener("load", function() {
+                            controlPanelSettingSlackIw.init();
+                        }, false);
+                        
+                        var textSettingSlackIw = {
+                            'label_1': "{{"controlPanelSettingSlack_2"|trans}}"
+                        };
+                    </script>
+                    <script src="{{asset("javascript/system/control_panel/SettingSlackIw.min.js")}}"></script>
+                {% endif %}
+            {% elseif urlExtra == "cp_setting_line" %}
+                {% if is_granted("ROLE_ADMIN") == true %}
+                    <p>{% trans %}controlPanelSettingLine_1{% endtrans %}</p>
+
+                    {{-render(controller("App\\Controller\\ControlPanel\\SettingLinePushController::renderAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    
+                    <script>
+                        window.addEventListener("load", function() {
+                            controlPanelSettingLinePush.init();
+                        }, false);
+                        
+                        var textSettingLinePush = {
+                            'label_1': "{{"controlPanelSettingLine_2"|trans}}"
+                        };
+                    </script>
+                    <script src="{{asset("javascript/system/control_panel/SettingLinePush.min.js")}}"></script>
+                {% endif %}
+            {% elseif (urlExtra == "cp_microservice_deploy" or urlExtra == "cp_microservice_deploy_create" or "cp_microservice_deploy_select" in urlExtra) %}
+                {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
+                    <p>{% trans %}controlPanelMicroserviceDeploy_1{% endtrans %}</p>
+                    <div class="cp_section_button">
+                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_deploy_create"})}}">{% trans %}controlPanel_1{% endtrans %}</a>
+                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_deploy_select"})}}">{% trans %}controlPanel_2{% endtrans %}</a>
+                    </div>
+                    
+                    {% if urlExtra == "cp_microservice_deploy" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceDeployController::renderAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% elseif urlExtra == "cp_microservice_deploy_create" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceDeployController::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% elseif urlExtra == "cp_microservice_deploy_select" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceDeployController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% endif %}
+                    
+                    <script>
+                        window.addEventListener("load", function() {
+                            controlPanelMicroserviceDeploy.init();
+                            controlPanelMicroserviceDeploy.changeView();
+                        }, false);
+                        
+                        window.addEventListener("resize", function() {
+                            controlPanelMicroserviceDeploy.changeView();
+                        }, false);
+
+                        var textMicroserviceDeploy = {
+                            'label_1': "{{"controlPanelMicroserviceDeploy_2"|trans}}",
+                            'label_2': "{{"controlPanelMicroserviceDeploy_3"|trans}}",
+                            'label_3': "{{"controlPanelMicroserviceDeploy_4"|trans}}"
+                        };
+                    </script>
+                    <script src="{{asset("javascript/system/control_panel/MicroserviceDeploy.min.js")}}"></script>
+                {% endif %}
+            {% elseif (urlExtra == "cp_microservice_api" or urlExtra == "cp_microservice_api_create" or "cp_microservice_api_profile" in urlExtra) %}
+                {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
+                    <p>{% trans %}controlPanelMicroserviceApi_1{% endtrans %}</p>
+                    
+                    {% if urlExtra == "cp_microservice_api" %}
+                        <div class="cp_section_button">
+                            <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_api_create"})}}">{% trans %}controlPanel_1{% endtrans %}</a>
+                        </div>
+                        {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceApiController::renderAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% elseif urlExtra == "cp_microservice_api_create" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceApiController::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% elseif "cp_microservice_api_profile" in urlExtra %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceApiController::profileSaveAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% endif %}
+                    
+                    <script>
+                        window.addEventListener("load", function() {
+                            controlPanelMicroserviceApi.init();
+                            controlPanelApiBasic.init();
+                        }, false);
+                        
+                        var textApiBasic = {
+                            'label_1': "{{"apiBasic_1"|trans}}"
+                        };
+                    </script>
+                    <script src="{{asset("javascript/system/control_panel/MicroserviceApi.min.js")}}"></script>
+                    <script src="{{asset("javascript/system/control_panel/ApiBasic.min.js")}}"></script>
+                {% endif %}
+            {% endif %}
+        </div>
+        
+        {{-include("@templateRoot/render/control_panel_custom.html.twig")-}}
+    {% else %}
+        <div class="sortable_column">
+            <p>{% trans %}controlPanel_3{% endtrans %}</p>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% macro menuControlPanel(urlLocale) %}
+    {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
+        <a class="mdc-list-item" href="{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': 2, 'urlExtra': ""})}}">
+            <i class="material-icons mdc-list-item__graphic">home</i>
+            <span>{% trans %}controlPanel_4{% endtrans %}</span>
+        </a>
+        <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_sytem_info"})}}">
+            <i class="material-icons mdc-list-item__graphic">developer_board</i>
+            <span>{% trans %}controlPanel_5{% endtrans %}</span>
+        </a>
+        <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_payment"})}}">
+            <i class="material-icons mdc-list-item__graphic">payment</i>
+            <span>{% trans %}controlPanel_6{% endtrans %}</span>
+        </a>
+        <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_page"})}}">
+            <i class="material-icons mdc-list-item__graphic">pages</i>
+            <span>{% trans %}controlPanel_7{% endtrans %}</span>
+        </a>
+        <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_user"})}}">
+            <i class="material-icons mdc-list-item__graphic">people</i>
+            <span>{% trans %}controlPanel_8{% endtrans %}</span>
+        </a>
+        <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_module"})}}">
+            <i class="material-icons mdc-list-item__graphic">extension</i>
+            <span>{% trans %}controlPanel_9{% endtrans %}</span>
+        </a>
+        <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_role"})}}">
+            <i class="material-icons mdc-list-item__graphic">label</i>
+            <span>{% trans %}controlPanel_10{% endtrans %}</span>
+        </a>
+        <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_setting"})}}">
+            <i class="material-icons mdc-list-item__graphic">settings</i>
+            <span>{% trans %}controlPanel_11{% endtrans %}</span>
+        </a>
+        <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_setting_slack_iw"})}}">
+            <img class="material-icons" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/slack.png")}}" alt="slack.png"/>
+            <span>{% trans %}controlPanel_12{% endtrans %}</span>
+        </a>
+        <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_setting_line"})}}">
+            <img class="material-icons" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/line.png")}}" alt="line.png"/>
+            <span>{% trans %}controlPanel_13{% endtrans %}</span>
+        </a>
+    {% endif %}
+
+    {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
+        <p class="mdc-typography--overline title_group">{% trans %}controlPanel_14{% endtrans %}</p>
+        <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_deploy"})}}">
+            <i class="material-icons mdc-list-item__graphic">build</i>
+            <span>{% trans %}controlPanel_15{% endtrans %}</span>
+        </a>
+        <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_api"})}}">
+            <i class="material-icons mdc-list-item__graphic">perm_data_setting</i>
+            <span>{% trans %}controlPanel_16{% endtrans %}</span>
+        </a>
+    {% endif %}
+    
+    {% if settingRow['use_type'] == 2 and (is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true) %}
+        <p class="mdc-typography--overline title_group">{% trans %}controlPanel_17{% endtrans %}</p>
+    {% endif %}
+{% endmacro %}

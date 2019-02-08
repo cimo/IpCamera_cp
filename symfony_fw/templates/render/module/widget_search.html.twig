@@ -1,0 +1,9 @@
+<form id="form_search_module" class="widget_search" action="{{path("search_module", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+    <i class="material-icons mdc-top-app-bar__action-item button_open">search</i>
+    
+    {{form_row(form.words, {'label': false})}}
+    
+    <i class="material-icons mdc-top-app-bar__action-item button_close">close</i>
+
+    {{form_widget(form._token)}}
+</form>

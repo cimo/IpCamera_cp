@@ -1,0 +1,16 @@
+.captcha {
+    text-align: center;
+    
+    .mdc-text-field {
+        height: 35px !important;
+        
+        .mdc-text-field__input {
+            padding-top: 0 !important;
+        }
+    }
+    
+    img {
+        cursor: pointer;
+        vertical-align: middle;
+    }
+}

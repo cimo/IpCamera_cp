@@ -1,0 +1,37 @@
+{% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
+
+<fieldset>
+    <legend>{% trans %}userCreate_1{% endtrans %}</legend>
+    <p>{% trans %}userCreate_2{% endtrans %}</p>
+    <form id="form_cp_user_create" action="{{path("cp_user_create", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+        {% if is_granted("ROLE_ADMIN") == true %}
+            <div id="user_roleUserId" class="wordTag_container">
+                {{form_row(form.roleUserId)}}
+                {{response.values.userRoleSelectHtml|raw}}
+                <div class="wordTag_result"></div>
+            </div>
+        {% endif %}
+        
+        {{form_row(form.username, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "pets"})}}
+        {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing"})}}
+        {{form_row(form.surname, {'dense': "", 'styleType': "outlinedTrailing"})}}
+        {{form_row(form.email, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "email"})}}
+        {{form_row(form.telephone, {'dense': "", 'styleType': "outlinedTrailing"})}}
+        {{form_row(form.born, {'dense': "", 'styleType': "outlinedTrailing", 'attr' : {'class': "widget_datePicker_input"} })}}
+        {{form_row(form.gender)}}
+        {{form_row(form.fiscalCode, {'dense': "", 'styleType': "outlinedTrailing"})}}
+        {{form_row(form.companyName, {'dense': "", 'styleType': "outlinedTrailing"})}}
+        {{form_row(form.vat, {'dense': "", 'styleType': "outlinedTrailing"})}}
+        {{form_row(form.website, {'dense': "", 'styleType': "outlinedTrailing"})}}
+        {{form_row(form.state, {'dense': "", 'styleType': "outlinedTrailing"})}}
+        {{form_row(form.city, {'dense': "", 'styleType': "outlinedTrailing"})}}
+        {{form_row(form.zip, {'dense': "", 'styleType': "outlinedTrailing"})}}
+        {{form_row(form.address, {'dense': "", 'styleType': "outlinedTrailing"})}}
+        {{form_row(form.password, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "linear_scale"})}}
+        {{form_row(form.passwordConfirm, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "linear_scale"})}}
+        
+        {{form_widget(form._token)}}
+        
+        {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+    </form>
+</fieldset>

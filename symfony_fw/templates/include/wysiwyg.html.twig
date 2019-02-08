@@ -1,0 +1,130 @@
+<div class="wysiwyg">
+    <div class="toolbar">
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="source">code</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="undo">undo</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="redo">redo</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="removeFormat">delete_sweep</span>
+        </button>
+        <div class="icon_container">
+            <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+                <span class="mdc-fab__icon material-icons" data-command="foreColor">format_color_text</span>
+            </button>
+            <input type="color"/>
+            <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+                <span class="mdc-fab__icon material-icons" data-command="backColor">format_color_fill</span>
+            </button>
+            <input type="color"/>
+        </div>
+        <div class="mdc-select select_format">
+            <select class="mdc-select__native-control" data-command="formatBlock">
+                <option value=""></option>
+                <option value="p">P</option>
+                <option value="h1">H1</option>
+                <option value="h2">H2</option>
+                <option value="h3">H3</option>
+                <option value="h4">H4</option>
+                <option value="h5">H5</option>
+                <option value="h6">H6</option>
+            </select>
+            <label class="mdc-floating-label mdc-floating-label--float-above">{{"wysiwyg_1"|trans}}</label>
+            <div class="mdc-line-ripple"></div>
+        </div>
+        <div class="mdc-select select_font">
+            <select class="mdc-select__native-control" data-command="fontSize">
+                <option value=""></option>
+                <option value="1">Size 1</option>
+                <option value="2">Size 2</option>
+                <option value="3">Size 3</option>
+                <option value="4">Size 4</option>
+                <option value="5">Size 5</option>
+                <option value="6">Size 6</option>
+                <option value="7">Size 7</option>
+            </select>
+            <label class="mdc-floating-label mdc-floating-label--float-above">{{"wysiwyg_2"|trans}}</label>
+            <div class="mdc-line-ripple"></div>
+        </div>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="bold">format_bold</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="italic">format_italic</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="underline">format_underline</span>
+        </button>
+        <br>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="justifyLeft">format_align_left</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="justifyCenter">format_align_center</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="justifyRight">format_align_right</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="justifyFull">format_align_justify</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="indent">format_indent_increase</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="outdent">format_indent_decrease</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="insertUnorderedList">format_list_bulleted</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="insertOrderedList">format_list_numbered</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="createLink">insert_link</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="unlink">link_off</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="insertImage">insert_photo</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="custom_button_add">add_box</span>
+        </button>
+        <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
+            <span class="mdc-fab__icon material-icons" data-command="custom_table_add">border_all</span>
+        </button>
+    </div>
+    <iframe class="editor" src="about:blank"></iframe>
+    <div class="source" contenteditable="true"></div>
+</div>
+<script>
+    var textWysiwyg = {
+        'label_1': "{{"wysiwyg_1"|trans}}",
+        'label_2': "{{"wysiwyg_2"|trans}}",
+        'label_3': "{{"wysiwyg_3"|trans}}",
+        'label_4': "{{"wysiwyg_4"|trans}}",
+        'label_5': "{{"wysiwyg_5"|trans}}",
+        'label_6': "{{"wysiwyg_6"|trans}}",
+        'label_7': "{{"wysiwyg_7"|trans}}",
+        'label_8': "{{"wysiwyg_8"|trans}}",
+        'label_9': "{{"wysiwyg_9"|trans}}",
+        'label_10': "{{"wysiwyg_10"|trans}}",
+        'label_11': "{{"wysiwyg_11"|trans}}",
+        'label_12': "{{"wysiwyg_12"|trans}}",
+        'label_13': "{{"wysiwyg_13"|trans}}",
+        'label_14': "{{"wysiwyg_14"|trans}}",
+        'label_15': "{{"wysiwyg_15"|trans}}",
+        'label_16': "{{"wysiwyg_16"|trans}}",
+        'label_17': "{{"wysiwyg_17"|trans}}",
+        'label_18': "{{"wysiwyg_18"|trans}}",
+        'label_19': "{{"wysiwyg_19"|trans}}",
+        'label_20': "{{"wysiwyg_20"|trans}}",
+        'label_21': "{{"wysiwyg_21"|trans}}"
+    };
+</script>

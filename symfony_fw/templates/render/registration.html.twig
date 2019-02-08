@@ -1,0 +1,47 @@
+{% if form is not null %}
+    {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
+    
+    <nav class="mdc-tab-bar mdc-tab-bar--icons-with-text">
+        <a class="mdc-tab mdc-tab--with-icon-and-text" href="{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': "private"})}}">
+            <i class="material-icons mdc-tab__icon">person</i>
+            <span class="mdc-tab__icon-text">{% trans %}registration_1{% endtrans %}</span>
+        </a>
+        <a class="mdc-tab mdc-tab--with-icon-and-text" href="{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': "company"})}}">
+            <i class="material-icons mdc-tab__icon">account_balance</i>
+            <span class="mdc-tab__icon-text">{% trans %}registration_2{% endtrans %}</span>
+        </a>
+        <span class="mdc-tab-bar__indicator"></span>
+    </nav>
+    <div>
+        <h1 class="mdc-typography--headline6">{% trans %}registration_3{% endtrans %}</h1>
+        <form id="form_user_registration" action="{{path("registration", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+            {{form_row(form.username, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "pets"})}}
+            {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing"})}}
+            {{form_row(form.surname, {'dense': "", 'styleType': "outlinedTrailing"})}}
+            {{form_row(form.email, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "email"})}}
+            {{form_row(form.telephone, {'dense': "", 'styleType': "outlinedTrailing"})}}
+            {{form_row(form.born, {'dense': "", 'styleType': "outlinedTrailing", 'attr' : {'class': "widget_datePicker_input"} })}}
+            {{form_row(form.gender)}}
+
+            {% if urlExtra == "company" %}
+                {{form_row(form.fiscalCode, {'dense': "", 'styleType': "outlinedTrailing"})}}
+                {{form_row(form.companyName, {'dense': "", 'styleType': "outlinedTrailing"})}}
+                {{form_row(form.vat, {'dense': "", 'styleType': "outlinedTrailing"})}}
+            {% endif %}
+
+            {{form_row(form.website, {'dense': "", 'styleType': "outlinedTrailing"})}}
+            {{form_row(form.state, {'dense': "", 'styleType': "outlinedTrailing"})}}
+            {{form_row(form.city, {'dense': "", 'styleType': "outlinedTrailing"})}}
+            {{form_row(form.zip, {'dense': "", 'styleType': "outlinedTrailing"})}}
+            {{form_row(form.address, {'dense': "", 'styleType': "outlinedTrailing"})}}
+            {{form_row(form.password, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "linear_scale"})}}
+            {{form_row(form.passwordConfirm, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "linear_scale"})}}
+
+            {{form_widget(form._token)}}
+
+            {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+        </form>
+    </div>
+{% else %}
+    <p>{{response.messages.success}}</p>
+{% endif %}

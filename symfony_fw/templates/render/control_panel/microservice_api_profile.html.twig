@@ -1,0 +1,33 @@
+{% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
+
+{% if response.values.id > 0 %}
+    <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_api"})}}">
+        {% trans %}microserviceApiProfile_1{% endtrans %}
+    </a>
+    <br><br>
+    <fieldset>
+        <legend>{% trans %}microserviceApiProfile_2{% endtrans %}</legend>
+        <p>{% trans %}microserviceApiProfile_3{% endtrans %}</p>
+        <form id="form_cp_microservice_api_profile" action="{{path("cp_microservice_api_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+            {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+            {{form_row(form.controllerName, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+            {{form_row(form.description, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+            
+            <div>
+                {{form_row(form.image)}}
+                {{form_row(form.removeImage)}}
+            </div>
+            
+            {{form_row(form.active)}}
+
+            {{form_widget(form._token)}}
+
+            {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+        </form>
+    </fieldset>
+    
+    {% if response.values.id > 0 %}
+        {{-render(controller("App\\Controller\\Microservice\\Api\\" ~ response.values.microserviceApiEntity.name ~ "\\" ~ response.values.microserviceApiEntity.controllerName ~ "Controller::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+        {{-render(controller("App\\Controller\\Microservice\\Api\\" ~ response.values.microserviceApiEntity.name ~ "\\" ~ response.values.microserviceApiEntity.controllerName ~ "Controller::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+    {% endif %}
+{% endif %}

@@ -1,0 +1,40 @@
+<div class="tableAndPagination">
+    <div class="button_container">
+        <button class="mdc-button mdc-button--dense mdc-button--raised refresh" type="button">
+            {% trans %}tableAndPagination_1{% endtrans %}
+        </button>
+        <button class="mdc-button mdc-button--dense mdc-button--raised delete_all mdc-theme--secondary-bg" type="button">
+            {% trans %}tableAndPagination_2{% endtrans %}
+        </button>
+    </div>
+    <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon mdc-text-field--dense">
+        <input class="mdc-text-field__input" type="text" value="{{response.values.search.value}}" autocomplete="off" aria-label="label"/>
+        <label class="mdc-floating-label" for="mdc-text-field__input">{% trans %}tableAndPagination_3{% endtrans %}</label>
+        <i class="material-icons mdc-text-field__icon" tabindex="0" role="button">search</i>
+        <div class="mdc-notched-outline">
+            <svg>
+                <path class="mdc-notched-outline__path"/>
+            </svg>
+        </div>
+        <div class="mdc-notched-outline__idle"></div>
+    </div>
+    <div class="update_loading">
+        <i class="material-icons rotate_loop">autorenew</i>
+    </div>
+    <div>
+        <div class="previous">
+            <button class="mdc-button mdc-button--dense mdc-button--raised" type="button" disabled>
+                {% trans %}tableAndPagination_4{% endtrans %}
+            </button>
+        </div>
+        <div class="text">
+            <span>{{response.values.pagination.text}}</span>
+        </div>
+        <div class="next">
+            <button class="mdc-button mdc-button--dense mdc-button--raised" type="button" disabled>
+                {% trans %}tableAndPagination_5{% endtrans %}
+            </button>
+        </div>
+    </div>
+    <p class="count">{% trans %}tableAndPagination_6{% endtrans %} <span>{{response.values.count}}</span></p>
+</div>

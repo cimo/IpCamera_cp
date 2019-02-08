@@ -1,0 +1,26 @@
+{% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
+
+<form id="form_cp_setting_slack_iw_render" action="{{path("cp_setting_slack_iw_render", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+    <fieldset class="accordion_container">
+        <legend>{% trans %}settingSlackIw_1{% endtrans %}</legend>
+        <p>{% trans %}settingSlackIw_2{% endtrans %}</p>
+        <button class="mdc-button mdc-button--dense mdc-button--raised button_accordion" type="button">{% trans %}index_9{% endtrans %}</button>
+        <div class="accordion">
+            <button class="mdc-button mdc-button--dense mdc-button--raised button_reset" type="button">{% trans %}settingSlackIw_3{% endtrans %}</button>
+            
+            {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+            {{form_row(form.hook, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+            {{form_row(form.channel, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+            {{form_row(form.active)}}
+            
+            {{form_widget(form._token)}}
+            
+            {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+            
+            <p class="info_field">{% trans %}settingSlackIw_4{% endtrans %}</p>
+            <div class="wordTag_container">
+                {{response.values.wordTagListHtml|raw}}
+            </div>
+        </div>
+    </fieldset>
+</form>

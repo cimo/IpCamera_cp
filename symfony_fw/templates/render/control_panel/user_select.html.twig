@@ -1,0 +1,73 @@
+<fieldset>
+    <legend>{% trans %}userSelect_1{% endtrans %}</legend>
+    <p>{% trans %}userSelect_2{% endtrans %}</p>
+    <div id="cp_user_select_desktop" class="display_desktop">
+        <div id="cp_user_select_result_desktop">
+            
+            {{-include("@templateRoot/include/table_and_pagination.html.twig")-}}
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            <span>{% trans %}userSelect_3{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}userSelect_4{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}userSelect_5{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}userSelect_6{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}userSelect_7{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}userSelect_8{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}userSelect_9{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}userSelect_10{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="table_tbody">
+                    {{response.values.listHtml|raw}}
+                </tbody>
+            </table>
+        </div>
+        <button id="cp_user_select_button_desktop" class="mdc-button mdc-button--dense mdc-button--raised" type="button">{% trans %}userSelect_11{% endtrans %}</button>
+    </div>
+    <div id="cp_user_select_mobile" class="display_mobile">
+        {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
+        
+        <form id="form_cp_user_select_mobile" action="{{path("cp_user_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+            {{form_row(form.id)}}
+
+            {{form_widget(form._token)}}
+
+            {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+        </form>
+    </div>
+    <div id="cp_user_select_result"></div>
+</fieldset>

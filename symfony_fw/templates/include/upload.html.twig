@@ -1,0 +1,34 @@
+<div class="upload">
+    <div class="form_row">
+        <div class="material_upload">
+            <button class="mdc-fab" type="button" aria-label="label">
+                <span class="mdc-fab__icon material-icons">cloud_upload</span>
+            </button>
+            <label>{{label}}</label>
+            <input class="file" type="file" name="file" autocomplete="off" aria-label="label">
+        </div>
+    </div>
+    
+    {{-include("@templateRoot/include/progress_bar.html.twig")-}}
+    
+    <div class="controls">
+        <button class="mdc-button mdc-button--dense mdc-button--raised button_start" type="button">
+            <i class="material-icons mdc-button__icon">play_arrow</i>
+            <span>{% trans %}upload_1{% endtrans %}</span>
+        </button>
+        <button class="mdc-button mdc-button--dense mdc-button--raised button_stop" type="button">
+            <i class="material-icons mdc-button__icon">stop</i>
+            <span>{% trans %}upload_2{% endtrans %}</span>
+        </button>
+    </div>
+</div>
+<script>
+    var textUpload = {
+        'label_1': "{{"upload_3"|trans}}",
+        'label_2': "{{"upload_4"|trans}}",
+        'label_3': "{{"upload_5"|trans}}",
+        'label_4': "{{"upload_6"|trans}}",
+        'label_5': "{{"upload_7"|trans}}",
+        'label_6': "{{"upload_8"|trans}}"
+    };
+</script>

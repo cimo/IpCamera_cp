@@ -1,0 +1,41 @@
+{% extends "@templateRoot/layout/layout_module_clean.html.twig" %}
+
+{% block panelId %}panel_id_{{response.module.id}}{% endblock %}
+{% block moduleContainer %}
+    <div class="page_container user_select_text">
+        {% if response.values.title != "" %}
+            <div class="header">
+                <h1 class="mdc-typography--headline6">{{response.values.title}}</h1>
+            </div>
+        {% endif %}
+
+        <div class="argument"><p>{{response.values.argument|raw}}</p></div>
+
+        {% if response.values.controllerAction != "" %}
+            <div class="controllerAction">
+                {{-render(controller(response.values.controllerAction, {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block moduleFooter %}
+    <div class="page_footer">
+        {% if settingRow['page_date'] == true and (urlCurrentPageId == 2 or urlCurrentPageId > 5) %}
+            <div class="mdc-typography--caption page_detail">
+                {% if (response.values.userCreate != "-" and response.values.userModify == "-") %}
+                    <p><i class="material-icons md-14">pets</i> <span class="mdc-theme--on-surface">{% trans %}pageView_1{% endtrans %}</span>{{response.values.userCreate}}</p>
+                    <p><i class="material-icons md-14">calendar_today</i> <span class="mdc-theme--on-surface">{% trans %}pageView_2{% endtrans %}</span>{{response.values.dateCreate[0]}} [{{response.values.dateCreate[1]}}]</p>
+                {% elseif (response.values.userModify != "-" and response.values.dateModify != "-") %}
+                    <p><i class="material-icons md-14">pets</i> <span class="mdc-theme--on-surface">{% trans %}pageView_3{% endtrans %}</span>{{response.values.userModify}}</p>
+                    <p><i class="material-icons md-14">calendar_today</i> <span class="mdc-theme--on-surface">{% trans %}pageView_4{% endtrans %}</span>{{response.values.dateModify[0]}} [{{response.values.dateModify[1]}}]</p>
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        {% if response.values.comment == true and urlCurrentPageId > 5 %}
+            {{-render(controller("App\\Controller\\PageCommentController::renderAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+
+            {{-render(controller("App\\Controller\\PageCommentController::saveAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+        {% endif %}
+    </div>
+{% endblock %}

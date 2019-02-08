@@ -1,0 +1,117 @@
+{% extends "@templateRoot/layout/layout_site.html.twig" %}
+
+{% block headerContainer %}
+    <header class="mdc-top-app-bar">
+        <div class="mdc-top-app-bar__row">
+            <div class="display_desktop">
+                {% if (settingRow['website_active'] == true or is_granted("IS_AUTHENTICATED_FULLY") == true) and urlExtra != "maintenance_authentication" and app.request.get("error") is null %}
+                    {{-render(controller("App\\Controller\\MenuRootController::moduleAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': "desktop"}))-}}
+                {% endif %}
+            </div>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <a class="material-icons mdc-top-app-bar__navigation-icon menu_root_mobile display_mobile" href="javascript:void(0)">menu</a>
+                <div class="display_desktop">
+                    <img class="logo_main_big" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/logo.svg")}}" alt="logo.svg"/>
+                    <span class="mdc-top-app-bar__title">{{websiteName}}</span>
+                </div>
+                <span class="mdc-top-app-bar__title display_mobile">
+                    <img class="logo_main_small" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/logo.svg")}}" alt="logo.svg"/>
+                </span>
+            </section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+                {{-render(controller("App\\Controller\\SearchController::moduleAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                {{-render(controller("App\\Controller\\LanguageController::textAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                {{-include("@templateRoot/include/menu_user.html.twig")-}}
+            </section>
+        </div>
+        <aside class="mdc-drawer mdc-drawer--temporary mdc-typography">
+            <nav class="mdc-drawer__drawer">
+                <header class="mdc-drawer__header">
+                    <div class="mdc-drawer__header-content">
+                        <img class="logo_main_big" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/logo.svg")}}" alt="logo.svg"/>
+                        <span>{{websiteName}}</span>
+                    </div>
+                </header>
+                {% if (settingRow['website_active'] == true or is_granted("IS_AUTHENTICATED_FULLY") == true) and urlExtra != "maintenance_authentication" and app.request.get("error") is null %}
+                    <nav class="mdc-drawer__content mdc-list">
+                        {{-render(controller("App\\Controller\\MenuRootController::moduleAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': "mobile"}))-}}
+                    </nav>
+                {% endif %}
+            </nav>
+        </aside>
+    </header>
+{% endblock %}
+
+{% block columnLeftContainer %}
+    {% if (settingRow['website_active'] == true or is_granted("IS_AUTHENTICATED_FULLY") == true) and urlExtra != "maintenance_authentication" and app.request.get("error") is null and urlExtra != "user_login" %}
+        <div class="sortable_column">
+            {% for key, value in response.modules.left %}
+                {% if value.active == true %}
+                    {{-render(controller("App\\Controller\\" ~ value.controller_name, {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block columnCenterContainer %}
+    {% if app.request.get("error") is not null and app.request.get("error") != "" %}
+        <div class="sortable_column">
+            {{-include("@templateRoot/render/static/error.html.twig")-}}
+        </div>
+    {% else %}
+        {% if (urlExtra == "user_login") %}
+            <div class="sortable_column">
+                {{-render(controller("App\\Controller\\AuthenticationController::moduleAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+            </div>
+        {% elseif (settingRow['website_active'] == true or is_granted("IS_AUTHENTICATED_FULLY") == true) and urlExtra != "maintenance_authentication" %}
+            <div class="sortable_column">
+                {% for key, value in response.modules.center %}
+                    {% if value.active == true %}
+                        {{-render(controller("App\\Controller\\" ~ value.controller_name, {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="sortable_column">
+                <div class="maintenance_container">
+                    <img src="{{asset("images/templates/" ~ settingRow['template'] ~ "/maintenance.svg")}}" alt="maintenance.svg"/>
+                    <p>{% trans %}index_1{% endtrans %}</p>
+                    <p>{% trans %}index_2{% endtrans %}</p>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block columnRightContainer %}
+    {% if (settingRow['website_active'] == true or is_granted("IS_AUTHENTICATED_FULLY") == true) and urlExtra != "maintenance_authentication" and app.request.get("error") is null and urlExtra != "user_login" %}
+        <div class="sortable_column">
+            {% for key, value in response.modules.right %}
+                {% if value.active == true %}
+                    {{-render(controller("App\\Controller\\" ~ value.controller_name, {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block footerContainer %}
+    <footer class="mdc-theme--primary-bg mdc-theme--on-primary footer">
+        <div class="icon">
+            <div>
+                <i class="material-icons">desktop_windows</i>
+            </div>
+            <div>
+                <i class="material-icons">laptop_windows</i>
+            </div>
+            <div>
+                <i class="material-icons">smartphone</i>
+            </div>
+        </div>
+        <div class="text">
+            <p>{{"index_3"|trans}}</p>
+            <p>{{"index_4"|trans}}</p>
+        </div>
+    </footer>
+{% endblock %}

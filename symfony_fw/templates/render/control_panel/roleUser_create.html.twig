@@ -1,0 +1,13 @@
+{% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
+
+<fieldset>
+    <legend>{% trans %}roleUserCreate_1{% endtrans %}</legend>
+    <p>{% trans %}roleUserCreate_2{% endtrans %}</p>
+    <form id="form_cp_roleUser_create" action="{{path("cp_roleUser_create", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+        {{form_row(form.level, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "supervisor_account"})}}
+
+        {{form_widget(form._token)}}
+
+        {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+    </form>
+</fieldset>
