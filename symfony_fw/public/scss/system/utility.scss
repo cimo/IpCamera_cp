@@ -7,7 +7,7 @@ $mdc-theme-secondary: #d50000;
 $mdc-theme-on-secondary: #ffffff;
 $mdc-theme-background: #ffffff;
 $mdc-theme-surface: #ffffff;
-$mdc-theme-on-surface: #000000b3;
+$mdc-theme-on-surface: #0000b3;
 
 @mixin opacity($value) {
     $msOpacity: $value * 100;

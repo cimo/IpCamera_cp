@@ -102,7 +102,10 @@ function ControlPanelSettingSlackIw() {
         });
         
         $("#form_cp_setting_slack_iw_render .wordTag_container").on("click", ".delete", function(event) {
-            var id = $.trim($(this).find(".mdc-chip__text").attr("data-id"));
+            if ($(event.target).hasClass("edit") === true)
+                return;
+            
+            var id = $.trim($(this).parent().find(".mdc-chip__text").attr("data-id"));
             
             popupEasy.create(
                 window.text.index_5,
