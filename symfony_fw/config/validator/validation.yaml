@@ -728,7 +728,7 @@ App\Entity\MicroserviceDeploy:
             - Regex:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
                 htmlPattern: false
-                pattern: /^([a-zA-Z_0-9\/.-]+)$/
+                pattern: /^([a-zA-Z_0-9\/.:-]+)$/
         gitCloneUrlUsername:
             - NotBlank:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
@@ -747,7 +747,7 @@ App\Entity\MicroserviceDeploy:
             - Regex:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
                 htmlPattern: false
-                pattern: /^[a-zA-Z_0-9\/.-]+$/
+                pattern: /^[a-zA-Z_0-9\/.:-]+$/
         userGitScript:
             - NotBlank:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
@@ -768,7 +768,7 @@ App\Entity\MicroserviceDeploy:
             - Regex:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
                 htmlPattern: false
-                pattern: /^[a-zA-Z_0-9\/.-]+$/
+                pattern: /^[a-zA-Z_0-9\/.:-]+$/
         active:
             - NotBlank:
                 groups: [microservice_deploy_profile]
