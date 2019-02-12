@@ -90,7 +90,7 @@ function Ajax() {
                 var errors = xhr.response.errors;
 
                 $.each(errors, function(key, value) {
-                    if (typeof(value[0]) === "string" && $.isEmptyObject(value) === false && key !== "_token") {
+                    if (typeof(value[0]) === "string" && $.isEmptyObject(value) === false && key !== "_token" && key !== "token") {
                         var input = null;
 
                         if ($(tagError).length > 0)
