@@ -70,8 +70,11 @@ class MicroserviceDeployController extends AbstractController {
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            if ($form->isSubmitted() == true && $form->isValid() == true)
-                $this->response['values']['renderHtml'] = $this->createRenderHtml($microserviceDeployRows);
+            if ($form->isSubmitted() == true && $form->isValid() == true) {
+                $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase($form->get("id")->getData());
+                
+                $this->response['values']['renderHtml'] = $this->createRenderHtml($microserviceDeployRow);
+            }
             else {
                 $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceDeployController_1");
                 $this->response['errors'] = $this->ajax->errors($form);
@@ -505,15 +508,15 @@ class MicroserviceDeployController extends AbstractController {
     }
     
     // Functions private
-    private function createRenderHtml($elements) {
-        $command = nl2br($elements[0]['command']);
+    private function createRenderHtml($element) {
+        $command = nl2br($element['command']);
         
         $renderHtml = "<ul class=\"mdc-list mdc-list--two-line mdc-list--avatar-list\">
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_1")}
-                    <span class=\"mdc-list-item__secondary-text\">{$elements[0]['name']}</span>
+                    <span class=\"mdc-list-item__secondary-text\">{$element['name']}</span>
                 </span>
             </li>
             <li role=\"separator\" class=\"mdc-list-divider\"></li>
@@ -521,7 +524,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_2")}
-                    <span class=\"mdc-list-item__secondary-text\">{$elements[0]['description']}</span>
+                    <span class=\"mdc-list-item__secondary-text\">{$element['description']}</span>
                 </span>
             </li>
             <li role=\"separator\" class=\"mdc-list-divider\"></li>
@@ -529,7 +532,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_3")}
-                    <span class=\"mdc-list-item__secondary-text\">{$elements[0]['system_user']}</span>
+                    <span class=\"mdc-list-item__secondary-text\">{$element['system_user']}</span>
                 </span>
             </li>
             <li role=\"separator\" class=\"mdc-list-divider\"></li>
@@ -537,7 +540,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_4")}
-                    <span class=\"mdc-list-item__secondary-text\">{$elements[0]['ssh_username']}</span>
+                    <span class=\"mdc-list-item__secondary-text\">{$element['ssh_username']}</span>
                 </span>
             </li>
             <li role=\"separator\" class=\"mdc-list-divider\"></li>
@@ -546,7 +549,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_5")}
                     <span class=\"mdc-list-item__secondary-text\">";
-                        $renderHtml .= $elements[0]['ssh_password'] == null ? "" : "***";
+                        $renderHtml .= $element['ssh_password'] == null ? "" : "***";
                     $renderHtml .= "</span>
                 </span>
             </li>
@@ -555,7 +558,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_6")}
-                    <span class=\"mdc-list-item__secondary-text\">{$elements[0]['key_public']}</span>
+                    <span class=\"mdc-list-item__secondary-text\">{$element['key_public']}</span>
                 </span>
             </li>
             <li role=\"separator\" class=\"mdc-list-divider\"></li>
@@ -563,7 +566,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_8")}
-                    <span class=\"mdc-list-item__secondary-text\">{$elements[0]['key_private']}</span>
+                    <span class=\"mdc-list-item__secondary-text\">{$element['key_private']}</span>
                 </span>
             </li>
             <li role=\"separator\" class=\"mdc-list-divider\"></li>
@@ -572,7 +575,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_10")}
                     <span class=\"mdc-list-item__secondary-text\">";
-                        $renderHtml .= $elements[0]['key_private_password'] == null ? "" : "***";
+                        $renderHtml .= $element['key_private_password'] == null ? "" : "***";
                     $renderHtml .= "</span>
                 </span>
             </li>
@@ -581,7 +584,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_11")}
-                    <span class=\"mdc-list-item__secondary-text\">{$elements[0]['ip']}</span>
+                    <span class=\"mdc-list-item__secondary-text\">{$element['ip']}</span>
                 </span>
             </li>
             <li role=\"separator\" class=\"mdc-list-divider\"></li>
@@ -589,7 +592,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_12")}
-                    <span class=\"mdc-list-item__secondary-text\">{$elements[0]['git_user_email']}</span>
+                    <span class=\"mdc-list-item__secondary-text\">{$element['git_user_email']}</span>
                 </span>
             </li>
             <li role=\"separator\" class=\"mdc-list-divider\"></li>
@@ -597,7 +600,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_13")}
-                    <span class=\"mdc-list-item__secondary-text\">{$elements[0]['git_user_name']}</span>
+                    <span class=\"mdc-list-item__secondary-text\">{$element['git_user_name']}</span>
                 </span>
             </li>
             <li role=\"separator\" class=\"mdc-list-divider\"></li>
@@ -605,7 +608,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_14")}
-                    <span class=\"mdc-list-item__secondary-text\">{$elements[0]['git_clone_url']}</span>
+                    <span class=\"mdc-list-item__secondary-text\">{$element['git_clone_url']}</span>
                 </span>
             </li>
             <li role=\"separator\" class=\"mdc-list-divider\"></li>
@@ -613,7 +616,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_15")}
-                    <span class=\"mdc-list-item__secondary-text\">{$elements[0]['git_clone_url_username']}</span>
+                    <span class=\"mdc-list-item__secondary-text\">{$element['git_clone_url_username']}</span>
                 </span>
             </li>
             <li role=\"separator\" class=\"mdc-list-divider\"></li>
@@ -622,7 +625,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_16")}
                     <span class=\"mdc-list-item__secondary-text\">";
-                        $renderHtml .= $elements[0]['git_clone_url_password'] == null ? "" : "***";
+                        $renderHtml .= $element['git_clone_url_password'] == null ? "" : "***";
                     $renderHtml .= "</span>
                 </span>
             </li>
@@ -631,7 +634,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_17")}
-                    <span class=\"mdc-list-item__secondary-text\">{$elements[0]['git_clone_path']}</span>
+                    <span class=\"mdc-list-item__secondary-text\">{$element['git_clone_path']}</span>
                 </span>
             </li>
             <li role=\"separator\" class=\"mdc-list-divider\"></li>
@@ -639,7 +642,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_18")}
-                    <span class=\"mdc-list-item__secondary-text\">{$elements[0]['user_git_script']}</span>
+                    <span class=\"mdc-list-item__secondary-text\">{$element['user_git_script']}</span>
                 </span>
             </li>
             <li role=\"separator\" class=\"mdc-list-divider\"></li>
@@ -647,7 +650,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_19")}
-                    <span class=\"mdc-list-item__secondary-text\">{$elements[0]['user_web_script']}</span>
+                    <span class=\"mdc-list-item__secondary-text\">{$element['user_web_script']}</span>
                 </span>
             </li>
             <li role=\"separator\" class=\"mdc-list-divider\"></li>
@@ -655,7 +658,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_20")}
-                    <span class=\"mdc-list-item__secondary-text\">{$elements[0]['root_web_path']}</span>
+                    <span class=\"mdc-list-item__secondary-text\">{$element['root_web_path']}</span>
                 </span>
             </li>
             <li role=\"separator\" class=\"mdc-list-divider\"></li>
