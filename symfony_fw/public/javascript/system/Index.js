@@ -23,6 +23,8 @@ $(document).ready(function() {
     materialDesign.select();
     materialDesign.slider();
     materialDesign.textField();
+    materialDesign.linearProgress(".linear_progress_b", 0.5, 1, 0.75);
+    materialDesign.linearProgress(".linear_progress_c", 0.5, 1);
     materialDesign.list();
     materialDesign.menu();
     materialDesign.snackbar();

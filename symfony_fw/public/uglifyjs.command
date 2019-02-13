@@ -19,5 +19,5 @@ echo Count: $(echo ls -f "$originalFiles" | wc -l)
 echo "$originalFiles" | while read fileName; do
     uglifyjs "$fileName" --compress --mangle --output "$(dirname $fileName)"/"$(basename ${fileName%%.*})".min.js
     
-    echo "$fileName"
+    echo "$(basename $fileName)"
 done
