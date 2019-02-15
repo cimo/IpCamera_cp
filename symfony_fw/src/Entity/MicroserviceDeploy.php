@@ -57,7 +57,7 @@ class MicroserviceDeploy {
     private $removeKeyPrivate = false;
     
     /**
-     * @ORM\Column(name="key_private_password", type="string", nullable=true, columnDefinition="varchar(255)")
+     * @ORM\Column(name="key_private_password", type="string", nullable=true, columnDefinition="blob")
      */
     private $keyPrivatePassword = "";
     

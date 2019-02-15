@@ -318,6 +318,13 @@ date.time: H:i:s
 
 "controlPanelMicroserviceApi_1": "Api section."
 
+"controlPanelMenuIpCamera_1": "Ip camera"
+"controlPanelMenuIpCamera_2": "Devices"
+
+"controlPanelPageIpCamera_1": "IpCamera devices section."
+"controlPanelPageIpCamera_2": "Really delete this device?"
+"controlPanelPageIpCamera_3": "Really delete all devices?"
+
 # Payment
 "paymentUserSelect_1": "Payments user selection form"
 "paymentUserSelect_2": "..."
@@ -845,3 +852,42 @@ date.time: H:i:s
 "apiBasicController_14": "Year"
 "apiBasicController_15": "Month"
 "apiBasicController_16": "ApiBasic problem with curl."
+
+# IpCamera
+"ipCameraCreate_1": "Device create form"
+"ipCameraCreate_2": "..."
+
+"ipCameraSelect_1": "Device selection form"
+"ipCameraSelect_2": "..."
+"ipCameraSelect_3": "Id"
+"ipCameraSelect_4": "Select"
+"ipCameraSelect_5": "Name"
+"ipCameraSelect_6": "Remove"
+"ipCameraSelect_7": "Select"
+
+"ipCameraProfile_1": "Device profile form"
+
+"ipCameraDelete_1": "Warning! If you delete the device is impossible return back."
+"ipCameraDelete_2": "Delete"
+
+"ipCameraFormType_1": "Name"
+"ipCameraFormType_2": "Host"
+"ipCameraFormType_3": "Username"
+"ipCameraFormType_4": "Password"
+"ipCameraFormType_5": "Detection sensitivity"
+"ipCameraFormType_6": "Active"
+"ipCameraFormType_7": "No"
+"ipCameraFormType_8": "Yes"
+"ipCameraFormType_9": "Send"
+
+"ipCameraSelectFormType_1": "Name"
+"ipCameraSelectFormType_2": "Select"
+
+"ipCameraController_1": "Device create completed."
+"ipCameraController_2": "Device not created!"
+"ipCameraController_3": "Device not selected!"
+"ipCameraController_4": "Device update completed."
+"ipCameraController_5": "Device update not completed!"
+"ipCameraController_6": "Device deletion completed."
+"ipCameraController_7": "All device deletion completed."
+"ipCameraController_8": "Device not deleted!"

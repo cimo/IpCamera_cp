@@ -339,9 +339,9 @@
                     <script src="{{asset("javascript/system/control_panel/ApiBasic.min.js")}}"></script>
                 {% endif %}
             {% endif %}
+            
+            {{-include("@templateRoot/render/control_panel_page_custom.html.twig")-}}
         </div>
-        
-        {{-include("@templateRoot/render/control_panel_custom.html.twig")-}}
     {% else %}
         <div class="sortable_column">
             <p>{% trans %}controlPanel_3{% endtrans %}</p>
@@ -408,4 +408,6 @@
     {% if settingRow['use_type'] == 2 and (is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true) %}
         <p class="mdc-typography--overline title_group">{% trans %}controlPanel_17{% endtrans %}</p>
     {% endif %}
+    
+    {{-include("@templateRoot/render/control_panel_menu_custom.html.twig")-}}
 {% endmacro %}

@@ -141,7 +141,7 @@ class MicroserviceDeployController extends AbstractController {
                 $this->entityManager->persist($microserviceDeployEntity);
                 $this->entityManager->flush();
                 
-                $this->microserviceDeployDatabase("update", $microserviceDeployEntity->getId(), $form->get("sshPassword")->getData(), $form->get("gitCloneUrlPassword")->getData());
+                $this->microserviceDeployDatabase("update", $microserviceDeployEntity->getId(), $form->get("sshPassword")->getData(), $form->get("keyPrivatePassword")->getData(), $form->get("gitCloneUrlPassword")->getData());
 
                 $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceDeployController_2");
             }
@@ -322,6 +322,7 @@ class MicroserviceDeployController extends AbstractController {
         
         $microserviceDeployEntity = $this->entityManager->getRepository("App\Entity\MicroserviceDeploy")->find($_SESSION['microserviceDeployProfileId']);
         $sshPasswordOld = $microserviceDeployEntity->getSshPassword();
+        $keyPrivatePasswordOld = $microserviceDeployEntity->getKeyPrivatePassword();
         $gitCloneUrlPasswordOld = $microserviceDeployEntity->getGitCloneUrlPassword();
         
         $form = $this->createForm(MicroserviceDeployFormType::class, $microserviceDeployEntity, Array(
@@ -345,6 +346,18 @@ class MicroserviceDeployController extends AbstractController {
                 else
                     $sshPassword = $form->get("sshPassword")->getData();
                 
+                $keyPrivatePassword = $keyPrivatePasswordOld;
+                
+                if ($form->get("keyPrivate")->getData() == null)
+                    $keyPrivatePassword = null;
+                
+                if ($form->get("keyPrivatePassword")->getData() == null || $form->get("keyPrivatePassword")->getData() == "") {
+                    $microserviceDeployEntity->setKeyPrivatePassword($keyPrivatePassword);
+                    $keyPrivatePassword = "";
+                }
+                else
+                    $keyPrivatePassword = $form->get("keyPrivatePassword")->getData();
+                
                 $gitCloneUrlPassword = $gitCloneUrlPasswordOld;
                 
                 if ($form->get("gitCloneUrlUsername")->getData() == null || $form->get("gitCloneUrlUsername")->getData() == "")
@@ -360,7 +373,7 @@ class MicroserviceDeployController extends AbstractController {
                 $this->entityManager->persist($microserviceDeployEntity);
                 $this->entityManager->flush();
                 
-                $this->microserviceDeployDatabase("update", $microserviceDeployEntity->getId(), $sshPassword, $gitCloneUrlPassword);
+                $this->microserviceDeployDatabase("update", $microserviceDeployEntity->getId(), $sshPassword, $keyPrivatePassword, $gitCloneUrlPassword);
 
                 $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceDeployController_5");
             }
@@ -735,7 +748,7 @@ class MicroserviceDeployController extends AbstractController {
         return $listHtml;
     }
     
-    private function microserviceDeployDatabase($type, $id = 0, $sshPassword = "", $gitCloneUrlPassword = "") {
+    private function microserviceDeployDatabase($type, $id = 0, $sshPassword = "", $keyPrivatePassword = "", $gitCloneUrlPassword = "") {
         if ($type == "delete") {
             $query = $this->utility->getConnection()->prepare("DELETE FROM microservice_deploy
                                                                 WHERE id = :id");
@@ -755,11 +768,13 @@ class MicroserviceDeployController extends AbstractController {
             
             if ($type == "select") {
                 $query = $this->utility->getConnection()->prepare("SELECT AES_DECRYPT(:sshPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS ssh_password,
+                                                                        AES_DECRYPT(:keyPrivatePassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS key_private_password,
                                                                         AES_DECRYPT(:gitCloneUrlPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS git_clone_url_password
                                                                         FROM microservice_deploy
                                                                     WHERE id = :id");
                 
                 $query->bindValue(":sshPassword", $sshPassword);
+                $query->bindValue(":keyPrivatePassword", $keyPrivatePassword);
                 $query->bindValue(":gitCloneUrlPassword", $gitCloneUrlPassword);
                 $query->bindValue(":id", $id);
                 
@@ -779,6 +794,17 @@ class MicroserviceDeployController extends AbstractController {
                     return $query->execute();
                 }
 
+                if ($type == "update" && $keyPrivatePassword != "") {
+                    $query = $this->utility->getConnection()->prepare("UPDATE IGNORE microservice_deploy
+                                                                        SET key_private_password = AES_ENCRYPT(:keyPrivatePassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
+                                                                        WHERE id = :id");
+
+                    $query->bindValue(":keyPrivatePassword", $keyPrivatePassword);
+                    $query->bindValue(":id", $id);
+
+                    return $query->execute();
+                }
+                
                 if ($type == "update" && $gitCloneUrlPassword != "") {
                     $query = $this->utility->getConnection()->prepare("UPDATE IGNORE microservice_deploy
                                                                         SET git_clone_url_password = AES_ENCRYPT(:gitCloneUrlPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
@@ -864,7 +890,7 @@ class MicroserviceDeployController extends AbstractController {
             
             $auth = true;
             
-            $microserviceDeployRow = $this->microserviceDeployDatabase("select", $row['id'], $row['ssh_password'], $row['git_clone_url_password']);
+            $microserviceDeployRow = $this->microserviceDeployDatabase("select", $row['id'], $row['ssh_password'], $row['key_private_password'], $row['git_clone_url_password']);
             
             if ($row['key_public'] == null || $row['key_private'] == null)
                 $auth = @ssh2_auth_password($connection, $row['ssh_username'], $microserviceDeployRow['ssh_password']);

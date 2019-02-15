@@ -1,0 +1,8 @@
+{% if is_granted("IS_AUTHENTICATED_FULLY") == true %}
+    <div>
+        {{response.values.video|raw}}
+    </div>
+    <div>
+        <p>Commands</p>
+    </div>
+{% endif %}

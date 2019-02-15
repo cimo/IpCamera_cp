@@ -953,7 +953,7 @@ class Utility {
             curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postFields));
             curl_setopt($curl, CURLOPT_HTTPHEADER, Array(
                 "Content-Type: application/json",
-                "Authorization: Bearer " . $row['access_token']
+                "Authorization: Bearer {$row['access_token']}"
             ));
             
             $curlResponse = curl_exec($curl);
@@ -991,13 +991,31 @@ class Utility {
                 curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postFields));
                 curl_setopt($curl, CURLOPT_HTTPHEADER, Array(
                     "Content-Type: application/json",
-                    "Authorization: Bearer " . $pushRow['access_token']
+                    "Authorization: Bearer {$pushRow['access_token']}"
                 ));
 
                 $curlResponse = curl_exec($curl);
                 curl_close($curl);
             }
         }
+    }
+    
+    public function loginAuthBasic($url, $username, $password) {
+        $curl = curl_init();
+        
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.2309.372 Safari/537.36");
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($curl, CURLOPT_USERPWD, "$username:$password");
+        
+        $curlResponse = curl_exec($curl);
+        curl_close($curl);
+        
+        return $curlResponse;
     }
     
     // Functions private

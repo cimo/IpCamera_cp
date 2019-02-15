@@ -1,0 +1,7 @@
+{% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
+    <p class="mdc-typography--overline title_group">{% trans %}controlPanelMenuIpCamera_1{% endtrans %}</p>
+    <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_ipCamera"})}}">
+        <i class="material-icons mdc-list-item__graphic">camera_alt</i>
+            <span>{% trans %}controlPanelMenuIpCamera_2{% endtrans %}</span>
+    </a>
+{% endif %}
