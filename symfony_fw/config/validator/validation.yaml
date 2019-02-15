@@ -872,14 +872,14 @@ App\Entity\IpCamera:
             - Regex:
                 groups: [ipCamera_create, ipCamera_profile]
                 htmlPattern: false
-                pattern: /^[a-zA-Z0-9_-]+$/
+                pattern: /^[a-zA-Z0-9_\- ]+$/
         host:
             - NotBlank:
                 groups: [ipCamera_create, ipCamera_profile]
             - Regex:
                 groups: [ipCamera_create, ipCamera_profile]
                 htmlPattern: false
-                pattern: /^([a-zA-Z0-9\/:.?=_-]+)$/
+                pattern: /^([a-zA-Z0-9\/:.?=_\-]+)$/
         username:
             - NotBlank:
                 groups: [ipCamera_create, ipCamera_profile]
