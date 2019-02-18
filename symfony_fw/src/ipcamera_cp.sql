@@ -25,24 +25,18 @@ DROP TABLE IF EXISTS `ipCamera_devices`;
 CREATE TABLE `ipCamera_devices` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
-  `host` varchar(255) NOT NULL DEFAULT '',
+  `user_id` varchar(255) NOT NULL DEFAULT '1,',
+  `host_video` varchar(255) NOT NULL DEFAULT '',
+  `host_image` varchar(255) NOT NULL DEFAULT '',
   `username` varchar(20) NOT NULL DEFAULT '',
   `password` blob,
-  `detection_sensitivity` decimal(4,3) NOT NULL DEFAULT '0.100',
+  `detection_sensitivity` decimal(4,3) NOT NULL DEFAULT '0.010',
+  `detection_active` tinyint(1) NOT NULL DEFAULT '0',
+  `detection_pid` varchar(4) DEFAULT '0',
   `active` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ipCamera_devices`
---
-
-LOCK TABLES `ipCamera_devices` WRITE;
-/*!40000 ALTER TABLE `ipCamera_devices` DISABLE KEYS */;
-INSERT INTO `ipCamera_devices` VALUES (1,'cosenza_salone','http://home-cs.ddns.net:1000/media/?action=stream','admin','l!\�y\�F�c���N)�	',0.001,1);
-/*!40000 ALTER TABLE `ipCamera_devices` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `languages`
@@ -294,7 +288,7 @@ CREATE TABLE `pages_arguments` (
 
 LOCK TABLES `pages_arguments` WRITE;
 /*!40000 ALTER TABLE `pages_arguments` DISABLE KEYS */;
-INSERT INTO `pages_arguments` VALUES (1,'User personal page.','Argomento my page.','My pageのアーギュメント。'),(2,'This is a cms created with symfony framework.','Argomento home.','ホームのアーギュメント。'),(3,'Registration argument.','Argomento registrazione.','登録のアーギュメント。'),(4,'Recover password argument.','Argomento recupero password.','パスワードを回復のアーギュメント。'),(5,'Search argument.','Argomento cerca.','サーチのアーギュメント。');
+INSERT INTO `pages_arguments` VALUES (1,'User personal page.','Argomento my page.','My pageã®ã¢ã¼ã®ã¥ã¡ã³ãã'),(2,'This is a cms created with symfony framework.','Argomento home.','ãã¼ã ã®ã¢ã¼ã®ã¥ã¡ã³ãã'),(3,'Registration argument.','Argomento registrazione.','ç»é²ã®ã¢ã¼ã®ã¥ã¡ã³ãã'),(4,'Recover password argument.','Argomento recupero password.','ãã¹ã¯ã¼ããåå¾©ã®ã¢ã¼ã®ã¥ã¡ã³ãã'),(5,'Search argument.','Argomento cerca.','ãµã¼ãã®ã¢ã¼ã®ã¥ã¡ã³ãã');
 /*!40000 ALTER TABLE `pages_arguments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -348,7 +342,7 @@ CREATE TABLE `pages_menu_names` (
 
 LOCK TABLES `pages_menu_names` WRITE;
 /*!40000 ALTER TABLE `pages_menu_names` DISABLE KEYS */;
-INSERT INTO `pages_menu_names` VALUES (1,'-','-','-'),(2,'Home','Home','ホーム'),(3,'-','-','-'),(4,'-','-','-'),(5,'-','-','-');
+INSERT INTO `pages_menu_names` VALUES (1,'-','-','-'),(2,'Home','Home','ãã¼ã '),(3,'-','-','-'),(4,'-','-','-'),(5,'-','-','-');
 /*!40000 ALTER TABLE `pages_menu_names` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -375,7 +369,7 @@ CREATE TABLE `pages_titles` (
 
 LOCK TABLES `pages_titles` WRITE;
 /*!40000 ALTER TABLE `pages_titles` DISABLE KEYS */;
-INSERT INTO `pages_titles` VALUES (1,'My page title','Titolo my page','My pageのタイトル'),(2,'Home title','Titolo home','ホームのタイトル'),(3,'Registration title','Titolo registrazione','登録のタイトル'),(4,'Recover password title','Titolo recupero password','パスワードを回復のタイトル'),(5,'Search title','Titolo cerca','サーチのタイトル');
+INSERT INTO `pages_titles` VALUES (1,'My page title','Titolo my page','My pageã®ã¿ã¤ãã«'),(2,'Home title','Titolo home','ãã¼ã ã®ã¿ã¤ãã«'),(3,'Registration title','Titolo registrazione','ç»é²ã®ã¿ã¤ãã«'),(4,'Recover password title','Titolo recupero password','ãã¹ã¯ã¼ããåå¾©ã®ã¿ã¤ãã«'),(5,'Search title','Titolo cerca','ãµã¼ãã®ã¿ã¤ãã«');
 /*!40000 ALTER TABLE `pages_titles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -610,7 +604,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'1,2,','ROLE_USER,ROLE_ADMIN','cimo','Simone','D\'Agostino','cimo@reinventsoftware.org','080123456789','1984-4-11','m',NULL,NULL,NULL,'https://www.reinventsoftware.org','Japan','Tokyo','100-0001','Street','$2y$13$hOJvU2.m8vRl5YxsuY/J0OiQGFSS7DAa8mTA5uNGZGxmYoc8zFgde',0,1,'2016-08-04 10:25:12','2019-02-15 19:18:18','2019-02-15 19:17:19',NULL,'192.168.56.1',0),(2,'1,4,','ROLE_USER,ROLE_MICROSERVICE','test_1',NULL,NULL,'test_1@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$Hi5SnSpKl9oKC79.G09MjeKOGUAzPEFjM3QPyp9z69m/gVXdnivJ2',0,1,'2016-09-10 17:39:31','2019-01-22 15:09:43','2019-01-22 14:55:58','','192.168.56.1',0),(3,'1,4,5,','ROLE_USER,ROLE_MICROSERVICE,ROLE_TEST','test_2',NULL,NULL,'test_2@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$fo/L0jc1j4uWXAFjjOKE3eP0cgwv8DtBkjvUnMC9Eaa2B537B7uXq',0,0,'0000-00-00 00:00:00','2018-09-05 16:48:01','2018-09-05 16:47:23',NULL,'183.77.252.62',0);
+INSERT INTO `users` VALUES (1,'1,2,','ROLE_USER,ROLE_ADMIN','cimo','Simone','D\'Agostino','cimo@reinventsoftware.org','080123456789','1984-4-11','m',NULL,NULL,NULL,'https://www.reinventsoftware.org','Japan','Tokyo','100-0001','Street','$2y$13$hOJvU2.m8vRl5YxsuY/J0OiQGFSS7DAa8mTA5uNGZGxmYoc8zFgde',0,1,'2016-08-04 10:25:12','2019-02-18 14:19:49','2019-02-18 11:01:52',NULL,'192.168.56.1',0),(2,'1,4,','ROLE_USER,ROLE_MICROSERVICE','test_1',NULL,NULL,'test_1@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$Hi5SnSpKl9oKC79.G09MjeKOGUAzPEFjM3QPyp9z69m/gVXdnivJ2',0,1,'2016-09-10 17:39:31','2019-01-22 15:09:43','2019-01-22 14:55:58','','192.168.56.1',0),(3,'1,4,5,','ROLE_USER,ROLE_MICROSERVICE,ROLE_TEST','test_2',NULL,NULL,'test_2@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$fo/L0jc1j4uWXAFjjOKE3eP0cgwv8DtBkjvUnMC9Eaa2B537B7uXq',0,0,'0000-00-00 00:00:00','2018-09-05 16:48:01','2018-09-05 16:47:23',NULL,'183.77.252.62',0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -627,4 +621,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-15 19:20:53
+-- Dump completed on 2019-02-18 19:21:25
