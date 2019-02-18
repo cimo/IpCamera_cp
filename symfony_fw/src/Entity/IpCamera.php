@@ -23,9 +23,19 @@ class IpCamera {
     private $name = "";
     
     /**
-     * @ORM\Column(name="host", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT ''")
+     * @ORM\Column(name="user_id", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT '1,'")
      */
-    private $host = "";
+    private $userId = "1,";
+    
+    /**
+     * @ORM\Column(name="host_video", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT ''")
+     */
+    private $hostVideo = "";
+    
+    /**
+     * @ORM\Column(name="host_image", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT ''")
+     */
+    private $hostImage = "";
     
     /**
      * @ORM\Column(name="username", type="string", columnDefinition="varchar(20) NOT NULL DEFAULT ''")
@@ -33,27 +43,45 @@ class IpCamera {
     private $username = "";
     
     /**
-     * @ORM\Column(name="password", type="string", type="string", nullable=true, columnDefinition="blob")
+     * @ORM\Column(name="password", type="string", nullable=true, columnDefinition="blob")
      */
     private $password = "";
     
     /**
-     * @ORM\Column(name="detection_sensitivity", type="decimal", columnDefinition="decimal(4,3) NOT NULL DEFAULT 0.1")
+     * @ORM\Column(name="detection_sensitivity", type="decimal", columnDefinition="decimal(4,3) NOT NULL DEFAULT 0.01")
      */
-    private $detectionSensitivity = "";
+    private $detectionSensitivity = 0.01;
     
     /**
-     * @ORM\Column(name="active", type="integer", type="string", nullable=true, columnDefinition="tinyint(1) NOT NULL DEFAULT 0")
+     * @ORM\Column(name="detection_active", type="integer", columnDefinition="tinyint(1) NOT NULL DEFAULT 0")
      */
-    private $active = "";
+    private $detectionActive = 0;
+    
+    /**
+     * @ORM\Column(name="detection_pid", type="string", nullable=true, columnDefinition="varchar(4)")
+     */
+    private $detectionPid = "0";
+    
+    /**
+     * @ORM\Column(name="active", type="integer", columnDefinition="tinyint(1) NOT NULL DEFAULT 0")
+     */
+    private $active = 0;
     
     // Properties
     public function setName($value) {
         $this->name = $value;
     }
     
-    public function setHost($value) {
-        $this->host = $value;
+    public function setUserId($value) {
+        $this->userId = $value;
+    }
+    
+    public function setHostVideo($value) {
+        $this->hostVideo = $value;
+    }
+    
+    public function setHostImage($value) {
+        $this->hostImage = $value;
     }
     
     public function setUsername($value) {
@@ -65,7 +93,15 @@ class IpCamera {
     }
     
     public function setDetectionSensitivity($value) {
-        $this->detectionSensitivity = $value;
+        $this->detectionSensitivity = $value + 0;
+    }
+    
+    public function setDetectionActive($value) {
+        $this->detectionActive = $value;
+    }
+    
+    public function setDetectionPid($value) {
+        $this->detectionPid = $value;
     }
     
     public function setActive($value) {
@@ -82,8 +118,16 @@ class IpCamera {
         return $this->name;
     }
     
-    public function getHost() {
-        return $this->host;
+    public function getUserId() {
+        return $this->userId;
+    }
+    
+    public function getHostVideo() {
+        return $this->hostVideo;
+    }
+    
+    public function getHostImage() {
+        return $this->hostImage;
     }
     
     public function getUsername() {
@@ -95,7 +139,15 @@ class IpCamera {
     }
     
     public function getDetectionSensitivity() {
-        return $this->detectionSensitivity;
+        return $this->detectionSensitivity + 0;
+    }
+    
+    public function getDetectionActive() {
+        return $this->detectionActive;
+    }
+    
+    public function getDetectionPid() {
+        return $this->detectionPid;
     }
     
     public function getActive() {

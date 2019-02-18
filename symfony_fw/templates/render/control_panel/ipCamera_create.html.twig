@@ -5,10 +5,19 @@
     <p>{% trans %}ipCameraCreate_2{% endtrans %}</p>
     <form id="form_cp_ipCamera_create" action="{{path("cp_ipCamera_create", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
         {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
-        {{form_row(form.host, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        
+        <div id="ipCamera_userId" class="wordTag_container">
+            {{form_row(form.userId)}}
+            {{response.values.userSelectHtml|raw}}
+            <div class="wordTag_result"></div>
+        </div>
+        
+        {{form_row(form.hostVideo, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        {{form_row(form.hostImage, {'dense': "", 'styleType': "outlinedTrailing"})}}
         {{form_row(form.username, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
         {{form_row(form.password, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
         {{form_row(form.detectionSensitivity, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+        {{form_row(form.detectionActive)}}
         {{form_row(form.active)}}
 
         {{form_widget(form._token)}}

@@ -378,15 +378,21 @@ class Utility {
         return false;
     }
     
-    public function arrayExplodeFindValue($elementsFirst, $elementsSecond) {
-        $elementsFirstExplode = explode(",", $elementsFirst);
-        array_pop($elementsFirstExplode);
-
-        $elementsSecondExplode =  explode(",", $elementsSecond);
-        array_pop($elementsSecondExplode);
+    public function arrayExplodeFindValue($first, $second, $multi = true) {
+        $firstExplode = explode(",", $first);
+        array_pop($firstExplode);
         
-        if ($this->arrayFindValue($elementsFirstExplode, $elementsSecondExplode) == true)
-            return true;
+        if ($multi == true) {
+            $secondExplode =  explode(",", $second);
+            array_pop($secondExplode);
+            
+            if ($this->arrayFindValue($firstExplode, $secondExplode) == true)
+                return true;
+        }
+        else {
+            if (in_array($second, $firstExplode) == true)
+                return true;
+        }
         
         return false;
     }
@@ -496,6 +502,25 @@ class Utility {
             $user->setCredit(0);
             $user->setActive(0);
         }
+    }
+    
+    public function createUserSelectHtml($selectId, $label, $isRequired = false) {
+        $rows = $this->query->selectAllUserDatabase();
+        
+        $required = $isRequired == true ? "required=\"required\"" : "";
+        
+        $html = "<div id=\"$selectId\" class=\"mdc-select\" $required>
+            <select class=\"mdc-select__native-control\">
+                <option value=\"\"></option>";
+                foreach ($rows as $key => $value) {
+                    $html .= "<option value=\"{$value['id']}\">{$value['username']}</option>";
+                }
+            $html .= "</select>
+            <label class=\"mdc-floating-label mdc-floating-label--float-above\">" . $this->translator->trans($label) . "</label>
+            <div class=\"mdc-line-ripple\"></div>
+        </div>";
+        
+        return $html;
     }
     
     public function createUserRoleSelectHtml($selectId, $label, $isRequired = false) {

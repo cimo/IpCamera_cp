@@ -5,6 +5,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -26,33 +27,56 @@ class IpCameraFormType extends AbstractType {
         $builder->add("name", TextType::class, Array(
             'required' => true,
             'label' => "ipCameraFormType_1"
+        ))  
+        ->add("userId", HiddenType::class, Array(
+            'required' => true,
+            'data' => $options['data']->getUserId()
         ))
-        ->add("host", TextType::class, Array(
+        ->add("hostVideo", TextType::class, Array(
             'required' => true,
             'label' => "ipCameraFormType_2"
         ))
-        ->add("username", TextType::class, Array(
-            'required' => true,
+        ->add("hostImage", TextType::class, Array(
+            'required' => false,
             'label' => "ipCameraFormType_3"
         ))
-        ->add("password", PasswordType::class, Array(
+        ->add("username", TextType::class, Array(
             'required' => true,
             'label' => "ipCameraFormType_4"
         ))
-        ->add("detectionSensitivity", TextType::class, Array(
+        ->add("password", PasswordType::class, Array(
             'required' => true,
             'label' => "ipCameraFormType_5"
         ))
+        ->add("detectionSensitivity", TextType::class, Array(
+            'required' => true,
+            'label' => "ipCameraFormType_6"
+        ))
+        ->add("detectionActive", ChoiceType::class, Array(
+            'required' => true,
+            'placeholder' => "ipCameraFormType_7",
+            'choices' => Array(
+                "ipCameraFormType_8" => "0",
+                "ipCameraFormType_9" => "1"
+            )
+        ))
+        ->add("detectionPid", TextType::class, Array(
+            'required' => false,
+            'label' => "ipCameraFormType_10",
+            'attr' => Array(
+                'readonly' => true
+            )
+        ))
         ->add("active", ChoiceType::class, Array(
             'required' => true,
-            'placeholder' => "ipCameraFormType_6",
+            'placeholder' => "ipCameraFormType_11",
             'choices' => Array(
-                "ipCameraFormType_7" => "0",
-                "ipCameraFormType_8" => "1"
+                "ipCameraFormType_8" => "0",
+                "ipCameraFormType_9" => "1"
             )
         ))
         ->add("submit", SubmitType::class, Array(
-            'label' => "ipCameraFormType_9"
+            'label' => "ipCameraFormType_12"
         ));
     }
 }

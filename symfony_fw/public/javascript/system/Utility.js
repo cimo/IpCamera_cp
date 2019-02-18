@@ -305,10 +305,10 @@ function Utility() {
         $.each(options, function(key, val) {
             var optionValue = parseInt(val.value);
             var optionText = val.text.substr(0, val.text.indexOf("-|") + 2);
-            var idPageElementSelected = parseInt(xhr.response.values.idPage);
-            var idParentElementSelected = parseInt(xhr.response.values.idParent);
+            var pageIdElementSelected = parseInt(xhr.response.values.pageId);
+            var parentIdElementSelected = parseInt(xhr.response.values.parentId);
             
-            if (optionValue === idPageElementSelected || optionValue === idParentElementSelected) {
+            if (optionValue === pageIdElementSelected || optionValue === parentIdElementSelected) {
                 disabled = true;
                 optionLength = optionText.length;
             }

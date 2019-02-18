@@ -99,6 +99,11 @@
             
             <div class="mdc-line-ripple"></div>
         </div>
+    {% elseif styleType is defined and styleType == "readonly" %}
+        <div class="mdc_input_readonly">
+            {{- form_label(form) -}}
+            <p>{{value}}</p>
+        </div>
     {% endif %}
     
     {% if type != "hidden" %}

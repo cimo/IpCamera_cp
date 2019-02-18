@@ -50,3 +50,5 @@ Temporary Items
 nbproject
 /symfony_fw/src/Config.php
 /symfony_fw/public/.sass-cache
+/symfony_fw/src/files/ipCamera/*
+!/symfony_fw/src/files/ipCamera/.gitkeep

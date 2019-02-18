@@ -63,7 +63,7 @@
         {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
     </form>
 
-    {% if is_granted("ROLE_ADMIN") == true and response.values.idPage > 5 %}
+    {% if is_granted("ROLE_ADMIN") == true and response.values.pageId > 5 %}
         {{-include("@templateRoot/render/control_panel/page_delete.html.twig")-}}
     {% endif %}
 </div>

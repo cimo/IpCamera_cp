@@ -17,6 +17,8 @@ function ControlPanelIpCamera() {
         
         selectMobile();
         
+        utility.wordTag("#ipCamera_userId", "#form_ipCamera_userId");
+        
         $("#form_cp_ipCamera_create").on("submit", "", function(event) {
             event.preventDefault();
             
@@ -207,6 +209,8 @@ function ControlPanelIpCamera() {
             selectSended = true;
             
             $("#cp_ipCamera_select_result").html(xhr.response.render);
+            
+            utility.wordTag("#ipCamera_userId", "#form_ipCamera_userId");
             
             materialDesign.refresh();
             

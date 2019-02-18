@@ -873,9 +873,21 @@ App\Entity\IpCamera:
                 groups: [ipCamera_create, ipCamera_profile]
                 htmlPattern: false
                 pattern: /^[a-zA-Z0-9_\- ]+$/
-        host:
+        userId:
             - NotBlank:
                 groups: [ipCamera_create, ipCamera_profile]
+            - Regex:
+                groups: [ipCamera_create, ipCamera_profile]
+                htmlPattern: false
+                pattern: /^[0-9,]+$/
+        hostVideo:
+            - NotBlank:
+                groups: [ipCamera_create, ipCamera_profile]
+            - Regex:
+                groups: [ipCamera_create, ipCamera_profile]
+                htmlPattern: false
+                pattern: /^([a-zA-Z0-9\/:.?=_\-]+)$/
+        hostImage:
             - Regex:
                 groups: [ipCamera_create, ipCamera_profile]
                 htmlPattern: false
@@ -899,6 +911,18 @@ App\Entity\IpCamera:
                 groups: [ipCamera_create, ipCamera_profile]
                 htmlPattern: false
                 pattern: /^[0-9.]+$/
+        detectionActive:
+            - NotBlank:
+                groups: [ipCamera_create, ipCamera_profile]
+            - Regex:
+                groups: [ipCamera_create, ipCamera_profile]
+                htmlPattern: false
+                pattern: /^1$|^0$/
+        detectionPid:
+            - Regex:
+                groups: [ipCamera_create, ipCamera_profile]
+                htmlPattern: false
+                pattern: /^[0-9]+$/
         active:
             - NotBlank:
                 groups: [ipCamera_create, ipCamera_profile]

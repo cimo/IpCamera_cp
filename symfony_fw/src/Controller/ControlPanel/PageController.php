@@ -232,9 +232,9 @@ class PageController extends AbstractController {
 
                     $pageParentRows = array_column($this->query->selectAllPageParentDatabase($form->get("parent")->getData()), "alias", "id");
                     
+                    $this->response['values']['pageId'] = $_SESSION['pageProfileId'];
                     $this->response['values']['userRoleSelectHtml'] = $this->utility->createUserRoleSelectHtml("form_page_roleUserId_select", "pageController_1", true);
                     $this->response['values']['pageSortListHtml'] = $this->utility->createPageSortListHtml($pageParentRows);
-                    $this->response['values']['idPage'] = $_SESSION['pageProfileId'];
                     $this->response['values']['userCreate'] = $pageEntity->getUserCreate();
                     $this->response['values']['dateCreate'] = $this->utility->dateFormat($pageEntity->getDateCreate());
                     $this->response['values']['userModify'] = $pageEntity->getUserModify();
@@ -430,8 +430,8 @@ class PageController extends AbstractController {
                     else {
                         $pageEntity = $this->entityManager->getRepository("App\Entity\Page")->find($id);
                         
-                        $this->response['values']['idPage'] = $id;
-                        $this->response['values']['idParent'] = $pageEntity->getParent();
+                        $this->response['values']['pageId'] = $id;
+                        $this->response['values']['parentId'] = $pageEntity->getParent();
                         $this->response['values']['text'] = "<p>" . $this->utility->getTranslator()->trans("pageController_8") . "</p>";
                         $this->response['values']['button'] = "<button id=\"cp_page_delete_parent_all\" class=\"mdc-button mdc-button--dense mdc-button--raised mdc-theme--secondary-bg\" type=\"button\" style=\"display: block;\">" . $this->utility->getTranslator()->trans("pageController_9") . "</button>";
                         $this->response['values']['pageSelectHtml'] = $this->utility->createPageSelectHtml($this->urlLocale, "cp_page_delete_parent_new", $this->utility->getTranslator()->trans("pageController_10"));

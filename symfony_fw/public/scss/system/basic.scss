@@ -601,6 +601,19 @@ table {
     }
 }
 
+.mdc_input_readonly {
+    position: relative;
+
+    .mdc-floating-label {
+        bottom: 20px !important;
+    }
+
+    p {
+        margin: 30px 0 8px 0 !important;
+        height: 19px;
+    }
+}
+
 #body_progress {
     display: block;
     height: 100%;

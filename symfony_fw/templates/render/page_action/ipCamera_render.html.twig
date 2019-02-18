@@ -1,4 +1,4 @@
-{% if is_granted("IS_AUTHENTICATED_FULLY") == true %}
+{% if response.values is defined %}
     <div>
         {{response.values.video|raw}}
     </div>

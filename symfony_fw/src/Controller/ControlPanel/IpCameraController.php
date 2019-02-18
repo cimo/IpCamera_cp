@@ -41,7 +41,7 @@ class IpCameraController extends AbstractController {
     *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
     *	methods={"POST"}
     * )
-    * @Template("@templateRoot/render/ipCamera_render.html.twig")
+    * @Template("@templateRoot/render/page_action/ipCamera_render.html.twig")
     */
     public function renderAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
         $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
@@ -61,13 +61,29 @@ class IpCameraController extends AbstractController {
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_USER"), $this->getUser());
         
         if ($checkUserRole == true) {
-            $ipCameraRow = $this->selectIpCameraDatabase(1);
-            $ipCameraPasswordRow = $this->ipCameraDatabase("select", $ipCameraRow['id'], $ipCameraRow['password']);
+            $ipCameraRows = $this->selectAllIpCameraDatabase();
             
-            if ($ipCameraPasswordRow != false) {
-                $response = $this->utility->loginAuthBasic("http://home-cs.ddns.net:1000/snapshot.cgi", $ipCameraRow['username'], $ipCameraPasswordRow['password']);
+            $devices = Array();
+            
+            foreach($ipCameraRows as $key => $value) {
+                if ($value['user_id'] != null) {
+                    $arrayFindValueExplode = $this->utility->arrayExplodeFindValue($value['user_id'], $this->getUser()->getId(), false);
+                    
+                    if ($arrayFindValueExplode == true)
+                        $devices[] = $ipCameraRows[$key];
+                }
+            }
+            
+            if (count($devices) > 0) {
+                $ipCameraPasswordRow = $this->ipCameraDatabase("select", $devices[0]['id'], $devices[0]['password']);
                 
-                $this->response['values']['video'] = $this->createRenderHtml($response);
+                if ($ipCameraPasswordRow != false) {
+                    $response = $this->utility->loginAuthBasic($devices[0]['host_image'], $devices[0]['username'], $ipCameraPasswordRow['password']);
+                    
+                    $this->response['values']['video'] = $this->createVideoHtml($response);
+                    
+                    $this->checkProcess($devices[0]['detection_pid'], $devices[0]['id']);
+                }
             }
         }
         
@@ -114,17 +130,21 @@ class IpCameraController extends AbstractController {
         ));
         $form->handleRequest($request);
         
+        $this->response['values']['userSelectHtml'] = $this->utility->createUserSelectHtml("form_ipCamera_userId_select", "ipCameraController_1", true);
+        
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
                 $this->entityManager->persist($ipCameraEntity);
                 $this->entityManager->flush();
                 
                 $this->ipCameraDatabase("update", $ipCameraEntity->getId(), $form->get("password")->getData());
-
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_1");
+                
+                mkdir("{$this->utility->getPathSrc()}/files/ipCamera/{$ipCameraEntity->getId()}");
+                
+                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_2");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("ipCameraController_2");
+                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("ipCameraController_3");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -243,6 +263,8 @@ class IpCameraController extends AbstractController {
 
                 if ($ipCameraEntity != null) {
                     $_SESSION['ipCameraProfileId'] = $id;
+                    
+                    $this->checkProcess($ipCameraEntity->getDetectionPid(), $id, $ipCameraEntity);
 
                     $form = $this->createForm(IpCameraFormType::class, $ipCameraEntity, Array(
                         'validation_groups' => Array('ipCamera_profile')
@@ -250,7 +272,8 @@ class IpCameraController extends AbstractController {
                     $form->handleRequest($request);
 
                     $this->response['values']['id'] = $_SESSION['ipCameraProfileId'];
-
+                    $this->response['values']['userSelectHtml'] = $this->utility->createUserSelectHtml("form_ipCamera_userId_select", "ipCameraController_1", true);
+                    
                     $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/ipCamera_profile.html.twig", Array(
                         'urlLocale' => $this->urlLocale,
                         'urlCurrentPageId' => $this->urlCurrentPageId,
@@ -260,7 +283,7 @@ class IpCameraController extends AbstractController {
                     ));
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("ipCameraController_3");
+                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("ipCameraController_4");
             }
         }
         
@@ -308,6 +331,7 @@ class IpCameraController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
+                // Password
                 $password = $passwordOld;
                 
                 if ($form->get("password")->getData() == null || $form->get("password")->getData() == "") {
@@ -317,15 +341,34 @@ class IpCameraController extends AbstractController {
                 else
                     $password = $form->get("password")->getData();
                 
+                // Database
                 $this->entityManager->persist($ipCameraEntity);
                 $this->entityManager->flush();
                 
                 $this->ipCameraDatabase("update", $ipCameraEntity->getId(), $password);
                 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_4");
+                // Detection
+                $detectionPid = 0;
+                
+                if ($ipCameraEntity->getDetectionActive() == true) {
+                    $ipCameraPasswordRow = $this->ipCameraDatabase("select", $ipCameraEntity->getId(), $ipCameraEntity->getPassword());
+                    
+                    $command = "-threads 0 -crf 23 -r 25 -pix_fmt yuv420p -vf \"select=gt(scene\,{$ipCameraEntity->getDetectionSensitivity()})\" -c:v libx264 -an";
+                    $pathResult = "{$this->utility->getPathSrc()}/files/ipCamera/{$ipCameraEntity->getId()}/" . time() . ".avi";
+                    
+                    $ffmpeg = "ffmpeg -y -i \"{$ipCameraEntity->getHostVideo()}&user={$ipCameraEntity->getUsername()}&pwd={$ipCameraPasswordRow['password']}\" $command \"{$pathResult}\"";
+                    
+                    $detectionPid = trim(shell_exec("$ffmpeg >/dev/null 2>&1 & echo $!"));
+                }
+                else
+                    posix_kill($ipCameraEntity->getDetectionPid(), 3);
+                
+                $this->ipCameraDatabase("update", $ipCameraEntity->getId(), "", $detectionPid);
+                
+                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_5");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("ipCameraController_5");
+                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("ipCameraController_6");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -382,17 +425,17 @@ class IpCameraController extends AbstractController {
                     if ($ipCameraDatabase == true) {
                         $this->response['values']['id'] = $id;
 
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_6");
+                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_7");
                     }
                 }
                 else if ($request->get("event") == "deleteAll") {
                     $ipCameraDatabase = $this->ipCameraDatabase("deleteAll");
 
                     if ($ipCameraDatabase == true)
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_7");
+                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_8");
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("ipCameraController_8");
+                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("ipCameraController_9");
 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -412,7 +455,7 @@ class IpCameraController extends AbstractController {
     }
     
     // Functions private
-    private function createRenderHtml($response) {
+    private function createVideoHtml($response) {
         ob_start();
         header("Content-Type: image/jpeg");
         echo $response;
@@ -424,7 +467,7 @@ class IpCameraController extends AbstractController {
         $fileMimeContentTypeExplode = explode(";", $fileMimeContentType);
         
         $html = "<img style=\"width: 320px; height: 180px;\" src=\"data:{$fileMimeContentTypeExplode[0]};base64," . base64_encode($obContent) . "\" alt=\"ipCamera.jpg\"/>";
-        
+                
         return $html;
     }
     
@@ -459,7 +502,7 @@ class IpCameraController extends AbstractController {
         return $listHtml;
     }
     
-    private function ipCameraDatabase($type, $id = 0, $password = "") {
+    private function ipCameraDatabase($type, $id = 0, $password = "", $detectionPid = 0) {
         if ($type == "select") {
             $settingRow = $this->query->selectSettingDatabase();
             
@@ -474,16 +517,28 @@ class IpCameraController extends AbstractController {
 
             return $query->fetch();
         }
-        else if ($type == "update" && $password != "") {
-            $settingRow = $this->query->selectSettingDatabase();
+        else if ($type == "update") {
+            if ($password != "") {
+                $settingRow = $this->query->selectSettingDatabase();
+
+                $query = $this->utility->getConnection()->prepare("UPDATE IGNORE ipCamera_devices
+                                                                    SET password = AES_ENCRYPT(:password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
+                                                                    WHERE id = :id");
+
+                $query->bindValue(":password", $password);
+                $query->bindValue(":id", $id);
+            }
+            else {
+                $query = $this->utility->getConnection()->prepare("UPDATE ipCamera_devices
+                                                                    SET detection_active = :detectionActive,
+                                                                        detection_pid = :detectionPid
+                                                                    WHERE id = :id");
+                
+                $query->bindValue(":detectionActive", $detectionPid > 0 ? 1 : 0);
+                $query->bindValue(":detectionPid", $detectionPid);
+                $query->bindValue(":id", $id);
+            }
             
-            $query = $this->utility->getConnection()->prepare("UPDATE IGNORE ipCamera_devices
-                                                                SET password = AES_ENCRYPT(:password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
-                                                                WHERE id = :id");
-
-            $query->bindValue(":password", $password);
-            $query->bindValue(":id", $id);
-
             return $query->execute();
         }
         else if ($type == "delete") {
@@ -514,11 +569,24 @@ class IpCameraController extends AbstractController {
         return $query->fetch();
     }
     
-    private function selectAllIpCameraDatabase($change = false) {
+    private function selectAllIpCameraDatabase() {
         $query = $this->utility->getConnection()->prepare("SELECT * FROM ipCamera_devices");
         
         $query->execute();
         
         return $query->fetchAll();
+    }
+    
+    private function checkProcess($pid, $id, $ipCameraEntity = null) {
+        $name = trim(shell_exec("ps -p $pid -o comm="));
+        
+        if ($pid > 0 && $name == "") {
+            if ($ipCameraEntity != null) {
+                $ipCameraEntity->setDetectionActive(0);
+                $ipCameraEntity->setDetectionPid(null);
+            }
+            
+            $this->ipCameraDatabase("update", $id, "", 0);
+        }
     }
 }
