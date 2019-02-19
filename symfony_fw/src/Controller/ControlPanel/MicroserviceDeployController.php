@@ -905,8 +905,9 @@ class MicroserviceDeployController extends AbstractController {
                 
                 if ($request->get("action") == "clone") {
                     $commands = Array(
-                        "git config --global user.email '{$row['git_user_email']}'",
-                        "git config --global user.name '{$row['git_user_name']}'",
+                        "sudo git config --global core.mergeoptions --no-edit",
+                        "sudo git config --global user.email '{$row['git_user_email']}'",
+                        "sudo git config --global user.name '{$row['git_user_name']}'",
                         "cd {$row['git_clone_path']}",
                         "sudo -u {$row['user_git_script']} git clone https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password']}@{$row['git_clone_url']} {$row['git_clone_path']}",
                         "sudo chown -R {$row['user_web_script']} {$row['root_web_path']}",
@@ -916,8 +917,9 @@ class MicroserviceDeployController extends AbstractController {
                 }
                 else if ($request->get("action") == "pull") {
                     $commands = Array(
-                        "git config --global user.email '{$row['git_user_email']}'",
-                        "git config --global user.name '{$row['git_user_name']}'",
+                        "sudo git config --global core.mergeoptions --no-edit",
+                        "sudo git config --global user.email '{$row['git_user_email']}'",
+                        "sudo git config --global user.name '{$row['git_user_name']}'",
                         "cd {$row['git_clone_path']}",
                         "sudo -u user_1 git pull --no-edit https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password']}@{$row['git_clone_url']} {$request->get("branchName")}",
                         "sudo chown -R {$row['user_web_script']} {$row['root_web_path']}",
@@ -927,8 +929,9 @@ class MicroserviceDeployController extends AbstractController {
                 }
                 else if ($request->get("action") == "reset") {
                     $commands = Array(
-                        "git config --global user.email '{$row['git_user_email']}'",
-                        "git config --global user.name '{$row['git_user_name']}'",
+                        "sudo git config --global core.mergeoptions --no-edit",
+                        "sudo git config --global user.email '{$row['git_user_email']}'",
+                        "sudo git config --global user.name '{$row['git_user_name']}'",
                         "cd {$row['git_clone_path']}",
                         "sudo -u {$row['user_git_script']} git fetch --all",
                         "sudo -u {$row['user_git_script']} git reset --hard",

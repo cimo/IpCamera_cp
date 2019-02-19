@@ -39,6 +39,8 @@ function ControlPanelIpCamera() {
                 null
             );
         });
+        
+        file();
     };
     
     self.changeView = function() {
@@ -287,5 +289,131 @@ function ControlPanelIpCamera() {
                 );
             }
         );
+    }
+    
+    function file() {
+        var tableAndPagination = new TableAndPagination();
+        tableAndPagination.init();
+        tableAndPagination.setButtonsStatus("show");
+        tableAndPagination.create(window.url.cpIpCameraFile, "#cp_ipCamera_file_result", true);
+        tableAndPagination.search();
+        tableAndPagination.pagination();
+        tableAndPagination.sort();
+        
+        $(document).on("click", "#cp_ipCamera_file_result .refresh", function() {
+            ajax.send(
+                true,
+                window.url.cpIpCameraFile,
+                "post",
+                {
+                    'event': "refresh",
+                    'token': window.session.token
+                },
+                "json",
+                false,
+                true,
+                "application/x-www-form-urlencoded; charset=UTF-8",
+                null,
+                function(xhr) {
+                    ajax.reply(xhr, "");
+                    
+                    tableAndPagination.populate(xhr);
+                },
+                null,
+                null
+            );
+        });
+        
+        $(document).on("click", "#cp_ipCamera_file_result .delete_all", function() {
+            popupEasy.create(
+                window.text.index_5,
+                window.textIpCamera.label_4,
+                function() {
+                    ajax.send(
+                        true,
+                        window.url.cpIpCameraFileDelete,
+                        "post",
+                        {
+                            'event': "deleteAll",
+                            'token': window.session.token
+                        },
+                        "json",
+                        false,
+                        true,
+                        "application/x-www-form-urlencoded; charset=UTF-8",
+                        null,
+                        function(xhr) {
+                            ajax.reply(xhr, "");
+
+                            $.each($("#cp_ipCamera_file_result").find("table .id_column"), function(key, value) {
+                                $(value).parents("tr").remove();
+                            });
+                        },
+                        null,
+                        null
+                    );
+                }
+            );
+        });
+        
+        $(document).on("click", "#cp_ipCamera_file_result .cp_ipCamera_file_download", function() {
+            var deviceName = $.trim($(this).parents("tr").find(".deviceName_column").text());
+            var name = $.trim($(this).parents("tr").find(".name_column span").text());
+            
+            $(document).ready(function(){
+                var html = "<form id=\"cp_ipCamera_file_download\" action=\"" + window.url.cpIpCameraFileDownload + "\" method=\"post\">\n\
+                    <input type=\"hidden\" name=\"deviceName\" value=\"" + deviceName + "\">\n\
+                    <input type=\"hidden\" name=\"name\" value=\"" + name + "\">\n\
+                    <input type=\"hidden\" name=\"token\" value=\"" + window.session.token + "\">\n\
+                </form>";
+                
+                $(html).appendTo("body").submit();
+                $("#cp_ipCamera_file_download").remove();
+            });
+        });
+        
+        $(document).on("click", "#cp_ipCamera_file_result .cp_ipCamera_file_delete", function() {
+            var id = $.trim($(this).parents("tr").find(".id_column").text());
+            var deviceName = $.trim($(this).parents("tr").find(".deviceName_column").text());
+            var name = $.trim($(this).parents("tr").find(".name_column span").text());
+            
+            popupEasy.create(
+                window.text.index_5,
+                window.textIpCamera.label_3,
+                function() {
+                    ajax.send(
+                        true,
+                        window.url.cpIpCameraFileDelete,
+                        "post",
+                        {
+                            'event': "delete",
+                            'id': id,
+                            'deviceName': deviceName,
+                            'name': name,
+                            'token': window.session.token
+                        },
+                        "json",
+                        false,
+                        true,
+                        "application/x-www-form-urlencoded; charset=UTF-8",
+                        null,
+                        function(xhr) {
+                            ajax.reply(xhr, "");
+
+                            if (xhr.response.messages.success !== undefined) {
+                                $.each($("#cp_ipCamera_file_result").find("table .id_column"), function(key, value) {
+                                    if (xhr.response.values.id === $.trim($(value).text()))
+                                        $(value).parents("tr").remove();
+                                });
+                                
+                                $("#cp_ipCamera_file_result").find(".refresh").click();
+                            }
+                        },
+                        null,
+                        null
+                    );
+                }
+            );
+        });
     }
 }

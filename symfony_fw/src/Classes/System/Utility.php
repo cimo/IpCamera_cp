@@ -650,13 +650,13 @@ class Utility {
     public function createTemplateList() {
         $templatesPath = "{$this->pathWeb}/images/templates";
         
-        $scanDirElements = scandir($templatesPath);
+        $scanDirElements = preg_grep("/^([^.])/", scandir($templatesPath));
         
         $list = Array();
         
         if ($scanDirElements != false) {
             foreach ($scanDirElements as $key => $value) {
-                if ($value != "." && $value != ".." && $value != ".htaccess" && is_dir("$templatesPath/$value") == true)
+                if ($value != "." && $value != ".." && is_dir("$templatesPath/$value") == true)
                     $list[$value] = $value;
             }
         }
@@ -933,6 +933,22 @@ class Utility {
             $newString,
             $isFind
         );
+    }
+    
+    public function download($path, $mime, $delete = false) {
+        header("Content-Description: File Transfer");
+        header("Content-Disposition: attachment; filename=\"" . basename($path) . "\"");
+        header("Content-Transfer-Encoding: binary");
+        header("Content-Length: " . filesize($path));
+        header("Content-Type: $mime");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, pre-check=0, post-check=0");
+        header("Pragma: public");
+        
+        readfile($path);
+
+        if ($delete == true)
+            unlink($path);
     }
     
     public function sendMessageToSlackRoom($name, $text) {

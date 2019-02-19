@@ -1,15 +1,19 @@
-{% if urlExtra == "cp_ipCamera" or urlExtra == "cp_ipCamera_create" or urlExtra == "cp_ipCamera_select" %}
+{% if urlExtra == "cp_ipCamera" or urlExtra == "cp_ipCamera_create" or urlExtra == "cp_ipCamera_select" or urlExtra == "cp_ipCamera_file" %}
     {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
-        <p>{% trans %}controlPanelPageIpCamera_1{% endtrans %}</p>
-        <div class="cp_section_button">
-            <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_ipCamera_create"})}}">{% trans %}controlPanel_1{% endtrans %}</a>
-            <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_ipCamera_select"})}}">{% trans %}controlPanel_2{% endtrans %}</a>
-        </div>
-
+        {% if urlExtra == "cp_ipCamera" or urlExtra == "cp_ipCamera_create" or urlExtra == "cp_ipCamera_select" %}
+            <p>{% trans %}controlPanelPageIpCamera_1{% endtrans %}</p>
+            <div class="cp_section_button">
+                <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_ipCamera_create"})}}">{% trans %}controlPanel_1{% endtrans %}</a>
+                <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_ipCamera_select"})}}">{% trans %}controlPanel_2{% endtrans %}</a>
+            </div>
+        {% endif %}
+        
         {% if urlExtra == "cp_ipCamera_create" %}
             {{-render(controller("App\\Controller\\ControlPanel\\IpCameraController::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
         {% elseif urlExtra == "cp_ipCamera_select" %}
             {{-render(controller("App\\Controller\\ControlPanel\\IpCameraController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+        {% elseif urlExtra == "cp_ipCamera_file" %}
+            {{-render(controller("App\\Controller\\ControlPanel\\IpCameraController::fileAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
         {% endif %}
 
         <script>
@@ -24,7 +28,9 @@
 
             var textIpCamera = {
                 'label_1': "{{"controlPanelPageIpCamera_2"|trans}}",
-                'label_2': "{{"controlPanelPageIpCamera_3"|trans}}"
+                'label_2': "{{"controlPanelPageIpCamera_3"|trans}}",
+                'label_3': "{{"controlPanelPageIpCamera_4"|trans}}",
+                'label_4': "{{"controlPanelPageIpCamera_5"|trans}}"
             };
         </script>
         <script src="{{asset("javascript/system/control_panel/IpCamera.min.js")}}"></script>

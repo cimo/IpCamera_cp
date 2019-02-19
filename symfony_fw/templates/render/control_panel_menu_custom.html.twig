@@ -4,4 +4,8 @@
         <i class="material-icons mdc-list-item__graphic">camera_alt</i>
             <span>{% trans %}controlPanelMenuIpCamera_2{% endtrans %}</span>
     </a>
+    <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_ipCamera_file"})}}">
+        <i class="material-icons mdc-list-item__graphic">file_copy</i>
+            <span>{% trans %}controlPanelMenuIpCamera_3{% endtrans %}</span>
+    </a>
 {% endif %}

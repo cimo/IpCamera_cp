@@ -320,10 +320,13 @@ date.time: H:i:s
 
 "controlPanelMenuIpCamera_1": "Ip camera"
 "controlPanelMenuIpCamera_2": "Devices"
+"controlPanelMenuIpCamera_3": "Files"
 
 "controlPanelPageIpCamera_1": "IpCamera devices section."
 "controlPanelPageIpCamera_2": "Really delete this device?"
 "controlPanelPageIpCamera_3": "Really delete all devices?"
+"controlPanelPageIpCamera_4": "Really delete this files?"
+"controlPanelPageIpCamera_5": "Really delete all files?"
 
 # Payment
 "paymentUserSelect_1": "Payments user selection form"
@@ -895,3 +898,13 @@ date.time: H:i:s
 "ipCameraController_7": "Device deletion completed."
 "ipCameraController_8": "All device deletion completed."
 "ipCameraController_9": "Device not deleted!"
+"ipCameraController_10": "File deletion completed."
+"ipCameraController_11": "All file deletion completed."
+"ipCameraController_12": "File not deleted!"
+
+"ipCameraFile_1": "Device's file"
+"ipCameraFile_2": "..."
+"ipCameraFile_3": "Id"
+"ipCameraFile_4": "Device name"
+"ipCameraFile_5": "Name"
+"ipCameraFile_6": "Remove"

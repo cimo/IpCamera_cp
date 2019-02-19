@@ -1,0 +1,40 @@
+<fieldset>
+    <legend>{% trans %}ipCameraFile_1{% endtrans %}</legend>
+    <p>{% trans %}ipCameraFile_2{% endtrans %}</p>
+    <div id="cp_ipCamera_file">
+        <div id="cp_ipCamera_file_result">
+            
+            {{-include("@templateRoot/include/table_and_pagination.html.twig")-}}
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            <span>{% trans %}ipCameraFile_3{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}ipCameraFile_4{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}ipCameraFile_5{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                        <th>
+                            <span>{% trans %}ipCameraFile_6{% endtrans %}</span>
+                            <i class="material-icons">arrow_drop_down</i>
+                            <i class="material-icons">arrow_drop_up</i>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="table_tbody">
+                    {{response.values.listHtml|raw}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</fieldset>
