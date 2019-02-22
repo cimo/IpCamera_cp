@@ -28,7 +28,7 @@ class Utility {
     
     private $pathRoot;
     private $pathSrc;
-    private $pathWeb;
+    private $pathPublic;
     
     private $urlRoot;
     
@@ -82,8 +82,8 @@ class Utility {
         return $this->pathSrc;
     }
     
-    public function getPathWeb() {
-        return $this->pathWeb;
+    public function getPathPublic() {
+        return $this->pathPublic;
     }
     
     public function getUrlRoot() {
@@ -123,7 +123,7 @@ class Utility {
         
         $this->pathRoot = $_SERVER['DOCUMENT_ROOT'] . $this->config->getPathRoot();
         $this->pathSrc = "{$this->pathRoot}/src";
-        $this->pathWeb = "{$this->pathRoot}/public";
+        $this->pathPublic = "{$this->pathRoot}/public";
         
         $this->urlRoot = $this->config->getProtocol() . $_SERVER['HTTP_HOST'] . $this->config->getUrlRoot();
         
@@ -333,19 +333,19 @@ class Utility {
         return substr($string, $position, $length);
     }
     
-    public function arrayLike($elements, $like, $flat) {
+    public function arrayLike($elements, $like, $oneLevel) {
         $result = Array();
         
-        if ($flat == true) {
+        if ($oneLevel == true) {
             foreach ($elements as $key => $value) {
-                $pregGrep = preg_grep("~$like~i", $value);
-
-                if (empty($pregGrep) == false)
-                    $result[] = $elements[$key];
+                $result[] = preg_grep("~$like~i", $value);
             }
         }
-        else
-            $result = preg_grep("~$like~i", $elements);
+        else {
+            foreach ($elements as $key => $value) {
+                $result[$key] = preg_grep("~$like~i", $value);
+            }
+        }
         
         return $result;
     }
@@ -648,7 +648,7 @@ class Utility {
     }
     
     public function createTemplateList() {
-        $templatesPath = "{$this->pathWeb}/images/templates";
+        $templatesPath = "{$this->pathPublic}/images/templates";
         
         $scanDirElements = preg_grep("/^([^.])/", scandir($templatesPath));
         
@@ -949,6 +949,34 @@ class Utility {
 
         if ($delete == true)
             unlink($path);
+    }
+    
+    public function fileReadTail($path, $limit = 50) {
+        $fopen = fopen($path, "r");
+        
+        fseek($fopen, -1, SEEK_END);
+        
+        for ($a = 0, $lines = Array(); $a < $limit && ($char = fgetc($fopen)) !== false;) {
+            if ($char === "\n") {
+                if (isset($lines[$a]) == true) {
+                    $lines[$a][] = $char;
+                    $lines[$a] = implode("", array_reverse($lines[$a]));
+                    
+                    $a ++;
+                }
+            }
+            else
+                $lines[$a][] = $char;
+            
+            fseek($fopen, -2, SEEK_CUR);
+        }
+        
+        fclose($fopen);
+        
+        if (count($lines) > 0 && $a < $limit)
+            $lines[$a] = implode("", array_reverse($lines[$a]));
+        
+        return array_reverse($lines);
     }
     
     public function sendMessageToSlackRoom($name, $text) {

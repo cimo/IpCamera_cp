@@ -28,14 +28,14 @@ class Captcha {
         
         imagefilledrectangle($image, 0, 0, 299, 99, $red);
         
-        $fontFile = "{$this->utility->getPathWeb()}/fonts/Roboto_light.ttf";
+        $fontFile = "{$this->utility->getPathPublic()}/fonts/Roboto_light.ttf";
         
         imagefttext($image, 10, 0, 12, 20, $black, $fontFile, $string);
         
         ob_start();
-            header("Content-type: image/png");
-            imagepng($image);
-            $result = base64_encode(ob_get_contents());
+        header("Content-type: image/png");
+        imagepng($image);
+        $result = base64_encode(ob_get_contents());
         ob_end_clean();
         
         imagedestroy($image);

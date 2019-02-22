@@ -37,7 +37,7 @@
             {{form_row(form._username, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "pets"})}}
             {{form_row(form._password, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "linear_scale"})}}
             
-            {% if (settingRow['captcha'] == true) %}
+            {% if settingRow['captcha'] == true %}
                 {{-include("@templateRoot/include/captcha.html.twig")-}}
             {% endif %}
             
@@ -49,12 +49,12 @@
             </div>
         </form>
 
-        {% if (settingRow['website_active'] == true) %}
+        {% if settingRow['website_active'] == true %}
             <div class="link_container">
-                {% if (settingRow['registration'] == true) %}
+                {% if settingRow['registration'] == true %}
                     <a class="mdc-typography--caption mdc-theme--on-surface" href="{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': 3, 'urlExtra': ""})}}">{% trans %}authentication_6{% endtrans %}</a>
                 {% endif %}
-                {% if (settingRow['recover_password'] == true) %}
+                {% if settingRow['recover_password'] == true %}
                     <a class="mdc-typography--caption mdc-theme--on-surface" href="{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': 4, 'urlExtra': ""})}}">{% trans %}authentication_7{% endtrans %}</a>
                 {% endif %}
             </div>

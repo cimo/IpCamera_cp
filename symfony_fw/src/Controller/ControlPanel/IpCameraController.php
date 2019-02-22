@@ -420,22 +420,36 @@ class IpCameraController extends AbstractController {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "delete") {
                     $id = $request->get("id") == null ? $_SESSION['ipCameraProfileId'] : $request->get("id");
+                    
+                    $elements = $this->elementFilter();
+                    
+                    /*foreach($elements[0] as $key => $value) {
+                        $ipCameraDatabase = $this->ipCameraDatabase("delete", $id);
+                        
+                        if ($ipCameraDatabase == true) {
+                            $this->delete("device", $id);
 
-                    $ipCameraDatabase = $this->ipCameraDatabase("delete", $id);
+                            $this->response['values']['id'] = $id;
 
+                            $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_7");
+                        }
+                    }*/
+                    
+                    /*$ipCameraDatabase = $this->ipCameraDatabase("delete", $id);
+                    
                     if ($ipCameraDatabase == true) {
-                        $this->deleteFile("multiple", $id);
+                        $this->delete("device", $id);
                         
                         $this->response['values']['id'] = $id;
 
                         $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_7");
-                    }
+                    }*/
                 }
                 else if ($request->get("event") == "deleteAll") {
                     $ipCameraDatabase = $this->ipCameraDatabase("deleteAll");
 
                     if ($ipCameraDatabase == true) {
-                        $this->deleteFile("multiple");
+                        $this->delete("device");
                         
                         $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_8");
                     }
@@ -588,7 +602,7 @@ class IpCameraController extends AbstractController {
                     $row = $this->selectIpCameraDatabase($request->get("deviceName"));
                     
                     if ($row != false) {
-                        $this->deleteFile("single", $row['id']);
+                        $this->delete("file", $row['id'], $request->get("name"));
                         
                         $this->response['values']['id'] = $request->get("id");
 
@@ -596,7 +610,7 @@ class IpCameraController extends AbstractController {
                     }
                 }
                 else if ($request->get("event") == "deleteAll") {
-                    $this->deleteFile("multiple");
+                    $this->delete("file");
                     
                     $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_11");
                 }
@@ -659,6 +673,12 @@ class IpCameraController extends AbstractController {
                 <td>
                     {$value['name']}
                 </td>
+                <td>";
+                    if ($value['active'] == 0)
+                        $listHtml .= $this->utility->getTranslator()->trans("ipCameraController_13");
+                    else
+                        $listHtml .= $this->utility->getTranslator()->trans("ipCameraController_14");
+                $listHtml .= "</td>
                 <td class=\"horizontal_center\">
                     <button class=\"mdc-fab mdc-fab--mini cp_ipCamera_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
                 </td>
@@ -674,20 +694,22 @@ class IpCameraController extends AbstractController {
         foreach ($tableResult as $key => $value) {
             $id = $key + 1;
             
-            $listHtml .= "<tr>
-                <td class=\"id_column\">
-                    $id
-                </td>
-                <td class=\"deviceName_column\">
-                    {$devices[$key]['name']}
-                </td>
-                <td class=\"name_column\">
-                    <span class=\"cp_ipCamera_file_download cursor_custom\">$value</span>
-                </td>
-                <td class=\"horizontal_center\">
-                    <button class=\"mdc-fab mdc-fab--mini cp_ipCamera_file_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
-                </td>
-            </tr>";
+            foreach ($value as $keySub => $valueSub) {
+                $listHtml .= "<tr>
+                    <td class=\"id_column\">
+                        $id
+                    </td>
+                    <td class=\"deviceName_column\">
+                        {$devices[$key]['name']}
+                    </td>
+                    <td class=\"name_column\">
+                        <span class=\"cp_ipCamera_file_download cursor_custom\">$valueSub</span>
+                    </td>
+                    <td class=\"horizontal_center\">
+                        <button class=\"mdc-fab mdc-fab--mini cp_ipCamera_file_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
+                    </td>
+                </tr>";
+            }
         }
         
         return $listHtml;
@@ -801,7 +823,7 @@ class IpCameraController extends AbstractController {
                 if ($scanDirElements != false) {
                     foreach ($scanDirElements as $keySub => $valueSub) {
                         if ($valueSub != "." && $valueSub != "..")
-                            $files[$value['id']] = $valueSub;
+                            $files[$value['id']][] = $valueSub;
                     }
                 }
             }
@@ -823,11 +845,8 @@ class IpCameraController extends AbstractController {
         }
     }
     
-    private function deleteFile($type, $id = 0) {
-        if ($type == "single") {
-            
-        }
-        else if ($type == "multiple") {
+    private function delete($type, $id = 0, $name = "") {
+        if ($type == "device") {
             if ($id > 0) {
                 $filePath = "{$this->utility->getPathSrc()}/files/ipCamera/$id";
 
@@ -837,6 +856,25 @@ class IpCameraController extends AbstractController {
                 $filePath = "{$this->utility->getPathSrc()}/files/ipCamera";
 
                 $this->utility->removeDirRecursive($filePath, false);
+            }
+        }
+        else if ($type == "file") {
+            if ($id > 0 && $name != "") {
+                $filePath = "{$this->utility->getPathSrc()}/files/ipCamera/$id/$name";
+                
+                if (file_exists($filePath) == true)
+                    unlink($filePath);
+            }
+            else {
+                $rows = $this->selectAllIpCameraDatabase();
+                
+                foreach($rows as $key => $value) {
+                    if (isset($value['id']) == true) {
+                        $filePath = "{$this->utility->getPathSrc()}/files/ipCamera/$id";
+                        
+                        $this->utility->removeDirRecursive($filePath, false);
+                    }
+                }
             }
         }
     }

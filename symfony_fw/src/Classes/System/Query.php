@@ -218,13 +218,14 @@ class Query {
                                                 AND pages_arguments.id = pages.id
                                                 AND pages_menu_names.id = pages.id
                                                 AND pages.only_link = :onlyLink
-                                                AND pages.id > :idStart
+                                                AND pages.id = :idStartA OR pages.id > :idStartB
                                                 AND (pages_titles.$language LIKE :search
                                                     OR pages_arguments.$language LIKE :search
                                                     OR pages_menu_names.$language LIKE :search)");
             
             $query->bindValue(":onlyLink", 0);
-            $query->bindValue(":idStart", 5);
+            $query->bindValue(":idStartA", 2);
+            $query->bindValue(":idStartB", 5);
             $query->bindValue(":search", "%$search%");
         }
         

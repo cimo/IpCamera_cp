@@ -60,7 +60,7 @@
             {{-include("@templateRoot/render/static/error.html.twig")-}}
         </div>
     {% else %}
-        {% if (urlExtra == "user_login") %}
+        {% if urlExtra == "user_login" %}
             <div class="sortable_column">
                 {{-render(controller("App\\Controller\\AuthenticationController::moduleAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
             </div>

@@ -152,8 +152,6 @@ class PageController extends AbstractController {
         
         $tableAndPagination = $this->tableAndPagination->request($pageRows, 20, "page", false, true);
         
-        $this->listHtml = "";
-        
         $this->response['values']['search'] = $tableAndPagination['search'];
         $this->response['values']['pagination'] = $tableAndPagination['pagination'];
         $this->response['values']['listHtml'] = $this->createListHtml($tableAndPagination['listHtml']);
@@ -495,8 +493,10 @@ class PageController extends AbstractController {
     
     // Functions private    
     private function createListHtml($elements) {
+        $listHtml = "";
+        
         foreach ($elements as $key => $value) {
-            $this->listHtml .= "<tr>
+            $listHtml .= "<tr>
                 <td class=\"id_column\">
                     {$value['id']}
                 </td>
@@ -522,25 +522,25 @@ class PageController extends AbstractController {
                 </td>
                 <td>";
                     if ($value['protected'] == 0)
-                        $this->listHtml .= $this->utility->getTranslator()->trans("pageController_14");
+                        $listHtml .= $this->utility->getTranslator()->trans("pageController_14");
                     else
-                        $this->listHtml .= $this->utility->getTranslator()->trans("pageController_15");
-                $this->listHtml .= "</td>
+                        $listHtml .= $this->utility->getTranslator()->trans("pageController_15");
+                $listHtml .= "</td>
                     <td>";
                         if ($value['show_in_menu'] == 0)
-                            $this->listHtml .= $this->utility->getTranslator()->trans("pageController_14");
+                            $listHtml .= $this->utility->getTranslator()->trans("pageController_14");
                         else
-                            $this->listHtml .= $this->utility->getTranslator()->trans("pageController_15");
-                $this->listHtml .= "</td>
+                            $listHtml .= $this->utility->getTranslator()->trans("pageController_15");
+                $listHtml .= "</td>
                     <td>";
                         if ($value['only_link'] == 0)
-                            $this->listHtml .= $this->utility->getTranslator()->trans("pageController_14");
+                            $listHtml .= $this->utility->getTranslator()->trans("pageController_14");
                         else
-                            $this->listHtml .= $this->utility->getTranslator()->trans("pageController_15");
-                $this->listHtml .= "</td>
+                            $listHtml .= $this->utility->getTranslator()->trans("pageController_15");
+                $listHtml .= "</td>
                 <td>";
                     if ($value['id'] > 5)
-                        $this->listHtml .= "<button class=\"mdc-fab mdc-fab--mini cp_page_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
+                        $listHtml .= "<button class=\"mdc-fab mdc-fab--mini cp_page_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
                 </td>
             </tr>";
             
@@ -548,7 +548,7 @@ class PageController extends AbstractController {
                 $this->createListHtml($value['children']);
         }
         
-        return $this->listHtml;
+        return $listHtml;
     }
     
     private function removePageChildrenDatabase($id) {

@@ -564,6 +564,7 @@ table {
     .mdc_card_header {
         display: flex;
         border-top-left-radius: inherit;
+        min-height: 135px;
         
         .mdc-card__media {
             width: 110px;

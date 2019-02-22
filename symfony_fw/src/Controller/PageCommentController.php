@@ -209,7 +209,7 @@ class PageCommentController extends AbstractController {
             $row = $this->query->selectPageCommentDatabase("single", $value['id_reply']);
             
             $html .= "<li class=\"mdc-list-item\" data-comment=\"{$value['id']}\">";
-                if (file_exists("{$this->utility->getPathWeb()}/files/user/{$value['username']}/Avatar.jpg") == true)
+                if (file_exists("{$this->utility->getPathPublic()}/files/user/{$value['username']}/Avatar.jpg") == true)
                     $html .= "<img class=\"mdc-list-item__graphic\" src=\"{$this->utility->getUrlRoot()}/files/user/{$value['username']}/Avatar.jpg\" aria-hidden=\"true\" alt=\"Avatar.jpg\"/>";
                 else
                     $html .= "<img class=\"mdc-list-item__graphic\" src=\"{$this->utility->getUrlRoot()}/images/templates/{$setting['template']}/no_avatar.jpg\" aria-hidden=\"true\" alt=\"no_avatar.jpg\"/>";
@@ -229,7 +229,7 @@ class PageCommentController extends AbstractController {
                 
                 $quoteAvatar = "<img class=\"quote_avatar\" src=\"{$this->utility->getUrlRoot()}/images/templates/{$setting['template']}/no_avatar.jpg\" alt=\"no_avatar.jpg\"/>";
                 
-                if (file_exists("{$this->utility->getPathWeb()}/files/user/{$row['username']}/Avatar.jpg") == true)
+                if (file_exists("{$this->utility->getPathPublic()}/files/user/{$row['username']}/Avatar.jpg") == true)
                     $quoteAvatar = "<img class=\"quote_avatar\" src=\"{$this->utility->getUrlRoot()}/files/user/{$row['username']}/Avatar.jpg\" alt=\"Avatar.jpg\"/>";
                 
                 $html .= "<span class=\"mdc-list-item__text\">

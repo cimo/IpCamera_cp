@@ -165,8 +165,6 @@ class MicroserviceApiController extends AbstractController {
         
         $_SESSION['microserviceApiProfileId'] = $id;
         
-        $this->response['values']['id'] = $id;
-        
         $microserviceApiEntity = $this->entityManager->getRepository("App\Entity\MicroserviceApi")->find($id);
         
         $this->response['values']['microserviceApiEntity'] = $microserviceApiEntity;
@@ -211,7 +209,7 @@ class MicroserviceApiController extends AbstractController {
     private function fileUpload($form, $entity) {
         $row = $this->query->selectMicroserviceApiDatabase($_SESSION['microserviceApiProfileId'], true);
         
-        $pathImage = $this->utility->getPathWeb() . "/files/microservice/api";
+        $pathImage = $this->utility->getPathPublic() . "/files/microservice/api";
         
         $image = $entity->getImage();
 

@@ -6,4 +6,6 @@ twig:
     strict_variables: '%kernel.debug%'
     # cimo +
     globals:
-        urlRoot: '%kernel.project_dir%/public'
+        pathRoot: '%kernel.project_dir%'
+        pathSrc: '%kernel.project_dir%/src'
+        pathPublic: '%kernel.project_dir%/public'

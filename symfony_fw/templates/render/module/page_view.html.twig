@@ -22,10 +22,10 @@
     <div class="page_footer">
         {% if settingRow['page_date'] == true and (urlCurrentPageId == 2 or urlCurrentPageId > 5) %}
             <div class="mdc-typography--caption page_detail">
-                {% if (response.values.userCreate != "-" and response.values.userModify == "-") %}
+                {% if response.values.userCreate != "-" and response.values.userModify == "-" %}
                     <p><i class="material-icons md-14">pets</i> <span class="mdc-theme--on-surface">{% trans %}pageView_1{% endtrans %}</span>{{response.values.userCreate}}</p>
                     <p><i class="material-icons md-14">calendar_today</i> <span class="mdc-theme--on-surface">{% trans %}pageView_2{% endtrans %}</span>{{response.values.dateCreate[0]}} [{{response.values.dateCreate[1]}}]</p>
-                {% elseif (response.values.userModify != "-" and response.values.dateModify != "-") %}
+                {% elseif response.values.userModify != "-" and response.values.dateModify != "-" %}
                     <p><i class="material-icons md-14">pets</i> <span class="mdc-theme--on-surface">{% trans %}pageView_3{% endtrans %}</span>{{response.values.userModify}}</p>
                     <p><i class="material-icons md-14">calendar_today</i> <span class="mdc-theme--on-surface">{% trans %}pageView_4{% endtrans %}</span>{{response.values.dateModify[0]}} [{{response.values.dateModify[1]}}]</p>
                 {% endif %}

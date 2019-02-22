@@ -107,8 +107,8 @@ class RegistrationController extends AbstractController {
                                 $settingRow['email_admin']
                             );
                             
-                            if (file_exists("{$this->utility->getPathWeb()}/files/user/{$userEntity->getUsername()}") == false)
-                                mkdir("{$this->utility->getPathWeb()}/files/user/{$userEntity->getUsername()}");
+                            if (file_exists("{$this->utility->getPathPublic()}/files/user/{$userEntity->getUsername()}") == false)
+                                mkdir("{$this->utility->getPathPublic()}/files/user/{$userEntity->getUsername()}");
                             
                             $this->entityManager->persist($userEntity);
                             $this->entityManager->flush();

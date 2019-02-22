@@ -4,7 +4,7 @@
         <i class="material-icons mdc-tab__icon">person</i>
         <span class="mdc-tab__icon-text">{% trans %}myPage_2{% endtrans %}</span>
     </a>
-    {% if (settingRow['payment'] == true) %}
+    {% if settingRow['payment'] == true %}
             <a class="mdc-tab mdc-tab--with-icon-and-text" href="{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': 1, 'urlExtra': "mp_payment"})}}">
                 <i class="material-icons mdc-tab__icon">account_balance</i>
                 <span class="mdc-tab__icon-text">{% trans %}myPage_3{% endtrans %}</span>

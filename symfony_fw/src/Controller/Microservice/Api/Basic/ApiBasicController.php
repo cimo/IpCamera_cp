@@ -77,6 +77,9 @@ class ApiBasicController extends AbstractController {
                 $this->entityManager->flush();
                 
                 $this->apiBasicDatabase("update", $apiBasicEntity->getId(), $form->get("databasePassword")->getData());
+                
+                $logPath = "{$this->utility->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $apiBasicEntity->getName()) . ".log";
+                @file_put_contents($logPath, "Start" . PHP_EOL, FILE_APPEND);
 
                 $this->response['messages']['success'] = $this->utility->getTranslator()->trans("apiBasicController_1");
             }
@@ -246,6 +249,7 @@ class ApiBasicController extends AbstractController {
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $apiBasicEntity = $this->entityManager->getRepository("App\Entity\ApiBasic")->find($_SESSION['apiBasicProfileId']);
+        $nameOld = $apiBasicEntity->getName();
         $databasePasswordOld = $apiBasicEntity->getDatabasePassword();
         
         $form = $this->createForm(ApiBasicFormType::class, $apiBasicEntity, Array(
@@ -271,6 +275,11 @@ class ApiBasicController extends AbstractController {
                 $this->entityManager->flush();
                 
                 $this->apiBasicDatabase("update", $apiBasicEntity->getId(), $databasePassword);
+                
+                $logPathOld = "{$this->utility->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $nameOld) . ".log";
+                $logPathNew = "{$this->utility->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $apiBasicEntity->getName()) . ".log";
+                if (file_exists($logPathOld) == true)
+                    rename($logPathOld, $logPathNew);
                 
                 $this->response['messages']['success'] = $this->utility->getTranslator()->trans("apiBasicController_4");
             }
@@ -392,7 +401,9 @@ class ApiBasicController extends AbstractController {
                 if ($request->get("event") == "log") {
                     $row = $this->selectApiBasicDatabase($_SESSION['apiBasicProfileId'], false);
                     
-                    $this->response['values']['log'] = "<pre class=\"microservice_api_log\">" . file_get_contents("{$this->utility->getPathSrc()}/files/microservice/api/basic/{$row['name']}.log") . "</pre>";
+                    $logPath = "{$this->utility->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $row['name']) . ".log";
+                    $fileReadTail = $this->utility->fileReadTail($logPath, "500");
+                    $this->response['values']['log'] = "<pre class=\"microservice_api_log\">" . implode("\r\n", $fileReadTail) . "</pre>";
                 }
                     
             }
@@ -619,11 +630,8 @@ class ApiBasicController extends AbstractController {
                                 if ($this->apiBasicRow['url_callback'] != "") {
                                     $urlCallback = $this->urlCallback($parameters, $this->apiBasicRow);
                                     
-                                    if ($urlCallback == true) {
-                                        $this->saveRequest($this->apiBasicRow['id'], $name, "apiBasic -> $name");
-                                        
+                                    if ($urlCallback == true)
                                         $this->response['messages']['success'] = $this->utility->getTranslator()->trans("apiBasicController_10");
-                                    }
                                     else
                                         $this->response['errorCode'] = 100;
                                 }
@@ -631,21 +639,14 @@ class ApiBasicController extends AbstractController {
                                 if ($this->apiBasicRow['database_ip'] != "" && $this->apiBasicRow['database_name'] != "" && $this->apiBasicRow['database_username'] != "" && $this->apiBasicRow['database_password'] != "") {
                                     $databaseExternal = $this->databaseExternal($parameters, $this->apiBasicRow);
                                     
-                                    if ($databaseExternal != false) {
-                                        $this->saveRequest($this->apiBasicRow['id'], $name, "apiBasic -> $name");
-                                        
+                                    if ($databaseExternal != false)
                                         $this->response['messages']['success'] = $this->utility->getTranslator()->trans("apiBasicController_10");
-                                    }
                                     else
                                         $this->response['errorCode'] = 100;
                                 }
                                 
-                                if ($this->apiBasicRow['url_callback'] == "" &&
-                                        ($this->apiBasicRow['database_ip'] == "" || $this->apiBasicRow['database_name'] == "" || $this->apiBasicRow['database_username'] == "" || $this->apiBasicRow['database_password'] == "")) {
-                                    $this->saveRequest($this->apiBasicRow['id'], $name, "apiBasic -> $name");
-                                
+                                if ($this->apiBasicRow['url_callback'] == "" && ($this->apiBasicRow['database_ip'] == "" || $this->apiBasicRow['database_name'] == "" || $this->apiBasicRow['database_username'] == "" || $this->apiBasicRow['database_password'] == ""))
                                     $this->response['messages']['success'] = $this->utility->getTranslator()->trans("apiBasicController_10");
-                                }
                             }
                         }
                         else
@@ -654,7 +655,12 @@ class ApiBasicController extends AbstractController {
                     else
                         $this->response['messages']['error'] = $this->utility->getTranslator()->trans("apiBasicController_9");
                     
-                    file_put_contents("{$this->utility->getPathSrc()}/files/microservice/api/basic/{$this->apiBasicRow['name']}.log", date("Y-m-d H:i:s") . " - $name - IP[{$_SERVER['REMOTE_ADDR']}]: " . print_r($this->response, true) . print_r($parameters, true) . PHP_EOL, FILE_APPEND);
+                    if ((isset($this->response['errorCode']) == true && $this->response['errorCode'] != 0) || isset($this->response['messages']['error']) == true) {
+                        $this->saveRequest($this->apiBasicRow['id'], $name, "apiBasic -> $name");
+                        
+                        $logPath = "{$this->utility->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $this->apiBasicRow['name']) . ".log";
+                        @file_put_contents($logPath, date("Y-m-d H:i:s") . " - $name - IP[{$_SERVER['REMOTE_ADDR']}]: " . print_r($this->response, true) . print_r($parameters, true) . PHP_EOL, FILE_APPEND);
+                    }
                 }
                 else
                     $this->response['messages']['error'] = $this->utility->getTranslator()->trans("apiBasicController_11");

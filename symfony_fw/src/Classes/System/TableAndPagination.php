@@ -12,13 +12,13 @@ class TableAndPagination {
         $this->utility = $utility;
     }
     
-    public function request($rows, $page, $sessionTag, $reverse, $flat) {
+    public function request($rows, $page, $sessionTag, $reverse, $oneLevel) {
         $newRows = $reverse == true ? array_reverse($rows, true) : $rows;
         
         // Search
         $searchWritten = isset($_POST['searchWritten']) == true ? $_POST['searchWritten'] : -1;
         $search = $this->search($sessionTag . "_search", $searchWritten);
-        $elements = $this->utility->arrayLike($newRows, $search['value'], $flat);
+        $elements = $this->utility->arrayLike($newRows, $search['value'], $oneLevel);
         
         // Pagination
         $paginationCurrent = isset($_POST['paginationCurrent']) == true ? $_POST['paginationCurrent'] : -1;

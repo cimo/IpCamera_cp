@@ -348,7 +348,7 @@ class MicroserviceDeployController extends AbstractController {
                 
                 $keyPrivatePassword = $keyPrivatePasswordOld;
                 
-                if ($form->get("keyPrivate")->getData() == null)
+                if ($form->get("keyPrivate")->getData() == null || $form->get("keyPrivate")->getData() == "")
                     $keyPrivatePassword = null;
                 
                 if ($form->get("keyPrivatePassword")->getData() == null || $form->get("keyPrivatePassword")->getData() == "") {
@@ -782,8 +782,8 @@ class MicroserviceDeployController extends AbstractController {
                 
                 return $query->fetch();
             }
-            else {
-                if ($type == "update" && $sshPassword != "") {
+            else if ($type == "update") {
+                if ($sshPassword != "") {
                     $query = $this->utility->getConnection()->prepare("UPDATE IGNORE microservice_deploy
                                                                         SET ssh_password = AES_ENCRYPT(:sshPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
                                                                         WHERE id = :id");
@@ -791,10 +791,10 @@ class MicroserviceDeployController extends AbstractController {
                     $query->bindValue(":sshPassword", $sshPassword);
                     $query->bindValue(":id", $id);
 
-                    return $query->execute();
+                    $query->execute();
                 }
 
-                if ($type == "update" && $keyPrivatePassword != "") {
+                if ($keyPrivatePassword != "") {
                     $query = $this->utility->getConnection()->prepare("UPDATE IGNORE microservice_deploy
                                                                         SET key_private_password = AES_ENCRYPT(:keyPrivatePassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
                                                                         WHERE id = :id");
@@ -802,10 +802,10 @@ class MicroserviceDeployController extends AbstractController {
                     $query->bindValue(":keyPrivatePassword", $keyPrivatePassword);
                     $query->bindValue(":id", $id);
 
-                    return $query->execute();
+                    $query->execute();
                 }
                 
-                if ($type == "update" && $gitCloneUrlPassword != "") {
+                if ($gitCloneUrlPassword != "") {
                     $query = $this->utility->getConnection()->prepare("UPDATE IGNORE microservice_deploy
                                                                         SET git_clone_url_password = AES_ENCRYPT(:gitCloneUrlPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
                                                                         WHERE id = :id");
@@ -813,8 +813,10 @@ class MicroserviceDeployController extends AbstractController {
                     $query->bindValue(":gitCloneUrlPassword", $gitCloneUrlPassword);
                     $query->bindValue(":id", $id);
 
-                    return $query->execute();
+                    $query->execute();
                 }
+                
+                return true;
             }
         }
         
@@ -890,10 +892,15 @@ class MicroserviceDeployController extends AbstractController {
             
             $auth = true;
             
+            $sudo = "sudo";
+            
             $microserviceDeployRow = $this->microserviceDeployDatabase("select", $row['id'], $row['ssh_password'], $row['key_private_password'], $row['git_clone_url_password']);
             
-            if ($row['key_public'] == null || $row['key_private'] == null)
+            if ($row['key_public'] == null || $row['key_private'] == null) {
                 $auth = @ssh2_auth_password($connection, $row['ssh_username'], $microserviceDeployRow['ssh_password']);
+                
+                $sudo = "echo '{$microserviceDeployRow['ssh_password']}' | sudo -S";
+            }
             else
                 $auth = @ssh2_auth_pubkey_file($connection, $row['system_user'], $pathKeyPublic, $pathKeyPrivate, $row['key_private_password']);
             
@@ -905,39 +912,39 @@ class MicroserviceDeployController extends AbstractController {
                 
                 if ($request->get("action") == "clone") {
                     $commands = Array(
-                        "sudo git config --global core.mergeoptions --no-edit",
-                        "sudo git config --global user.email '{$row['git_user_email']}'",
-                        "sudo git config --global user.name '{$row['git_user_name']}'",
+                        "{$sudo} git config --global core.mergeoptions --no-edit",
+                        "{$sudo} git config --global user.email '{$row['git_user_email']}'",
+                        "{$sudo} git config --global user.name '{$row['git_user_name']}'",
                         "cd {$row['git_clone_path']}",
-                        "sudo -u {$row['user_git_script']} git clone https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password']}@{$row['git_clone_url']} {$row['git_clone_path']}",
-                        "sudo chown -R {$row['user_web_script']} {$row['root_web_path']}",
-                        "sudo find {$row['root_web_path']} -type d -exec chmod 775 {} \;",
-                        "sudo find {$row['root_web_path']} -type f -exec chmod 664 {} \;"
+                        "{$sudo} -u {$row['user_git_script']} git clone https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password']}@{$row['git_clone_url']} {$row['git_clone_path']}",
+                        "{$sudo} chown -R {$row['user_web_script']} {$row['root_web_path']}",
+                        "{$sudo} find {$row['root_web_path']} -type d -exec chmod 775 {} \;",
+                        "{$sudo} find {$row['root_web_path']} -type f -exec chmod 664 {} \;"
                     );
                 }
                 else if ($request->get("action") == "pull") {
                     $commands = Array(
-                        "sudo git config --global core.mergeoptions --no-edit",
-                        "sudo git config --global user.email '{$row['git_user_email']}'",
-                        "sudo git config --global user.name '{$row['git_user_name']}'",
+                        "{$sudo} git config --global core.mergeoptions --no-edit",
+                        "{$sudo} git config --global user.email '{$row['git_user_email']}'",
+                        "{$sudo} git config --global user.name '{$row['git_user_name']}'",
                         "cd {$row['git_clone_path']}",
-                        "sudo -u user_1 git pull --no-edit https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password']}@{$row['git_clone_url']} {$request->get("branchName")}",
-                        "sudo chown -R {$row['user_web_script']} {$row['root_web_path']}",
-                        "sudo find {$row['root_web_path']} -type d -exec chmod 775 {} \;",
-                        "sudo find {$row['root_web_path']} -type f -exec chmod 664 {} \;"
+                        "{$sudo} -u {$row['user_git_script']} git pull --no-edit https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password']}@{$row['git_clone_url']} {$request->get("branchName")}",
+                        "{$sudo} chown -R {$row['user_web_script']} {$row['root_web_path']}",
+                        "{$sudo} find {$row['root_web_path']} -type d -exec chmod 775 {} \;",
+                        "{$sudo} find {$row['root_web_path']} -type f -exec chmod 664 {} \;"
                     );
                 }
                 else if ($request->get("action") == "reset") {
                     $commands = Array(
-                        "sudo git config --global core.mergeoptions --no-edit",
-                        "sudo git config --global user.email '{$row['git_user_email']}'",
-                        "sudo git config --global user.name '{$row['git_user_name']}'",
+                        "{$sudo} git config --global core.mergeoptions --no-edit",
+                        "{$sudo} git config --global user.email '{$row['git_user_email']}'",
+                        "{$sudo} git config --global user.name '{$row['git_user_name']}'",
                         "cd {$row['git_clone_path']}",
-                        "sudo -u {$row['user_git_script']} git fetch --all",
-                        "sudo -u {$row['user_git_script']} git reset --hard",
-                        "sudo chown -R {$row['user_web_script']} {$row['root_web_path']}",
-                        "sudo find {$row['root_web_path']} -type d -exec chmod 775 {} \;",
-                        "sudo find {$row['root_web_path']} -type f -exec chmod 664 {} \;"
+                        "{$sudo} -u {$row['user_git_script']} git fetch --all",
+                        "{$sudo} -u {$row['user_git_script']} git reset --hard",
+                        "{$sudo} chown -R {$row['user_web_script']} {$row['root_web_path']}",
+                        "{$sudo} find {$row['root_web_path']} -type d -exec chmod 775 {} \;",
+                        "{$sudo} find {$row['root_web_path']} -type f -exec chmod 664 {} \;"
                     );
                 }
                 

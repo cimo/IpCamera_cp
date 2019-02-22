@@ -789,6 +789,7 @@ date.time: H:i:s
 "microserviceApiProfile_1": "Back"
 "microserviceApiProfile_2": "Api profile form"
 "microserviceApiProfile_3": "..."
+"microserviceApiProfile_4": "There is no controller!"
 
 "microserviceApiFormType_1": "Name"
 "microserviceApiFormType_2": "Controller"
@@ -865,8 +866,9 @@ date.time: H:i:s
 "ipCameraSelect_3": "Id"
 "ipCameraSelect_4": "Select"
 "ipCameraSelect_5": "Name"
-"ipCameraSelect_6": "Remove"
-"ipCameraSelect_7": "Select"
+"ipCameraSelect_6": "Active"
+"ipCameraSelect_7": "Remove"
+"ipCameraSelect_8": "Select"
 
 "ipCameraProfile_1": "Device profile form"
 
@@ -901,6 +903,8 @@ date.time: H:i:s
 "ipCameraController_10": "File deletion completed."
 "ipCameraController_11": "All file deletion completed."
 "ipCameraController_12": "File not deleted!"
+"ipCameraController_13": "No"
+"ipCameraController_14": "Yes"
 
 "ipCameraFile_1": "Device's file"
 "ipCameraFile_2": "..."

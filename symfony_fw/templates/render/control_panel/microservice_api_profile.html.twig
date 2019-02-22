@@ -1,6 +1,6 @@
 {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
 
-{% if response.values.id > 0 %}
+{% if response.values.microserviceApiEntity.name is defined and file_exists(pathSrc ~ "/Controller/Microservice/Api/" ~ response.values.microserviceApiEntity.name ~ "/" ~ response.values.microserviceApiEntity.controllerName ~ "Controller.php") == true %}
     <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_api"})}}">
         {% trans %}microserviceApiProfile_1{% endtrans %}
     </a>
@@ -26,8 +26,11 @@
         </form>
     </fieldset>
     
-    {% if response.values.id > 0 %}
-        {{-render(controller("App\\Controller\\Microservice\\Api\\" ~ response.values.microserviceApiEntity.name ~ "\\" ~ response.values.microserviceApiEntity.controllerName ~ "Controller::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
-        {{-render(controller("App\\Controller\\Microservice\\Api\\" ~ response.values.microserviceApiEntity.name ~ "\\" ~ response.values.microserviceApiEntity.controllerName ~ "Controller::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
-    {% endif %}
+    {{-render(controller("App\\Controller\\Microservice\\Api\\" ~ response.values.microserviceApiEntity.name ~ "\\" ~ response.values.microserviceApiEntity.controllerName ~ "Controller::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+    {{-render(controller("App\\Controller\\Microservice\\Api\\" ~ response.values.microserviceApiEntity.name ~ "\\" ~ response.values.microserviceApiEntity.controllerName ~ "Controller::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+{% else %}
+    <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_api"})}}">
+        {% trans %}microserviceApiProfile_1{% endtrans %}
+    </a>
+    <p>{% trans %}microserviceApiProfile_4{% endtrans %}</p>
 {% endif %}

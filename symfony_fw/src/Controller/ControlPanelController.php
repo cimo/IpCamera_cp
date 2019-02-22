@@ -59,7 +59,7 @@ class ControlPanelController extends AbstractController {
         $this->response['path']['documentRoot'] = $_SERVER['DOCUMENT_ROOT'];
         $this->response['path']['root'] = $this->utility->getPathRoot();
         $this->response['path']['src'] = $this->utility->getPathSrc();
-        $this->response['path']['web'] = $this->utility->getPathWeb();
+        $this->response['path']['public'] = $this->utility->getPathPublic();
         
         $this->response['url']['root'] = $this->utility->getUrlRoot();
         

@@ -78,7 +78,7 @@ class UserController extends AbstractController {
                 if ($messagePassword == "ok") {
                     $this->utility->assignUserParameter($userEntity);
 
-                    mkdir("{$this->utility->getPathWeb()}/files/user/{$form->get("username")->getData()}");
+                    mkdir("{$this->utility->getPathPublic()}/files/user/{$form->get("username")->getData()}");
                     
                     $this->entityManager->persist($userEntity);
                     $this->entityManager->flush();
@@ -279,8 +279,8 @@ class UserController extends AbstractController {
                 if ($messagePassword == "ok") {
                     $usernameOld = $userEntity->getUsername();
                     
-                    if (file_exists("{$this->utility->getPathWeb()}/files/user/$usernameOld") == true)
-                        rename("{$this->utility->getPathWeb()}/files/user/$usernameOld", "{$this->utility->getPathWeb()}/files/user/{$form->get("username")->getData()}");
+                    if (file_exists("{$this->utility->getPathPublic()}/files/user/$usernameOld") == true)
+                        rename("{$this->utility->getPathPublic()}/files/user/$usernameOld", "{$this->utility->getPathPublic()}/files/user/{$form->get("username")->getData()}");
                     
                     if ($form->get("active")->getData() == true)
                         $userEntity->setHelpCode("");
@@ -350,7 +350,7 @@ class UserController extends AbstractController {
 
                     $userEntity = $this->entityManager->getRepository("App\Entity\User")->find($id);
 
-                    $this->utility->removeDirRecursive("{$this->utility->getPathWeb()}/files/user/{$userEntity->getUsername()}", true);
+                    $this->utility->removeDirRecursive("{$this->utility->getPathPublic()}/files/user/{$userEntity->getUsername()}", true);
 
                     $userDatabase = $this->userDatabase("delete", $userEntity->getId());
 
@@ -364,7 +364,7 @@ class UserController extends AbstractController {
                     $userRows = $this->query->selectAllUserDatabase(1);
 
                     for ($a = 0; $a < count($userRows); $a ++) {
-                        $this->utility->removeDirRecursive("{$this->utility->getPathWeb()}/files/user/{$userRows[$a]['username']}", true);
+                        $this->utility->removeDirRecursive("{$this->utility->getPathPublic()}/files/user/{$userRows[$a]['username']}", true);
                     }
 
                     $userDatabase = $this->userDatabase("deleteAll", null);

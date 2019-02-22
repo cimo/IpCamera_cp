@@ -276,7 +276,7 @@
                     </script>
                     <script src="{{asset("javascript/system/control_panel/SettingLinePush.min.js")}}"></script>
                 {% endif %}
-            {% elseif (urlExtra == "cp_microservice_deploy" or urlExtra == "cp_microservice_deploy_create" or "cp_microservice_deploy_select" in urlExtra) %}
+            {% elseif urlExtra == "cp_microservice_deploy" or urlExtra == "cp_microservice_deploy_create" or "cp_microservice_deploy_select" in urlExtra %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
                     <p>{% trans %}controlPanelMicroserviceDeploy_1{% endtrans %}</p>
                     <div class="cp_section_button">
@@ -310,7 +310,7 @@
                     </script>
                     <script src="{{asset("javascript/system/control_panel/MicroserviceDeploy.min.js")}}"></script>
                 {% endif %}
-            {% elseif (urlExtra == "cp_microservice_api" or urlExtra == "cp_microservice_api_create" or "cp_microservice_api_profile" in urlExtra) %}
+            {% elseif urlExtra == "cp_microservice_api" or urlExtra == "cp_microservice_api_create" or "cp_microservice_api_profile" in urlExtra %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
                     <p>{% trans %}controlPanelMicroserviceApi_1{% endtrans %}</p>
                     

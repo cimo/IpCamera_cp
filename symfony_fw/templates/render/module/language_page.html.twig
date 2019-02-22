@@ -1,6 +1,6 @@
 <div id="language_page_container">
     {% for key, value in response.values.languageRows %}
-        {% if (file_exists(urlRoot ~ "/images/templates/" ~ response.values.settingRow['template'] ~ "/lang/" ~ value.code ~ ".png") == true) %}
+        {% if file_exists(pathPublic ~ "/images/templates/" ~ response.values.settingRow['template'] ~ "/lang/" ~ value.code ~ ".png") == true %}
             <div class="mdc-chip">
                 <img class="mdc-chip__icon mdc-chip__icon--leading flag_{{value.code}}" src="{{asset("images/templates/" ~ response.values.settingRow['template'] ~ "/lang/" ~ value.code ~ ".png")}}" alt="{{value.code}}.png"/>
                 <div class="mdc-chip__text sort_elemet_data">{{value.code}}</div>
