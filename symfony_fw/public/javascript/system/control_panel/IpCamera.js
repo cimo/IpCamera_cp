@@ -130,10 +130,7 @@ function ControlPanelIpCamera() {
                             ajax.reply(xhr, "");
 
                             $.each($("#cp_ipCamera_select_result_desktop").find("table .id_column"), function(key, value) {
-                                var id = $.trim($(value).parents("tr").find(".id_column").text());
-                                
-                                if (id > 4)
-                                    $(value).parents("tr").remove();
+                                $(value).parents("tr").remove();
                             });
                             
                             $("#cp_ipCamera_select_result").html("");

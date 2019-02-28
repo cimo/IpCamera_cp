@@ -655,9 +655,9 @@ class ApiBasicController extends AbstractController {
                     else
                         $this->response['messages']['error'] = $this->utility->getTranslator()->trans("apiBasicController_9");
                     
+                    $this->saveRequest($this->apiBasicRow['id'], $name, "apiBasic -> $name");
+                    
                     if ((isset($this->response['errorCode']) == true && $this->response['errorCode'] != 0) || isset($this->response['messages']['error']) == true) {
-                        $this->saveRequest($this->apiBasicRow['id'], $name, "apiBasic -> $name");
-                        
                         $logPath = "{$this->utility->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $this->apiBasicRow['name']) . ".log";
                         @file_put_contents($logPath, date("Y-m-d H:i:s") . " - $name - IP[{$_SERVER['REMOTE_ADDR']}]: " . print_r($this->response, true) . print_r($parameters, true) . PHP_EOL, FILE_APPEND);
                     }
@@ -711,7 +711,7 @@ class ApiBasicController extends AbstractController {
         return false;
     }
     
-    private function apiBasicRequestDatabase($type, $id, $name = "", $row = null) {
+    private function apiBasicRequestDatabase($type, $apiId, $name = "", $row = null) {
         if ($type == "insert") {
             $query = $this->utility->getConnection()->prepare("INSERT INTO microservice_apiBasic_request (
                                                                     api_id,
@@ -726,7 +726,7 @@ class ApiBasicController extends AbstractController {
                                                                     :ip
                                                                 );");
             
-            $query->bindValue(":apiId", $id);
+            $query->bindValue(":apiId", $apiId);
             $query->bindValue(":name", $name);
             $query->bindValue(":date", date("Y-m-d H:i:s"));
             $query->bindValue(":ip", $_SERVER['REMOTE_ADDR']);
@@ -739,15 +739,15 @@ class ApiBasicController extends AbstractController {
                                                                 AND date LIKE :date");
             
             $query->bindValue(":count", $row['count'] + 1);
-            $query->bindValue(":apiId", $id);
+            $query->bindValue(":apiId", $apiId);
             $query->bindValue(":name", $name);
             $query->bindValue(":date", "%" . date("Y-m-d") . "%");
         }
         else if ($type == "delete") {
             $query = $this->utility->getConnection()->prepare("DELETE FROM microservice_apiBasic_request
-                                                                WHERE api_id = :id");
+                                                                WHERE api_id = :apiId");
             
-            $query->bindValue(":id", $id);
+            $query->bindValue(":apiId", $apiId);
         }
         
         return $query->execute();
@@ -809,7 +809,7 @@ class ApiBasicController extends AbstractController {
         return $query->fetchAll();
     }
     
-    private function selectApiBasicRequestDatabase($id, $name) {
+    private function selectApiBasicRequestDatabase($apiId, $name) {
         $connection = $this->entityManager->getConnection();
         
         $query = $connection->prepare("SELECT * FROM microservice_apiBasic_request
@@ -817,7 +817,7 @@ class ApiBasicController extends AbstractController {
                                         AND name = :name
                                         AND date LIKE :date");
         
-        $query->bindValue(":apiId", $id);
+        $query->bindValue(":apiId", $apiId);
         $query->bindValue(":name", $name);
         $query->bindValue(":date", "%" . date("Y-m-d") . "%");
         
@@ -826,7 +826,7 @@ class ApiBasicController extends AbstractController {
         return $query->fetch();
     }
     
-    private function selectAllApiBasicRequestDatabase($id, $name) {
+    private function selectAllApiBasicRequestDatabase($apiId, $name) {
         $connection = $this->entityManager->getConnection();
         
         $query = $connection->prepare("SELECT * FROM microservice_apiBasic_request
@@ -834,7 +834,7 @@ class ApiBasicController extends AbstractController {
                                         AND name = :name
                                         AND date LIKE :date");
         
-        $query->bindValue(":apiId", $id);
+        $query->bindValue(":apiId", $apiId);
         $query->bindValue(":name", $name);
         $query->bindValue(":date", "%{$_SESSION['apiBasicGraphPeriod_year']}-{$_SESSION['apiBasicGraphPeriod_month']}%");
         
