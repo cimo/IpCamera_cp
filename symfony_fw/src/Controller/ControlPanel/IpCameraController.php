@@ -75,15 +75,15 @@ class IpCameraController extends AbstractController {
                 }
             }
             
-            if (count($devices) > 0) {
-                $ipCameraPasswordRow = $this->ipCameraDatabase("select", $devices[0]['id'], $devices[0]['password']);
+            foreach ($devices as $key => $value) {
+                $ipCameraPasswordRow = $this->ipCameraDatabase("select", $value['id'], $value['password']);
                 
                 if ($ipCameraPasswordRow != false) {
-                    $response = $this->utility->loginAuthBasic($devices[0]['host_image'], $devices[0]['username'], $ipCameraPasswordRow['password']);
+                    //$response = $this->utility->loginAuthBasic($value['host_image'], $value['username'], $ipCameraPasswordRow['password']);
                     
-                    $this->response['values']['video'] = $this->createVideoHtml($response);
+                    $this->response['values']['video'] = $this->createVideoHtml($key, "{$value['host_image']}&user={$value['username']}&pwd={$ipCameraPasswordRow['password']}");
                     
-                    $this->checkProcess($devices[0]['detection_pid'], $devices[0]['id']);
+                    $this->checkProcess($value['detection_pid'], $value['id']);
                 }
             }
         }
@@ -641,8 +641,8 @@ class IpCameraController extends AbstractController {
     }
     
     // Functions private
-    private function createVideoHtml($response) {
-        ob_start();
+    private function createVideoHtml($index, $url) {
+        /*ob_start();
         header("Content-Type: image/jpeg");
         echo $response;
         $obContent = ob_get_contents();
@@ -652,8 +652,10 @@ class IpCameraController extends AbstractController {
         $fileMimeContentType = $fileInfo->buffer($obContent) . PHP_EOL;
         $fileMimeContentTypeExplode = explode(";", $fileMimeContentType);
         
-        $html = "<img style=\"width: 320px; height: 180px;\" src=\"data:{$fileMimeContentTypeExplode[0]};base64," . base64_encode($obContent) . "\" alt=\"ipCamera.jpg\"/>";
-                
+        $html = "<img class=\"video\" src=\"data:{$fileMimeContentTypeExplode[0]};base64," . base64_encode($obContent) . "\" alt=\"ipCamera.jpg\"/>";*/
+        
+        $html = "<img id=\"video_{$index}\" class=\"video\" src=\"$url\" alt=\"ipCamera.jpg\"/>";
+        
         return $html;
     }
     

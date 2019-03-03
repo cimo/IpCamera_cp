@@ -1,0 +1,39 @@
+@import "utility.scss";
+
+@media(max-width: $widthMobile) {
+    .video_container {
+        width: 100% !important;
+    }
+    
+    .command_container {
+        display: none !important;
+    }
+}
+@media(min-width: $widthDesktop) {
+    
+}
+
+.page_container {
+    .header {
+        display: none;
+    }
+    
+    .argument {
+        display: none;
+    }
+    
+    .video_container {
+        display: inline-block;
+        width: 70%;
+        
+        .video {
+            display: block;
+            width: 100%;
+        }
+    }
+    
+    .command_container {
+        display: inline-block;
+        vertical-align: top;
+    }
+}
