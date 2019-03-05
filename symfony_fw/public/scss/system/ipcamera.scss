@@ -10,7 +10,8 @@
     }
 }
 @media(min-width: $widthDesktop) {
-    
+}
+@media(max-width: "599px") {
 }
 
 .page_container {
@@ -35,5 +36,18 @@
     .command_container {
         display: inline-block;
         vertical-align: top;
+    }
+}
+
+#cp_ipCamera_file {
+    .cp_ipCamera_file_download {
+        .material-icons {
+            vertical-align: middle;
+            margin: -2px 2px 0 0;
+        }
+        
+        p {
+            display: inline;
+        }
     }
 }

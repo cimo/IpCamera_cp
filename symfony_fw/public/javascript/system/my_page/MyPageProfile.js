@@ -13,7 +13,7 @@ function MyPageProfile() {
         upload.init();
         upload.setUrlRequest(window.url.myPageProfileUpload);
         upload.setTagContainer("#upload_myPage_profile_container");
-        upload.setTagProgressBar("#upload_myPage_profile_container .upload .mdc-linear-progress");
+        upload.setTagProgressBar("#upload_myPage_profile_container .upload_chunk .mdc-linear-progress");
         upload.setTagImageRefresh("#upload_myPage_profile_container .avatar");
         upload.processFile();
         

@@ -10,6 +10,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use App\Classes\System\Utility;
 use App\Classes\System\Ajax;
+use App\Classes\System\Upload;
+use App\Classes\System\ToolExcel;
 
 use App\Entity\ApiBasic;
 use App\Form\ApiBasicFormType;
@@ -28,6 +30,8 @@ class ApiBasicController extends AbstractController {
     private $utility;
     private $query;
     private $ajax;
+    private $upload;
+    private $toolExcel;
     
     private $apiBasicRow;
     
@@ -516,6 +520,64 @@ class ApiBasicController extends AbstractController {
             'urlExtra' => $this->urlExtra,
             'response' => $this->response
         ));
+    }
+    
+    /**
+    * @Route(
+    *   name = "cp_apiBasic_csv",
+    *   path = "/cp_apiBasic_csv/{_locale}/{urlCurrentPageId}/{urlExtra}",
+    *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
+    *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
+    *	methods={"POST"}
+    * )
+    */
+    public function csvAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
+        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
+        $this->entityManager = $this->getDoctrine()->getManager();
+        
+        $this->response = Array();
+        
+        $this->utility = new Utility($this->container, $this->entityManager, $translator);
+        $this->query = $this->utility->getQuery();
+        $this->ajax = new Ajax($this->utility);
+        $this->upload = new Upload($this->utility);
+        $this->toolExcel = new ToolExcel($this);
+        
+        // Logic
+        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        
+        if ($request->isMethod("POST") == true && $checkUserRole == true) {
+            $path = "{$this->utility->getPathSrc()}/files/microservice/api/basic";
+            
+            $this->upload->setSettings(Array(
+                'path' => $path,
+                'chunkSize' => 1000000,
+                'inputType' => "single",
+                'types' => Array("text/plain")
+            ));
+            $uploadProcessFile = $this->upload->processFile();
+            
+            $this->response['upload']['processFile'] = $uploadProcessFile;
+            
+            if (isset($uploadProcessFile['name']) == true)
+                $this->toolExcel->readCsv("$path/{$uploadProcessFile['name']}", ",");
+        }
+        
+        return $this->ajax->response(Array(
+            'urlLocale' => $this->urlLocale,
+            'urlCurrentPageId' => $this->urlCurrentPageId,
+            'urlExtra' => $this->urlExtra,
+            'response' => $this->response
+        ));
+    }
+    
+    public function toolExcelCsvCallback($path, $index, $cell) {
+        $this->response['velues'][] = $cell;
+        
+        return true;
     }
     
     /**

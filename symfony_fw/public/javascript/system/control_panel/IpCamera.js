@@ -355,7 +355,7 @@ function ControlPanelIpCamera() {
         
         $(document).on("click", "#cp_ipCamera_file_result .cp_ipCamera_file_download", function() {
             var deviceName = $.trim($(this).parents("tr").find(".deviceName_column").text());
-            var name = $.trim($(this).parents("tr").find(".name_column span").text());
+            var name = $.trim($(this).parents("tr").find(".name_column span p").text());
             
             $(document).ready(function(){
                 var html = "<form id=\"cp_ipCamera_file_download\" action=\"" + window.url.cpIpCameraFileDownload + "\" method=\"post\">\n\

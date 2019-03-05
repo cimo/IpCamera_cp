@@ -49,33 +49,42 @@ class Upload {
     
     // Functions private
     private function change() {
-        $imageSize = getimagesize($_FILES["file"]["tmp_name"]);
-        $fileSize = $_FILES["file"]["size"];
-        $fileName = basename($_FILES["file"]["name"]);
+        if (isset($_FILES["file"]) == true) {
+            $fileSize = $_FILES["file"]["size"];
+            $fileName = basename($_FILES["file"]["name"]);
 
-        if ($imageSize !== false) {
-            if ($imageSize[0] > $this->settings['imageWidth']  ||  $imageSize[1] > $this->settings['imageHeight']) {
+            if (isset($this->settings['imageWidth']) == true && isset($this->settings['imageHeight']) == true) {
+                $imageSize = getimagesize($_FILES["file"]["tmp_name"]);
+
+                if ($imageSize[0] > $this->settings['imageWidth']  ||  $imageSize[1] > $this->settings['imageHeight']) {
+                    return Array(
+                        'status' => 1,
+                        'text' => $this->utility->getTranslator()->trans("classUpload_3") . "{$this->settings['imageWidth']} px - {$this->settings['imageHeight']} px."
+                    );
+                }
+            }
+
+            if (isset($this->settings['maxSize']) == true && $fileSize > $this->settings['maxSize']) {
                 return Array(
                     'status' => 1,
-                    'text' => $this->utility->getTranslator()->trans("classUpload_3") . "{$this->settings['imageWidth']} px - {$this->settings['imageHeight']} px."
+                    'text' => $this->utility->getTranslator()->trans("classUpload_1") . $this->utility->unitFormat($this->settings['maxSize']) . "."
+                );
+            }
+
+            if (in_array(mime_content_type($_FILES["file"]["tmp_name"]), $this->settings['types']) == false) {
+                return Array(
+                    'status' => 1,
+                    'text' => $this->utility->getTranslator()->trans("classUpload_2") . implode(", ", $this->settings['types']) . "."
                 );
             }
         }
-
-        if ($fileSize > $this->settings['maxSize']) {
+        else {
             return Array(
                 'status' => 1,
-                'text' => $this->utility->getTranslator()->trans("classUpload_1") . $this->utility->sizeUnits($this->settings['maxSize']) . "."
+                'text' => $this->utility->getTranslator()->trans("classUpload_7")
             );
         }
-
-        if (in_array(mime_content_type($_FILES["file"]["tmp_name"]), $this->settings['types']) == false) {
-            return Array(
-                'status' => 1,
-                'text' => $this->utility->getTranslator()->trans("classUpload_2") . implode(", ", $this->settings['types']) . "."
-            );
-        }
-
+        
         return $this->settings['chunkSize'];
     }
     
@@ -110,7 +119,7 @@ class Upload {
     
     private function finish() {
         if (file_exists("{$this->settings['path']}/$this->tmp") == true) {
-            if ($this->settings['nameOverwrite'] != "")
+            if (isset($this->settings['nameOverwrite']) == true && $this->settings['nameOverwrite'] != "")
                 $this->name =  $this->settings['nameOverwrite'] . "." . pathinfo($this->name, PATHINFO_EXTENSION);
             
             rename("{$this->settings['path']}/$this->tmp", "{$this->settings['path']}/$this->name");
@@ -118,7 +127,8 @@ class Upload {
             if (empty($this->settings['path']) == false) {
                 return Array(
                     'status' => 2,
-                    'text' => $this->utility->getTranslator()->trans("classUpload_5")
+                    'text' => $this->utility->getTranslator()->trans("classUpload_5"),
+                    'name' => $this->name
                 );
             }
         }

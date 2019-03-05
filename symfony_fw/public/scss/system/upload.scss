@@ -1,5 +1,18 @@
-.upload {
-    margin-bottom: 10px;
+@import "utility.scss";
+
+@media(max-width: $widthMobile) {
+    .upload_chunk {
+        width: 100% !important;
+    }
+}
+@media(min-width: $widthDesktop) {
+}
+@media(max-width: "599px") {
+}
+
+.upload_chunk {
+    margin: 10px 0 10px 0;
+    width: 50%;
     
     .mdc-linear-progress {
         display: none;
@@ -8,5 +21,15 @@
     
     .controls {
         display: none;
+        vertical-align: middle;
+    }
+    
+    .update_loading {
+        display: none;
+        vertical-align: middle;
+        
+        i {
+            font-size: 35px;
+        }
     }
 }

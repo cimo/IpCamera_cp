@@ -300,22 +300,23 @@ class MyPageProfileController extends AbstractController {
         $this->upload = new Upload($this->utility);
         
         // Logic
-        $path = "";
-
-        if ($this->getUser() != null)
-            $path = "{$this->utility->getPathPublic()}/files/user/{$this->getUser()->getUsername()}";
+        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_USER"), $this->getUser());
         
-        $this->upload->setSettings(Array(
-            'path' => $path,
-            'chunkSize' => 1000000,
-            'inputType' => "single",
-            'types' => Array('image/jpg', 'image/jpeg'),
-            'maxSize' => 2097152,
-            'nameOverwrite' => "Avatar",
-            'imageWidth' => 150,
-            'imageHeight' => 150
-        ));
-        $this->response['upload']['processFile'] = $this->upload->processFile();
+        if ($request->isMethod("POST") == true && $checkUserRole == true) {
+            $path = "{$this->utility->getPathPublic()}/files/user/{$this->getUser()->getUsername()}";
+            
+            $this->upload->setSettings(Array(
+                'path' => $path,
+                'chunkSize' => 1000000,
+                'inputType' => "single",
+                'types' => Array("image/jpg", "image/jpeg"),
+                'maxSize' => 2097152,
+                'nameOverwrite' => "Avatar",
+                'imageWidth' => 150,
+                'imageHeight' => 150
+            ));
+            $this->response['upload']['processFile'] = $this->upload->processFile();
+        }
         
         return $this->ajax->response(Array(
             'urlLocale' => $this->urlLocale,

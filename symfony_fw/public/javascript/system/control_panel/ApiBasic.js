@@ -72,6 +72,12 @@ function ControlPanelApiBasic() {
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
             $("#cp_apiBasic_select_result").html(xhr.response.render);
             
+            upload.init();
+            upload.setUrlRequest(window.url.cpApiBasicCsv);
+            upload.setTagContainer("#upload_apiBasic_csv_container");
+            upload.setTagProgressBar("#upload_apiBasic_csv_container .upload_chunk .mdc-linear-progress");
+            upload.processFile();
+            
             materialDesign.refresh();
             
             $("#button_apiBasic_show_log").on("click", "", function(event) {
@@ -145,7 +151,7 @@ function ControlPanelApiBasic() {
                     null
                 );
             });
-
+            
             $("#form_cp_apiBasic_profile").on("submit", "", function(event) {
                 event.preventDefault();
                 

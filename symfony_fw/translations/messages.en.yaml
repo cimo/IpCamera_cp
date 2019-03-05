@@ -816,6 +816,7 @@ date.time: H:i:s
 "apiBasicSelect_2": "..."
 
 "apiBasicProfile_1": "ApiBasic profile form"
+"apiBasicProfile_2": "Import csv"
 
 "apiBasicDelete_1": "Warning! If you delete the apiBasic is impossible return back."
 "apiBasicDelete_2": "Delete"

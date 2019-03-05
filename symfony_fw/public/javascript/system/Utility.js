@@ -419,11 +419,15 @@ function Utility() {
         $(document).on("click", ".material_upload button", function() {
             var button = $(this);
             var input = button.parent().find("input");
+            var name = "";
             
             input.click();
             
             input.on("change", "", function() {
-                button.parent().find("label").text(input[0].files[0].name);
+                if (input[0].files[0] !== undefined)
+                    name = input[0].files[0].name;
+                
+                button.parent().find("label").text(name);
             });
         });
     };

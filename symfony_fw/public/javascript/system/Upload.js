@@ -1,4 +1,4 @@
-/* global utility, ajax, flashBag */
+/* global utility, ajax, loader, flashBag */
 
 var upload = new Upload();
 
@@ -63,7 +63,7 @@ function Upload() {
     };
     
     self.processFile = function() {
-        $(tagContainer).find(".upload .file").on("change", "", function() {
+        $(tagContainer).find(".upload_chunk .file").on("change", "", function() {
             file = $(this)[0].files[0];
             
             var formData = new FormData();
@@ -88,15 +88,16 @@ function Upload() {
                         if (xhr.response.upload.processFile.status === 1) {
                             resetValue("hide");
                             
-                            flashBag.show(xhr.response.upload.processFile.text);
-
+                            if (xhr.response.upload.processFile.text !== undefined)
+                                flashBag.show(xhr.response.upload.processFile.text);
+                            
                             return;
                         }
                         
                         if (file !== null) {
                             resetValue("show");
                             
-                            $(tagContainer).find(".upload .button_start").off("click").on("click", "", function() {
+                            $(tagContainer).find(".upload_chunk .button_start").off("click").on("click", "", function() {
                                 if (uploadStarted === false && uploadPaused === false)
                                     start();
                                 else if (uploadStarted === true && uploadPaused === false)
@@ -104,8 +105,8 @@ function Upload() {
                                 else if (uploadStarted === true && uploadPaused === true)
                                     resume();
                             });
-
-                            $(tagContainer).find(".upload .button_stop").off("click").on("click", "", function() {
+                            
+                            $(tagContainer).find(".upload_chunk .button_stop").off("click").on("click", "", function() {
                                 abort();
                             });
                         } 
@@ -124,9 +125,11 @@ function Upload() {
         if (file !== null) {
             uploadStarted = true;
             
+            $(tagContainer).find(".update_loading").css("display", "inline-block");
+            
             flashBag.show(window.textUpload.label_2);
             
-            $(tagContainer).find(".upload .button_start span").text(window.textUpload.label_5);
+            $(tagContainer).find(".upload_chunk .button_start span").text(window.textUpload.label_5);
             
             chunkCurrent = Math.ceil(file.size / chunkSize);
 
@@ -137,21 +140,27 @@ function Upload() {
     function pause() {
         uploadPaused = true;
         
-        $(tagContainer).find(".upload .button_start i").text("pause");
-        $(tagContainer).find(".upload .button_start span").text(window.textUpload.label_6);
+        $(tagContainer).find(".update_loading").css("display", "none");
+        
+        $(tagContainer).find(".upload_chunk .button_start i").text("pause");
+        $(tagContainer).find(".upload_chunk .button_start span").text(window.textUpload.label_6);
     }
     
     function resume() {
         uploadPaused = false;
         
-        $(tagContainer).find(".upload .button_start i").text("play_arrow");
-        $(tagContainer).find(".upload .button_start span").text(window.textUpload.label_5);
+        $(tagContainer).find(".update_loading").css("display", "inline-block");
+        
+        $(tagContainer).find(".upload_chunk .button_start i").text("play_arrow");
+        $(tagContainer).find(".upload_chunk .button_start span").text(window.textUpload.label_5);
         
         sendChunk(chunkPause);
     }
     
     function abort() {
         uploadAborted = true;
+        
+        loader.show();
         
         var xhr = new XMLHttpRequest();
         xhr.open("post", urlRequest + "?action=abort&tmp=" + tmp, true);
@@ -161,13 +170,17 @@ function Upload() {
             if (xhr.readyState === 4) {
                 var jsonParse = JSON.parse(xhr.response);
                 
-                if(xhr.status !== 200)
+                if(jsonParse.response.upload.processFile === undefined || xhr.status !== 200)
                     return;
+                
+                $(tagContainer).find(".update_loading").css("display", "none");
                 
                 resetValue("hide");
                 
-                if (jsonParse.response.upload.processFile !== null)
+                if (jsonParse.response.upload.processFile.text !== undefined)
                     flashBag.show(jsonParse.response.upload.processFile.text);
+                
+                loader.hide();
             }
         };
         
@@ -221,7 +234,7 @@ function Upload() {
                 if (xhr.readyState === 4) {
                     var jsonParse = JSON.parse(xhr.response);
                     
-                    if (xhr.status !== 200)
+                    if (jsonParse.response.upload.processFile === undefined || xhr.status !== 200)
                         return;
                     
                     if (jsonParse.response.upload.processFile.status === 0) {
@@ -239,7 +252,8 @@ function Upload() {
                     else if (jsonParse.response.upload.processFile.status === 1) {
                         resetValue("hide");
                         
-                        flashBag.show(jsonParse.response.upload.processFile.text);
+                        if (jsonParse.response.upload.processFile.text !== undefined)
+                            flashBag.show(jsonParse.response.upload.processFile.text);
                         
                         return;
                     }
@@ -261,12 +275,14 @@ function Upload() {
             if (xhr.readyState === 4) {
                 var jsonParse = JSON.parse(xhr.response);
 
-                if (xhr.status !== 200)
+                if (jsonParse.response.upload.processFile === undefined || xhr.status !== 200)
                     return;
+                
+                $(tagContainer).find(".update_loading").css("display", "none");
                 
                 resetValue("hide");
                 
-                if (jsonParse.response.upload.processFile !== null)
+                if (jsonParse.response.upload.processFile.text !== undefined)
                     flashBag.show(jsonParse.response.upload.processFile.text);
                 
                 if (tagImageRefresh !== "")
@@ -280,17 +296,19 @@ function Upload() {
     function resetValue(type) {
         materialDesign.linearProgress(tagProgressBar);
         
-        $(tagContainer).find(".upload .button_start i").text("play_arrow");
-        $(tagContainer).find(".upload .button_start span").text(window.textUpload.label_4);
+        $(tagContainer).find(".upload_chunk .button_start i").text("play_arrow");
+        $(tagContainer).find(".upload_chunk .button_start span").text(window.textUpload.label_4);
         
         if (type === "show") {
-            $(tagContainer).find(".upload .mdc-linear-progress").show();
-            $(tagContainer).find(".upload .controls").show();
+            $(tagContainer).find(".upload_chunk .mdc-linear-progress").show();
+            $(tagContainer).find(".upload_chunk .controls").css("display", "inline-block");
         }
         else if (type === "hide") {
-            $(tagContainer).find(".upload .file").val("");
-            $(tagContainer).find(".upload .mdc-linear-progress").hide();
-            $(tagContainer).find(".upload .controls").hide();
+            $(tagContainer).find(".upload_chunk .file").val("");
+            $(tagContainer).find(".upload_chunk .mdc-linear-progress").hide();
+            $(tagContainer).find(".upload_chunk .controls").css("display", "none");
+            
+            $(tagContainer).find(".material_upload button").parent().find("label").text("");
             
             file = null;
         }

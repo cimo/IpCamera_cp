@@ -1,7 +1,7 @@
-/* global ipCamera */
+/* global ... */
 
 $(document).ready(function() {
-    ipCamera.init();
+    //...
     
     $(window).resize(function() {
         //...

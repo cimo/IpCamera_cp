@@ -79,9 +79,9 @@ class IpCameraController extends AbstractController {
                 $ipCameraPasswordRow = $this->ipCameraDatabase("select", $value['id'], $value['password']);
                 
                 if ($ipCameraPasswordRow != false) {
-                    //$response = $this->utility->loginAuthBasic($value['host_image'], $value['username'], $ipCameraPasswordRow['password']);
+                    $url = "{$value['host_video']}&user={$value['username']}&pwd={$ipCameraPasswordRow['password']}";
                     
-                    $this->response['values']['video'] = $this->createVideoHtml($key, "{$value['host_image']}&user={$value['username']}&pwd={$ipCameraPasswordRow['password']}");
+                    $this->response['values']['video'] = $this->createVideoHtml($key, $url);
                     
                     $this->checkProcess($value['detection_pid'], $value['id']);
                 }
@@ -558,9 +558,12 @@ class IpCameraController extends AbstractController {
                 foreach($elements[0] as $key => $value) {
                     if (isset($value['name']) == true && trim($value['name']) == trim($request->get("deviceName"))) {
                         $downloadPath = "{$this->utility->getPathSrc()}/files/ipCamera/{$value['id']}/{$request->get("name")}";
-                        $downloadMime = mime_content_type($downloadPath);
                         
-                        $this->utility->download($downloadPath, $downloadMime);
+                        if (file_exists($downloadPath) == true) {
+                            $downloadMime = mime_content_type($downloadPath);
+
+                            $this->utility->download($downloadPath, $downloadMime);
+                        }
                     }
                 }
             }
@@ -642,19 +645,7 @@ class IpCameraController extends AbstractController {
     
     // Functions private
     private function createVideoHtml($index, $url) {
-        /*ob_start();
-        header("Content-Type: image/jpeg");
-        echo $response;
-        $obContent = ob_get_contents();
-        ob_end_clean();
-        
-        $fileInfo = new \finfo(FILEINFO_MIME);
-        $fileMimeContentType = $fileInfo->buffer($obContent) . PHP_EOL;
-        $fileMimeContentTypeExplode = explode(";", $fileMimeContentType);
-        
-        $html = "<img class=\"video\" src=\"data:{$fileMimeContentTypeExplode[0]};base64," . base64_encode($obContent) . "\" alt=\"ipCamera.jpg\"/>";*/
-        
-        $html = "<img id=\"video_{$index}\" class=\"video\" src=\"$url\" alt=\"ipCamera.jpg\"/>";
+        $html = "<img id=\"video_{$index}\" class=\"video\" src=\"$url\" alt=\"video\"/>";
         
         return $html;
     }
@@ -711,7 +702,7 @@ class IpCameraController extends AbstractController {
                         {$devices[$key]['name']}
                     </td>
                     <td class=\"name_column\">
-                        <span class=\"cp_ipCamera_file_download cursor_custom\">$valueSub</span>
+                        <span class=\"cp_ipCamera_file_download cursor_custom\"><i class=\"material-icons\">arrow_drop_down_circle</i><p>$valueSub</p></span>
                     </td>
                     <td class=\"horizontal_center\">
                         <button class=\"mdc-fab mdc-fab--mini cp_ipCamera_file_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
