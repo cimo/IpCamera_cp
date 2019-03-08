@@ -859,6 +859,8 @@ date.time: H:i:s
 "apiBasicController_16": "ApiBasic problem with curl."
 
 # IpCamera
+"ipCameraRender_1": "Need login for show content!"
+
 "ipCameraCreate_1": "Device create form"
 "ipCameraCreate_2": "..."
 
