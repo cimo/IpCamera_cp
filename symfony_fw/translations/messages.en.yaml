@@ -202,22 +202,16 @@ date.time: H:i:s
 "tableAndPagination_6": "Elements founded:"
 
 # Upload
-"upload_1": "Start"
-"upload_2": "Abort"
-"upload_3": "Paused..."
-"upload_4": "Uploading..."
-"upload_5": " seconds remaining."
-"upload_6": "Start"
-"upload_7": "Pause"
-"upload_8": "Resume"
+"upload_1": "File uploaded successfully."
 
-"classUpload_1": "Error max size, limit is: "
-"classUpload_2": "Error type, are allowed only: "
-"classUpload_3": "Error measures, are allowed only: "
-"classUpload_4": "Error chunk size."
-"classUpload_5": "File uploaded successfully."
-"classUpload_6": "Unable to move file to path."
-"classUpload_7": "Upload aborted."
+"classUpload_1": "Error chunk size!"
+"classUpload_2": "Error input type!"
+"classUpload_3": "Error types!"
+"classUpload_4": "Error max size!"
+"classUpload_5": "Error image size!"
+"classUpload_6": "File uploaded successfully."
+"classUpload_7": "File not uploaded!"
+"classUpload_8": "Upload aborted."
 
 # Captcha
 "captcha_1": "Chaptcha code incorrect!"

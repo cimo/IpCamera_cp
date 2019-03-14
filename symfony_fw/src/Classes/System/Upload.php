@@ -7,9 +7,6 @@ class Upload {
     
     private $settings;
     
-    private $tmp;
-    private $name;
-    
     // Properties
     public function setSettings($value) {
         $this->settings = $value;
@@ -20,12 +17,61 @@ class Upload {
         $this->utility = $utility;
         
         $this->settings = Array();
-        
-        $this->tmp = "0";
-        $this->name = "";
     }
     
     public function processFile() {
+        $action = "";
+        
+        if (isset($_GET['action']) == true)
+            $action = $_GET['action'];
+        
+        if ($action == "start") {
+            $fileName = $_GET['fileName'];
+            
+            if (file_exists("{$this->settings['path']}/$fileName") == true)
+                unlink("{$this->settings['path']}/$fileName");
+            
+            touch("{$this->settings['path']}/$fileName");
+            
+            return Array(
+                'status' => "start"
+            );
+        }
+        else if ($action == "upload") {
+            if (isset($_FILES["file"]) == true) {
+                $fileName = $_GET['fileName'];
+                
+                $tmpName = $_FILES['file']['tmp_name'];
+                $fileSize = $_FILES["file"]["size"];
+                
+                $content = file_get_contents($tmpName);
+                
+                file_put_contents("{$this->settings['path']}/$fileName", trim($content . PHP_EOL), FILE_APPEND);
+            }
+            
+            return Array(
+                'status' => "upload"
+            );
+        }
+        else if ($action == "complete") {
+            $fileName = $_GET['fileName'];
+            
+            if (file_exists("{$this->settings['path']}/$fileName") == true) {
+                return Array(
+                    'status' => "complete",
+                    'name' => $fileName,
+                    'text' => $this->utility->getTranslator()->trans("classUpload_6")
+                );
+            }
+        }
+        
+        return Array(
+            'status' => "error",
+            'text' => $this->utility->getTranslator()->trans("classUpload_7")
+        );
+    }
+    
+    /*public function processFile() {
         $action = "";
         
         if (isset($_GET['action']) == true)
@@ -165,5 +211,5 @@ class Upload {
             unlink($value . "/check_" . $this->tmp);
         
         return true;
-    }
+    }*/
 }

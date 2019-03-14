@@ -554,7 +554,7 @@ class ApiBasicController extends AbstractController {
             
             $this->upload->setSettings(Array(
                 'path' => $path,
-                'chunkSize' => 1000000,
+                'chunkSize' => 1048576,
                 'inputType' => "single",
                 'types' => Array("text/plain")
             ));
@@ -562,8 +562,17 @@ class ApiBasicController extends AbstractController {
             
             $this->response['upload']['processFile'] = $uploadProcessFile;
             
-            if (isset($uploadProcessFile['name']) == true)
-                $this->toolExcel->readCsv("$path/{$uploadProcessFile['name']}", ",");
+            if (isset($uploadProcessFile['status']) == true && $uploadProcessFile['status'] == "complete") {
+                fastcgi_finish_request();
+                ignore_user_abort(true);
+                set_time_limit(0);
+                ini_set("memory_limit", "-1");
+                
+                $this->apiBasicRow = $this->selectApiBasicDatabase($_SESSION['apiBasicProfileId'], true);
+                $apiBasicDatabaseRow = $this->apiBasicDatabase("select", $this->apiBasicRow['id'], $this->apiBasicRow['database_password']);
+                
+                $this->toolExcel->readCsv("$path/{$uploadProcessFile['name']}", ",", $apiBasicDatabaseRow);
+            }
         }
         
         return $this->ajax->response(Array(
@@ -574,7 +583,7 @@ class ApiBasicController extends AbstractController {
         ));
     }
     
-    public function toolExcelCsvCallback($path, $index, $cell) {
+    public function toolExcelCsvCallback($path, $index, $cell, $extra) {
         $this->response['velues'][] = $cell;
         
         return true;
@@ -681,6 +690,7 @@ class ApiBasicController extends AbstractController {
                 if (isset($parameters['event']) == true && $parameters['event'] == "requestTest") {
                     $microserviceApiRow = $this->query->selectMicroserviceApiDatabase(1);
                     $this->apiBasicRow = $this->selectApiBasicDatabase($parameters['tokenName'], true);
+                    $apiBasicDatabaseRow = $this->apiBasicDatabase("select", $this->apiBasicRow['id'], $this->apiBasicRow['database_password']);
                     
                     if ($microserviceApiRow != false) {
                         if ($this->apiBasicRow != false) {
@@ -699,7 +709,7 @@ class ApiBasicController extends AbstractController {
                                 }
 
                                 if ($this->apiBasicRow['database_ip'] != "" && $this->apiBasicRow['database_name'] != "" && $this->apiBasicRow['database_username'] != "" && $this->apiBasicRow['database_password'] != "") {
-                                    $databaseExternal = $this->databaseExternal($parameters, $this->apiBasicRow);
+                                    $databaseExternal = $this->databaseExternal($parameters, $this->apiBasicRow, $apiBasicDatabaseRow);
                                     
                                     if ($databaseExternal != false)
                                         $this->response['messages']['success'] = $this->utility->getTranslator()->trans("apiBasicController_10");
@@ -1034,20 +1044,21 @@ class ApiBasicController extends AbstractController {
         return false;
     }
     
-    private function databaseExternal($parameters, $row) {
+    private function databaseExternal($parameters, $row, $extra) {
         $response = false;
         
-        $apiBasicRow = $this->apiBasicDatabase("select", $row['id'], $row['database_password']);
-        
-        if ($row['database_ip'] != "" && $row['database_name'] != "" && $row['database_username'] != "" && $apiBasicRow['database_password'] != "") {
+        if ($row['database_ip'] != "" && $row['database_name'] != "" && $row['database_username'] != "" && $extra['database_password'] != "") {
             $checkHost = $this->utility->checkHost($row['database_ip']);
             
             if ($checkHost == false)
                 return $response;
             
-            $pdo = new \PDO("mysql:host={$row['database_ip']};dbname={$row['database_name']};charset=utf8", $row['database_username'], $apiBasicRow['database_password']);
+            $pdo = new \PDO("mysql:host={$row['database_ip']};dbname={$row['database_name']};charset=utf8", $row['database_username'], $extra['database_password']);
             
             //...
+            
+            if ($response == false || $pdo == false)
+                $this->response['messages']['errorCode'] = 10;
             
             unset($pdo);
         }

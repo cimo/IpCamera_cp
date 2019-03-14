@@ -307,13 +307,13 @@ class MyPageProfileController extends AbstractController {
             
             $this->upload->setSettings(Array(
                 'path' => $path,
-                'chunkSize' => 1000000,
+                'chunkSize' => 1048576,
                 'inputType' => "single",
                 'types' => Array("image/jpg", "image/jpeg"),
                 'maxSize' => 2097152,
-                'nameOverwrite' => "Avatar",
                 'imageWidth' => 150,
-                'imageHeight' => 150
+                'imageHeight' => 150,
+                'nameOverwrite' => "Avatar"
             ));
             $this->response['upload']['processFile'] = $this->upload->processFile();
         }

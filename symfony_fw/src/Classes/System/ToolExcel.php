@@ -92,7 +92,7 @@ class ToolExcel {
         $this->fileName = trim($fileName) . ".xlsx";
     }
     
-    public function readCsv($path, $separator) {
+    public function readCsv($path, $separator, $extra) {
         $elements = Array();
         
         $index = 0;
@@ -103,7 +103,7 @@ class ToolExcel {
                     if ($this->self == null)
                         $elements['items'][] = $cell;
                     else {
-                        $result = $this->self->toolExcelCsvCallback($path, $index, $cell);
+                        $result = $this->self->toolExcelCsvCallback($path, $index, $cell, $extra);
                         
                         if ($result == false)
                             break;
