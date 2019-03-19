@@ -73,9 +73,10 @@ function ControlPanelApiBasic() {
             $("#cp_apiBasic_select_result").html(xhr.response.render);
             
             upload.init();
-            upload.setUrlRequest(window.url.cpApiBasicCsv);
+            upload.setUrlRequest(window.url.cpApiBasicCsv + "?token=" + window.session.token + "&event=csv");
             upload.setTagContainer("#upload_apiBasic_csv_container");
             upload.setTagProgressBar("#upload_apiBasic_csv_container .upload_chunk .mdc-linear-progress");
+            upload.setLockUrl(window.url.root + "/listener/lockListener.php");
             upload.processFile();
             
             materialDesign.refresh();

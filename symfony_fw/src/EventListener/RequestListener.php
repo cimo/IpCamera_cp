@@ -41,9 +41,11 @@ class RequestListener {
         
         $request = $event->getRequest();
         
+        $session = $request->getSession();
+        
         $settingRow = $this->query->selectSettingDatabase();
         
-        $this->utility->configureCookie(session_name(), 0, $settingRow['https'], true);
+        $this->utility->configureCookie($session->getName(), 0, $settingRow['https'], true);
         
         $checkLanguage = $this->utility->checkLanguage($request, $this->router, $settingRow);
         $request = $checkLanguage[0];
@@ -61,8 +63,7 @@ class RequestListener {
             'currentPageId' => $urlCurrentPageId
         );
         
-        if ($this->container->get("session")->isStarted() == true) {
-            $session = $request->getSession();
+        if ($session->isStarted() == true) {
             $session->set("php_session", $phpSession);
             
             $this->container->get("twig")->addGlobal("php_session", $phpSession);

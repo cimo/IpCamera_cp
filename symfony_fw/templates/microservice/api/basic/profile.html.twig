@@ -1,45 +1,43 @@
 {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
 
+<h2 class="mdc-typography--headline6">{% trans %}apiBasicProfile_1{% endtrans %}</h2>
 <div>
-    <h2 class="mdc-typography--headline6">{% trans %}apiBasicProfile_1{% endtrans %}</h2>
-    <div>
-        <button id="button_apiBasic_show_log" class="mdc-button mdc-button--dense mdc-button--raised" type="button">
-            <i class="material-icons mdc-button__icon">description</i>
-            <span>Show log</span>
-        </button>
-        <button id="button_apiBasic_show_graph" class="mdc-button mdc-button--dense mdc-button--raised" type="button">
-            <i class="material-icons mdc-button__icon">assessment</i>
-            <span>Show graph</span>
-        </button>
-        <div id="upload_apiBasic_csv_container">
-            {{-include("@templateRoot/include/upload.html.twig", {'label': "apiBasicProfile_2"|trans})-}}
-        </div>
+    <button id="button_apiBasic_show_log" class="mdc-button mdc-button--dense mdc-button--raised" type="button">
+        <i class="material-icons mdc-button__icon">description</i>
+        <span>Show log</span>
+    </button>
+    <button id="button_apiBasic_show_graph" class="mdc-button mdc-button--dense mdc-button--raised" type="button">
+        <i class="material-icons mdc-button__icon">assessment</i>
+        <span>Show graph</span>
+    </button>
+    <div id="upload_apiBasic_csv_container">
+        {{-include("@templateRoot/include/upload.html.twig", {'label': "apiBasicProfile_2"|trans})-}}
     </div>
-    <form id="form_cp_apiBasic_profile" action="{{path("cp_apiBasic_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
-        {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
-        {{form_row(form.tokenName, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
-        
-        <p class="info_field">{% trans %}apiBasicFormType_3_i{% endtrans %}</p>
-        {{form_row(form.ip, {'dense': "", 'styleType': "outlinedTrailing"})}}
-        
-        {{form_row(form.urlCallback, {'dense': "", 'styleType': "outlinedTrailing"})}}
-        {{form_row(form.databaseIp, {'dense': "", 'styleType': "outlinedTrailing"})}}
-        {{form_row(form.databaseName, {'dense': "", 'styleType': "outlinedTrailing"})}}
-        
-        <p class="info_field">{% trans %}apiBasicFormType_7_i{% endtrans %}</p>
-        {{form_row(form.databaseUsername, {'dense': "", 'styleType': "outlinedTrailing"})}}
-        
-        {{form_row(form.databasePassword, {'dense': "", 'styleType': "outlinedTrailing"})}}
-        {{form_row(form.active)}}
-        {{form_row(form.slackActive)}}
-        {{form_row(form.lineActive)}}
-
-        {{form_widget(form._token)}}
-
-        {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
-    </form>
-    
-    {% if is_granted("ROLE_ADMIN") == true %}
-        {{-include("@templateRoot/microservice/api/basic/delete.html.twig")-}}
-    {% endif %}
 </div>
+<form id="form_cp_apiBasic_profile" action="{{path("cp_apiBasic_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+    {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+    {{form_row(form.tokenName, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+
+    <p class="info_field">{% trans %}apiBasicFormType_3_i{% endtrans %}</p>
+    {{form_row(form.ip, {'dense': "", 'styleType': "outlinedTrailing"})}}
+
+    {{form_row(form.urlCallback, {'dense': "", 'styleType': "outlinedTrailing"})}}
+    {{form_row(form.databaseIp, {'dense': "", 'styleType': "outlinedTrailing"})}}
+    {{form_row(form.databaseName, {'dense': "", 'styleType': "outlinedTrailing"})}}
+
+    <p class="info_field">{% trans %}apiBasicFormType_7_i{% endtrans %}</p>
+    {{form_row(form.databaseUsername, {'dense': "", 'styleType': "outlinedTrailing"})}}
+
+    {{form_row(form.databasePassword, {'dense': "", 'styleType': "outlinedTrailing"})}}
+    {{form_row(form.active)}}
+    {{form_row(form.slackActive)}}
+    {{form_row(form.lineActive)}}
+
+    {{form_widget(form._token)}}
+
+    {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+</form>
+
+{% if is_granted("ROLE_ADMIN") == true %}
+    {{-include("@templateRoot/microservice/api/basic/delete.html.twig")-}}
+{% endif %}

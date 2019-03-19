@@ -10,9 +10,29 @@
     </div>
     
     {{-include("@templateRoot/include/progress_bar.html.twig")-}}
+    
+    <div class="controls">
+        <button class="mdc-button mdc-button--dense mdc-button--raised button_start" type="button">
+            <i class="material-icons mdc-button__icon">play_arrow</i>
+            <span>{% trans %}upload_1{% endtrans %}</span>
+        </button>
+        <button class="mdc-button mdc-button--dense mdc-button--raised button_stop" type="button">
+            <i class="material-icons mdc-button__icon">stop</i>
+            <span>{% trans %}upload_2{% endtrans %}</span>
+        </button>
+    </div>
+        
+    <div id="popupWait" class="popupWait">
+        <i class="material-icons close" disabled="disabled">close</i>
+        <div class="content">
+            <p>{% trans %}upload_3{% endtrans %}</p>
+            {{-include("@templateRoot/include/progress_bar.html.twig")-}}
+        </div>
+    </div>
 </div>
 <script>
     var textUpload = {
-        'label_1': "{{"upload_1"|trans}}"
+        'label_1': "{{"upload_4"|trans}}",
+        'label_2': "{{"upload_5"|trans}}"
     };
 </script>

@@ -138,17 +138,17 @@ class Utility {
     public function configureCookie($name, $lifeTime, $secure, $httpOnly) {
         $currentCookieParams = session_get_cookie_params();
         
-        $value = isset($_COOKIE[$name]) == true ? $_COOKIE[$name] : session_id();
+        $value = isset($_COOKIE[$name]) == true ? $_COOKIE[$name] : $this->session->getId();
         
         if (isset($_COOKIE[$name]) == true)
             setcookie($name, $value, $lifeTime, $currentCookieParams['path'], $currentCookieParams['domain'], $secure, $httpOnly);
     }
     
     public function sessionUnset() {
-        session_unset();
+        $this->session->clear();
         
         $cookies = Array(
-            session_name() . "_REMEMBERME"
+            $this->session->getName() . "_REMEMBERME"
         );
         
         foreach ($cookies as $value) {
@@ -726,7 +726,7 @@ class Utility {
             $_SESSION['userInformCount'] = 0;
         }
         
-        if ($this->tokenStorage->getToken() != null && $request->cookies->has(session_name() . "_REMEMBERME") == false && $this->authorizationChecker->isGranted("IS_AUTHENTICATED_FULLY") == true) {
+        if ($this->tokenStorage->getToken() != null && $request->cookies->has($this->session->getName() . "_REMEMBERME") == false && $this->authorizationChecker->isGranted("IS_AUTHENTICATED_FULLY") == true) {
             if (isset($_SESSION['userTimestamp']) == false)
                 $_SESSION['userTimestamp'] = time();
             
@@ -909,6 +909,9 @@ class Utility {
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
         
         $curlResponse = curl_exec($curl);
+        $curlError = curl_error($curl);
+        $curlInfo = curl_getinfo($curl);
+        
         curl_close($curl);
         
         if ($curlResponse == false)
@@ -1000,6 +1003,9 @@ class Utility {
             ));
 
             $curlResponse = curl_exec($curl);
+            $curlError = curl_error($curl);
+            $curlInfo = curl_getinfo($curl);
+            
             curl_close($curl);
         }
     }
@@ -1026,6 +1032,9 @@ class Utility {
             ));
             
             $curlResponse = curl_exec($curl);
+            $curlError = curl_error($curl);
+            $curlInfo = curl_getinfo($curl);
+            
             curl_close($curl);
         }
     }
@@ -1064,6 +1073,9 @@ class Utility {
                 ));
 
                 $curlResponse = curl_exec($curl);
+                $curlError = curl_error($curl);
+                $curlInfo = curl_getinfo($curl);
+                
                 curl_close($curl);
             }
         }
@@ -1082,9 +1094,26 @@ class Utility {
         curl_setopt($curl, CURLOPT_USERPWD, "$username:$password");
         
         $curlResponse = curl_exec($curl);
+        $curlError = curl_error($curl);
+        $curlInfo = curl_getinfo($curl);
+        
         curl_close($curl);
         
         return $curlResponse;
+    }
+    
+    public function closeAjaxRequest($response, $memoryLimit = false) {
+        echo json_encode(Array(
+            'response' => $response
+        ));
+        
+        fastcgi_finish_request();
+        ignore_user_abort(true);
+        
+        if ($memoryLimit == true) {
+            set_time_limit(0);
+            ini_set("memory_limit", "-1");
+        }
     }
     
     // Functions private

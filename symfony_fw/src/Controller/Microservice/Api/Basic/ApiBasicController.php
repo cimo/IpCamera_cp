@@ -550,28 +550,45 @@ class ApiBasicController extends AbstractController {
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            $path = "{$this->utility->getPathSrc()}/files/microservice/api/basic";
-            
-            $this->upload->setSettings(Array(
-                'path' => $path,
-                'chunkSize' => 1048576,
-                'inputType' => "single",
-                'types' => Array("text/plain")
-            ));
-            $uploadProcessFile = $this->upload->processFile();
-            
-            $this->response['upload']['processFile'] = $uploadProcessFile;
-            
-            if (isset($uploadProcessFile['status']) == true && $uploadProcessFile['status'] == "complete") {
-                fastcgi_finish_request();
-                ignore_user_abort(true);
-                set_time_limit(0);
-                ini_set("memory_limit", "-1");
-                
-                $this->apiBasicRow = $this->selectApiBasicDatabase($_SESSION['apiBasicProfileId'], true);
-                $apiBasicDatabaseRow = $this->apiBasicDatabase("select", $this->apiBasicRow['id'], $this->apiBasicRow['database_password']);
-                
-                $this->toolExcel->readCsv("$path/{$uploadProcessFile['name']}", ",", $apiBasicDatabaseRow);
+            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
+                if ($request->get("event") == "csv") {
+                    $this->apiBasicRow = $this->selectApiBasicDatabase($_SESSION['apiBasicProfileId'], true);
+                    $apiBasicDatabaseRow = $this->apiBasicDatabase("select", $this->apiBasicRow['id'], $this->apiBasicRow['database_password']);
+                    
+                    $lockPath = "{$this->utility->getPathSrc()}/files/lock/{$this->apiBasicRow['name']}_lock";
+                    
+                    if (file_exists($lockPath) == false) {
+                        $path = "{$this->utility->getPathSrc()}/files/microservice/api/basic";
+
+                        $this->upload->setSettings(Array(
+                            'path' => $path,
+                            'chunkSize' => 1048576,
+                            'types' => Array("text/plain")
+                        ));
+                        $uploadProcessFile = $this->upload->processFile();
+
+                        $this->response['upload']['processFile'] = $uploadProcessFile;
+
+                        if (isset($uploadProcessFile['status']) == true && $uploadProcessFile['status'] == "complete") {
+                            $this->response['values']['lockName'] = "{$this->apiBasicRow['name']}_lock";
+
+                            $this->utility->closeAjaxRequest($this->response, true);
+                            
+                            file_put_contents($lockPath, "");
+
+                            $_SESSION['lockPath'] = $lockPath;
+                            $_SESSION['totalLineCsv'] = $this->toolExcel->totalLineCsv("$path/{$uploadProcessFile['fileName']}", ",");
+
+                            $readCsv = $this->toolExcel->readCsv("$path/{$uploadProcessFile['fileName']}", ",", $apiBasicDatabaseRow);
+
+                            if (isset($readCsv['items']) == true && isset($readCsv['items'][0]) == false && $readCsv['items'] == true) {
+                                //...
+                            }
+                        }
+                    }
+                    else
+                        $this->response['messages']['error'] = $this->utility->getTranslator()->trans("lock_1");
+                }
             }
         }
         
@@ -584,7 +601,11 @@ class ApiBasicController extends AbstractController {
     }
     
     public function toolExcelCsvCallback($path, $index, $cell, $extra) {
-        $this->response['velues'][] = $cell;
+        if ($index == 0)
+            $this->apiBasicRow = $this->selectApiBasicDatabase($_SESSION['apiBasicProfileId'], true);
+        
+        if ($index > 0)
+            file_put_contents($_SESSION['lockPath'], "{$_SESSION['totalLineCsv']}|$index");
         
         return true;
     }
@@ -603,7 +624,6 @@ class ApiBasicController extends AbstractController {
         
         $this->utility = new Utility($this->container, $this->entityManager, $translator);
         $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
         
         // Logic
         if ($request->isMethod("POST") == true) {
@@ -616,12 +636,12 @@ class ApiBasicController extends AbstractController {
             
             $this->parameters = $parameters;
             
-            $errorCode = $this->errorCode("requestControl", $parameters);
+            $errorCode = $this->errorCode("requestControl", $this->parameters);
             
             if ($errorCode == false) {
-                if (isset($parameters['event']) == true && $parameters['event'] == "requestCheck") {
+                if (isset($this->parameters['event']) == true && $this->parameters['event'] == "requestCheck") {
                     $microserviceApiRow = $this->query->selectMicroserviceApiDatabase(1);
-                    $this->apiBasicRow = $this->selectApiBasicDatabase($parameters['tokenName'], true);
+                    $this->apiBasicRow = $this->selectApiBasicDatabase($this->parameters['tokenName'], true);
 
                     if ($microserviceApiRow != false) {
                         if ($this->apiBasicRow != false) {
@@ -669,7 +689,6 @@ class ApiBasicController extends AbstractController {
         
         $this->utility = new Utility($this->container, $this->entityManager, $translator);
         $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
         
         // Logic
         $name = "requestTestAction";
@@ -684,12 +703,12 @@ class ApiBasicController extends AbstractController {
             
             $this->parameters = $parameters;
             
-            $errorCode = $this->errorCode("requestControl", $parameters);
+            $errorCode = $this->errorCode("requestControl", $this->parameters);
             
             if ($errorCode == false) {
-                if (isset($parameters['event']) == true && $parameters['event'] == "requestTest") {
+                if (isset($this->parameters['event']) == true && $this->parameters['event'] == "requestTest") {
                     $microserviceApiRow = $this->query->selectMicroserviceApiDatabase(1);
-                    $this->apiBasicRow = $this->selectApiBasicDatabase($parameters['tokenName'], true);
+                    $this->apiBasicRow = $this->selectApiBasicDatabase($this->parameters['tokenName'], true);
                     $apiBasicDatabaseRow = $this->apiBasicDatabase("select", $this->apiBasicRow['id'], $this->apiBasicRow['database_password']);
                     
                     if ($microserviceApiRow != false) {
@@ -700,7 +719,7 @@ class ApiBasicController extends AbstractController {
                                 $this->response['messages']['error'] = $this->utility->getTranslator()->trans("apiBasicController_13");
                             else {
                                 if ($this->apiBasicRow['url_callback'] != "") {
-                                    $urlCallback = $this->urlCallback($parameters, $this->apiBasicRow);
+                                    $urlCallback = $this->urlCallback($this->parameters, $this->apiBasicRow);
                                     
                                     if ($urlCallback == true)
                                         $this->response['messages']['success'] = $this->utility->getTranslator()->trans("apiBasicController_10");
@@ -709,7 +728,7 @@ class ApiBasicController extends AbstractController {
                                 }
 
                                 if ($this->apiBasicRow['database_ip'] != "" && $this->apiBasicRow['database_name'] != "" && $this->apiBasicRow['database_username'] != "" && $this->apiBasicRow['database_password'] != "") {
-                                    $databaseExternal = $this->databaseExternal($parameters, $this->apiBasicRow, $apiBasicDatabaseRow);
+                                    $databaseExternal = $this->databaseExternal($this->parameters, $this->apiBasicRow, $apiBasicDatabaseRow);
                                     
                                     if ($databaseExternal != false)
                                         $this->response['messages']['success'] = $this->utility->getTranslator()->trans("apiBasicController_10");
@@ -731,7 +750,7 @@ class ApiBasicController extends AbstractController {
                     
                     if ((isset($this->response['errorCode']) == true && $this->response['errorCode'] != 0) || isset($this->response['messages']['error']) == true) {
                         $logPath = "{$this->utility->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $this->apiBasicRow['name']) . ".log";
-                        @file_put_contents($logPath, date("Y-m-d H:i:s") . " - $name - IP[{$_SERVER['REMOTE_ADDR']}]: " . print_r($this->response, true) . print_r($parameters, true) . PHP_EOL, FILE_APPEND);
+                        @file_put_contents($logPath, date("Y-m-d H:i:s") . " - $name - IP[{$_SERVER['REMOTE_ADDR']}]: " . print_r($this->response, true) . print_r($this->parameters, true) . PHP_EOL, FILE_APPEND);
                     }
                 }
                 else
@@ -1030,11 +1049,14 @@ class ApiBasicController extends AbstractController {
             ));
 
             $curlResponse = curl_exec($curl);
+            $curlError = curl_error($curl);
             $curlInfo = curl_getinfo($curl);
+            
             curl_close($curl);
             
             if ($curlInfo['http_code'] == "200") {
                 $this->response['messages']['urlCallbackResponse'] = $curlResponse;
+                $this->response['messages']['urlCallbackError'] = $curlError;
                 $this->response['messages']['urlCallbackInfo'] = $curlInfo;
 
                 return true;

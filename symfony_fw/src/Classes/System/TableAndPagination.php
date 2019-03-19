@@ -16,12 +16,12 @@ class TableAndPagination {
         $newRows = $reverse == true ? array_reverse($rows, true) : $rows;
         
         // Search
-        $searchWritten = isset($_POST['searchWritten']) == true ? $_POST['searchWritten'] : -1;
+        $searchWritten = isset($_REQUEST['searchWritten']) == true ? $_REQUEST['searchWritten'] : -1;
         $search = $this->search($sessionTag . "_search", $searchWritten);
         $elements = $this->utility->arrayLike($newRows, $search['value'], $oneLevel);
         
         // Pagination
-        $paginationCurrent = isset($_POST['paginationCurrent']) == true ? $_POST['paginationCurrent'] : -1;
+        $paginationCurrent = isset($_REQUEST['paginationCurrent']) == true ? $_REQUEST['paginationCurrent'] : -1;
         $pagination = $this->pagination($sessionTag . "_pagination", $paginationCurrent, count($elements), $page);
         
         if ($sessionTag != "page")
@@ -38,7 +38,7 @@ class TableAndPagination {
     }
     
     public function checkPost() {
-        if (isset($_POST['searchWritten']) == true && isset($_POST['paginationCurrent']) == true)
+        if (isset($_REQUEST['searchWritten']) == true && isset($_REQUEST['paginationCurrent']) == true)
             return true;
         
         return false;

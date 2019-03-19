@@ -3,6 +3,8 @@ namespace App\Classes\System;
 
 class Upload {
     // Vars
+    private $response;
+    
     private $utility;
     
     private $settings;
@@ -14,202 +16,84 @@ class Upload {
     
     // Functions public
     public function __construct($utility) {
+        $this->response = Array();
+        
         $this->utility = $utility;
         
         $this->settings = Array();
     }
     
     public function processFile() {
+        $this->response = Array();
+        
         $action = "";
         
-        if (isset($_GET['action']) == true)
-            $action = $_GET['action'];
+        if (isset($_REQUEST['action']) == true)
+            $action = $_REQUEST['action'];
         
-        if ($action == "start") {
-            $fileName = $_GET['fileName'];
-            
-            if (file_exists("{$this->settings['path']}/$fileName") == true)
-                unlink("{$this->settings['path']}/$fileName");
-            
-            touch("{$this->settings['path']}/$fileName");
-            
-            return Array(
-                'status' => "start"
-            );
-        }
-        else if ($action == "upload") {
-            if (isset($_FILES["file"]) == true) {
-                $fileName = $_GET['fileName'];
-                
-                $tmpName = $_FILES['file']['tmp_name'];
-                $fileSize = $_FILES["file"]["size"];
-                
-                $content = file_get_contents($tmpName);
-                
-                file_put_contents("{$this->settings['path']}/$fileName", trim($content . PHP_EOL), FILE_APPEND);
-            }
-            
-            return Array(
-                'status' => "upload"
-            );
-        }
-        else if ($action == "complete") {
-            $fileName = $_GET['fileName'];
+        if ($action == "stop") {
+            $fileName = $_REQUEST['fileName'];
             
             if (file_exists("{$this->settings['path']}/$fileName") == true) {
-                return Array(
-                    'status' => "complete",
-                    'name' => $fileName,
-                    'text' => $this->utility->getTranslator()->trans("classUpload_6")
-                );
+                unlink("{$this->settings['path']}/$fileName");
+                
+                $this->response['status'] = "stop";
+                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("classUpload_6");
+            }
+            else {
+                $this->response['status'] = "error";
+                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("classUpload_7");
             }
         }
-        
-        return Array(
-            'status' => "error",
-            'text' => $this->utility->getTranslator()->trans("classUpload_7")
-        );
-    }
-    
-    /*public function processFile() {
-        $action = "";
-        
-        if (isset($_GET['action']) == true)
-            $action = $_GET['action'];
-        
-        if (isset($_GET['tmp']) == true)
-            $this->tmp = $_GET['tmp'];
-        
-        if (isset($_GET['name']) == true)
-            $this->name = $_GET['name'];
-        
-        if ($action == "change")
-            return $this->change();
-        else if ($action == "start")
-            return $this->start();
-        else if ($action == "finish")
-            return $this->finish();
-        else if ($action == "abort")
-            return $this->abort();
-    }
-    
-    // Functions private
-    private function change() {
-        if (isset($_FILES["file"]) == true) {
-            $fileSize = $_FILES["file"]["size"];
-            $fileName = basename($_FILES["file"]["name"]);
-
-            if (isset($this->settings['imageWidth']) == true && isset($this->settings['imageHeight']) == true) {
-                $imageSize = getimagesize($_FILES["file"]["tmp_name"]);
-
-                if ($imageSize[0] > $this->settings['imageWidth']  ||  $imageSize[1] > $this->settings['imageHeight']) {
-                    return Array(
-                        'status' => 1,
-                        'text' => $this->utility->getTranslator()->trans("classUpload_3") . "{$this->settings['imageWidth']} px - {$this->settings['imageHeight']} px."
-                    );
+        else {
+            if ($action == "start") {
+                $fileName = $_REQUEST['fileName'];
+                
+                if (file_exists("{$this->settings['path']}/$fileName") == true) {
+                    $this->response['status'] = "error";
+                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("classUpload_8");
+                }
+                else {
+                    touch("{$this->settings['path']}/$fileName");
+                    
+                    $this->response['status'] = "start";
+                    $this->response['messages']['success'] = "";
                 }
             }
-
-            if (isset($this->settings['maxSize']) == true && $fileSize > $this->settings['maxSize']) {
-                return Array(
-                    'status' => 1,
-                    'text' => $this->utility->getTranslator()->trans("classUpload_1") . $this->utility->unitFormat($this->settings['maxSize']) . "."
-                );
+            else if ($action == "send") {
+                if (isset($_FILES["file"]) == true) {
+                    $fileName = $_REQUEST['fileName'];
+                    
+                    $tmpName = $_FILES['file']['tmp_name'];
+                    $fileSize = $_FILES["file"]["size"];
+                    
+                    $content = file_get_contents($tmpName);
+                    
+                    file_put_contents("{$this->settings['path']}/$fileName", trim($content . PHP_EOL), FILE_APPEND);
+                    
+                    $this->response['status'] = "send";
+                    $this->response['messages']['success'] = "";
+                }
+                else {
+                    $this->response['status'] = "error";
+                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("classUpload_9");
+                }
             }
-
-            if (in_array(mime_content_type($_FILES["file"]["tmp_name"]), $this->settings['types']) == false) {
-                return Array(
-                    'status' => 1,
-                    'text' => $this->utility->getTranslator()->trans("classUpload_2") . implode(", ", $this->settings['types']) . "."
-                );
-            }
-        }
-        else {
-            return Array(
-                'status' => 1,
-                'text' => $this->utility->getTranslator()->trans("classUpload_7")
-            );
-        }
-        
-        return $this->settings['chunkSize'];
-    }
-    
-    private function start() {
-        if ($this->tmp == "0")
-            $this->tmp = uniqid(mt_rand(), true) . ".tmp";
-        
-        $content = file_get_contents("php://input");
-	
-        $fopen = fopen("{$this->settings['path']}/$this->tmp", "a");
-
-        if ($this->checkChunkSize($this->settings['path']) == false) {
-            fclose($fopen);
-
-            return Array(
-                'status' => 1,
-                'text' => $this->utility->getTranslator()->trans("classUpload_4")
-            );
-        }
-        else {
-            fwrite($fopen, $content);
-            fclose($fopen);
-
-            if (empty($this->settings['path']) == false) {
-                return Array(
-                    'status' => 0,
-                    'tmp' => $this->tmp
-                );
+            else if ($action == "complete") {
+                $fileName = $_REQUEST['fileName'];
+                
+                if (file_exists("{$this->settings['path']}/$fileName") == true) {
+                    $this->response['status'] = "complete";
+                    $this->response['fileName'] = $fileName;
+                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("classUpload_10");
+                }
+                else {
+                    $this->response['status'] = "error";
+                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("classUpload_11");
+                }
             }
         }
-    }
-    
-    private function finish() {
-        if (file_exists("{$this->settings['path']}/$this->tmp") == true) {
-            if (isset($this->settings['nameOverwrite']) == true && $this->settings['nameOverwrite'] != "")
-                $this->name =  $this->settings['nameOverwrite'] . "." . pathinfo($this->name, PATHINFO_EXTENSION);
-            
-            rename("{$this->settings['path']}/$this->tmp", "{$this->settings['path']}/$this->name");
-            
-            if (empty($this->settings['path']) == false) {
-                return Array(
-                    'status' => 2,
-                    'text' => $this->utility->getTranslator()->trans("classUpload_5"),
-                    'name' => $this->name
-                );
-            }
-        }
-        else {
-            return Array(
-                'status' => 2,
-                'text' => $this->utility->getTranslator()->trans("classUpload_6")
-            );
-        }
-    }
-    
-    private function abort() {
-        if (file_exists("{$this->settings['path']}/$this->tmp") == true)
-            unlink("{$this->settings['path']}/$this->tmp");
         
-        return Array(
-            'status' => 2,
-            'text' => $this->utility->getTranslator()->trans("classUpload_7")
-        );
+        return $this->response;
     }
-    
-    private function checkChunkSize($value) {
-        $fopen = fopen($value . "/check_" . $this->tmp, "a");
-        $fstat = fstat($fopen);
-        $size = array_slice($fstat, 13)['size'];
-        fclose($fopen);
-
-        if ($size > $this->settings['chunkSize']) {
-            unlink($value . "/check_" . $this->tmp);
-
-            return false;
-        }
-        else
-            unlink($value . "/check_" . $this->tmp);
-        
-        return true;
-    }*/
 }

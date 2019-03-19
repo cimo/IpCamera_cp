@@ -54,9 +54,9 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
     }
     
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
-        $referer = $request->headers->get("referer");
-        
         if ($request->isXmlHttpRequest() == true) {
+            $referer = $request->headers->get("referer");
+            
             $user = $token->getUser();
             
             $checkCaptcha = $this->captcha->check($this->settingRow['captcha'], $request->get("captcha"));
@@ -98,8 +98,6 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception) {
-        $referer = $request->headers->get("referer");
-        
         if ($request->isXmlHttpRequest() == true) {
             $username = $request->get("_username");
             
@@ -149,10 +147,10 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
         
         $url = $referer;
         
-        $session = $this->requestStack->getCurrentRequest()->getSession();
-        $session = $session->get("php_session");
-        
         if (strpos($request, "control_panel") !== false) {
+            $session = $request->getSession();
+            $session = $session->get("php_session");
+            
             $url = $this->router->generate(
                 "root_render",
                 Array(

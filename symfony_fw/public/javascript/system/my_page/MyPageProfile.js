@@ -11,7 +11,7 @@ function MyPageProfile() {
     // Functions public
     self.init = function() {
         upload.init();
-        upload.setUrlRequest(window.url.myPageProfileUpload);
+        upload.setUrlRequest(window.url.myPageProfileUpload + "?token=" + window.session.token + "&event=upload");
         upload.setTagContainer("#upload_myPage_profile_container");
         upload.setTagProgressBar("#upload_myPage_profile_container .upload_chunk .mdc-linear-progress");
         upload.setTagImageRefresh("#upload_myPage_profile_container .avatar");

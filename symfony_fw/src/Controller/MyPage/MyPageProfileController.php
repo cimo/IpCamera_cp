@@ -303,19 +303,28 @@ class MyPageProfileController extends AbstractController {
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_USER"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            $path = "{$this->utility->getPathPublic()}/files/user/{$this->getUser()->getUsername()}";
-            
-            $this->upload->setSettings(Array(
-                'path' => $path,
-                'chunkSize' => 1048576,
-                'inputType' => "single",
-                'types' => Array("image/jpg", "image/jpeg"),
-                'maxSize' => 2097152,
-                'imageWidth' => 150,
-                'imageHeight' => 150,
-                'nameOverwrite' => "Avatar"
-            ));
-            $this->response['upload']['processFile'] = $this->upload->processFile();
+            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
+                if ($request->get("event") == "upload") {
+                    $path = "{$this->utility->getPathPublic()}/files/user/{$this->getUser()->getUsername()}";
+
+                    $this->upload->setSettings(Array(
+                        'path' => $path,
+                        'chunkSize' => 1048576,
+                        'types' => Array("image/jpg", "image/jpeg"),
+                        'maxSize' => 2097152,
+                        'imageWidth' => 150,
+                        'imageHeight' => 150,
+                        'nameOverwrite' => "Avatar"
+                    ));
+                    $uploadProcessFile = $this->upload->processFile();
+
+                    $this->response['upload']['processFile'] = $uploadProcessFile;
+                    
+                    if (isset($uploadProcessFile['status']) == true && $uploadProcessFile['status'] == "complete") {
+                        //...
+                    }
+                }
+            }
         }
         
         return $this->ajax->response(Array(

@@ -32,14 +32,17 @@ class ErrorListener {
         $this->requestStack = $requestStack;
         
         $this->utility = new Utility($this->container, $this->entityManager, $translator);
+        $this->query = $this->utility->getQuery();
     }
     
     public function onKernelException(GetResponseForExceptionEvent $event) {
         $exception = $event->getException();
-
+        
         if ($exception instanceof NotFoundHttpException) {
-            if ($event->getRequest()->get("_route") == null) {
-                $session = $this->requestStack->getCurrentRequest()->getSession();
+            $request = $event->getRequest();
+            
+            if ($request->get("_route") == null) {
+                $session = $request->getSession();
                 $session = $session->get("php_session");
                 
                 $url = $this->router->generate(

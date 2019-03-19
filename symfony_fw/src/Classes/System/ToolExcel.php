@@ -92,6 +92,22 @@ class ToolExcel {
         $this->fileName = trim($fileName) . ".xlsx";
     }
     
+    public function totalLineCsv($path, $separator) {
+        $index = 0;
+        
+        if (file_exists($path) == true) {
+            if (($handle = fopen($path, "r")) !== false) {
+                while (($cell = fgetcsv($handle, 0, $separator)) !== false) {
+                    $index ++;
+                }
+
+                fclose($handle);
+            }
+        }
+        
+        return $index;
+    }
+    
     public function readCsv($path, $separator, $extra) {
         $elements = Array();
         
@@ -104,6 +120,8 @@ class ToolExcel {
                         $elements['items'][] = $cell;
                     else {
                         $result = $this->self->toolExcelCsvCallback($path, $index, $cell, $extra);
+                        
+                        $elements['items'] = $result;
                         
                         if ($result == false)
                             break;
@@ -170,24 +188,6 @@ class ToolExcel {
     }
     
     public function download() {
-        /*$this->save(__DIR__ . "/");
-        
-        ob_clean();
-        
-        header("Content-Disposition: attachment; filename=" . basename($this->file));
-        header("Content-Length: " . filesize($this->file));
-        header("Content-Type: application/vnd.openxmlformats-package.relationships+xml");
-        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-        header("Pragma: no-cache");
-        header("Expires: 0");
-        
-        readfile($this->file);
-        
-        if (file_exists($this->file) == true)
-            unlink($this->file);
-        
-        exit;*/
-        
         $this->save(__DIR__ . "/");
         
         ob_start();

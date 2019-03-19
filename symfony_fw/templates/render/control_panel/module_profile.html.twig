@@ -1,39 +1,37 @@
 {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
 
-<div>
-    <h2 class="mdc-typography--headline6">{% trans %}moduleProfile_1{% endtrans %}</h2>
-    <form id="form_cp_module_profile" action="{{path("cp_module_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
-        {{form_row(form.position)}}
+<h2 class="mdc-typography--headline6">{% trans %}moduleProfile_1{% endtrans %}</h2>
+<form id="form_cp_module_profile" action="{{path("cp_module_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+    {{form_row(form.position)}}
 
-        <div id="module_rankColumnSort" class="sort_container">
-            <p>{% trans %}moduleProfile_2{% endtrans %} <i class="material-icons">list</i></p>
-            <div class="sort_result">
-                {{response.values.moduleSortListHtml|raw}}
-            </div>
-            <div class="sort_control">
-                <button class="mdc-button mdc-button--dense mdc-button--raised" type="button">
-                    <i class="material-icons mdc-button__icon button_up">arrow_drop_up</i>
-                    {% trans %}moduleProfile_3{% endtrans %}
-                </button>
-                <button class="mdc-button mdc-button--dense mdc-button--raised" type="button">
-                    <i class="material-icons mdc-button__icon button_down">arrow_drop_down</i>
-                    {% trans %}moduleProfile_4{% endtrans %}
-                </button>
-            </div>
-            {{form_row(form.rankColumnSort)}}
+    <div id="module_rankColumnSort" class="sort_container">
+        <p>{% trans %}moduleProfile_2{% endtrans %} <i class="material-icons">list</i></p>
+        <div class="sort_result">
+            {{response.values.moduleSortListHtml|raw}}
         </div>
-        
-        {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
-        {{form_row(form.label, {'dense': "", 'styleType': "outlinedTrailing"})}}
-        {{form_row(form.controllerName, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "toll"})}}
-        {{form_row(form.active)}}
+        <div class="sort_control">
+            <button class="mdc-button mdc-button--dense mdc-button--raised" type="button">
+                <i class="material-icons mdc-button__icon button_up">arrow_drop_up</i>
+                {% trans %}moduleProfile_3{% endtrans %}
+            </button>
+            <button class="mdc-button mdc-button--dense mdc-button--raised" type="button">
+                <i class="material-icons mdc-button__icon button_down">arrow_drop_down</i>
+                {% trans %}moduleProfile_4{% endtrans %}
+            </button>
+        </div>
+        {{form_row(form.rankColumnSort)}}
+    </div>
 
-        {{form_widget(form._token)}}
+    {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+    {{form_row(form.label, {'dense': "", 'styleType': "outlinedTrailing"})}}
+    {{form_row(form.controllerName, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "toll"})}}
+    {{form_row(form.active)}}
 
-        {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
-    </form>
-    
-    {% if is_granted("ROLE_ADMIN") == true and response.values.id > 2 %}
-        {{-include("@templateRoot/render/control_panel/module_delete.html.twig")-}}
-    {% endif %}
-</div>
+    {{form_widget(form._token)}}
+
+    {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+</form>
+
+{% if is_granted("ROLE_ADMIN") == true and response.values.id > 2 %}
+    {{-include("@templateRoot/render/control_panel/module_delete.html.twig")-}}
+{% endif %}

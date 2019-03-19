@@ -202,16 +202,23 @@ date.time: H:i:s
 "tableAndPagination_6": "Elements founded:"
 
 # Upload
-"upload_1": "File uploaded successfully."
+"upload_1": "Start"
+"upload_2": "Stop"
+"upload_3": "Please don't close this window and wait..."
+"upload_4": "Error listener!"
+"upload_5": "Completed. Now you can close this window."
 
 "classUpload_1": "Error chunk size!"
 "classUpload_2": "Error input type!"
 "classUpload_3": "Error types!"
 "classUpload_4": "Error max size!"
 "classUpload_5": "Error image size!"
-"classUpload_6": "File uploaded successfully."
-"classUpload_7": "File not uploaded!"
-"classUpload_8": "Upload aborted."
+"classUpload_6": "Upload stopped."
+"classUpload_7": "Upload not stopped!"
+"classUpload_8": "File exists!"
+"classUpload_9": "Chunk not sended!"
+"classUpload_10": "File uploaded successfully."
+"classUpload_11": "File not uploaded!"
 
 # Captcha
 "captcha_1": "Chaptcha code incorrect!"
@@ -694,6 +701,9 @@ date.time: H:i:s
 "settingLinePushController_9": "Push user not added!"
 "settingLinePushController_10": "Active"
 "settingLinePushController_11": "Not active"
+
+# Lock
+"lock_1": "Process in progress, please try later."
 
 # Microservice deploy
 "microserviceDeployRender_1": "Microservice deploy render form"
