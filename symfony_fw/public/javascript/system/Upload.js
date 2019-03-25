@@ -276,22 +276,42 @@ function Upload() {
                         if ($(tagContainer).find(".popupWait .close").prop("disabled") === false) {
                             $(".loader_back").hide();
                             
+                            $(tagContainer).find(".popupWait .result").html("");
+                            $(tagContainer).find(".popupWait .result").hide();
+                            
+                            $(tagContainer).find(".popupWait .content").show();
+                            
                             $(tagContainer).find(".popupWait").hide();
                         }
                     });
                     
-                    if (xhr.response.values !== undefined)
-                        materialDesign.linearProgress(tagContainer + " .popupWait .mdc-linear-progress", xhr.response.values.count, xhr.response.values.total);
+                    if (xhr.response.values !== undefined) {
+                        if (xhr.response.values.count !== null) {
+                            $(tagContainer).find(".popupWait .content .status").html(xhr.response.values.count + "/" + xhr.response.values.total);
+                            
+                            materialDesign.linearProgress(tagContainer + " .popupWait .content .mdc-linear-progress", xhr.response.values.count, xhr.response.values.total);
+                        }
+                    }
                     
                     if (xhr.response.status === "error") {
                         $(tagContainer).find(".popupWait .close").prop("disabled", false);
                         
-                        $(tagContainer).find(".popupWait .content").html("<p>" + window.textUpload.label_1 + "</p>");
+                        $(tagContainer).find(".popupWait .content .status").html("");
+                        materialDesign.linearProgress(tagContainer + " .popupWait .content .mdc-linear-progress", 0, 0);
+                        $(tagContainer).find(".popupWait .content").hide();
+                        
+                        $(tagContainer).find(".popupWait .result").show();
+                        $(tagContainer).find(".popupWait .result").html("<p>" + window.textUpload.label_1 + "</p>");
                     }
                     else if (xhr.response.status === "finish") {
                         $(tagContainer).find(".popupWait .close").prop("disabled", false);
                         
-                        $(tagContainer).find(".popupWait .content").html("<p>" + window.textUpload.label_2 + "</p>");
+                        $(tagContainer).find(".popupWait .content .status").html("");
+                        materialDesign.linearProgress(tagContainer + " .popupWait .content .mdc-linear-progress", 0, 0);
+                        $(tagContainer).find(".popupWait .content").hide();
+                        
+                        $(tagContainer).find(".popupWait .result").show();
+                        $(tagContainer).find(".popupWait .result").html("<p>" + window.textUpload.label_2 + "</p>");
                     }
                     else if (xhr.response.status === "loop")
                         lock(xhr.response.values.lockName);

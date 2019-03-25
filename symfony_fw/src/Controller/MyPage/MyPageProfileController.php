@@ -310,10 +310,9 @@ class MyPageProfileController extends AbstractController {
                     $this->upload->setSettings(Array(
                         'path' => $path,
                         'chunkSize' => 1048576,
-                        'types' => Array("image/jpg", "image/jpeg"),
+                        'mimeType' => Array("image/jpg", "image/jpeg", "image/png"),
                         'maxSize' => 2097152,
-                        'imageWidth' => 150,
-                        'imageHeight' => 150,
+                        'imageSize' => Array(150, 150),
                         'nameOverwrite' => "Avatar"
                     ));
                     $uploadProcessFile = $this->upload->processFile();

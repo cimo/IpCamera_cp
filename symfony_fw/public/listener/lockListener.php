@@ -1,18 +1,18 @@
 <?php
 sleep(5);
 
+if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) == true && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != "xmlhttprequest")
+    exit;
+
 $response = Array();
 $lockName = isset($_REQUEST['lockName']) == true ? $_REQUEST['lockName'] : "";
-
-$response['testA'] = $_SERVER['SERVER_ADDR'];
-$response['testB'] = $_SERVER['REMOTE_ADDR'];
 
 $path = "../../src/files/lock/$lockName";
 
 if (file_exists($path) == true) {
     $fileContent = file_get_contents($path);
     $fileContentExplode = explode("|", $fileContent);
-
+    
     if (($fileContentExplode[0] - 1) == $fileContentExplode[1]) {
         unlink($path);
         

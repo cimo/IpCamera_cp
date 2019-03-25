@@ -42,13 +42,14 @@ class ErrorListener {
             $request = $event->getRequest();
             
             if ($request->get("_route") == null) {
-                $session = $request->getSession();
-                $session = $session->get("php_session");
+                $settingRow = $this->query->selectSettingDatabase();
+                
+                $this->utility->checkLanguage($request, $this->router, $settingRow);
                 
                 $url = $this->router->generate(
                     "root_render",
                     Array(
-                        '_locale' => $session['languageTextCode'],
+                        '_locale' => $_SESSION['languageTextCode'],
                         'urlCurrentPageId' => 2,
                         'urlExtra' => "",
                         'error' => "404"

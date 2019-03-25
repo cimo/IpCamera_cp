@@ -141,12 +141,15 @@ function MaterialDesign() {
             
             var progress = 0;
             
-            if (start !== undefined && end !== undefined)
+            if (start !== undefined && end !== undefined && end !== 0) {
                 progress = start / end;
+                
+                linearProgressMdc.progress = progress;
+            }
+            else
+                linearProgressMdc.progress = 0;
             
-            linearProgressMdc.progress = progress;
-            
-            if (buffer !== undefined)
+            if (buffer !== undefined && end !== 0)
                 linearProgressMdc.buffer = buffer;
         }
     };

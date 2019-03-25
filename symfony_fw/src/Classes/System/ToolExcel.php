@@ -3,15 +3,16 @@ namespace App\Classes\System;
 
 class ToolExcel {
     // Vars
-    private $self;
     private $encoding;
     
+    private $file;
     private $fileName;
     private $fileOptions;
     private $fileElements;
-    private $file;
     
     private $sheets;
+    private $sheetData;
+    private $worksheetName;
     
     // Properties
     
@@ -19,6 +20,8 @@ class ToolExcel {
     public function __construct($self = null, $encoding = "UTF-8") {
         $this->self = $self;
         $this->encoding = $encoding;
+        
+        $this->file = null;
         
         $this->fileName = "no_name";
         
@@ -83,9 +86,9 @@ class ToolExcel {
                                     . "</Types>"
         );
         
-        $this->file = null;
-        
         $this->sheets = Array();
+        $this->sheetData = Array();
+        $this->worksheetName = "";
     }
     
     public function fileName($fileName) {
@@ -100,7 +103,7 @@ class ToolExcel {
                 while (($cell = fgetcsv($handle, 0, $separator)) !== false) {
                     $index ++;
                 }
-
+                
                 fclose($handle);
             }
         }
@@ -108,66 +111,74 @@ class ToolExcel {
         return $index;
     }
     
-    public function readCsv($path, $separator, $extra) {
-        $elements = Array();
-        
-        $index = 0;
+    public function readCsv($path, $separator, $extras = Array()) {
+        $result = false;
         
         if (file_exists($path) == true) {
             if (($handle = fopen($path, "r")) !== false) {
+                $index = 0;
+                
                 while (($cell = fgetcsv($handle, 0, $separator)) !== false) {
                     if ($this->self == null)
-                        $elements['items'][] = $cell;
-                    else {
-                        $result = $this->self->toolExcelCsvCallback($path, $index, $cell, $extra);
-                        
-                        $elements['items'] = $result;
-                        
-                        if ($result == false)
-                            break;
-                    }
+                        $result = $this->populateSheetElements($index, $cell, $extras);
+                    else
+                        $result = $this->self->toolExcelCsvCallback($path, $index, $cell, $extras);
+                    
+                    if ($result == false)
+                        break;
                     
                     $index ++;
                 }
-
+                
                 fclose($handle);
             }
         }
         
-        return $elements;
+        return $result;
     }
     
-    public function convertCsvInXlsx($elements) {
-        $this->createSheet("Converted", $elements);
-    }
-    
-    public function createSheet($label, $elements, $options = Array()) {
-        $newOptions = array_merge($this->fileOptions, $options);
-        
+    public function createSheet($label) {
         $count = count($this->sheets);
         
-        $worksheetName = "sheet$count.xml";
+        $this->worksheetName = "sheet{$count}.xml";
         $id = $count + 3;
         
-        $relationship = "<Relationship Id=\"rId$id\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet\" Target=\"worksheets/$worksheetName\"/>{workbookRelationshipSheet}";
-        $name = "<sheet name=\"$label\" sheetId=\"$id\" r:id=\"rId$id\"/>{workbookSheetName}";
-        $contentType = "<Override PartName=\"/xl/worksheets/$worksheetName\" ContentType=\"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml\"/>{ContentTypeSheet}";
-        $worksheet = "<worksheet xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" mc:Ignorable=\"x14ac\" xmlns:x14ac=\"http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac\">"
-                        . "<sheetData>" . $this->row($elements, $newOptions) . "</sheetData>"
-                    . "</worksheet>";
+        $relationship = "<Relationship Id=\"rId{$id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet\" Target=\"worksheets/{$this->worksheetName}\"/>{workbookRelationshipSheet}";
+        $name = "<sheet name=\"$label\" sheetId=\"$id\" r:id=\"rId{$id}\"/>{workbookSheetName}";
+        $contentType = "<Override PartName=\"/xl/worksheets/{$this->worksheetName}\" ContentType=\"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml\"/>{ContentTypeSheet}";
+        $worksheet = "<worksheet xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" mc:Ignorable=\"x14ac\" xmlns:x14ac=\"http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac\"><sheetData></sheetData></worksheet>";
         
         $this->fileElements['xl/_rels/workbook.xml.rels'] = str_replace("{workbookRelationshipSheet}", $relationship, $this->fileElements['xl/_rels/workbook.xml.rels']);
         $this->fileElements['xl/workbook.xml'] = str_replace("{workbookSheetName}", $name, $this->fileElements['xl/workbook.xml']);
         $this->fileElements['[Content_Types].xml'] = str_replace("{ContentTypeSheet}", $contentType, $this->fileElements['[Content_Types].xml']);
-        $this->fileElements['xl/worksheets/' . $worksheetName] = $worksheet;
+        $this->fileElements['xl/worksheets/' . $this->worksheetName] = $worksheet;
         
-        $this->sheets[] = $worksheetName;
+        $this->sheets[] = $this->worksheetName;
+    }
+    
+    public function createSheetElements($elements, $extras = Array()) {
+        if (count($this->sheets) == 0)
+            return false;
+        
+        $options = array_merge($this->fileOptions, $extras);
+        
+        $index = 0;
+        
+        foreach($elements as $key => $value) {
+            $this->sheetData[$this->worksheetName] .= $this->sheetData($index, $value, $options);
+            
+            $index ++;
+        }
+        
+        return true;
     }
     
     public function save($path) {
         $zipArchive = new \ZipArchive();
         
         $zipArchive->open("$path/{$this->fileName}", \ZIPARCHIVE::CREATE);
+        
+        $worksheet = false;
         
         foreach ($this->fileElements as $key => $value) {
             $newValue = "<?xml version=\"1.0\" encoding=\"{$this->encoding}\" standalone=\"yes\"?>$value";
@@ -178,8 +189,20 @@ class ToolExcel {
                 $newValue = str_replace("{workbookSheetName}", "", $newValue);
             else if ($key == "[Content_Types].xml")
                 $newValue = str_replace("{ContentTypeSheet}", "", $newValue);
+            else if (strpos($key, "xl/worksheets/") !== false && $worksheet == false) {
+                $worksheet = true;
+                
+                foreach($this->sheets as $keySub => $valueSub) {
+                    $tmp = "<worksheet xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" mc:Ignorable=\"x14ac\" xmlns:x14ac=\"http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac\">"
+                            . "<sheetData>" . $this->sheetData[$valueSub] . "</sheetData>"
+                        . "</worksheet>";
+                    
+                    $zipArchive->addFromString('xl/worksheets/' . $valueSub, $tmp);
+                }
+            }
             
-            $zipArchive->addFromString($key, $newValue);
+            if ($worksheet == false)
+                $zipArchive->addFromString($key, $newValue);
         }
         
         $zipArchive->close();
@@ -188,9 +211,10 @@ class ToolExcel {
     }
     
     public function download() {
-        $this->save(__DIR__ . "/");
+        $this->save(__DIR__);
         
-        ob_start();
+        ob_clean();
+        
         header("Content-Disposition: attachment; filename=" . basename($this->file));
         header("Content-Length: " . filesize($this->file));
         header("Content-Type: application/vnd.openxmlformats-package.relationships+xml");
@@ -200,25 +224,31 @@ class ToolExcel {
         
         readfile($this->file);
         
-        $obContent = ob_get_contents();
-        ob_end_clean();
-
-        $fileInfo = new \finfo(FILEINFO_MIME);
-        $fileMimeContentType = $fileInfo->buffer($obContent) . PHP_EOL;
-        $fileMimeContentTypeExplode = explode(";", $fileMimeContentType);
-        
         if (file_exists($this->file) == true)
             unlink($this->file);
+        
+        exit;
     }
     
     // Functions private
-    private function row($elements, $options) {
+    private function populateSheetElements($index, $cell, $extras = Array()) {
+        if (count($this->sheets) == 0)
+            return false;
+        
+        $options = array_merge($this->fileOptions, $extras);
+        
+        $this->sheetData[$this->worksheetName] .= $this->sheetData($index, $cell, $options);
+        
+        return true;
+    }
+    
+    private function sheetData($index, $cell, $options) {
         $result = "";
         
-        if (count($elements['labels']) > 0) {
+        if ($index == 0) {
             $result .= "<row>";
             
-            foreach ($elements['labels'] as $key => $value) {
+            foreach ($cell as $key => $value) {
                 if (is_numeric($value) == true)
                     $result .= "<c s=\"1\" t=\"inlineStr\"><is><t>" . trim($value) . "</t></is></c>";
                 else {
@@ -226,7 +256,7 @@ class ToolExcel {
                         $newValue = htmlspecialchars($value, ENT_QUOTES | ENT_XML1, $options['encoding']);
                     else
                         $newValue = htmlspecialchars($value);
-
+                    
                     $result .= "<c s=\"1\" t=\"inlineStr\"><is><t>$newValue</t></is></c>";
                 }
             }
@@ -234,23 +264,45 @@ class ToolExcel {
             $result .= "</row>";
         }
         
-        foreach ($elements['items'] as $key => $value) {
-            $result .= "<row>";
-            
-            foreach ($value as $keySub => $valueSub) {
-                if (is_numeric($valueSub) == true)
-                    $result .= "<c><v>" . trim($valueSub) . "</v></c>";
-                else {
-                    if (defined("ENT_XML1") == true)
-                        $newValue = htmlspecialchars($valueSub, ENT_QUOTES | ENT_XML1, $options['encoding']);
-                    else
-                        $newValue = htmlspecialchars($valueSub);
+        if ($index > 0) {
+            if (is_array($cell[0]) == true) {
+                foreach ($cell as $key => $value) {
+                    $result .= "<row>";
                     
-                    $result .= "<c t=\"inlineStr\"><is><t>$newValue</t></is></c>";
+                    foreach ($value as $keySub => $valueSub) {
+                        if (is_numeric($valueSub) == true)
+                            $result .= "<c><v>" . trim($valueSub) . "</v></c>";
+                        else {
+                            if (defined("ENT_XML1") == true)
+                                $newValue = htmlspecialchars($valueSub, ENT_QUOTES | ENT_XML1, $options['encoding']);
+                            else
+                                $newValue = htmlspecialchars($valueSub);
+                            
+                            $result .= "<c t=\"inlineStr\"><is><t>$newValue</t></is></c>";
+                        }
+                    }
+                    
+                    $result .= "</row>";
                 }
             }
-            
-            $result .= "</row>";
+            else {
+                $result .= "<row>";
+                
+                foreach ($cell as $key => $value) {
+                    if (is_numeric($value) == true)
+                        $result .= "<c><v>" . trim($value) . "</v></c>";
+                    else {
+                        if (defined("ENT_XML1") == true)
+                            $newValue = htmlspecialchars($value, ENT_QUOTES | ENT_XML1, $options['encoding']);
+                        else
+                            $newValue = htmlspecialchars($value);
+                        
+                        $result .= "<c t=\"inlineStr\"><is><t>$newValue</t></is></c>";
+                    }
+                }
+                
+                $result .= "</row>";
+            }
         }
         
         return $result;

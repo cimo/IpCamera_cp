@@ -148,13 +148,12 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
         $url = $referer;
         
         if (strpos($request, "control_panel") !== false) {
-            $session = $request->getSession();
-            $session = $session->get("php_session");
+            $this->utility->checkLanguage($request, $this->router, $this->settingRow);
             
             $url = $this->router->generate(
                 "root_render",
                 Array(
-                    '_locale' => $session['languageTextCode'],
+                    '_locale' => $_SESSION['languageTextCode'],
                     'urlCurrentPageId' => 2,
                     'urlExtra' => ""
                 )

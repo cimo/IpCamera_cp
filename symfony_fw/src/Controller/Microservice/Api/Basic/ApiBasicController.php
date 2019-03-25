@@ -563,7 +563,7 @@ class ApiBasicController extends AbstractController {
                         $this->upload->setSettings(Array(
                             'path' => $path,
                             'chunkSize' => 1048576,
-                            'types' => Array("text/plain")
+                            'mimeType' => Array("text/plain")
                         ));
                         $uploadProcessFile = $this->upload->processFile();
 
@@ -581,7 +581,7 @@ class ApiBasicController extends AbstractController {
 
                             $readCsv = $this->toolExcel->readCsv("$path/{$uploadProcessFile['fileName']}", ",", $apiBasicDatabaseRow);
 
-                            if (isset($readCsv['items']) == true && isset($readCsv['items'][0]) == false && $readCsv['items'] == true) {
+                            if ($readCsv == true) {
                                 //...
                             }
                         }

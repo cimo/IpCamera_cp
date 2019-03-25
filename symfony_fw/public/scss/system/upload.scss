@@ -42,8 +42,18 @@
             cursor: pointer;
         }
         
-        .mdc-linear-progress {
-            display: block !important;
+        .content {
+            .status {
+                text-align: right;
+            }
+            
+            .mdc-linear-progress {
+                display: block !important;
+            }
+        }
+        
+        .result {
+            display: none;
         }
     }
 }

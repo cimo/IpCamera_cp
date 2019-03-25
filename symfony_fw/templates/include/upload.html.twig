@@ -22,12 +22,14 @@
         </button>
     </div>
         
-    <div id="popupWait" class="popupWait">
+    <div class="popupWait">
         <i class="material-icons close" disabled="disabled">close</i>
         <div class="content">
             <p>{% trans %}upload_3{% endtrans %}</p>
+            <p class="status"></p>
             {{-include("@templateRoot/include/progress_bar.html.twig")-}}
         </div>
+        <div class="result"></div>
     </div>
 </div>
 <script>
