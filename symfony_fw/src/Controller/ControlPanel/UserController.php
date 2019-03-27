@@ -216,6 +216,7 @@ class UserController extends AbstractController {
 
                     $this->response['values']['userRoleSelectHtml'] = $this->utility->createUserRoleSelectHtml("form_user_roleUserId_select", "userController_1", true);
                     $this->response['values']['id'] = $_SESSION['userProfileId'];
+                    $this->response['values']['attemptLogin'] = $userEntity->getAttemptLogin();
                     $this->response['values']['credit'] = $userEntity->getCredit();
 
                     $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/user_profile.html.twig", Array(
@@ -319,6 +320,57 @@ class UserController extends AbstractController {
     
     /**
     * @Route(
+    *   name = "cp_user_attemptLoginReset",
+    *   path = "/cp_user_attemptLoginReset/{_locale}/{urlCurrentPageId}/{urlExtra}",
+    *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
+    *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
+    *	methods={"POST"}
+    * )
+    * @Template("@templateRoot/render/control_panel/user_profile.html.twig")
+    */
+    public function attemptLoginResetAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
+        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
+        $this->entityManager = $this->getDoctrine()->getManager();
+        
+        $this->response = Array();
+        
+        $this->utility = new Utility($this->container, $this->entityManager, $translator);
+        $this->query = $this->utility->getQuery();
+        $this->ajax = new Ajax($this->utility);
+        
+        // Logic
+        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        
+        if ($request->isMethod("POST") == true && $checkUserRole == true) {
+            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
+                if ($request->get("event") == "reset") {
+                    $userEntity = $this->entityManager->getRepository("App\Entity\User")->find($_SESSION['userProfileId']);
+                    
+                    $userEntity->setAttemptLogin(0);
+                    
+                    $this->entityManager->persist($userEntity);
+                    $this->entityManager->flush();
+
+                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("userController_7");
+                }
+                else
+                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("userController_8");
+            }
+        }
+        
+        return $this->ajax->response(Array(
+            'urlLocale' => $this->urlLocale,
+            'urlCurrentPageId' => $this->urlCurrentPageId,
+            'urlExtra' => $this->urlExtra,
+            'response' => $this->response
+        ));
+    }
+    
+    /**
+    * @Route(
     *   name = "cp_user_delete",
     *   path = "/cp_user_delete/{_locale}/{urlCurrentPageId}/{urlExtra}",
     *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
@@ -357,7 +409,7 @@ class UserController extends AbstractController {
                     if ($userDatabase == true) {
                         $this->response['values']['id'] = $id;
 
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("userController_7");
+                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("userController_9");
                     }
                 }
                 else if ($request->get("event") == "deleteAll") {
@@ -370,10 +422,10 @@ class UserController extends AbstractController {
                     $userDatabase = $this->userDatabase("deleteAll", null);
 
                     if ($userDatabase == true)
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("userController_8");
+                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("userController_10");
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("userController_9");
+                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("userController_11");
 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -431,9 +483,9 @@ class UserController extends AbstractController {
                 </td>
                 <td>";
                     if ($value['active'] == 0)
-                        $listHtml .= $this->utility->getTranslator()->trans("userController_10");
+                        $listHtml .= $this->utility->getTranslator()->trans("userController_12");
                     else
-                        $listHtml .= $this->utility->getTranslator()->trans("userController_11");
+                        $listHtml .= $this->utility->getTranslator()->trans("userController_13");
                 $listHtml .= "</td>
                 <td>
                     <button class=\"mdc-fab mdc-fab--mini cp_user_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>

@@ -1,11 +1,20 @@
 <?php
-sleep(5);
+$remoteAddressExplode = explode(",", $_SERVER['REMOTE_ADDR']);
+$serverAddressExplode = explode(",", $_SERVER['SERVER_ADDR']);
+
+if ($remoteAddressExplode[0] != $serverAddressExplode[0] && $remoteAddressExplode[1] != $serverAddressExplode[1] && $remoteAddressExplode[2] != $serverAddressExplode[2])
+    exit;
 
 if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) == true && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != "xmlhttprequest")
     exit;
 
 $response = Array();
 $lockName = isset($_REQUEST['lockName']) == true ? $_REQUEST['lockName'] : "";
+
+if (empty($lockName) == true)
+    exit;
+
+sleep(5);
 
 $path = "../../src/files/lock/$lockName";
 

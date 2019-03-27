@@ -8,10 +8,17 @@ class Upload {
     private $utility;
     
     private $settings;
+    
     private $maxSize;
     
     // Properties
     public function setSettings($value) {
+        if (isset($value['mimeType']) == true) {
+            $value['mimeType'][] = "application/octet-stream";
+            
+            $value['mimeType'] = array_unique($value['mimeType']);
+        }
+        
         $this->settings = $value;
     }
     
@@ -22,6 +29,7 @@ class Upload {
         $this->utility = $utility;
         
         $this->settings = Array();
+        
         $this->maxSize = 0;
     }
     
@@ -67,8 +75,8 @@ class Upload {
                     $fileName = $_REQUEST['fileName'];
                     
                     $tmpName = $_FILES['file']['tmp_name'];
-                    $fileSize = $_FILES["file"]["size"];
                     $mimeType = mime_content_type($tmpName);
+                    $fileSize = $_FILES["file"]["size"];
                     $this->maxSize += $fileSize;
                     
                     $check = true;
@@ -136,7 +144,9 @@ class Upload {
                 
                 if (file_exists("{$this->settings['path']}/$fileName") == true) {
                     if (isset($this->settings['nameOverwrite']) == true && $this->settings['nameOverwrite'] != "") {
-                        rename("{$this->settings['path']}/$fileName", "{$this->settings['path']}/{$this->settings['nameOverwrite']}");
+                        $extension = pathinfo("{$this->settings['path']}/$fileName", PATHINFO_EXTENSION);
+                        
+                        rename("{$this->settings['path']}/$fileName", "{$this->settings['path']}/{$this->settings['nameOverwrite']}.{$extension}");
                         
                         $fileName = $this->settings['nameOverwrite'];
                     }

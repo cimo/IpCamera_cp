@@ -244,6 +244,33 @@ function ControlPanelUser() {
                 );
             });
             
+            $("#attemptLogin_reset").on("click", "", function(event) {
+                event.preventDefault();
+
+                ajax.send(
+                    true,
+                    window.url.cpUserAttemptLoginReset,
+                    "post",
+                    {
+                        'event': "reset",
+                        'token': window.session.token
+                    },
+                    "json",
+                    false,
+                    true,
+                    "application/x-www-form-urlencoded; charset=UTF-8",
+                    null,
+                    function(xhr) {
+                        ajax.reply(xhr, "");
+                        
+                        if (xhr.response.messages.success !== undefined)
+                            $(".attemptLogin_reset_result").text(0);
+                    },
+                    null,
+                    null
+                );
+            });
+            
             $("#cp_user_delete").on("click", "", function() {
                deleteElement(null);
             });
