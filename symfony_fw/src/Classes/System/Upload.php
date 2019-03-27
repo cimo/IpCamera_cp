@@ -13,11 +13,9 @@ class Upload {
     
     // Properties
     public function setSettings($value) {
-        if (isset($value['mimeType']) == true) {
-            $value['mimeType'][] = "application/octet-stream";
-            
-            $value['mimeType'] = array_unique($value['mimeType']);
-        }
+        $value['mimeType'][] = "application/octet-stream";
+        
+        $value['mimeType'] = array_unique($value['mimeType']);
         
         $this->settings = $value;
     }
