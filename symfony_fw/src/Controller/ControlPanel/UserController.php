@@ -470,9 +470,6 @@ class UserController extends AbstractController {
                     </div>
                 </td>
                 <td>
-                    {$roleUserRow[$key][0]}
-                </td>
-                <td>
                     {$value['username']}
                 </td>
                 <td>

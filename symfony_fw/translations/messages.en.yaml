@@ -318,6 +318,7 @@ date.time: H:i:s
 
 "controlPanelMicroserviceApi_1": "Api section."
 
+# IpCamera
 "controlPanelMenuIpCamera_1": "Ip camera"
 "controlPanelMenuIpCamera_2": "Devices"
 "controlPanelMenuIpCamera_3": "Files"
@@ -448,15 +449,15 @@ date.time: H:i:s
 "userSelect_2": "..."
 "userSelect_3": "Id"
 "userSelect_4": "Select"
-"userSelect_5": "Role"
-"userSelect_6": "Username"
-"userSelect_7": "Email"
-"userSelect_8": "Company name"
-"userSelect_9": "Active"
-"userSelect_10": "Remove"
-"userSelect_11": "Select"
+"userSelect_5": "Username"
+"userSelect_6": "Email"
+"userSelect_7": "Company name"
+"userSelect_8": "Active"
+"userSelect_9": "Remove"
+"userSelect_10": "Select"
 
 "userProfile_1": "User profile form"
+"userProfile_2": "Attempt login:"
 
 "userDelete_1": "Warning! If you delete the user is impossible return back."
 "userDelete_2": "Delete"
@@ -495,11 +496,13 @@ date.time: H:i:s
 "userController_4": "User not selected!"
 "userController_5": "User update completed."
 "userController_6": "User update not completed!"
-"userController_7": "User deletion completed."
-"userController_8": "All users deletion completed."
-"userController_9": "User not deleted!"
-"userController_10": "No"
-"userController_11": "Yes"
+"userController_7": "Attempt login reset completed."
+"userController_8": "Attempt login reset not completed!"
+"userController_9": "User deletion completed."
+"userController_10": "All users deletion completed."
+"userController_11": "User not deleted!"
+"userController_12": "No"
+"userController_13": "Yes"
 
 # Module
 "module_1": "Authentication"
