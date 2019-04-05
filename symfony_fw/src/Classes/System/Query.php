@@ -218,7 +218,7 @@ class Query {
                                                 AND pages_arguments.id = pages.id
                                                 AND pages_menu_names.id = pages.id
                                                 AND pages.only_link = :onlyLink
-                                                AND pages.id = :idStartA OR pages.id > :idStartB
+                                                AND (pages.id = :idStartA OR pages.id > :idStartB)
                                                 AND (pages_titles.$language LIKE :search
                                                     OR pages_arguments.$language LIKE :search
                                                     OR pages_menu_names.$language LIKE :search)");

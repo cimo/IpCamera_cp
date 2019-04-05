@@ -145,13 +145,19 @@ class SearchController extends AbstractController {
     }
     
     // Functions private
-    private function createListHtml($tableResult) {
-        if (count($tableResult) == 0)
+    private function createListHtml($elements) {
+        if (count($elements) == 0)
             return "";
         
         $listHtml = "<ul class=\"mdc-list mdc-list--two-line mdc-list--avatar-list\">";
         
-        foreach ($tableResult as $key => $value) {      
+        foreach ($elements as $key => $value) {
+            if (count($value) == 0) {
+                $listHtml = "";
+                
+                break;
+            }
+            
             $listHtml .= "<li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">receipt</span>
                 <span class=\"mdc-list-item__text\">
@@ -170,7 +176,7 @@ class SearchController extends AbstractController {
                 </a>
             </li>";
             
-            if ($key < (count($tableResult) - 1))
+            if ($key < (count($elements) - 1))
                 $listHtml .= "<li role=\"separator\" class=\"mdc-list-divider\"></li>";
         }
         

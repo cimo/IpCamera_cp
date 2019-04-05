@@ -445,7 +445,7 @@ class UserController extends AbstractController {
     }
     
     // Functions private    
-    private function createListHtml($userRows, $tableResult) {
+    private function createListHtml($userRows, $elements) {
         $listHtml = "";
         
         $roleUserRow = Array();
@@ -453,7 +453,7 @@ class UserController extends AbstractController {
         foreach ($userRows as $key => $value)
             $roleUserRow[] = $this->query->selectRoleUserDatabase($value['role_user_id'], true);
         
-        foreach ($tableResult as $key => $value) {
+        foreach ($elements as $key => $value) {
             $listHtml .= "<tr>
                 <td class=\"id_column\">
                     {$value['id']}

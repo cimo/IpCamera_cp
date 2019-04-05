@@ -367,10 +367,10 @@ class RoleUserController extends AbstractController {
     }
     
     // Functions private
-    private function createListHtml($tableResult) {
+    private function createListHtml($elements) {
         $listHtml = "";
         
-        foreach ($tableResult as $key => $value) {
+        foreach ($elements as $key => $value) {
             $listHtml .= "<tr>
                 <td class=\"id_column\">
                     {$value['id']}
