@@ -692,8 +692,8 @@ date.time: H:i:s
 "settingLinePushFormType_6": "Yes"
 "settingLinePushFormType_7": "Send"
 
-"settingLinePushController_1": "Push create completed."
-"settingLinePushController_2": "Push not created!"
+"settingLinePushController_1": "Push saved."
+"settingLinePushController_2": "Push not saved!"
 "settingLinePushController_3": "Push not selected!"
 "settingLinePushController_4": "Push delete completed."
 "settingLinePushController_5": "Push not deleted!"
