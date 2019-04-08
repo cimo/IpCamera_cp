@@ -135,6 +135,423 @@ class Utility {
         $this->arrayColumnFix();
     }
     
+    public function createUserSelectHtml($selectId, $label, $isRequired = false) {
+        $rows = $this->query->selectAllUserDatabase();
+        
+        $required = $isRequired == true ? "required=\"required\"" : "";
+        
+        $html = "<div id=\"$selectId\" class=\"mdc-select\" $required>
+            <select class=\"mdc-select__native-control\">
+                <option value=\"\"></option>";
+                foreach ($rows as $key => $value) {
+                    $html .= "<option value=\"{$value['id']}\">{$value['username']}</option>";
+                }
+            $html .= "</select>
+            <label class=\"mdc-floating-label mdc-floating-label--float-above\">" . $this->translator->trans($label) . "</label>
+            <div class=\"mdc-line-ripple\"></div>
+        </div>";
+        
+        return $html;
+    }
+    
+    public function createUserRoleSelectHtml($selectId, $label, $isRequired = false) {
+        $rows = $this->query->selectAllRoleUserDatabase();
+        
+        $required = $isRequired == true ? "required=\"required\"" : "";
+        
+        $html = "<div id=\"$selectId\" class=\"mdc-select\" $required>
+            <select class=\"mdc-select__native-control\">
+                <option value=\"\"></option>";
+                foreach ($rows as $key => $value) {
+                    $html .= "<option value=\"{$value['id']}\">{$value['level']}</option>";
+                }
+            $html .= "</select>
+            <label class=\"mdc-floating-label mdc-floating-label--float-above\">" . $this->translator->trans($label) . "</label>
+            <div class=\"mdc-line-ripple\"></div>
+        </div>";
+        
+        return $html;
+    }
+    
+    public function createPageSelectHtml($urlLocale, $selectId, $label) {
+        $rows = $this->query->selectAllPageDatabase($urlLocale);
+        
+        $pagesList = $this->createPageList($rows, true);
+        
+        $html = "<div id=\"$selectId\" class=\"mdc-select\">
+            <select class=\"mdc-select__native-control\">
+                <option value=\"\"></option>";
+                foreach ($pagesList as $key => $value) {
+                    $html .= "<option value=\"$key\">$value</option>";
+                }
+            $html .= "</select>
+            <label class=\"mdc-floating-label mdc-floating-label--float-above\">$label</label>
+            <div class=\"mdc-line-ripple\"></div>
+        </div>";
+        
+        return $html;
+    }
+    
+    public function createLanguageSelectOptionHtml($code) {
+        $row = $this->query->selectLanguageDatabase($code);
+        $rows = $this->query->selectAllLanguageDatabase();
+        
+        $key = array_search($row, $rows);
+        unset($rows[$key]);
+        array_unshift($rows, $row);
+        
+        $html = "";
+        
+        foreach ($rows as $key => $value) {
+            $html .= "<option value=\"{$value['code']}\">{$value['code']}</option>";
+        }
+        
+        return $html;
+    }
+    
+    public function createPageSortListHtml($rows) {
+        $html = "<ul class=\"sort_list\">";
+            foreach ($rows as $key => $value) {
+                $html .= "<li class=\"ui-state-default\">
+                    <div class=\"mdc-chip\">
+                        <i class=\"material-icons mdc-chip__icon mdc-chip__icon--leading\">drag_handle</i>
+                        <div class=\"mdc-chip__text sort_elemet_data\" data-id=\"$key\">[$key] $value</div>
+                    </div>
+                </li>";
+            }
+            
+            if ($_SESSION['pageProfileId'] == 0) {
+                $pageRows = $this->query->selectAllPageDatabase($_SESSION['languageTextCode']);
+                $id = count($pageRows) + 1;
+                
+                $html .= "<li class=\"ui-state-default\">
+                    <div class=\"mdc-chip\">
+                        <i class=\"material-icons mdc-chip__icon mdc-chip__icon--leading\">drag_handle</i>
+                        <div class=\"mdc-chip__text sort_elemet_data\" data-id=\"$id\">[$id] " . $this->translator->trans("classUtility_4") . "</div>
+                    </div>
+                </li>";
+            }
+        $html .= "</ul>";
+        
+        return $html;
+    }
+    
+    public function createModuleSortListHtml($rows) {
+        $html = "<ul class=\"sort_list\">";
+            foreach ($rows as $key => $value) {
+                $html .= "<li class=\"ui-state-default\">
+                    <div class=\"mdc-chip\">
+                        <i class=\"material-icons mdc-chip__icon mdc-chip__icon--leading\">drag_handle</i>
+                        <div class=\"mdc-chip__text sort_elemet_data\" data-id=\"$key\">[$key] $value</div>
+                    </div>
+                </li>";
+            }
+            
+            if ($_SESSION['moduleProfileId'] == 0) {
+                $moduleRows = $this->query->selectAllModuleDatabase();
+                $id = count($moduleRows) + 1;
+                
+                $html .= "<li class=\"ui-state-default\">
+                    <div class=\"mdc-chip\">
+                        <i class=\"material-icons mdc-chip__icon mdc-chip__icon--leading\">drag_handle</i>
+                        <div class=\"mdc-chip__text sort_elemet_data\" data-id=\"$id\">[$id] " . $this->translator->trans("classUtility_5") . "</div>
+                    </div>
+                </li>";
+            }
+        $html .= "</ul>";
+        
+        return $html;
+    }
+    
+    public function createWordTagListHtml($rows) {
+        $html = "";
+        
+        foreach ($rows as $key => $value) {
+            if (isset($value['name']) == true) {
+                $html .= "<div class=\"mdc-chip edit\">
+                    <i class=\"material-icons mdc-chip__icon mdc-chip__icon--leading delete\">delete</i>
+                    <div class=\"mdc-chip__text wordTag_elemet_data\" data-id=\"{$value['id']}\">{$value['name']}</div>
+                </div>";
+            }
+        }
+        
+        return $html;
+    }
+    
+    public function createTemplateList() {
+        $templatesPath = "{$this->pathPublic}/images/templates";
+        
+        $scanDirElements = preg_grep("/^([^.])/", scandir($templatesPath));
+        
+        $list = Array();
+        
+        if ($scanDirElements != false) {
+            foreach ($scanDirElements as $key => $value) {
+                if ($value != "." && $value != ".." && is_dir("$templatesPath/$value") == true)
+                    $list[$value] = $value;
+            }
+        }
+        
+        return $list;
+    }
+    
+    public function createPageList($pagesRows, $onlyMenuName, $pagination = null) {
+        $pagesListHierarchy = $this->createPageListHierarchy($pagesRows, $pagination);
+        
+        if ($onlyMenuName == true) {
+            $tag = "";
+            $parentId = 0;
+            $elements = Array();
+            $count = 0;
+
+            $pagesListOnlyMenuName = $this->createPageListOnlyMenuName($pagesListHierarchy, $tag, $parentId, $elements, $count);
+            
+            return $pagesListOnlyMenuName;
+        }
+        
+        return $pagesListHierarchy;
+    }
+    
+    public function assignUserPassword($type, $user, $form) {
+        $row = $this->query->selectUserDatabase($user->getId());
+        
+        if ($type == "withOld") {
+            if (password_verify($form->get("old")->getData(), $row['password']) == false)
+                return $this->translator->trans("classUtility_1");
+            else if ($form->get("new")->getData() != $form->get("newConfirm")->getData())
+                return $this->translator->trans("classUtility_2");
+            
+            $user->setPassword($this->createPasswordEncoder($type, $user, $form));
+        }
+        else if ($type == "withoutOld") {
+            if ($form->get("password")->getData() != "" || $form->get("passwordConfirm")->getData() != "") {
+                if ($form->get("password")->getData() != $form->get("passwordConfirm")->getData())
+                    return $this->translator->trans("classUtility_3");
+                
+                $user->setPassword($this->createPasswordEncoder($type, $user, $form));
+            }
+            else
+                $user->setPassword($row['password']);
+        }
+        
+        return "ok";
+    }
+    
+    public function assignUserParameter($user) {
+        $query = $this->connection->prepare("SELECT id FROM users
+                                                LIMIT 1");
+        
+        $query->execute();
+        
+        $rowsCount = $query->rowCount();
+        
+        if ($rowsCount == 0) {
+            $user->setRoleUserId("1,2,");
+            $user->setRoles(Array("ROLE_USER", "ROLE_ADMIN"));
+            $user->setCredit(0);
+            $user->setActive(1);
+        }
+        else {
+            $user->setRoleUserId("1,");
+            $user->setRoles(Array("ROLE_USER"));
+            $user->setCredit(0);
+            $user->setActive(0);
+        }
+    }
+    
+    public function checkAttemptLogin($type, $userValue, $settingRow) {
+        $row = $this->query->selectUserDatabase($userValue);
+        
+        $dateTimeCurrentLogin = new \DateTime($row['date_current_login']);
+        $dateTimeCurrent = new \DateTime();
+        
+        $interval = intval($dateTimeCurrentLogin->diff($dateTimeCurrent)->format("%i"));
+        $total = $settingRow['login_attempt_time'] - $interval;
+        
+        if ($total < 0)
+            $total = 0;
+        
+        $dateCurrent = date("Y-m-d H:i:s");
+        $dateLastLogin = strpos($row['date_last_login'], "0000") !== false ? $dateCurrent : $row['date_current_login'];
+        
+        $result = Array("", "");
+        
+        if (isset($row['id']) == true && $settingRow['login_attempt_time'] > 0) {
+            $count = $row['attempt_login'] + 1;
+            
+            $query = $this->connection->prepare("UPDATE users
+                                                    SET date_current_login = :dateCurrentLogin,
+                                                        date_last_login = :dateLastLogin,
+                                                        ip = :ip,
+                                                        attempt_login = :attemptLogin
+                                                    WHERE id = :id");
+            
+            if ($type == "success") {
+                if ($count > $settingRow['login_attempt_count'] && $total > 0) {
+                    $result[0] = "lock";
+                    $result[1] = $total;
+                    
+                    return Array(false, $result[0], $result[1]);
+                }
+                else {
+                    $query->bindValue(":dateCurrentLogin", $dateCurrent);
+                    $query->bindValue(":dateLastLogin", $dateLastLogin);
+                    $query->bindValue(":ip", $this->clientIp());
+                    $query->bindValue(":attemptLogin", 0);
+                    $query->bindValue(":id", $row['id']);
+
+                    $query->execute();
+                }
+            }
+            else if ($type == "failure") {
+                if ($count > $settingRow['login_attempt_count'] && $total > 0) {
+                    $result[0] = "lock";
+                    $result[1] = $total;
+                }
+                else {
+                    if ($count > $settingRow['login_attempt_count'])
+                        $count = 1;
+                    
+                    $query->bindValue(":dateCurrentLogin", $dateCurrent);
+                    $query->bindValue(":dateLastLogin", $row['date_last_login']);
+                    $query->bindValue(":ip", $this->clientIp());
+                    $query->bindValue(":attemptLogin", $count);
+                    $query->bindValue(":id", $row['id']);
+                    
+                    $query->execute();
+                    
+                    $result[0] = "try";
+                    $result[1] = $count;
+                }
+                
+                return Array(false, $result[0], $result[1]);
+            }
+        }
+        
+        return Array(true, $result[0], $result[1]);
+    }
+    
+    public function checkUserActive($username) {
+        $row = $this->query->selectUserDatabase($username);
+        
+        if ($row == false)
+            return false;
+        else
+            return $row['active'];
+    }
+    
+    public function checkUserRole($roleName, $user) {
+        if ($user != null) {
+            $row = $this->query->selectRoleUserDatabase($user->getRoleUserId());
+
+            if ($this->arrayFindValue($roleName, $row) == true)
+                return true;
+        }
+        
+        return false;
+    }
+    
+    public function sendMessageToSlackRoom($name, $text) {
+        $row = $this->query->selectSettingSlackIwDatabase($name);
+        
+        if ($row != false) {
+            $postFields = Array();
+            $postFields['channel'] = $row['channel'];
+            $postFields['text'] = $text;
+
+            $curl = curl_init();
+
+            curl_setopt($curl, CURLOPT_URL, $row['hook']);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postFields));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, Array(
+                "Content-Type: application/json"
+            ));
+
+            $curlResponse = curl_exec($curl);
+            $curlError = curl_error($curl);
+            $curlInfo = curl_getinfo($curl);
+            
+            curl_close($curl);
+        }
+    }
+    
+    public function sendMessageToLineChat($name, $text) {
+        $row = $this->query->selectSettingLinePushDatabase($name);
+        
+        if ($row != false) {
+            $postFields = Array();
+            $postFields['to'] = $row['user_id'];
+            $postFields['messages'] = Array(Array('type' => "text", 'text' => $text));
+            
+            $curl = curl_init();
+            
+            curl_setopt($curl, CURLOPT_URL, "https://api.line.me/v2/bot/message/push");
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postFields));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, Array(
+                "Content-Type: application/json",
+                "Authorization: Bearer {$row['access_token']}"
+            ));
+            
+            $curlResponse = curl_exec($curl);
+            $curlError = curl_error($curl);
+            $curlInfo = curl_getinfo($curl);
+            
+            curl_close($curl);
+        }
+    }
+    
+    public function sendMessageToLineChatMultiple($name, $text) {
+        $pushRow = $this->query->selectSettingLinePushDatabase($name);
+        
+        if ($pushRow != false) {
+            $pushUserRows = $this->query->selectAllSettingLinePushUserDatabase("allPushName", $name);
+            
+            $to[] = $pushRow['user_id'];
+            
+            foreach ($pushUserRows as $key => $value) {
+                if ($value['push_name'] == $name && $value['active'] == 1)
+                    $to[] = $value['user_id'];
+            }
+            
+            $to = array_unique($to);
+            
+            foreach ($to as $key => $value) {
+                $postFields = Array();
+                $postFields['to'] = $value;
+                $postFields['messages'] = Array(Array('type' => "text", 'text' => $text));
+
+                $curl = curl_init();
+
+                curl_setopt($curl, CURLOPT_URL, "https://api.line.me/v2/bot/message/push");
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($curl, CURLOPT_POST, true);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postFields));
+                curl_setopt($curl, CURLOPT_HTTPHEADER, Array(
+                    "Content-Type: application/json",
+                    "Authorization: Bearer {$pushRow['access_token']}"
+                ));
+
+                $curlResponse = curl_exec($curl);
+                $curlError = curl_error($curl);
+                $curlInfo = curl_getinfo($curl);
+                
+                curl_close($curl);
+            }
+        }
+    }
+    
+    // ---
+    
     public function configureCookie($name, $lifeTime, $secure, $httpOnly) {
         $currentCookieParams = session_get_cookie_params();
         
@@ -333,18 +750,16 @@ class Utility {
         return substr($string, $position, $length);
     }
     
-    public function arrayLike($elements, $like, $oneLevel) {
+    public function arrayLike($elements, $like) {
         $result = Array();
         
-        if ($oneLevel == true) {
-            foreach ($elements as $key => $value) {
-                $result[] = preg_grep("~$like~i", $value);
-            }
-        }
-        else {
-            foreach ($elements as $key => $value) {
-                $result[$key] = preg_grep("~$like~i", $value);
-            }
+        foreach ($elements as $key => $value) {
+            $result[$key] = preg_grep("~$like~i", $value);
+            
+            if (count($result[$key]) == 0)
+                unset($result[$key]);
+            else
+                $result[$key] = $value;
         }
         
         return $result;
@@ -455,230 +870,6 @@ class Utility {
         }
         
         return $result;
-    }
-    
-    public function assignUserPassword($type, $user, $form) {
-        $row = $this->query->selectUserDatabase($user->getId());
-        
-        if ($type == "withOld") {
-            if (password_verify($form->get("old")->getData(), $row['password']) == false)
-                return $this->translator->trans("classUtility_1");
-            else if ($form->get("new")->getData() != $form->get("newConfirm")->getData())
-                return $this->translator->trans("classUtility_2");
-            
-            $user->setPassword($this->createPasswordEncoder($type, $user, $form));
-        }
-        else if ($type == "withoutOld") {
-            if ($form->get("password")->getData() != "" || $form->get("passwordConfirm")->getData() != "") {
-                if ($form->get("password")->getData() != $form->get("passwordConfirm")->getData())
-                    return $this->translator->trans("classUtility_3");
-                
-                $user->setPassword($this->createPasswordEncoder($type, $user, $form));
-            }
-            else
-                $user->setPassword($row['password']);
-        }
-        
-        return "ok";
-    }
-    
-    public function assignUserParameter($user) {
-        $query = $this->connection->prepare("SELECT id FROM users
-                                                LIMIT 1");
-        
-        $query->execute();
-        
-        $rowsCount = $query->rowCount();
-        
-        if ($rowsCount == 0) {
-            $user->setRoleUserId("1,2,");
-            $user->setRoles(Array("ROLE_USER", "ROLE_ADMIN"));
-            $user->setCredit(0);
-            $user->setActive(1);
-        }
-        else {
-            $user->setRoleUserId("1,");
-            $user->setRoles(Array("ROLE_USER"));
-            $user->setCredit(0);
-            $user->setActive(0);
-        }
-    }
-    
-    public function createUserSelectHtml($selectId, $label, $isRequired = false) {
-        $rows = $this->query->selectAllUserDatabase();
-        
-        $required = $isRequired == true ? "required=\"required\"" : "";
-        
-        $html = "<div id=\"$selectId\" class=\"mdc-select\" $required>
-            <select class=\"mdc-select__native-control\">
-                <option value=\"\"></option>";
-                foreach ($rows as $key => $value) {
-                    $html .= "<option value=\"{$value['id']}\">{$value['username']}</option>";
-                }
-            $html .= "</select>
-            <label class=\"mdc-floating-label mdc-floating-label--float-above\">" . $this->translator->trans($label) . "</label>
-            <div class=\"mdc-line-ripple\"></div>
-        </div>";
-        
-        return $html;
-    }
-    
-    public function createUserRoleSelectHtml($selectId, $label, $isRequired = false) {
-        $rows = $this->query->selectAllRoleUserDatabase();
-        
-        $required = $isRequired == true ? "required=\"required\"" : "";
-        
-        $html = "<div id=\"$selectId\" class=\"mdc-select\" $required>
-            <select class=\"mdc-select__native-control\">
-                <option value=\"\"></option>";
-                foreach ($rows as $key => $value) {
-                    $html .= "<option value=\"{$value['id']}\">{$value['level']}</option>";
-                }
-            $html .= "</select>
-            <label class=\"mdc-floating-label mdc-floating-label--float-above\">" . $this->translator->trans($label) . "</label>
-            <div class=\"mdc-line-ripple\"></div>
-        </div>";
-        
-        return $html;
-    }
-    
-    public function createPageSelectHtml($urlLocale, $selectId, $label) {
-        $rows = $this->query->selectAllPageDatabase($urlLocale);
-        
-        $pagesList = $this->createPageList($rows, true);
-        
-        $html = "<div id=\"$selectId\" class=\"mdc-select\">
-            <select class=\"mdc-select__native-control\">
-                <option value=\"\"></option>";
-                foreach ($pagesList as $key => $value) {
-                    $html .= "<option value=\"$key\">$value</option>";
-                }
-            $html .= "</select>
-            <label class=\"mdc-floating-label mdc-floating-label--float-above\">$label</label>
-            <div class=\"mdc-line-ripple\"></div>
-        </div>";
-        
-        return $html;
-    }
-    
-    public function createLanguageSelectOptionHtml($code) {
-        $row = $this->query->selectLanguageDatabase($code);
-        $rows = $this->query->selectAllLanguageDatabase();
-        
-        $key = array_search($row, $rows);
-        unset($rows[$key]);
-        array_unshift($rows, $row);
-        
-        $html = "";
-        
-        foreach ($rows as $key => $value) {
-            $html .= "<option value=\"{$value['code']}\">{$value['code']}</option>";
-        }
-        
-        return $html;
-    }
-    
-    public function createPageSortListHtml($rows) {
-        $html = "<ul class=\"sort_list\">";
-            foreach ($rows as $key => $value) {
-                $html .= "<li class=\"ui-state-default\">
-                    <div class=\"mdc-chip\">
-                        <i class=\"material-icons mdc-chip__icon mdc-chip__icon--leading\">drag_handle</i>
-                        <div class=\"mdc-chip__text sort_elemet_data\" data-id=\"$key\">[$key] $value</div>
-                    </div>
-                </li>";
-            }
-            
-            if ($_SESSION['pageProfileId'] == 0) {
-                $pageRows = $this->query->selectAllPageDatabase($_SESSION['languageTextCode']);
-                $id = count($pageRows) + 1;
-                
-                $html .= "<li class=\"ui-state-default\">
-                    <div class=\"mdc-chip\">
-                        <i class=\"material-icons mdc-chip__icon mdc-chip__icon--leading\">drag_handle</i>
-                        <div class=\"mdc-chip__text sort_elemet_data\" data-id=\"$id\">[$id] " . $this->translator->trans("classUtility_4") . "</div>
-                    </div>
-                </li>";
-            }
-        $html .= "</ul>";
-        
-        return $html;
-    }
-    
-    public function createModuleSortListHtml($rows) {
-        $html = "<ul class=\"sort_list\">";
-            foreach ($rows as $key => $value) {
-                $html .= "<li class=\"ui-state-default\">
-                    <div class=\"mdc-chip\">
-                        <i class=\"material-icons mdc-chip__icon mdc-chip__icon--leading\">drag_handle</i>
-                        <div class=\"mdc-chip__text sort_elemet_data\" data-id=\"$key\">[$key] $value</div>
-                    </div>
-                </li>";
-            }
-            
-            if ($_SESSION['moduleProfileId'] == 0) {
-                $moduleRows = $this->query->selectAllModuleDatabase();
-                $id = count($moduleRows) + 1;
-                
-                $html .= "<li class=\"ui-state-default\">
-                    <div class=\"mdc-chip\">
-                        <i class=\"material-icons mdc-chip__icon mdc-chip__icon--leading\">drag_handle</i>
-                        <div class=\"mdc-chip__text sort_elemet_data\" data-id=\"$id\">[$id] " . $this->translator->trans("classUtility_5") . "</div>
-                    </div>
-                </li>";
-            }
-        $html .= "</ul>";
-        
-        return $html;
-    }
-    
-    public function createWordTagListHtml($rows) {
-        $html = "";
-        
-        foreach ($rows as $key => $value) {
-            if (isset($value['name']) == true) {
-                $html .= "<div class=\"mdc-chip edit\">
-                    <i class=\"material-icons mdc-chip__icon mdc-chip__icon--leading delete\">delete</i>
-                    <div class=\"mdc-chip__text wordTag_elemet_data\" data-id=\"{$value['id']}\">{$value['name']}</div>
-                </div>";
-            }
-        }
-        
-        return $html;
-    }
-    
-    public function createTemplateList() {
-        $templatesPath = "{$this->pathPublic}/images/templates";
-        
-        $scanDirElements = preg_grep("/^([^.])/", scandir($templatesPath));
-        
-        $list = Array();
-        
-        if ($scanDirElements != false) {
-            foreach ($scanDirElements as $key => $value) {
-                if ($value != "." && $value != ".." && is_dir("$templatesPath/$value") == true)
-                    $list[$value] = $value;
-            }
-        }
-        
-        return $list;
-    }
-    
-    public function createPageList($pagesRows, $onlyMenuName, $pagination = null) {
-        $pagesListHierarchy = $this->createPageListHierarchy($pagesRows, $pagination);
-        
-        if ($onlyMenuName == true) {
-            $tag = "";
-            $parentId = 0;
-            $elements = Array();
-            $count = 0;
-
-            $pagesListOnlyMenuName = $this->createPageListOnlyMenuName($pagesListHierarchy, $tag, $parentId, $elements, $count);
-            
-            return $pagesListOnlyMenuName;
-        }
-        
-        return $pagesListHierarchy;
     }
     
     public function checkLanguage($request, $router, $settingRow) {
@@ -806,98 +997,6 @@ class Utility {
         return false;
     }
     
-    public function checkAttemptLogin($type, $userValue, $settingRow) {
-        $row = $this->query->selectUserDatabase($userValue);
-        
-        $dateTimeCurrentLogin = new \DateTime($row['date_current_login']);
-        $dateTimeCurrent = new \DateTime();
-        
-        $interval = intval($dateTimeCurrentLogin->diff($dateTimeCurrent)->format("%i"));
-        $total = $settingRow['login_attempt_time'] - $interval;
-        
-        if ($total < 0)
-            $total = 0;
-        
-        $dateCurrent = date("Y-m-d H:i:s");
-        $dateLastLogin = strpos($row['date_last_login'], "0000") !== false ? $dateCurrent : $row['date_current_login'];
-        
-        $result = Array("", "");
-        
-        if (isset($row['id']) == true && $settingRow['login_attempt_time'] > 0) {
-            $count = $row['attempt_login'] + 1;
-            
-            $query = $this->connection->prepare("UPDATE users
-                                                    SET date_current_login = :dateCurrentLogin,
-                                                        date_last_login = :dateLastLogin,
-                                                        ip = :ip,
-                                                        attempt_login = :attemptLogin
-                                                    WHERE id = :id");
-            
-            if ($type == "success") {
-                if ($count > $settingRow['login_attempt_count'] && $total > 0) {
-                    $result[0] = "lock";
-                    $result[1] = $total;
-                    
-                    return Array(false, $result[0], $result[1]);
-                }
-                else {
-                    $query->bindValue(":dateCurrentLogin", $dateCurrent);
-                    $query->bindValue(":dateLastLogin", $dateLastLogin);
-                    $query->bindValue(":ip", $this->clientIp());
-                    $query->bindValue(":attemptLogin", 0);
-                    $query->bindValue(":id", $row['id']);
-
-                    $query->execute();
-                }
-            }
-            else if ($type == "failure") {
-                if ($count > $settingRow['login_attempt_count'] && $total > 0) {
-                    $result[0] = "lock";
-                    $result[1] = $total;
-                }
-                else {
-                    if ($count > $settingRow['login_attempt_count'])
-                        $count = 1;
-                    
-                    $query->bindValue(":dateCurrentLogin", $dateCurrent);
-                    $query->bindValue(":dateLastLogin", $row['date_last_login']);
-                    $query->bindValue(":ip", $this->clientIp());
-                    $query->bindValue(":attemptLogin", $count);
-                    $query->bindValue(":id", $row['id']);
-                    
-                    $query->execute();
-                    
-                    $result[0] = "try";
-                    $result[1] = $count;
-                }
-                
-                return Array(false, $result[0], $result[1]);
-            }
-        }
-        
-        return Array(true, $result[0], $result[1]);
-    }
-    
-    public function checkUserActive($username) {
-        $row = $this->query->selectUserDatabase($username);
-        
-        if ($row == false)
-            return false;
-        else
-            return $row['active'];
-    }
-    
-    public function checkUserRole($roleName, $user) {
-        if ($user != null) {
-            $row = $this->query->selectRoleUserDatabase($user->getRoleUserId());
-
-            if ($this->arrayFindValue($roleName, $row) == true)
-                return true;
-        }
-        
-        return false;
-    }
-    
     public function checkHost($host) {
         $curl = curl_init();
         
@@ -982,105 +1081,6 @@ class Utility {
         return array_reverse($lines);
     }
     
-    public function sendMessageToSlackRoom($name, $text) {
-        $row = $this->query->selectSettingSlackIwDatabase($name);
-        
-        if ($row != false) {
-            $postFields = Array();
-            $postFields['channel'] = $row['channel'];
-            $postFields['text'] = $text;
-
-            $curl = curl_init();
-
-            curl_setopt($curl, CURLOPT_URL, $row['hook']);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postFields));
-            curl_setopt($curl, CURLOPT_HTTPHEADER, Array(
-                "Content-Type: application/json"
-            ));
-
-            $curlResponse = curl_exec($curl);
-            $curlError = curl_error($curl);
-            $curlInfo = curl_getinfo($curl);
-            
-            curl_close($curl);
-        }
-    }
-    
-    public function sendMessageToLineChat($name, $text) {
-        $row = $this->query->selectSettingLinePushDatabase($name);
-        
-        if ($row != false) {
-            $postFields = Array();
-            $postFields['to'] = $row['user_id'];
-            $postFields['messages'] = Array(Array('type' => "text", 'text' => $text));
-            
-            $curl = curl_init();
-            
-            curl_setopt($curl, CURLOPT_URL, "https://api.line.me/v2/bot/message/push");
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postFields));
-            curl_setopt($curl, CURLOPT_HTTPHEADER, Array(
-                "Content-Type: application/json",
-                "Authorization: Bearer {$row['access_token']}"
-            ));
-            
-            $curlResponse = curl_exec($curl);
-            $curlError = curl_error($curl);
-            $curlInfo = curl_getinfo($curl);
-            
-            curl_close($curl);
-        }
-    }
-    
-    public function sendMessageToLineChatMultiple($name, $text) {
-        $pushRow = $this->query->selectSettingLinePushDatabase($name);
-        
-        if ($pushRow != false) {
-            $pushUserRows = $this->query->selectAllSettingLinePushUserDatabase("allPushName", $name);
-            
-            $to[] = $pushRow['user_id'];
-            
-            foreach ($pushUserRows as $key => $value) {
-                if ($value['push_name'] == $name && $value['active'] == 1)
-                    $to[] = $value['user_id'];
-            }
-            
-            $to = array_unique($to);
-            
-            foreach ($to as $key => $value) {
-                $postFields = Array();
-                $postFields['to'] = $value;
-                $postFields['messages'] = Array(Array('type' => "text", 'text' => $text));
-
-                $curl = curl_init();
-
-                curl_setopt($curl, CURLOPT_URL, "https://api.line.me/v2/bot/message/push");
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($curl, CURLOPT_POST, true);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postFields));
-                curl_setopt($curl, CURLOPT_HTTPHEADER, Array(
-                    "Content-Type: application/json",
-                    "Authorization: Bearer {$pushRow['access_token']}"
-                ));
-
-                $curlResponse = curl_exec($curl);
-                $curlError = curl_error($curl);
-                $curlInfo = curl_getinfo($curl);
-                
-                curl_close($curl);
-            }
-        }
-    }
-    
     public function loginAuthBasic($url, $username, $password) {
         $curl = curl_init();
         
@@ -1116,7 +1116,83 @@ class Utility {
         }
     }
     
+    public function escapeScript($value) {
+        $pattern = "/<script.*?>|<\/script>|javascript:/i";
+        $replacement = "";
+        
+        if (preg_match_all($pattern, $value, $matches) !== false)
+            return preg_replace($pattern, $replacement, $value);
+        else
+            return $value;
+    }
+    
     // Functions private
+    private function createPasswordEncoder($type, $user, $form) {
+        if ($type == "withOld")
+            return $this->passwordEncoder->encodePassword($user, $form->get("new")->getData());
+        else if ($type == "withoutOld")
+            return $this->passwordEncoder->encodePassword($user, $form->get("password")->getData());
+    }
+    
+    private function createPageListHierarchy($pagesRows, $pagination) {
+        $elements = array_slice($pagesRows, $pagination['offset'], $pagination['show']);
+        
+        $nodes = Array();
+        $tree = Array();
+        
+        foreach ($elements as $page) {
+            $nodes[$page['id']] = array_merge($page, Array(
+                'children' => Array()
+            ));
+        }
+        
+        foreach ($nodes as &$node) {
+            if ($node['parent'] == null || array_key_exists($node['parent'], $nodes) == false)
+                $tree[] = &$node;
+            else
+                $nodes[$node['parent']]['children'][] = &$node;
+        }
+        
+        unset($node);
+        unset($nodes);
+        
+        return $tree;
+    }
+    
+    private function createPageListOnlyMenuName($pagesListHierarchy, &$tag, &$parentId, &$elements, &$count) {
+        foreach ($pagesListHierarchy as $key => $value) {
+            if ($value['parent'] == null) {
+                $count = 0;
+                
+                $tag = "-";
+            }
+            else if ($value['parent'] != null && $parentId != null && $value['parent'] < $parentId) {
+                $count --;
+                
+                if ($count == 1)
+                    $tag = substr($tag, 0, 2);
+                else
+                    $tag = substr($tag, 0, $count);
+            }
+            else if ($value['parent'] != null && $value['parent'] != $parentId) {
+                $count ++;
+                
+                $tag .= "-";
+            }
+            
+            $parentId = $value['parent'];
+            
+            $elements[$value['id']] = "|$tag| " . $value['alias'];
+            
+            if (count($value['children']) > 0)
+                $this->createPageListOnlyMenuName($value['children'], $tag, $parentId, $elements, $count);
+        }
+        
+        return $elements;
+    }
+    
+    // ---
+    
     private function arrayColumnFix() {
         if (function_exists("array_column") == false) {
             function array_column($input = null, $columnKey = null, $indexKey = null) {
@@ -1192,69 +1268,5 @@ class Utility {
                 return $resultArray;
             }
         }
-    }
-    
-    private function createPasswordEncoder($type, $user, $form) {
-        if ($type == "withOld")
-            return $this->passwordEncoder->encodePassword($user, $form->get("new")->getData());
-        else if ($type == "withoutOld")
-            return $this->passwordEncoder->encodePassword($user, $form->get("password")->getData());
-    }
-    
-    private function createPageListHierarchy($pagesRows, $pagination) {
-        $elements = array_slice($pagesRows, $pagination['offset'], $pagination['show']);
-        
-        $nodes = Array();
-        $tree = Array();
-        
-        foreach ($elements as $page) {
-            $nodes[$page['id']] = array_merge($page, Array(
-                'children' => Array()
-            ));
-        }
-        
-        foreach ($nodes as &$node) {
-            if ($node['parent'] == null || array_key_exists($node['parent'], $nodes) == false)
-                $tree[] = &$node;
-            else
-                $nodes[$node['parent']]['children'][] = &$node;
-        }
-        
-        unset($node);
-        unset($nodes);
-        
-        return $tree;
-    }
-    
-    private function createPageListOnlyMenuName($pagesListHierarchy, &$tag, &$parentId, &$elements, &$count) {
-        foreach ($pagesListHierarchy as $key => $value) {
-            if ($value['parent'] == null) {
-                $count = 0;
-                
-                $tag = "-";
-            }
-            else if ($value['parent'] != null && $parentId != null && $value['parent'] < $parentId) {
-                $count --;
-                
-                if ($count == 1)
-                    $tag = substr($tag, 0, 2);
-                else
-                    $tag = substr($tag, 0, $count);
-            }
-            else if ($value['parent'] != null && $value['parent'] != $parentId) {
-                $count ++;
-                
-                $tag .= "-";
-            }
-            
-            $parentId = $value['parent'];
-            
-            $elements[$value['id']] = "|$tag| " . $value['alias'];
-            
-            if (count($value['children']) > 0)
-                $this->createPageListOnlyMenuName($value['children'], $tag, $parentId, $elements, $count);
-        }
-        
-        return $elements;
     }
 }

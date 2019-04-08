@@ -386,7 +386,7 @@ class SettingLinePushController extends AbstractController {
         
         $pushUserRows = $this->query->selectAllSettingLinePushUserDatabase("allPushName", $name);
         
-        $tableAndPagination = $this->tableAndPagination->request($pushUserRows, 20, "pushUser", true, true);
+        $tableAndPagination = $this->tableAndPagination->request($pushUserRows, 20, "pushUser", true);
 
         $this->response['values']['search'] = $tableAndPagination['search'];
         $this->response['values']['pagination'] = $tableAndPagination['pagination'];

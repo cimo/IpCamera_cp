@@ -63,7 +63,7 @@ class PageCommentController extends AbstractController {
         if ($settingRow['pageComment'] == true) {
             $pageCommentRows = $this->query->selectAllPageCommentDatabase($this->urlCurrentPageId);
 
-            $tableAndPagination = $this->tableAndPagination->request($pageCommentRows, 20, "pageComment", false, true);
+            $tableAndPagination = $this->tableAndPagination->request($pageCommentRows, 20, "pageComment", false);
 
             $this->response['values']['search'] = $tableAndPagination['search'];
             $this->response['values']['pagination'] = $tableAndPagination['pagination'];
@@ -132,7 +132,10 @@ class PageCommentController extends AbstractController {
                     $pageCommentRows = $this->query->selectAllPageCommentDatabase($this->urlCurrentPageId);
                     
                     $typeExplode = explode("_", $form->get("type")->getData());
-
+                    
+                    $argument = $this->utility->escapeScript($form->get("argument")->getData());
+                    $pageCommentEntity->setArgument($argument);
+                    
                     if ($typeExplode[0] == "new") {
                         if ($pageCommentRows[count($pageCommentRows) - 1]['username'] !== $this->getUser()->getUsername()) {
                             $pageCommentEntity->setPageId($this->urlCurrentPageId);
@@ -163,7 +166,7 @@ class PageCommentController extends AbstractController {
                         }
                     }
                     else if ($typeExplode[0] == "edit") {
-                        $this->pageCommentDatabase($typeExplode[1], $form->get("argument")->getData());
+                        $this->pageCommentDatabase($typeExplode[1], $argument);
 
                         $this->response['messages']['success'] = $this->utility->getTranslator()->trans("pageCommentController_5");
                     }
@@ -199,6 +202,9 @@ class PageCommentController extends AbstractController {
     
     // Functions private
     private function createListHtml($elements) {
+        if (count($elements) == 0)
+            return "";
+        
         $setting = $this->query->selectSettingDatabase();
         
         $html = "<ul class=\"mdc-list mdc-list--two-line mdc-list--avatar-list\">";

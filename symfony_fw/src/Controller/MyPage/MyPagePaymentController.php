@@ -66,7 +66,7 @@ class MyPagePaymentController extends AbstractController {
 
             $paymentRows = $this->query->selectAllPaymentDatabase($this->getUser()->getId());
 
-            $tableAndPagination = $this->tableAndPagination->request($paymentRows, 20, "payment", true, true);
+            $tableAndPagination = $this->tableAndPagination->request($paymentRows, 20, "payment", true);
 
             $this->response['values']['search'] = $tableAndPagination['search'];
             $this->response['values']['pagination'] = $tableAndPagination['pagination'];

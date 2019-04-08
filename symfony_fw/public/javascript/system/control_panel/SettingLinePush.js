@@ -16,6 +16,8 @@ function ControlPanelSettingLinePush() {
         tableAndPagination.search();
         tableAndPagination.pagination();
         
+        $("#cp_setting_line_push_user_result").find(".tableAndPagination").hide();
+        
         $("#form_cp_setting_line_push_render").on("submit", "", function(event) {
             event.preventDefault();
             
@@ -102,6 +104,8 @@ function ControlPanelSettingLinePush() {
                         $("#form_settingLinePush_accessToken").val(xhr.response.values.entity[2]);
                         $("#form_settingLinePush_active").val(xhr.response.values.entity[3] === true ? 1 : 0);
                         
+                        $("#cp_setting_line_push_user_result").find(".tableAndPagination").show();
+                        
                         $("#form_cp_setting_line_push_render").find(".wordTag_container").html(xhr.response.values.wordTagListHtml);
                         
                         tableAndPagination.populate(xhr);
@@ -172,5 +176,7 @@ function ControlPanelSettingLinePush() {
         
         $("#form_settingLinePush_active").val("");
         $("#form_settingLinePush_active").parent().find("label").removeClass("mdc-floating-label--float-above");
+        
+        $("#cp_setting_line_push_user_result").find(".tableAndPagination").hide();
     }
 }

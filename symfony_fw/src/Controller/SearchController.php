@@ -118,7 +118,7 @@ class SearchController extends AbstractController {
         if (empty($this->urlExtra) == true)
             $pageRows = Array();
         
-        $tableAndPagination = $this->tableAndPagination->request($pageRows, 20, "searchRender", true, true);
+        $tableAndPagination = $this->tableAndPagination->request($pageRows, 20, "searchRender", true);
         
         $this->response['values']['search'] = $tableAndPagination['search'];
         $this->response['values']['pagination'] = $tableAndPagination['pagination'];
@@ -152,12 +152,6 @@ class SearchController extends AbstractController {
         $listHtml = "<ul class=\"mdc-list mdc-list--two-line mdc-list--avatar-list\">";
         
         foreach ($elements as $key => $value) {
-            if (count($value) == 0) {
-                $listHtml = "";
-                
-                break;
-            }
-            
             $listHtml .= "<li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">receipt</span>
                 <span class=\"mdc-list-item__text\">

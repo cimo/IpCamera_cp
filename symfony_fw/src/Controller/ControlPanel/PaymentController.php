@@ -131,7 +131,7 @@ class PaymentController extends AbstractController {
         
         $paymentRows = $this->query->selectAllPaymentDatabase($_SESSION['paymentUserId']);
 
-        $tableAndPagination = $this->tableAndPagination->request($paymentRows, 20, "payment", true, true);
+        $tableAndPagination = $this->tableAndPagination->request($paymentRows, 20, "payment", true);
 
         $this->response['values']['search'] = $tableAndPagination['search'];
         $this->response['values']['pagination'] = $tableAndPagination['pagination'];

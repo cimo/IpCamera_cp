@@ -198,7 +198,7 @@ class MicroserviceDeployController extends AbstractController {
         
         $microserviceDeployRows = $this->query->selectAllMicroserviceDeployDatabase();
         
-        $tableAndPagination = $this->tableAndPagination->request($microserviceDeployRows, 20, "microserviceDeploy", true, true);
+        $tableAndPagination = $this->tableAndPagination->request($microserviceDeployRows, 20, "microserviceDeploy", true);
         
         $this->response['values']['search'] = $tableAndPagination['search'];
         $this->response['values']['pagination'] = $tableAndPagination['pagination'];

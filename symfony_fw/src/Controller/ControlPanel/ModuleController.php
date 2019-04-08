@@ -136,7 +136,7 @@ class ModuleController extends AbstractController {
         
         $moduleRows = $this->query->selectAllModuleDatabase();
         
-        $tableAndPagination = $this->tableAndPagination->request($moduleRows, 20, "module", true, true);
+        $tableAndPagination = $this->tableAndPagination->request($moduleRows, 20, "module", true);
         
         $this->response['values']['search'] = $tableAndPagination['search'];
         $this->response['values']['pagination'] = $tableAndPagination['pagination'];

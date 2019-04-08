@@ -128,7 +128,7 @@ class RoleUserController extends AbstractController {
         
         $userRoleRows = $this->query->selectAllRoleUserDatabase();
         
-        $tableAndPagination = $this->tableAndPagination->request($userRoleRows, 20, "role", true, true);
+        $tableAndPagination = $this->tableAndPagination->request($userRoleRows, 20, "role", true);
         
         $this->response['values']['search'] = $tableAndPagination['search'];
         $this->response['values']['pagination'] = $tableAndPagination['pagination'];

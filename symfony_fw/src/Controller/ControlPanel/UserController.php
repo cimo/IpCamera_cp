@@ -141,11 +141,11 @@ class UserController extends AbstractController {
         
         $userRows = $this->query->selectAllUserDatabase(1);
         
-        $tableAndPagination = $this->tableAndPagination->request($userRows, 20, "user", true, true);
+        $tableAndPagination = $this->tableAndPagination->request($userRows, 20, "user", true);
         
         $this->response['values']['search'] = $tableAndPagination['search'];
         $this->response['values']['pagination'] = $tableAndPagination['pagination'];
-        $this->response['values']['listHtml'] = $this->createListHtml($userRows, $tableAndPagination['listHtml'], $this->query);
+        $this->response['values']['listHtml'] = $this->createListHtml($userRows, $tableAndPagination['listHtml']);
         $this->response['values']['count'] = $tableAndPagination['count'];
         
         $form = $this->createForm(UserSelectFormType::class, null, Array(
