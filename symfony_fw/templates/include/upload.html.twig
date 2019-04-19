@@ -16,7 +16,7 @@
             <i class="material-icons mdc-button__icon">play_arrow</i>
             <span>{% trans %}upload_1{% endtrans %}</span>
         </button>
-        <button class="mdc-button mdc-button--dense mdc-button--raised button_stop" type="button">
+        <button class="mdc-button mdc-button--dense mdc-button--raised button_stop" type="button" disabled="disabled">
             <i class="material-icons mdc-button__icon">stop</i>
             <span>{% trans %}upload_2{% endtrans %}</span>
         </button>
@@ -27,7 +27,9 @@
         <div class="content">
             <p>{% trans %}upload_3{% endtrans %}</p>
             <p class="status"></p>
+            
             {{-include("@templateRoot/include/progress_bar.html.twig")-}}
+            
         </div>
         <div class="result"></div>
     </div>

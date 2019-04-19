@@ -11,12 +11,12 @@ function FlashBag() {
     // Properties
     self.setElement = function(value) {
         element = value;
-    }
+    };
     
     // Functions public
     self.init = function() {
         element = null;
-    }
+    };
     
     self.show = function(message) {
         var snackbarDataObj = {

@@ -144,6 +144,8 @@ class PageController extends AbstractController {
         $this->tableAndPagination = new TableAndPagination($this->utility);
         
         // Logic
+        $this->listHtml = "";
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         $_SESSION['pageProfileId'] = 0;
@@ -493,10 +495,8 @@ class PageController extends AbstractController {
     
     // Functions private    
     private function createListHtml($elements) {
-        $listHtml = "";
-        
         foreach ($elements as $key => $value) {
-            $listHtml .= "<tr>
+            $this->listHtml .= "<tr>
                 <td class=\"id_column\">
                     {$value['id']}
                 </td>
@@ -522,25 +522,25 @@ class PageController extends AbstractController {
                 </td>
                 <td>";
                     if ($value['protected'] == 0)
-                        $listHtml .= $this->utility->getTranslator()->trans("pageController_14");
+                        $this->listHtml .= $this->utility->getTranslator()->trans("pageController_14");
                     else
-                        $listHtml .= $this->utility->getTranslator()->trans("pageController_15");
-                $listHtml .= "</td>
+                        $this->listHtml .= $this->utility->getTranslator()->trans("pageController_15");
+                $this->listHtml .= "</td>
                     <td>";
                         if ($value['show_in_menu'] == 0)
-                            $listHtml .= $this->utility->getTranslator()->trans("pageController_14");
+                            $this->listHtml .= $this->utility->getTranslator()->trans("pageController_14");
                         else
-                            $listHtml .= $this->utility->getTranslator()->trans("pageController_15");
-                $listHtml .= "</td>
+                            $this->listHtml .= $this->utility->getTranslator()->trans("pageController_15");
+                $this->listHtml .= "</td>
                     <td>";
                         if ($value['only_link'] == 0)
-                            $listHtml .= $this->utility->getTranslator()->trans("pageController_14");
+                            $this->listHtml .= $this->utility->getTranslator()->trans("pageController_14");
                         else
-                            $listHtml .= $this->utility->getTranslator()->trans("pageController_15");
-                $listHtml .= "</td>
+                            $this->listHtml .= $this->utility->getTranslator()->trans("pageController_15");
+                $this->listHtml .= "</td>
                 <td>";
                     if ($value['id'] > 5)
-                        $listHtml .= "<button class=\"mdc-fab mdc-fab--mini cp_page_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
+                        $this->listHtml .= "<button class=\"mdc-fab mdc-fab--mini cp_page_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
                 </td>
             </tr>";
             
@@ -548,7 +548,7 @@ class PageController extends AbstractController {
                 $this->createListHtml($value['children']);
         }
         
-        return $listHtml;
+        return $this->listHtml;
     }
     
     private function removePageChildrenDatabase($id) {

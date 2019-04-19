@@ -207,18 +207,18 @@ class PageCommentController extends AbstractController {
         
         $setting = $this->query->selectSettingDatabase();
         
-        $html = "<ul class=\"mdc-list mdc-list--two-line mdc-list--avatar-list\">";
+        $listHtml = "<ul class=\"mdc-list mdc-list--two-line mdc-list--avatar-list\">";
         
         $elementsCount = count($elements);
         
         foreach ($elements as $key => $value) {
             $row = $this->query->selectPageCommentDatabase("single", $value['id_reply']);
             
-            $html .= "<li class=\"mdc-list-item\" data-comment=\"{$value['id']}\">";
+            $listHtml .= "<li class=\"mdc-list-item\" data-comment=\"{$value['id']}\">";
                 if (file_exists("{$this->utility->getPathPublic()}/files/user/{$value['username']}/Avatar.jpg") == true)
-                    $html .= "<img class=\"mdc-list-item__graphic\" src=\"{$this->utility->getUrlRoot()}/files/user/{$value['username']}/Avatar.jpg\" aria-hidden=\"true\" alt=\"Avatar.jpg\"/>";
+                    $listHtml .= "<img class=\"mdc-list-item__graphic\" src=\"{$this->utility->getUrlRoot()}/files/user/{$value['username']}/Avatar.jpg\" aria-hidden=\"true\" alt=\"Avatar.jpg\"/>";
                 else
-                    $html .= "<img class=\"mdc-list-item__graphic\" src=\"{$this->utility->getUrlRoot()}/images/templates/{$setting['template']}/no_avatar.jpg\" aria-hidden=\"true\" alt=\"no_avatar.jpg\"/>";
+                    $listHtml .= "<img class=\"mdc-list-item__graphic\" src=\"{$this->utility->getUrlRoot()}/images/templates/{$setting['template']}/no_avatar.jpg\" aria-hidden=\"true\" alt=\"no_avatar.jpg\"/>";
                 
                 $detail = "";
                 
@@ -238,13 +238,13 @@ class PageCommentController extends AbstractController {
                 if (file_exists("{$this->utility->getPathPublic()}/files/user/{$row['username']}/Avatar.jpg") == true)
                     $quoteAvatar = "<img class=\"quote_avatar\" src=\"{$this->utility->getUrlRoot()}/files/user/{$row['username']}/Avatar.jpg\" alt=\"Avatar.jpg\"/>";
                 
-                $html .= "<span class=\"mdc-list-item__text\">
+                $listHtml .= "<span class=\"mdc-list-item__text\">
                     <p class=\"detail\">$detail</p>";
                     
                     if ($row['argument'] != "")
-                        $html .= "<p class=\"quote\">$quoteAvatar <span class=\"quote_text\">" . wordwrap($row['argument'], 50, "<br>\n", true) . "</span></p>";
+                        $listHtml .= "<p class=\"quote\">$quoteAvatar <span class=\"quote_text\">" . wordwrap($row['argument'], 50, "<br>\n", true) . "</span></p>";
                     
-                    $html .= "<p class=\"mdc-list-item__secondary-text argument\">{$value['argument']}</p>
+                    $listHtml .= "<p class=\"mdc-list-item__secondary-text argument\">{$value['argument']}</p>
                 </span>";
                 
                 if ($this->getUser() != null) {
@@ -252,25 +252,25 @@ class PageCommentController extends AbstractController {
                         $row = $this->query->selectPageCommentDatabase("reply", $value['id'], $this->getUser()->getUsername());
                         
                         if ($row == false)
-                            $html .= "<span class=\"mdc-list-item__meta material-icons button_reply\">reply</span>";
+                            $listHtml .= "<span class=\"mdc-list-item__meta material-icons button_reply\">reply</span>";
                     }
                     else {
                         $row = $this->query->selectPageCommentDatabase("edit", $value['id']);
                         
                         if ($row == false)
-                            $html .= "<span class=\"mdc-list-item__meta material-icons button_edit\">edit</span>";
+                            $listHtml .= "<span class=\"mdc-list-item__meta material-icons button_edit\">edit</span>";
                     }
                 }
 
-            $html .= "</li>";
+            $listHtml .= "</li>";
             
             if ($key < $elementsCount - 1)
-                $html .= "<li role=\"separator\" class=\"mdc-list-divider\"></li>";
+                $listHtml .= "<li role=\"separator\" class=\"mdc-list-divider\"></li>";
         }
         
-        $html .= "</ul>";
+        $listHtml .= "</ul>";
         
-        return $html;
+        return $listHtml;
     }
     
     private function pageCommentDatabase($id, $argument) {

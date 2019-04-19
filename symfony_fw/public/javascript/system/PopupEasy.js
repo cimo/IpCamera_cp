@@ -6,7 +6,7 @@ function PopupEasy() {
     // Vars
     var self = this;
     
-    var dialogMdc = null;
+    var dialogMdc;
     
     // Properties
     

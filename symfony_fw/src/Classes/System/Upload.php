@@ -138,6 +138,7 @@ class Upload {
                 }
             }
             else if ($action == "complete") {
+                $extension = "";
                 $fileName = $_REQUEST['fileName'];
                 
                 if (file_exists("{$this->settings['path']}/$fileName") == true) {
@@ -151,6 +152,7 @@ class Upload {
                     
                     $this->response['status'] = "complete";
                     $this->response['fileName'] = $fileName;
+                    $this->response['fileExtension'] = $extension;
                     $this->response['messages']['success'] = $this->utility->getTranslator()->trans("classUpload_9");
                 }
                 else {

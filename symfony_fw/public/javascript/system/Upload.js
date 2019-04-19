@@ -1,4 +1,4 @@
-/* global utility, ajax, loader, flashBag */
+/* global utility, ajax, loader, flashBag, materialDesign */
 
 var upload = new Upload();
 
@@ -56,9 +56,13 @@ function Upload() {
         sizeStart = 0;
         sizeEnd = byteChunk;
         isStop = false;
+        
+        callbackComplete = null;
     };
     
-    self.processFile = function() {
+    self.processFile = function(callback) {
+        callbackComplete = callback;
+        
         inputLabel = $(tagContainer).find(".material_upload label").text();
         
         $(tagContainer).find(".upload_chunk .file").on("change", "", function() {
@@ -192,6 +196,9 @@ function Upload() {
                     
                     if (response.messages.success !== undefined)
                         flashBag.show(response.messages.success);
+                    
+                    if (callbackComplete !== null)
+                        callbackComplete();
                 }
             }
         };

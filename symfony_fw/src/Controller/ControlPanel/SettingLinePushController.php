@@ -461,12 +461,12 @@ class SettingLinePushController extends AbstractController {
     }
     
     private function createListHtml($elements) {
-        $html = "<ul class=\"mdc-list mdc-list--two-line mdc-list--avatar-list cp_line_push_user\">";
+        $listHtml = "<ul class=\"mdc-list mdc-list--two-line mdc-list--avatar-list cp_line_push_user\">";
         
         $elementsCount = count($elements);
         
         foreach ($elements as $key => $value) {
-            $html .= "<li class=\"mdc-list-item\" data-comment=\"{$value['id']}\">
+            $listHtml .= "<li class=\"mdc-list-item\" data-comment=\"{$value['id']}\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     <span class=\"mdc-list-item__secondary-text\">
@@ -475,20 +475,20 @@ class SettingLinePushController extends AbstractController {
                         
                         $isActive = $value['active'] == true ? $this->utility->getTranslator()->trans("settingLinePushController_10") : $this->utility->getTranslator()->trans("settingLinePushController_11");
                     
-                        $html .= "$isActive
+                        $listHtml .= "$isActive
                     </span>
                 </span>
             </li>";
             
             if ($key < $elementsCount - 1)
-                $html .= "<li role=\"separator\" class=\"mdc-list-divider\"></li>";
+                $listHtml .= "<li role=\"separator\" class=\"mdc-list-divider\"></li>";
         }
         
-        $html .= "</ul>";
+        $listHtml .= "</ul>";
         
         if (count($elements) == 0)
-            $html = "";
+            $listHtml = "";
         
-        return $html;
+        return $listHtml;
     }
 }
