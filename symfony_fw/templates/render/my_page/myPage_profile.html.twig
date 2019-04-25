@@ -6,39 +6,37 @@
     <button class="mdc-button mdc-button--dense mdc-button--raised button_accordion" type="button">{% trans %}index_9{% endtrans %}</button>
     <div class="accordion">
         <form id="form_myPage_profile" action="{{path("myPage_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
-            <div id="upload_myPage_profile_container">
-                {{-include("@templateRoot/include/upload.html.twig", {'label': "Avatar"})-}}
-                
-                <div>
-                    <img class="avatar" src="{{avatar}}" alt="Avatar"/>
-                </div>
+            <div class="upload_image_container">
+                {{form_row(form.image)}}
+                {{form_row(form.removeImage)}}
             </div>
-
+            <img class="avatar" src="{{avatar}}" alt="Avatar"/>
+            
             {% if is_granted("ROLE_ADMIN") == true %}
                 {{form_row(form.username, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "pets"})}}
             {% endif %}
-
+            
             {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing"})}}
             {{form_row(form.surname, {'dense': "", 'styleType': "outlinedTrailing"})}}
             {{form_row(form.email, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "email"})}}
             {{form_row(form.telephone, {'dense': "", 'styleType': "outlinedTrailing"})}}
             {{form_row(form.born, {'dense': "", 'styleType': "outlinedTrailing", 'attr' : {'class': "widget_datePicker_input"} })}}
             {{form_row(form.gender)}}
-
+            
             {% if form.fiscalCode.vars.value != "" %}
                 {{form_row(form.fiscalCode, {'dense': "", 'styleType': "outlinedTrailing"})}}
                 {{form_row(form.companyName, {'dense': "", 'styleType': "outlinedTrailing"})}}
                 {{form_row(form.vat, {'dense': "", 'styleType': "outlinedTrailing"})}}
             {% endif %}
-
+            
             {{form_row(form.website, {'dense': "", 'styleType': "outlinedTrailing"})}}
             {{form_row(form.state, {'dense': "", 'styleType': "outlinedTrailing"})}}
             {{form_row(form.city, {'dense': "", 'styleType': "outlinedTrailing"})}}
             {{form_row(form.zip, {'dense': "", 'styleType': "outlinedTrailing"})}}
             {{form_row(form.address, {'dense': "", 'styleType': "outlinedTrailing"})}}
-
+            
             {{form_widget(form._token)}}
-
+            
             {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
         </form>
     </div>

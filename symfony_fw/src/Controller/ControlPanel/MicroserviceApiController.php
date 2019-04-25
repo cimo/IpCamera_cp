@@ -104,7 +104,7 @@ class MicroserviceApiController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                $microserviceApiEntity = $this->fileUpload($form, $microserviceApiEntity);
+                $this->fileUpload($form, $microserviceApiEntity);
                 
                 $this->entityManager->persist($microserviceApiEntity);
                 $this->entityManager->flush();
@@ -159,6 +159,8 @@ class MicroserviceApiController extends AbstractController {
         // Logic
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
+        $settingRow = $this->query->selectSettingDatabase();
+        
         $urlExtraExplode = explode("_", $this->urlExtra);
         
         $id = isset($urlExtraExplode[4]) == true ? $urlExtraExplode[4] : 0;
@@ -166,6 +168,11 @@ class MicroserviceApiController extends AbstractController {
         $_SESSION['microserviceApiProfileId'] = $id;
         
         $microserviceApiEntity = $this->entityManager->getRepository("App\Entity\MicroserviceApi")->find($id);
+        
+        $logo = "{$this->utility->getUrlRoot()}/images/templates/{$settingRow['template']}/api.png";
+        
+        if ($microserviceApiEntity->getImage() != "" && file_exists("{$this->utility->getPathPublic()}/files/microservice/api/{$microserviceApiEntity->getImage()}") == true)
+            $logo = "{$this->utility->getUrlRoot()}/files/microservice/api/{$microserviceApiEntity->getImage()}";
         
         $this->response['values']['microserviceApiEntity'] = $microserviceApiEntity;
 
@@ -176,7 +183,7 @@ class MicroserviceApiController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                $microserviceApiEntity = $this->fileUpload($form, $microserviceApiEntity);
+                $this->fileUpload($form, $microserviceApiEntity);
                 
                 $this->entityManager->persist($microserviceApiEntity);
                 $this->entityManager->flush();
@@ -192,7 +199,8 @@ class MicroserviceApiController extends AbstractController {
                 'urlLocale' => $this->urlLocale,
                 'urlCurrentPageId' => $this->urlCurrentPageId,
                 'urlExtra' => $this->urlExtra,
-                'response' => $this->response
+                'response' => $this->response,
+                'logo' => $logo
             ));
         }
         
@@ -201,7 +209,8 @@ class MicroserviceApiController extends AbstractController {
             'urlCurrentPageId' => $this->urlCurrentPageId,
             'urlExtra' => $this->urlExtra,
             'response' => $this->response,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'logo' => $logo
         );
     }
     
@@ -209,31 +218,28 @@ class MicroserviceApiController extends AbstractController {
     private function fileUpload($form, $entity) {
         $row = $this->query->selectMicroserviceApiDatabase($_SESSION['microserviceApiProfileId'], true);
         
-        $pathImage = $this->utility->getPathPublic() . "/files/microservice/api";
+        $pathImage = "{$this->utility->getPathPublic()}/files/microservice/api";
         
         $image = $entity->getImage();
-
+        
         // Remove image
-        if (isset($row['image']) == true) {
-            if ($form->get("removeImage")->getData() == true || ($image != null && $image != $row['image'])) {
-                if ($row['image'] != "" && file_exists("$pathImage/{$row['image']}") == true)
-                    unlink("$pathImage/{$row['image']}");
-
-                $entity->setImage("");
-            }
-            else if ($row['image'] != "")
-                $entity->setImage($row['image']);
+        if ($form->get("removeImage")->getData() == true) {
+            if (file_exists("{$pathImage}/{$row['image']}") == true)
+                unlink("{$pathImage}/{$row['image']}");
+            
+            $entity->setImage("");
         }
-
+        
         // Upload image
         if ($image != null && $form->get("removeImage")->getData() == false) {
+            if ($row['image'] != "" && file_exists("{$pathImage}/{$row['image']}") == true)
+                unlink("{$pathImage}/{$row['image']}");
+            
             $fileName = $image->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-            $newName = uniqid() . ".$extension";
+            $newName = uniqid() . ".{$extension}";
             $image->move($pathImage, $newName);
             $entity->setImage($newName);
         }
-        
-        return $entity;
     }
 }

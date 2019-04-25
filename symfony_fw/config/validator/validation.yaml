@@ -253,6 +253,18 @@ App\Entity\User:
                 groups: [registration, profile, user_create, user_profile]
                 htmlPattern: false
                 pattern: /^[0-9,]+$/
+        image:    
+            - File:
+                groups: [profile, user_create, user_profile]
+                maxSize: 2M
+                maxSizeMessage: error maxSize
+                mimeTypes: [image/png, image/jpg, image/jpeg]
+                mimeTypesMessage: error mimeType
+        removeImage:
+            - Regex:
+                groups: [profile, user_create, user_profile]
+                htmlPattern: false
+                pattern: /^1$|^0$/
         username:
             - NotBlank:
                 groups: [registration, user_create, user_profile]
@@ -327,7 +339,7 @@ App\Entity\User:
             - Regex:
                 groups: [registration, profile, user_create, user_profile]
                 htmlPattern: false
-                pattern: /^[0-9]+$/
+                pattern: /^[0-9-]+$/
         address:
             - Regex:
                 groups: [registration, profile, user_create, user_profile]
@@ -817,6 +829,11 @@ App\Entity\MicroserviceApi:
                 maxSizeMessage: error maxSize
                 mimeTypes: [image/png, image/jpg, image/jpeg]
                 mimeTypesMessage: error mimeType
+        removeImage:
+            - Regex:
+                groups: [microservice_api_create, microservice_api_profile]
+                htmlPattern: false
+                pattern: /^1$|^0$/
         active:
             - NotBlank:
                 groups: [microservice_api_create, microservice_api_profile]

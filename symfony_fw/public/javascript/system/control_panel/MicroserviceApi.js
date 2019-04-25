@@ -1,3 +1,5 @@
+/* global ajax */
+
 var controlPanelMicroserviceApi = new ControlPanelMicroserviceApi();
 
 function ControlPanelMicroserviceApi() {

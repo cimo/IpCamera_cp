@@ -26,6 +26,13 @@ class User implements UserInterface, EquatableInterface, \Serializable {
     private $roleUserId = "1,";
     
     /**
+     * @ORM\Column(name="image", type="string", nullable=true, columnDefinition="varchar(255)")
+     */
+    private $image = "";
+    
+    private $removeImage = false;
+    
+    /**
      * @ORM\Column(name="username", type="string", columnDefinition="varchar(20) NOT NULL DEFAULT ''")
      */
     private $username = "";
@@ -150,6 +157,14 @@ class User implements UserInterface, EquatableInterface, \Serializable {
         $this->roleUserId = $value;
     }
     
+    public function setImage($value) {
+        $this->image = $value;
+    }
+    
+    public function setRemoveImage($value) {
+        $this->removeImage = $value;
+    }
+    
     public function setUsername($value) {
         $this->username = $value;
     }
@@ -256,6 +271,14 @@ class User implements UserInterface, EquatableInterface, \Serializable {
     
     public function getRoleUserId() {
         return $this->roleUserId;
+    }
+    
+    public function getImage() {
+        return $this->image;
+    }
+    
+    public function getRemoveImage() {
+        return $this->removeImage;
     }
 
     public function getName() {

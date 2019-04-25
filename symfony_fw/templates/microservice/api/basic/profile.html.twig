@@ -13,6 +13,38 @@
     <div id="upload_apiBasic_csv_container">
         {{-include("@templateRoot/include/upload.html.twig", {'label': "apiBasicProfile_2"|trans})-}}
     </div>
+    <div>
+        <button id="download_up_show" class="mdc-fab" type="button" aria-label="label">
+            <span class="mdc-fab__icon"><img src="{{asset("images/templates/" ~ settingRow['template'] ~ "/excel.svg")}}" alt="excel.svg"/></span>
+        </button>
+    </div>
+    <div class="download_detail_container">
+        <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon mdc-text-field--dense">
+            <input class="mdc-text-field__input widget_datePicker_input" type="text" value="" autocomplete="off" aria-label="label" name="download_date_start"/>
+            <i class="material-icons mdc-text-field__icon" tabindex="0" role="button">date_range</i>
+            <label class="mdc-floating-label">{% trans %}apiBasicProfile_3{% endtrans %}</label>
+            <div class="mdc-notched-outline">
+                <svg>
+                    <path class="mdc-notched-outline__path"/>
+                </svg>
+            </div>
+            <div class="mdc-notched-outline__idle"></div>
+        </div>
+        <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon mdc-text-field--dense">
+            <input class="mdc-text-field__input widget_datePicker_input" type="text" value="" autocomplete="off" aria-label="label" name="download_date_end"/>
+            <i class="material-icons mdc-text-field__icon" tabindex="0" role="button">date_range</i>
+            <label class="mdc-floating-label">{% trans %}apiBasicProfile_4{% endtrans %}</label>
+            <div class="mdc-notched-outline">
+                <svg>
+                    <path class="mdc-notched-outline__path"/>
+                </svg>
+            </div>
+            <div class="mdc-notched-outline__idle"></div>
+        </div>
+        <button id="button_apiBasic_download_detail" class="mdc-button mdc-button--dense mdc-button--raised button_svg" type="button" data-event="download_requestTestAction">
+            <span>{% trans %}apiBasicProfile_5{% endtrans %}</span>
+        </button>
+    </div>
 </div>
 <form id="form_cp_apiBasic_profile" action="{{path("cp_apiBasic_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
     {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}

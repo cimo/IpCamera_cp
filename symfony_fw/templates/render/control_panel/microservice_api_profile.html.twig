@@ -13,10 +13,11 @@
             {{form_row(form.controllerName, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
             {{form_row(form.description, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
             
-            <div>
+            <div class="upload_image_container">
                 {{form_row(form.image)}}
                 {{form_row(form.removeImage)}}
             </div>
+            <img class="avatar" src="{{logo}}" alt="Logo"/>
             
             {{form_row(form.active)}}
 

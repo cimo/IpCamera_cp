@@ -61,7 +61,6 @@ class MicroserviceApiFormType extends AbstractType {
         
         $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $formEvent) {
             $data = $formEvent->getData();
-            $form = $formEvent->getForm();
             
             if ($data->getRemoveImage() == false)
                 $data->setRemoveImage("0");

@@ -19,6 +19,8 @@ function Upload() {
     var byteChunk;
     var isStop;
     
+    var callbackComplete;
+    
     // Properties
     self.setUrlRequest = function(value) {
         urlRequest = value;
@@ -61,7 +63,8 @@ function Upload() {
     };
     
     self.processFile = function(callback) {
-        callbackComplete = callback;
+        if (callback !== undefined)
+            callbackComplete = callback;
         
         inputLabel = $(tagContainer).find(".material_upload label").text();
         

@@ -1,4 +1,4 @@
-/* global mdc */
+/* global utility, mdc */
 
 var widgetDatePicker = new WidgetDatePicker();
 
@@ -27,6 +27,8 @@ function WidgetDatePicker() {
     var result;
     
     var inputFillTag;
+    
+    var currentInput;
     
     // Properties
     self.setLanguage = function(value) {
@@ -83,6 +85,8 @@ function WidgetDatePicker() {
         result = "";
 
         inputFillTag = "";
+        
+        currentInput = null;
     };
     
     self.create = function() {
@@ -102,7 +106,8 @@ function WidgetDatePicker() {
         calculateDayPosition();
         
         var content = "<div class=\"widget_datePicker_back\"></div>\n\
-        <div class=\"mdc-elevation--z8 widget_datePicker unselect\">";
+            <div class=\"mdc-elevation--z8 widget_datePicker unselect\">";
+            
             content += createHeaderHtml(true);
             content += createListYearsHtml();
             
@@ -143,9 +148,11 @@ function WidgetDatePicker() {
     };
     
     self.action = function() {
-        $(inputFillTag).off("click").on("click", "", function() {
+        $(inputFillTag).off("click").on("click", "", function(event) {
             $(".widget_datePicker_back").show();
             $(".widget_datePicker").show();
+            
+            currentInput = $(event.target);
         });
         
         $(".widget_datePicker").find(".header p").off("click").on("click", "", function() {
@@ -236,7 +243,7 @@ function WidgetDatePicker() {
         });
         
         $(".widget_datePicker").find(".header > .mdc-fab").off("click").on("click", "", function() {
-            $(inputFillTag).focus();
+            $(currentInput).focus();
 
             $(".widget_datePicker_back").hide();
             $(".widget_datePicker").hide();
@@ -382,30 +389,32 @@ function WidgetDatePicker() {
     }
     
     function fillInput(type) {
-        result = currentYear + "-" + (currentMonth + 1) + "-" + currentDay;
+        var currentMontTmp = currentMonth + 1;
+        
+        result = currentYear + "-" + utility.padZero(currentMontTmp) + "-" + currentDay;
         
         if (language === "it")
-            result = currentDay + "-" + (currentMonth + 1) + "-" + currentYear;
+            result = currentDay + "-" + utility.padZero(currentMontTmp) + "-" + currentYear;
         
         if (type === true)
-            $(inputFillTag).val(result);
+            $(currentInput).val(result);
         else
-            $(inputFillTag).val("");
+            $(currentInput).val("");
         
-        if ($(inputFillTag).parent().find(".mdc-text-field__label").length > 0) {
+        if ($(currentInput).parent().find(".mdc-text-field__label").length > 0) {
             if (type === true) {
-                $(inputFillTag).parent().addClass("mdc-text-field--focused");
-                $(inputFillTag).parent().find(".mdc-text-field__label").addClass("mdc-text-field__label--float-above");
-                $(inputFillTag).parent().find(".mdc-line-ripple").addClass("mdc-line-ripple--active");
+                $(currentInput).parent().addClass("mdc-text-field--focused");
+                $(currentInput).parent().find(".mdc-text-field__label").addClass("mdc-text-field__label--float-above");
+                $(currentInput).parent().find(".mdc-line-ripple").addClass("mdc-line-ripple--active");
             }
             else {
-                $(inputFillTag).parent().removeClass("mdc-text-field--focused");
-                $(inputFillTag).parent().find(".mdc-text-field__label").removeClass("mdc-text-field__label--float-above");
-                $(inputFillTag).parent().find(".mdc-line-ripple").removeClass("mdc-line-ripple--active");
+                $(currentInput).parent().removeClass("mdc-text-field--focused");
+                $(currentInput).parent().find(".mdc-text-field__label").removeClass("mdc-text-field__label--float-above");
+                $(currentInput).parent().find(".mdc-line-ripple").removeClass("mdc-line-ripple--active");
             }
         }
         else
-            $(inputFillTag).focus();
+            $(currentInput).focus();
         
         $(".widget_datePicker_back").hide();
         $(".widget_datePicker").hide();

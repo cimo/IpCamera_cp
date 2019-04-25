@@ -1,4 +1,4 @@
-/* global utility, ajax, upload */
+/* global utility, ajax */
 
 var myPageProfile = new MyPageProfile();
 
@@ -10,13 +10,6 @@ function MyPageProfile() {
     
     // Functions public
     self.init = function() {
-        upload.init();
-        upload.setUrlRequest(window.url.myPageProfileUpload + "?token=" + window.session.token + "&event=upload");
-        upload.setTagContainer("#upload_myPage_profile_container");
-        upload.setTagProgressBar("#upload_myPage_profile_container .upload_chunk .mdc-linear-progress");
-        upload.setTagImageRefresh("#upload_myPage_profile_container .avatar");
-        upload.processFile();
-        
         $("#form_myPage_profile").on("submit", "", function(event) {
             event.preventDefault();
             
@@ -24,11 +17,11 @@ function MyPageProfile() {
                 true,
                 $(this).prop("action"),
                 $(this).prop("method"),
-                $(this).serialize(),
+                new FormData(this),
                 "json",
                 false,
-                true,
-                "application/x-www-form-urlencoded; charset=UTF-8",
+                false,
+                false,
                 null,
                 function(xhr) {
                     ajax.reply(xhr, "#" + event.currentTarget.id);

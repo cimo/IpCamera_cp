@@ -81,7 +81,6 @@ class ApiBasicFormType extends AbstractType {
         ));
         
         $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $formEvent) {
-            $form = $formEvent->getForm();
             $data = $formEvent->getData();
             
             if ($data->getSlackActive() == false)

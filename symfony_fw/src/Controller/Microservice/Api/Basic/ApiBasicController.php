@@ -33,9 +33,9 @@ class ApiBasicController extends AbstractController {
     private $upload;
     private $toolExcel;
     
-    private $apiBasicRow;
-    
     private $parameters;
+    
+    private $apiBasicRow;
     
     // Properties
     
@@ -282,6 +282,7 @@ class ApiBasicController extends AbstractController {
                 
                 $logPathOld = "{$this->utility->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $nameOld) . ".log";
                 $logPathNew = "{$this->utility->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $apiBasicEntity->getName()) . ".log";
+                
                 if (file_exists($logPathOld) == true)
                     rename($logPathOld, $logPathNew);
                 
@@ -409,7 +410,6 @@ class ApiBasicController extends AbstractController {
                     $fileReadTail = $this->utility->fileReadTail($logPath, "500");
                     $this->response['values']['log'] = "<pre class=\"microservice_api_log\">" . implode("\r\n", $fileReadTail) . "</pre>";
                 }
-                    
             }
         }
         
@@ -600,14 +600,124 @@ class ApiBasicController extends AbstractController {
         ));
     }
     
-    public function toolExcelCsvCallback($path, $index, $cell, $extra) {
+    public function toolExcelCsvCallback($index, $cell, $extra) {
         if ($index == 0)
             $this->apiBasicRow = $this->selectApiBasicDatabase($_SESSION['apiBasicProfileId'], true);
+        else if ($index > 0) {
+            $parameters = Array();
+            
+            $databaseExternal = $this->databaseExternal($parameters, $this->apiBasicRow, $extra);
+            
+            if ($databaseExternal != false)
+                file_put_contents($_SESSION['lockPath'], "{$_SESSION['totalLineCsv']}|$index");
+            else {
+                if (file_exists($_SESSION['lockPath']) == true)
+                    unlink($_SESSION['lockPath']);
+                
+                $this->response['errorCode'] = 100;
+            }
+        }
         
-        if ($index > 0)
-            file_put_contents($_SESSION['lockPath'], "{$_SESSION['totalLineCsv']}|$index");
+        if (isset($this->response['errorCode']) == true && $this->response['errorCode'] != 0) {
+            $logPath = "{$this->utility->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $this->apiBasicRow['name']) . ".log";
+            @file_put_contents($logPath, date("Y-m-d H:i:s") . " - $name - IP[{$_SERVER['REMOTE_ADDR']}]: " . print_r($this->response, true) . print_r($parameters, true) . PHP_EOL, FILE_APPEND);
+            
+            return false;
+        }
         
         return true;
+    }
+    
+    /**
+    * @Route(
+    *   name = "cp_apiBasic_download_detail",
+    *   path = "/cp_apiBasic_download_detail/{_locale}/{urlCurrentPageId}/{urlExtra}",
+    *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
+    *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
+    *	methods={"POST"}
+    * )
+    */
+    public function downloadDetailAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
+        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
+        $this->entityManager = $this->getDoctrine()->getManager();
+        
+        $this->response = Array();
+        
+        $this->utility = new Utility($this->container, $this->entityManager, $translator);
+        $this->query = $this->utility->getQuery();
+        $this->ajax = new Ajax($this->utility);
+        $this->toolExcel = new ToolExcel();
+        
+        // Logic
+        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        
+        if ($request->isMethod("POST") == true && $checkUserRole == true) {
+            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
+                if ($request->get("event") == "download_requestTestAction") {
+                    $_SESSION['download_path'] = "{$this->utility->getPathPublic()}/files/microservice/api/basic";
+                    $_SESSION['download_name'] = rand() . "_points";
+                    
+                    $this->toolExcel->setPath($_SESSION['download_path']);
+                    $this->toolExcel->setName($_SESSION['download_name']);
+                    
+                    $this->toolExcel->createSheet("Points");
+                    
+                    $elements = Array(
+                        'labels' => Array(
+                            "name",
+                            "errorCode"
+                        )
+                    );
+                    
+                    $rows = $this->selectAllApiBasicRequestDetailDatabase("requestTestAction", $request->get("dateStart"), $request->get("dateEnd"));
+                    
+                    if ($rows != false && count($rows) > 0) {
+                        foreach ($rows as $key => $value) {
+                            if (trim($value['data']) !== "false") {
+                                $data = json_decode($value['data']);
+
+                                $elements['items'] = Array(
+                                    $data->name,
+                                    $data->errorCode
+                                );
+
+                                $this->toolExcel->populateSheet($key, $elements);
+                            }
+                        }
+
+                        $result = $this->toolExcel->save();
+
+                        if ($result == false)
+                            $this->response['messages']['error'] = $this->utility->getTranslator()->trans("download_1");
+                        else {
+                            $url = "{$this->utility->getUrlRoot()}/files/microservice/api/basic";
+
+                            $this->response['values']['url'] = "{$url}/{$_SESSION['download_name']}.xlsx";
+                        }
+                    }
+                    else
+                        $this->response['messages']['error'] = $this->utility->getTranslator()->trans("download_2");
+                }
+                else if ($request->get("event") == "download_delete") {
+                    unlink("{$_SESSION['download_path']}/{$_SESSION['download_name']}.xlsx");
+                    
+                    unset($_SESSION['download_path']);
+                    unset($_SESSION['download_name']);
+                    
+                    $this->response['messages']['success'] = "";
+                }
+            }
+        }
+        
+        return $this->ajax->response(Array(
+            'urlLocale' => $this->urlLocale,
+            'urlCurrentPageId' => $this->urlCurrentPageId,
+            'urlExtra' => $this->urlExtra,
+            'response' => $this->response
+        ));
     }
     
     /**
@@ -718,6 +828,8 @@ class ApiBasicController extends AbstractController {
                             if (isset($this->apiBasicRow['ip']) == true && in_array($_SERVER['REMOTE_ADDR'], $ipSplit) == false)
                                 $this->response['messages']['error'] = $this->utility->getTranslator()->trans("apiBasicController_13");
                             else {
+                                $postFields = Array();
+                                
                                 if ($this->apiBasicRow['url_callback'] != "") {
                                     $urlCallback = $this->urlCallback($this->parameters, $this->apiBasicRow);
                                     
@@ -747,6 +859,8 @@ class ApiBasicController extends AbstractController {
                         $this->response['messages']['error'] = $this->utility->getTranslator()->trans("apiBasicController_9");
                     
                     $this->saveRequest($this->apiBasicRow['id'], $name, "apiBasic -> $name");
+                    
+                    $this->saveRequestDetail($name, $postFields, $this->response['errorCode']);
                     
                     if ((isset($this->response['errorCode']) == true && $this->response['errorCode'] != 0) || isset($this->response['messages']['error']) == true) {
                         $logPath = "{$this->utility->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $this->apiBasicRow['name']) . ".log";
@@ -934,6 +1048,38 @@ class ApiBasicController extends AbstractController {
         return $query->fetchAll();
     }
     
+    private function selectAllApiBasicRequestDetailDatabase($name, $dateStart, $dateEnd) {
+        $connection = $this->entityManager->getConnection();
+        
+        if ($dateStart == "" && $dateEnd == "")
+            return false;
+        else if ($dateStart != "" && $dateEnd == "") {
+            $query = $connection->prepare("SELECT * FROM microservice_apiBasic_request_detail
+                                            WHERE name = :name AND DATE(date) >= :dateStart");
+            
+            $query->bindValue(":dateStart", $dateStart);
+        }
+        else if ($dateStart == "" && $dateEnd != "") {
+            $query = $connection->prepare("SELECT * FROM microservice_apiBasic_request_detail
+                                            WHERE name = :name AND DATE(date) <= :dateEnd");
+            
+            $query->bindValue(":dateEnd", $dateEnd);
+        }
+        else if ($dateStart != "" && $dateEnd != "") {
+            $query = $connection->prepare("SELECT * FROM microservice_apiBasic_request_detail
+                                            WHERE name = :name AND DATE(date) >= :dateStart AND DATE(date) <= :dateEnd");
+            
+            $query->bindValue(":dateStart", $dateStart);
+            $query->bindValue(":dateEnd", $dateEnd);
+        }
+        
+        $query->bindValue(":name", $name);
+        
+        $query->execute();
+        
+        return $query->fetchAll();
+    }
+    
     private function createSelectPeriodYearHtml($request) {
         $periodMin = new \DateTime("2017/01/01");
         $periodMax = new \DateTime(date("Y/01/01"));
@@ -1101,5 +1247,30 @@ class ApiBasicController extends AbstractController {
         
         if ($this->apiBasicRow['line_active'] == true)
             $this->utility->sendMessageToLineChatMultiple("api_basic", date("Y-m-d H:i:s") . " - IP[{$_SERVER['REMOTE_ADDR']}] - Message: $message");
+    }
+    
+    private function saveRequestDetail($name, $data, $errorCode) {
+        if ($name == "requestTestAction") {
+            $data['errorCode'] = $errorCode;
+            
+            $json = json_encode($data);
+            
+            $query = $this->utility->getConnection()->prepare("INSERT INTO microservice_apiBasic_request_detail (
+                                                                    name,
+                                                                    date,
+                                                                    data
+                                                                )
+                                                                VALUES (
+                                                                    :name,
+                                                                    :date,
+                                                                    :data
+                                                                );");
+            
+            $query->bindValue(":name", $name);
+            $query->bindValue(":date", date("Y-m-d H:i:s"));
+            $query->bindValue(":data", $json);
+        }
+        
+        $query->execute();
     }
 }

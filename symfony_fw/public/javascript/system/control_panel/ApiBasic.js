@@ -1,19 +1,15 @@
+/* global utility, ajax, upload, materialDesign, popupEasy, chaato, widgetDatePicker */
+
 var controlPanelApiBasic = new ControlPanelApiBasic();
 
 function ControlPanelApiBasic() {
     // Vars
     var self = this;
     
-    var year;
-    var month;
-    
     // Properties
     
     // Functions public
     self.init = function() {
-        year = "";
-        month = "";
-        
         $(document).on("submit", "#form_cp_apiBasic_select", function(event) {
             event.preventDefault();
 
@@ -78,6 +74,9 @@ function ControlPanelApiBasic() {
             upload.setTagProgressBar("#upload_apiBasic_csv_container .upload_chunk .mdc-linear-progress");
             upload.setLockUrl(window.url.root + "/listener/lockListener.php");
             upload.processFile();
+            
+            widgetDatePicker.setInputFill(".widget_datePicker_input");
+            widgetDatePicker.action();
             
             materialDesign.refresh();
             
@@ -151,6 +150,69 @@ function ControlPanelApiBasic() {
                     null,
                     null
                 );
+            });
+            
+            $("#download_up_show").on("click", "", function(event) {
+                $(".download_detail_container").toggle( "slow" );
+                
+                $("#button_apiBasic_download_detail").off("click").on("click", "", function(event) {
+                    var event = $(this).attr("data-event");
+                    var dateStart = $("input[name='download_date_start']").val();
+                    var dateEnd = $("input[name='download_date_end']").val();
+                    
+                    ajax.send(
+                        true,
+                        window.url.cpApiBasicDownloadDetail,
+                        "post",
+                        {
+                            'event': event,
+                            'dateStart': dateStart,
+                            'dateEnd': dateEnd,
+                            'token': window.session.token
+                        },
+                        "json",
+                        false,
+                        true,
+                        "application/x-www-form-urlencoded; charset=UTF-8",
+                        null,
+                        function(xhr) {
+                            ajax.reply(xhr, "");
+                            
+                            if (xhr.response.values !== undefined) {
+                                var xhrRequest = new XMLHttpRequest();
+                                xhrRequest.onreadystatechange = function() {
+                                    if (this.readyState === 4) {
+                                        window.location = xhr.response.values.url;
+                                        
+                                        ajax.send(
+                                            false,
+                                            window.url.cpApiBasicDownloadDetail,
+                                            "post",
+                                            {
+                                                'event': "download_delete",
+                                                'token': window.session.token
+                                            },
+                                            "json",
+                                            false,
+                                            true,
+                                            "application/x-www-form-urlencoded; charset=UTF-8",
+                                            null,
+                                            function(xhr) {
+                                                ajax.reply(xhr, "");
+                                            },
+                                            null,
+                                            null
+                                        );
+                                    }
+                                };
+                                xhrRequest.open("head", xhr.response.values.url, true);
+                                xhrRequest.send();
+                            }
+                        },
+                        null,
+                        null
+                    );
+                });
             });
             
             $("#form_cp_apiBasic_profile").on("submit", "", function(event) {

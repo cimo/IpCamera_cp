@@ -3,10 +3,13 @@ namespace App\Classes\System;
 
 class ToolExcel {
     // Vars
+    private $self;
     private $encoding;
     
+    private $path;
+    private $name;
+    
     private $file;
-    private $fileName;
     private $fileOptions;
     private $fileElements;
     
@@ -15,15 +18,25 @@ class ToolExcel {
     private $worksheetName;
     
     // Properties
+    public function setPath($value) {
+        $this->path = $value;
+    }
+    
+    public function setName($value) {
+        $this->name = trim($value) . ".xlsx";
+    }
     
     // Functions public
     public function __construct($self = null, $encoding = "UTF-8") {
+        //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+        
         $this->self = $self;
         $this->encoding = $encoding;
         
-        $this->file = null;
+        $this->path = null;
+        $this->name = "no_name";
         
-        $this->fileName = "no_name";
+        $this->file = null;
         
         $this->fileOptions = Array(
             'encoding' => $encoding
@@ -91,10 +104,6 @@ class ToolExcel {
         $this->worksheetName = "";
     }
     
-    public function fileName($fileName) {
-        $this->fileName = trim($fileName) . ".xlsx";
-    }
-    
     public function totalLineCsv($path, $separator) {
         $index = 0;
         
@@ -120,9 +129,9 @@ class ToolExcel {
                 
                 while (($cell = fgetcsv($handle, 0, $separator)) !== false) {
                     if ($this->self == null)
-                        $result = $this->populateSheetElements($index, $cell, $extras);
+                        $result = $this->populateSheet($index, $cell, $extras);
                     else
-                        $result = $this->self->toolExcelCsvCallback($path, $index, $cell, $extras);
+                        $result = $this->self->toolExcelCsvCallback($index, $cell, $extras);
                     
                     if ($result == false)
                         break;
@@ -154,29 +163,27 @@ class ToolExcel {
         $this->fileElements['xl/worksheets/' . $this->worksheetName] = $worksheet;
         
         $this->sheets[] = $this->worksheetName;
+        $this->sheetData[$this->worksheetName] = "";
     }
     
-    public function createSheetElements($elements, $extras = Array()) {
-        if (count($this->sheets) == 0)
+    public function populateSheet($index, $cell, $extras = Array()) {
+        if (count($this->sheetData) == 0)
             return false;
         
         $options = array_merge($this->fileOptions, $extras);
         
-        $index = 0;
-        
-        foreach($elements as $key => $value) {
-            $this->sheetData[$this->worksheetName] .= $this->sheetData($index, $value, $options);
-            
-            $index ++;
-        }
+        $this->sheetData[$this->worksheetName] .= $this->sheetDataLogic($index, $cell, $options);
         
         return true;
     }
     
-    public function save($path) {
+    public function save() {
+        if ($this->path == null || count($this->sheetData) == 0)
+            return false;
+        
         $zipArchive = new \ZipArchive();
         
-        $zipArchive->open("$path/{$this->fileName}", \ZIPARCHIVE::CREATE);
+        $zipArchive->open("{$this->path}/{$this->name}", \ZIPARCHIVE::CREATE);
         
         $worksheet = false;
         
@@ -207,52 +214,28 @@ class ToolExcel {
         
         $zipArchive->close();
         
-        $this->file = "$path/{$this->fileName}";
-    }
-    
-    public function download() {
-        $this->save(__DIR__);
-        
-        ob_clean();
-        
-        header("Content-Disposition: attachment; filename=" . basename($this->file));
-        header("Content-Length: " . filesize($this->file));
-        header("Content-Type: application/vnd.openxmlformats-package.relationships+xml");
-        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-        header("Pragma: no-cache");
-        header("Expires: 0");
-        
-        readfile($this->file);
-        
-        if (file_exists($this->file) == true)
-            unlink($this->file);
-        
-        exit;
-    }
-    
-    // Functions private
-    private function populateSheetElements($index, $cell, $extras = Array()) {
-        if (count($this->sheets) == 0)
-            return false;
-        
-        $options = array_merge($this->fileOptions, $extras);
-        
-        $this->sheetData[$this->worksheetName] .= $this->sheetData($index, $cell, $options);
+        $this->file = "{$this->path}/{$this->name}";
         
         return true;
     }
     
-    private function sheetData($index, $cell, $options) {
+    // Functions private
+    private function sheetDataLogic($index, $cell, $options) {
         $result = "";
+        
+        $elements = $cell;
         
         if ($index == 0) {
             $result .= "<row>";
             
-            foreach ($cell as $key => $value) {
+            if (isset($cell['labels']) == true)
+                $elements = $cell['labels'];
+            
+            foreach ($elements as $key => $value) {
                 if (is_numeric($value) == true)
                     $result .= "<c s=\"1\" t=\"inlineStr\"><is><t>" . trim($value) . "</t></is></c>";
                 else {
-                    if (defined("ENT_XML1") == true)
+                    if (defined("ENT_XML1") === true)
                         $newValue = htmlspecialchars($value, ENT_QUOTES | ENT_XML1, $options['encoding']);
                     else
                         $newValue = htmlspecialchars($value);
@@ -262,37 +245,17 @@ class ToolExcel {
             }
             
             $result .= "</row>";
-        }
-        
-        if ($index > 0) {
-            if (is_array($cell[0]) == true) {
-                foreach ($cell as $key => $value) {
-                    $result .= "<row>";
-                    
-                    foreach ($value as $keySub => $valueSub) {
-                        if (is_numeric($valueSub) == true)
-                            $result .= "<c><v>" . trim($valueSub) . "</v></c>";
-                        else {
-                            if (defined("ENT_XML1") == true)
-                                $newValue = htmlspecialchars($valueSub, ENT_QUOTES | ENT_XML1, $options['encoding']);
-                            else
-                                $newValue = htmlspecialchars($valueSub);
-                            
-                            $result .= "<c t=\"inlineStr\"><is><t>$newValue</t></is></c>";
-                        }
-                    }
-                    
-                    $result .= "</row>";
-                }
-            }
-            else {
+            
+            if (isset($cell['items']) == true) {
+                $elements = $cell['items'];
+                
                 $result .= "<row>";
                 
-                foreach ($cell as $key => $value) {
+                foreach ($elements as $key => $value) {
                     if (is_numeric($value) == true)
-                        $result .= "<c><v>" . trim($value) . "</v></c>";
+                        $result .= "<c t=\"inlineStr\"><is><t>" . trim($value) . "</t></is></c>";
                     else {
-                        if (defined("ENT_XML1") == true)
+                        if (defined("ENT_XML1") === true)
                             $newValue = htmlspecialchars($value, ENT_QUOTES | ENT_XML1, $options['encoding']);
                         else
                             $newValue = htmlspecialchars($value);
@@ -303,6 +266,27 @@ class ToolExcel {
                 
                 $result .= "</row>";
             }
+        }
+        else if ($index > 0) {
+            if (isset($cell['items']) == true)
+                $elements = $cell['items'];
+            
+            $result .= "<row>";
+            
+            foreach ($elements as $key => $value) {
+                if (is_numeric($value) == true)
+                    $result .= "<c t=\"inlineStr\"><is><t>" . trim($value) . "</t></is></c>";
+                else {
+                    if (defined("ENT_XML1") === true)
+                        $newValue = htmlspecialchars($value, ENT_QUOTES | ENT_XML1, $options['encoding']);
+                    else
+                        $newValue = htmlspecialchars($value);
+                    
+                    $result .= "<c t=\"inlineStr\"><is><t>$newValue</t></is></c>";
+                }
+            }
+            
+            $result .= "</row>";
         }
         
         return $result;

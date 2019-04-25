@@ -11,7 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use App\Classes\System\Utility;
 use App\Classes\System\Ajax;
-use App\Classes\System\Upload;
 
 use App\Form\UserFormType;
 use App\Form\PasswordFormType;
@@ -30,7 +29,6 @@ class MyPageProfileController extends AbstractController {
     private $utility;
     private $query;
     private $ajax;
-    private $upload;
     
     // Properties
     
@@ -77,14 +75,14 @@ class MyPageProfileController extends AbstractController {
         // Logic
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_USER"), $this->getUser());
         
-        $usernameOld = $this->getUser()->getUsername();
-        
         $settingRow = $this->query->selectSettingDatabase();
+        
+        $usernameOld = $this->getUser()->getUsername();
         
         $avatar = "{$this->utility->getUrlRoot()}/images/templates/{$settingRow['template']}/no_avatar.jpg";
         
-        if (file_exists("{$this->utility->getPathPublic()}/files/user/$usernameOld/Avatar.jpg") == true)
-            $avatar = "{$this->utility->getUrlRoot()}/files/user/$usernameOld/Avatar.jpg";
+        if ($this->getUser()->getImage() != "" && file_exists("{$this->utility->getPathPublic()}/files/user/$usernameOld/{$this->getUser()->getImage()}") == true)
+            $avatar = "{$this->utility->getUrlRoot()}/files/user/$usernameOld/{$this->getUser()->getImage()}";
         
         $form = $this->createForm(UserFormType::class, $this->getUser(), Array(
             'validation_groups' => Array('profile')
@@ -101,6 +99,8 @@ class MyPageProfileController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
+                $this->fileUpload($form, $this->getUser());
+                
                 if ($form->has("username") == true) {
                     if (file_exists("{$this->utility->getPathPublic()}/files/user/$usernameOld") == true)
                         rename("{$this->utility->getPathPublic()}/files/user/$usernameOld", "{$this->utility->getPathPublic()}/files/user/{$form->get("username")->getData()}");
@@ -278,64 +278,6 @@ class MyPageProfileController extends AbstractController {
     
     /**
     * @Route(
-    *   name = "myPage_profile_upload",
-    *   path = "/myPage_profile_upload/{_locale}/{urlCurrentPageId}/{urlExtra}",
-    *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
-    *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
-    *	methods={"POST"}
-    * )
-    */
-    public function uploadAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
-        $this->entityManager = $this->getDoctrine()->getManager();
-        
-        $this->response = Array();
-        
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->upload = new Upload($this->utility);
-        
-        // Logic
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_USER"), $this->getUser());
-        
-        if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                if ($request->get("event") == "upload") {
-                    $path = "{$this->utility->getPathPublic()}/files/user/{$this->getUser()->getUsername()}";
-
-                    $this->upload->setSettings(Array(
-                        'path' => $path,
-                        'chunkSize' => 1048576,
-                        'mimeType' => Array("image/jpg", "image/jpeg", "image/png"),
-                        'maxSize' => 2097152,
-                        'imageSize' => Array(150, 150),
-                        'nameOverwrite' => "Avatar"
-                    ));
-                    $uploadProcessFile = $this->upload->processFile();
-
-                    $this->response['upload']['processFile'] = $uploadProcessFile;
-                    
-                    if (isset($uploadProcessFile['status']) == true && $uploadProcessFile['status'] == "complete") {
-                        //...
-                    }
-                }
-            }
-        }
-        
-        return $this->ajax->response(Array(
-            'urlLocale' => $this->urlLocale,
-            'urlCurrentPageId' => $this->urlCurrentPageId,
-            'urlExtra' => $this->urlExtra,
-            'response' => $this->response
-        ));
-    }
-    
-    /**
-    * @Route(
     *   name = "myPage_profile_credit_payPal",
     *   path = "/myPage_profile_credit_payPal/{_locale}/{urlCurrentPageId}/{urlExtra}",
     *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
@@ -361,4 +303,31 @@ class MyPageProfileController extends AbstractController {
     }
     
     // Functions private
+    private function fileUpload($form, $user) {
+        $row = $this->query->selectUserDatabase($user->getId());
+        
+        $pathImage = "{$this->utility->getPathPublic()}/files/user/{$this->getUser()->getUsername()}";
+        
+        $image = $user->getImage();
+        
+        // Remove image
+        if ($form->get("removeImage")->getData() == true) {
+            if (file_exists("{$pathImage}/{$row['image']}") == true)
+                unlink("{$pathImage}/{$row['image']}");
+            
+            $user->setImage("");
+        }
+        
+        // Upload image
+        if ($image != null && $form->get("removeImage")->getData() == false) {
+            if ($row['image'] != "" && file_exists("{$pathImage}/{$row['image']}") == true)
+                unlink("{$pathImage}/{$row['image']}");
+            
+            $fileName = $image->getClientOriginalName();
+            $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+            $newName = uniqid() . ".{$extension}";
+            $image->move($pathImage, $newName);
+            $user->setImage($newName);
+        }
+    }
 }

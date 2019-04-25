@@ -1,3 +1,5 @@
+/* global materialDesign, mdc */
+
 var utility = new Utility();
 
 function Utility() {
@@ -437,7 +439,7 @@ function Utility() {
         
         var serializeArray = object.serializeArray();
         
-        var jsonString = JSON.stringify(serializeArray)
+        var jsonString = JSON.stringify(serializeArray);
         var json = JSON.parse(jsonString);
         
         var name = "";
@@ -457,6 +459,22 @@ function Utility() {
         });
         
         return elements;
+    };
+    
+    self.unitFormat = function(bytes) {
+        if (bytes === 0)
+            return "0 Bytes";
+        
+        var byte = 1024;
+        var sizes = new Array("Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB");
+        
+        var value = Math.floor(Math.log(bytes) / Math.log(byte));
+        
+        return parseFloat((bytes / Math.pow(byte, value)).toFixed(2)) + " " + sizes[value];
+    };
+    
+    self.padZero = function(value) {
+        return (value < 10 ? "0" : "") + value;
     };
     
     // Functions private
