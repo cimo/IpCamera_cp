@@ -5,6 +5,19 @@
     <div class="command_container">
         <p>Commands</p>
     </div>
-{% else %}
-    {% trans %}ipCameraRender_1{% endtrans %}
+    <script>
+        function deferred(method) {
+            if (window.$ !== undefined)
+                method();
+            else
+                setTimeout(function() {deferred(method);}, 50);
+        }
+
+        deferred(function() {
+            $(document).ready(function() {
+                $(".video_container").parents(".page_container").find(".header").hide();
+                $(".video_container").parents(".page_container").find(".argument").hide();
+            });
+        });
+    </script>
 {% endif %}
