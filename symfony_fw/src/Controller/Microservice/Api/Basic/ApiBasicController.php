@@ -68,8 +68,6 @@ class ApiBasicController extends AbstractController {
         
         $apiBasicEntity = new ApiBasic();
         
-        $_SESSION['apiBasicProfileId'] = 0;
-        
         $form = $this->createForm(ApiBasicFormType::class, $apiBasicEntity, Array(
             'validation_groups' => Array('apiBasic_create')
         ));

@@ -645,13 +645,11 @@ class PageController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE pages, pages_titles, pages_arguments, pages_menu_names, pages_comments FROM pages, pages_titles, pages_arguments, pages_menu_names, pages_comments
-                                                                WHERE pages.id > :idExclude
-                                                                AND pages.id = :id
-                                                                AND pages_titles.id = :id
-                                                                AND pages_arguments.id = :id
-                                                                AND pages_menu_names.id = :id
-                                                                AND pages_comments.page_id = :id");
+            $query = $this->utility->getConnection()->prepare("DELETE FROM pages WHERE id > :idExclude AND id = :id;
+                                                                DELETE FROM pages_titles WHERE id > :idExclude AND id = :id;
+                                                                DELETE FROM pages_arguments WHERE id > :idExclude AND id = :id;
+                                                                DELETE FROM pages_menu_names WHERE id > :idExclude AND id = :id;
+                                                                DELETE FROM pages_comments WHERE id > :idExclude AND id = :id;");
             
             $query->bindValue(":idExclude", 5);
             $query->bindValue(":id", $id);
@@ -659,12 +657,11 @@ class PageController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteAll") {
-            $query = $this->utility->getConnection()->prepare("DELETE pages, pages_titles, pages_arguments, pages_menu_names, pages_comments FROM pages, pages_titles, pages_arguments, pages_menu_names, pages_comments
-                                                                WHERE pages.id > :idExclude
-                                                                AND pages_titles.id > :idExclude
-                                                                AND pages_arguments.id > :idExclude
-                                                                AND pages_menu_names.id > :idExclude
-                                                                AND pages_comments.page_id > :idExclude");
+            $query = $this->utility->getConnection()->prepare("DELETE FROM pages WHERE id > :idExclude;
+                                                                DELETE FROM pages_titles WHERE id > :idExclude;
+                                                                DELETE FROM pages_arguments WHERE id > :idExclude;
+                                                                DELETE FROM pages_menu_names WHERE id > :idExclude;
+                                                                DELETE FROM pages_comments WHERE id > :idExclude;");
             
             $query->bindValue(":idExclude", 5);
             

@@ -673,8 +673,8 @@ date.time: H:i:s
 "settingSlackIwFormType_7": "Send"
 
 "settingSlackIwController_1": "Incoming webhook not selected!"
-"settingSlackIwController_2": "Incoming webhook create completed."
-"settingSlackIwController_3": "Incoming webhook not created!"
+"settingSlackIwController_2": "Incoming webhook save completed."
+"settingSlackIwController_3": "Incoming webhook not saved!"
 "settingSlackIwController_4": "Incoming webhook delete completed."
 "settingSlackIwController_5": "Incoming webhook not deleted!"
 "settingSlackIwController_6": "Incoming webhook reset completed."
@@ -694,7 +694,7 @@ date.time: H:i:s
 "settingLinePushFormType_6": "Yes"
 "settingLinePushFormType_7": "Send"
 
-"settingLinePushController_1": "Push saved."
+"settingLinePushController_1": "Push save completed."
 "settingLinePushController_2": "Push not saved!"
 "settingLinePushController_3": "Push not selected!"
 "settingLinePushController_4": "Push delete completed."

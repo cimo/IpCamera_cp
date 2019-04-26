@@ -39,6 +39,16 @@ CREATE TABLE `ipCamera_devices` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `ipCamera_devices`
+--
+
+LOCK TABLES `ipCamera_devices` WRITE;
+/*!40000 ALTER TABLE `ipCamera_devices` DISABLE KEYS */;
+INSERT INTO `ipCamera_devices` VALUES (1,'Cosenza - Salone','1,','http://home-cs.ddns.net:1000/media/?action=stream','http://home-cs.ddns.net:1000/media/?action=snapshot','admin','l!\�y\�F�c���N)�	',0.010,0,'0',1);
+/*!40000 ALTER TABLE `ipCamera_devices` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `languages`
 --
 
@@ -88,7 +98,7 @@ CREATE TABLE `microservice_api` (
 
 LOCK TABLES `microservice_api` WRITE;
 /*!40000 ALTER TABLE `microservice_api` DISABLE KEYS */;
-INSERT INTO `microservice_api` VALUES (1,'Basic','ApiBasic','Test api functionality',NULL,1);
+INSERT INTO `microservice_api` VALUES (1,'Basic','ApiBasic','Test api functionality',NULL,0);
 /*!40000 ALTER TABLE `microservice_api` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -150,6 +160,31 @@ CREATE TABLE `microservice_apiBasic_request` (
 LOCK TABLES `microservice_apiBasic_request` WRITE;
 /*!40000 ALTER TABLE `microservice_apiBasic_request` DISABLE KEYS */;
 /*!40000 ALTER TABLE `microservice_apiBasic_request` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `microservice_apiBasic_request_detail`
+--
+
+DROP TABLE IF EXISTS `microservice_apiBasic_request_detail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `microservice_apiBasic_request_detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `date` varchar(19) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `data` json NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `microservice_apiBasic_request_detail`
+--
+
+LOCK TABLES `microservice_apiBasic_request_detail` WRITE;
+/*!40000 ALTER TABLE `microservice_apiBasic_request_detail` DISABLE KEYS */;
+/*!40000 ALTER TABLE `microservice_apiBasic_request_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -261,7 +296,7 @@ CREATE TABLE `pages` (
 
 LOCK TABLES `pages` WRITE;
 /*!40000 ALTER TABLE `pages` DISABLE KEYS */;
-INSERT INTO `pages` VALUES (1,'myPage',NULL,'App\\Controller\\MyPage\\MyPageProfileController::renderAction','1,',1,0,1,0,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 17:47:45','Personal page.','personal, page','noindex, nofollow'),(2,'home',NULL,'App\\Controller\\ControlPanel\\IpCameraController::renderAction','1,',0,1,2,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-02-15 16:42:37','Website home page.','website, home, page','index, follow'),(3,'registration',NULL,'App\\Controller\\RegistrationController::renderAction','1,',0,0,3,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:05:15','User registration page.','user, registration, page','index, follow'),(4,'recover_password',NULL,'App\\Controller\\RecoverPasswordController::renderAction','1,',0,0,4,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:05:40','User recover password.','user, recover, password','index, follow'),(5,'search',NULL,'App\\Controller\\SearchController::renderAction','1,',0,0,5,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:07:47','Website content search','website, content, search','noindex, nofollow');
+INSERT INTO `pages` VALUES (1,'myPage',NULL,'App\\Controller\\MyPage\\MyPageProfileController::renderAction','1,',1,0,1,0,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 17:47:45','Personal page.','personal, page','noindex, nofollow'),(2,'home',NULL,'App\\Controller\\ControlPanel\\IpCameraController::renderAction','1,',1,1,2,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-04-25 14:47:22','Website home page.','website, home, page','index, follow'),(3,'registration',NULL,'App\\Controller\\RegistrationController::renderAction','1,',0,0,3,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:05:15','User registration page.','user, registration, page','index, follow'),(4,'recover_password',NULL,'App\\Controller\\RecoverPasswordController::renderAction','1,',0,0,4,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:05:40','User recover password.','user, recover, password','index, follow'),(5,'search',NULL,'App\\Controller\\SearchController::renderAction','1,',0,0,5,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:07:47','Website content search','website, content, search','noindex, nofollow');
 /*!40000 ALTER TABLE `pages` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -288,7 +323,7 @@ CREATE TABLE `pages_arguments` (
 
 LOCK TABLES `pages_arguments` WRITE;
 /*!40000 ALTER TABLE `pages_arguments` DISABLE KEYS */;
-INSERT INTO `pages_arguments` VALUES (1,'User personal page.','Argomento my page.','My pageã®ã¢ã¼ã®ã¥ã¡ã³ãã'),(2,'This is a cms created with symfony framework.','Argomento home.','ãã¼ã ã®ã¢ã¼ã®ã¥ã¡ã³ãã'),(3,'Registration argument.','Argomento registrazione.','ç»é²ã®ã¢ã¼ã®ã¥ã¡ã³ãã'),(4,'Recover password argument.','Argomento recupero password.','ãã¹ã¯ã¼ããåå¾©ã®ã¢ã¼ã®ã¥ã¡ã³ãã'),(5,'Search argument.','Argomento cerca.','ãµã¼ãã®ã¢ã¼ã®ã¥ã¡ã³ãã');
+INSERT INTO `pages_arguments` VALUES (1,'User personal page.','Argomento my page.','My pageのアーギュメント。'),(2,'This is a cms created with symfony framework.','Argomento home.','ホームのアーギュメント。'),(3,'Registration argument.','Argomento registrazione.','登録のアーギュメント。'),(4,'Recover password argument.','Argomento recupero password.','パスワードを回復のアーギュメント。'),(5,'Search argument.','Argomento cerca.','サーチのアーギュメント。');
 /*!40000 ALTER TABLE `pages_arguments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -342,7 +377,7 @@ CREATE TABLE `pages_menu_names` (
 
 LOCK TABLES `pages_menu_names` WRITE;
 /*!40000 ALTER TABLE `pages_menu_names` DISABLE KEYS */;
-INSERT INTO `pages_menu_names` VALUES (1,'-','-','-'),(2,'Home','Home','ãã¼ã '),(3,'-','-','-'),(4,'-','-','-'),(5,'-','-','-');
+INSERT INTO `pages_menu_names` VALUES (1,'-','-','-'),(2,'Home','Home','ホーム'),(3,'-','-','-'),(4,'-','-','-'),(5,'-','-','-');
 /*!40000 ALTER TABLE `pages_menu_names` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -369,7 +404,7 @@ CREATE TABLE `pages_titles` (
 
 LOCK TABLES `pages_titles` WRITE;
 /*!40000 ALTER TABLE `pages_titles` DISABLE KEYS */;
-INSERT INTO `pages_titles` VALUES (1,'My page title','Titolo my page','My pageã®ã¿ã¤ãã«'),(2,'Home title','Titolo home','ãã¼ã ã®ã¿ã¤ãã«'),(3,'Registration title','Titolo registrazione','ç»é²ã®ã¿ã¤ãã«'),(4,'Recover password title','Titolo recupero password','ãã¹ã¯ã¼ããåå¾©ã®ã¿ã¤ãã«'),(5,'Search title','Titolo cerca','ãµã¼ãã®ã¿ã¤ãã«');
+INSERT INTO `pages_titles` VALUES (1,'My page title','Titolo my page','My pageのタイトル'),(2,'Home title','Titolo home','ホームのタイトル'),(3,'Registration title','Titolo registrazione','登録のタイトル'),(4,'Recover password title','Titolo recupero password','パスワードを回復のタイトル'),(5,'Search title','Titolo cerca','サーチのタイトル');
 /*!40000 ALTER TABLE `pages_titles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -427,7 +462,7 @@ CREATE TABLE `roles_users` (
 
 LOCK TABLES `roles_users` WRITE;
 /*!40000 ALTER TABLE `roles_users` DISABLE KEYS */;
-INSERT INTO `roles_users` VALUES (1,'ROLE_USER'),(2,'ROLE_ADMIN'),(3,'ROLE_MODERATOR'),(4,'ROLE_MICROSERVICE'),(5,'ROLE_TEST');
+INSERT INTO `roles_users` VALUES (1,'ROLE_USER'),(2,'ROLE_ADMIN'),(3,'ROLE_MODERATOR'),(4,'ROLE_MICROSERVICE'),(5,'ROLE_IPCAMERA');
 /*!40000 ALTER TABLE `roles_users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -570,6 +605,7 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `role_user_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '1,',
   `roles` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'ROLE_USER,',
+  `image` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `username` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `surname` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -604,7 +640,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'1,2,','ROLE_USER,ROLE_ADMIN','cimo','Simone','D\'Agostino','cimo@reinventsoftware.org','080123456789','1984-4-11','m',NULL,NULL,NULL,'https://www.reinventsoftware.org','Japan','Tokyo','100-0001','Street','$2y$13$hOJvU2.m8vRl5YxsuY/J0OiQGFSS7DAa8mTA5uNGZGxmYoc8zFgde',0,1,'2016-08-04 10:25:12','2019-02-18 14:19:49','2019-02-18 11:01:52',NULL,'192.168.56.1',0),(2,'1,4,','ROLE_USER,ROLE_MICROSERVICE','test_1',NULL,NULL,'test_1@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$Hi5SnSpKl9oKC79.G09MjeKOGUAzPEFjM3QPyp9z69m/gVXdnivJ2',0,1,'2016-09-10 17:39:31','2019-01-22 15:09:43','2019-01-22 14:55:58','','192.168.56.1',0),(3,'1,4,5,','ROLE_USER,ROLE_MICROSERVICE,ROLE_TEST','test_2',NULL,NULL,'test_2@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$fo/L0jc1j4uWXAFjjOKE3eP0cgwv8DtBkjvUnMC9Eaa2B537B7uXq',0,0,'0000-00-00 00:00:00','2018-09-05 16:48:01','2018-09-05 16:47:23',NULL,'183.77.252.62',0);
+INSERT INTO `users` VALUES (1,'1,2,','ROLE_USER,ROLE_ADMIN','5cbfc82693953.jpg','cimo','Simone','D\'Agostino','cimo@reinventsoftware.org','080123456789','1984-4-11','m',NULL,NULL,NULL,'https://www.reinventsoftware.org','Japan','Tokyo','100-0001','Street','$2y$13$hOJvU2.m8vRl5YxsuY/J0OiQGFSS7DAa8mTA5uNGZGxmYoc8zFgde',0,1,'2016-08-04 10:25:12','2019-04-25 15:35:41','2019-04-25 15:34:27',NULL,'192.168.56.1',0),(2,'1,4,','ROLE_USER,ROLE_MICROSERVICE',NULL,'test_1',NULL,NULL,'test_1@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$Hi5SnSpKl9oKC79.G09MjeKOGUAzPEFjM3QPyp9z69m/gVXdnivJ2',0,1,'2016-09-10 17:39:31','2019-01-22 15:09:43','2019-01-22 14:55:58','','192.168.56.1',0),(3,'1,4,5,','ROLE_USER,ROLE_MICROSERVICE,ROLE_IPCAMERA',NULL,'test_2',NULL,NULL,'test_2@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$fo/L0jc1j4uWXAFjjOKE3eP0cgwv8DtBkjvUnMC9Eaa2B537B7uXq',0,0,'0000-00-00 00:00:00','2018-09-05 16:48:01','2018-09-05 16:47:23',NULL,'183.77.252.62',0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -621,4 +657,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-18 19:21:25
+-- Dump completed on 2019-04-26 18:44:53
