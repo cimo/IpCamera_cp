@@ -32,7 +32,7 @@
         </div>
     {% else %}
         {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
-
+        
         <form id="form_authentication" action="{{path("authentication_enter_check", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
             {{form_row(form._username, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "pets"})}}
             {{form_row(form._password, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "linear_scale"})}}
@@ -42,18 +42,19 @@
             {% endif %}
             
             {{form_widget(form._token)}}
-
+            
             <div class="submit_container">
                 {{form_widget(form._remember_me)}}
                 {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
             </div>
         </form>
-
+        
         {% if settingRow['website_active'] == true %}
             <div class="link_container">
                 {% if settingRow['registration'] == true %}
                     <a class="mdc-typography--caption mdc-theme--on-surface" href="{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': 3, 'urlExtra': ""})}}">{% trans %}authentication_6{% endtrans %}</a>
                 {% endif %}
+                
                 {% if settingRow['recover_password'] == true %}
                     <a class="mdc-typography--caption mdc-theme--on-surface" href="{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': 4, 'urlExtra': ""})}}">{% trans %}authentication_7{% endtrans %}</a>
                 {% endif %}

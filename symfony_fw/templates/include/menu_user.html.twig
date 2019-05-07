@@ -18,12 +18,19 @@
                 <li class="mdc-list-item login" role="menuitem">
                     <span>{% trans %}menuUser_4{% endtrans %}</span>
                 </li>
-                <li class="mdc-list-item registration" role="menuitem">
-                    <span>{% trans %}menuUser_5{% endtrans %}</span>
-                </li>
-                <li class="mdc-list-item recover_password" role="menuitem">
-                    <span>{% trans %}menuUser_6{% endtrans %}</span>
-                </li>
+                {% if settingRow['website_active'] == true %}
+                    {% if settingRow['registration'] == true %}
+                        <li class="mdc-list-item registration" role="menuitem">
+                            <span>{% trans %}menuUser_5{% endtrans %}</span>
+                        </li>
+                    {% endif %}
+                    
+                    {% if settingRow['recover_password'] == true %}
+                        <li class="mdc-list-item recover_password" role="menuitem">
+                            <span>{% trans %}menuUser_6{% endtrans %}</span>
+                        </li>
+                    {% endif %}
+                {% endif %}
             {% endif %}
         </ul>
     </div>
