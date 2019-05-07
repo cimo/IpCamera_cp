@@ -25,10 +25,10 @@ class RoleUserFormType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder->add("level", TextType::class, Array(
             'required' => true,
-            'label' => "roleUserFormType_3"
+            'label' => "roleUserFormType_1"
         ))
         ->add("submit", SubmitType::class, Array(
-            'label' => "roleUserFormType_4"
+            'label' => "roleUserFormType_2"
         ));
         
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $formEvent) {
