@@ -1267,8 +1267,8 @@ class ApiBasicController extends AbstractController {
             $query->bindValue(":name", $name);
             $query->bindValue(":date", date("Y-m-d H:i:s"));
             $query->bindValue(":data", $json);
+            
+            $query->execute();
         }
-        
-        $query->execute();
     }
 }
