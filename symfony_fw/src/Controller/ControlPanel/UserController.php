@@ -495,7 +495,7 @@ class UserController extends AbstractController {
     
     private function userDatabase($type, $id) {
         if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM users
+            $query = $this->utility->getConnection()->prepare("DELETE FROM user
                                                                 WHERE id > :idExclude
                                                                 AND id = :id");
             
@@ -504,8 +504,8 @@ class UserController extends AbstractController {
 
             $query->execute();
             
-            // Payments
-            $query = $this->utility->getConnection()->prepare("DELETE FROM payments
+            // payment
+            $query = $this->utility->getConnection()->prepare("DELETE FROM payment
                                                                 WHERE user_id > :idExclude
                                                                 AND user_id = :id");
             
@@ -515,15 +515,15 @@ class UserController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteAll") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM users
+            $query = $this->utility->getConnection()->prepare("DELETE FROM user
                                                                 WHERE id > :idExclude");
 
             $query->bindValue(":idExclude", 1);
 
             $query->execute();
             
-            // Payments
-            $query = $this->utility->getConnection()->prepare("DELETE FROM payments
+            // payment
+            $query = $this->utility->getConnection()->prepare("DELETE FROM payment
                                                                 WHERE user_id > :idExclude");
             
             $query->bindValue(":idExclude", 1);

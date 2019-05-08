@@ -474,13 +474,13 @@ function Wysiwyg() {
             }
             
             if (content !== "")
-                popupSettings(type, target, content);
+                popupsetting(type, target, content);
             
             return false;
         });
     }
     
-    function popupSettings(type, target, content) {
+    function popupsetting(type, target, content) {
         popupEasy.create(
             window.textWysiwyg.label_15,
             "<div id=\"wysiwyg_popup\">" + content + "</div>",

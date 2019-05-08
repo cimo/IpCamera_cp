@@ -1,9 +1,9 @@
 {% if settingRow['pageComment'] == true %}
     {% if response.values.listHtml is defined and response.values.count > 0 %}
         <div id="pageComment_result">
-
+            
             {{-include("@templateRoot/include/table_and_pagination.html.twig")-}}
-
+            
             <div class="list_result">
                 {{response.values.listHtml|raw}}
             </div>
@@ -15,14 +15,14 @@
     {% if settingRow['pageComment_active'] == true %}
         {% if app.user %}
             {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
-
+            
             <form id="form_pageComment" action="{{path("pageComment_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
                 {{form_widget(form.type)}}
-
+                
                 {{form_row(form.argument, {'dense': "", 'styleType': "outlinedTrailing"})}}
-
+                
                 {{form_widget(form._token)}}
-
+                
                 {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
             </form>
         {% else %}

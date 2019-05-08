@@ -466,7 +466,7 @@ class ModuleController extends AbstractController {
             if (empty($value) == true)
                 $value = $moduleId;
 
-            $query = $this->utility->getConnection()->prepare("UPDATE modules
+            $query = $this->utility->getConnection()->prepare("UPDATE module
                                                                 SET rank_in_column = :rankInColumn
                                                                 WHERE id = :id");
 
@@ -479,7 +479,7 @@ class ModuleController extends AbstractController {
     
     private function moduleDatabase($type, $id, $rankInColumn, $position) {
         if ($type == "update") {
-            $query = $this->utility->getConnection()->prepare("UPDATE modules
+            $query = $this->utility->getConnection()->prepare("UPDATE module
                                                                 SET position = :position,
                                                                     rank_in_column = :rankInColumn
                                                                 WHERE id = :id");
@@ -491,7 +491,7 @@ class ModuleController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM modules
+            $query = $this->utility->getConnection()->prepare("DELETE FROM module
                                                                 WHERE id > :idExclude
                                                                 AND id = :id");
 
@@ -501,7 +501,7 @@ class ModuleController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteAll") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM modules
+            $query = $this->utility->getConnection()->prepare("DELETE FROM module
                                                                 WHERE id > :idExclude");
 
             $query->bindValue(":idExclude", 2);

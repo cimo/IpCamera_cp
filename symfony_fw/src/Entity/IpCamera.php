@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Table(name="ipCamera_devices", options={"collate"="utf8_unicode_ci", "charset"="utf8", "engine"="InnoDB"})
+ * @ORM\Table(name="ipCamera_device", options={"collate"="utf8_unicode_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity(repositoryClass="App\Repository\IpCameraRepository")
  * @UniqueEntity(fields={"name"}, groups={"ipCamera_create", "ipCamera_profile"})
  */

@@ -331,7 +331,7 @@ class PaymentController extends AbstractController {
     
     private function paymentDatabase($type, $id) {
         if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM payments
+            $query = $this->utility->getConnection()->prepare("DELETE FROM payment
                                                                 WHERE user_id = :userId
                                                                 AND id = :id");
             
@@ -341,7 +341,7 @@ class PaymentController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteAll") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM payments
+            $query = $this->utility->getConnection()->prepare("DELETE FROM payment
                                                                 WHERE user_id = :userId");
             
             $query->bindValue(":userId", $_SESSION['paymentUserId']);

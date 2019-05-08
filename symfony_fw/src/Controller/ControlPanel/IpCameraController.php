@@ -719,7 +719,7 @@ class IpCameraController extends AbstractController {
             $settingRow = $this->query->selectSettingDatabase();
             
             $query = $this->utility->getConnection()->prepare("SELECT AES_DECRYPT(:password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS password
-                                                                    FROM ipCamera_devices
+                                                                    FROM ipCamera_device
                                                                 WHERE id = :id");
 
             $query->bindValue(":password", $password);
@@ -733,7 +733,7 @@ class IpCameraController extends AbstractController {
             if ($password != "") {
                 $settingRow = $this->query->selectSettingDatabase();
 
-                $query = $this->utility->getConnection()->prepare("UPDATE IGNORE ipCamera_devices
+                $query = $this->utility->getConnection()->prepare("UPDATE IGNORE ipCamera_device
                                                                     SET password = AES_ENCRYPT(:password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
                                                                     WHERE id = :id");
 
@@ -741,7 +741,7 @@ class IpCameraController extends AbstractController {
                 $query->bindValue(":id", $id);
             }
             else {
-                $query = $this->utility->getConnection()->prepare("UPDATE ipCamera_devices
+                $query = $this->utility->getConnection()->prepare("UPDATE ipCamera_device
                                                                     SET detection_active = :detectionActive,
                                                                         detection_pid = :detectionPid
                                                                     WHERE id = :id");
@@ -754,7 +754,7 @@ class IpCameraController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM ipCamera_devices
+            $query = $this->utility->getConnection()->prepare("DELETE FROM ipCamera_device
                                                                 WHERE id = :id");
             
             $query->bindValue(":id", $id);
@@ -766,7 +766,7 @@ class IpCameraController extends AbstractController {
     }
     
     private function selectAllIpCameraDatabase() {
-        $query = $this->utility->getConnection()->prepare("SELECT * FROM ipCamera_devices");
+        $query = $this->utility->getConnection()->prepare("SELECT * FROM ipCamera_device");
         
         $query->execute();
         

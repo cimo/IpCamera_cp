@@ -4,7 +4,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="payments", options={"collate"="utf8_unicode_ci", "charset"="utf8", "engine"="InnoDB"})
+ * @ORM\Table(name="payment", options={"collate"="utf8_unicode_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity(repositoryClass="App\Repository\PaymentRepository")
  */
 class Payment {

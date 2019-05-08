@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Table(name="pages", options={"collate"="utf8_unicode_ci", "charset"="utf8", "engine"="InnoDB"})
+ * @ORM\Table(name="page", options={"collate"="utf8_unicode_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity(repositoryClass="App\Repository\PageRepository")
  * @UniqueEntity(fields={"alias"}, groups={"page_create", "page_profile"})
  */

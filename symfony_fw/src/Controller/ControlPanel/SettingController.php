@@ -254,7 +254,7 @@ class SettingController extends AbstractController {
     
     private function moduleDatabase($templateColumn) {
         if ($templateColumn == 1) {
-            $query = $this->utility->getConnection()->prepare("UPDATE modules
+            $query = $this->utility->getConnection()->prepare("UPDATE module
                                                                 SET position_tmp = :positionTmp,
                                                                     position = :position
                                                                 WHERE position_tmp = :position");
@@ -271,7 +271,7 @@ class SettingController extends AbstractController {
             $query->execute();
         }
         else if ($templateColumn == 2 || $templateColumn == 3 || $templateColumn == 4) {
-            $query = $this->utility->getConnection()->prepare("UPDATE modules
+            $query = $this->utility->getConnection()->prepare("UPDATE module
                                                                 SET position_tmp = :positionTmp,
                                                                     position = :position
                                                                 WHERE position = :positionTmp");
@@ -282,7 +282,7 @@ class SettingController extends AbstractController {
                 
                 $query->execute();
                 
-                $query = $this->utility->getConnection()->prepare("UPDATE modules
+                $query = $this->utility->getConnection()->prepare("UPDATE module
                                                                     SET position_tmp = :positionTmp,
                                                                         position = :position
                                                                     WHERE position_tmp = :position");
@@ -298,7 +298,7 @@ class SettingController extends AbstractController {
                 
                 $query->execute();
                 
-                $query = $this->utility->getConnection()->prepare("UPDATE modules
+                $query = $this->utility->getConnection()->prepare("UPDATE module
                                                                     SET position_tmp = :positionTmp,
                                                                         position = :position
                                                                     WHERE position_tmp = :position");
@@ -330,7 +330,7 @@ class SettingController extends AbstractController {
         $moduleRows = $this->query->selectAllModuleDatabase(null, $position);
         
         foreach($moduleRows as $key => $value) {
-            $query = $this->utility->getConnection()->prepare("UPDATE modules
+            $query = $this->utility->getConnection()->prepare("UPDATE module
                                                                 SET rank_in_column = :rankInColumn
                                                                 WHERE id = :id");
             
@@ -343,7 +343,7 @@ class SettingController extends AbstractController {
     
     private function settingDatabase($type, $code, $date = null, $active = 0) {
         if ($type == "insertLanguage") {
-            $query = $this->utility->getConnection()->prepare("INSERT INTO languages (code, date, active)
+            $query = $this->utility->getConnection()->prepare("INSERT INTO language (code, date, active)
                                                                 VALUES (:code, :date, :active)");
             
             $query->bindValue(":code", $code);
@@ -353,7 +353,7 @@ class SettingController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "updateLanguage") {
-            $query = $this->utility->getConnection()->prepare("UPDATE languages
+            $query = $this->utility->getConnection()->prepare("UPDATE language
                                                                 SET date = :date,
                                                                     active = :active
                                                                 WHERE code = :code");
@@ -365,7 +365,7 @@ class SettingController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteLanguage") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM languages
+            $query = $this->utility->getConnection()->prepare("DELETE FROM language
                                                                 WHERE code = :code");
             
             $query->bindValue(":code", $code);
@@ -377,9 +377,9 @@ class SettingController extends AbstractController {
             $codeTmp = strlen($codeTmp) == true ? $codeTmp : "";
             $codeTmp = ctype_alpha($codeTmp) == true ? $codeTmp : "";
             
-            $query = $this->utility->getConnection()->prepare("ALTER TABLE pages_titles ADD $codeTmp VARCHAR(255) DEFAULT '';
-                                                                ALTER TABLE pages_arguments ADD $codeTmp LONGTEXT;
-                                                                ALTER TABLE pages_menu_names ADD $codeTmp VARCHAR(255) NOT NULL DEFAULT '-';");
+            $query = $this->utility->getConnection()->prepare("ALTER TABLE page_title ADD $codeTmp VARCHAR(255) DEFAULT '';
+                                                                ALTER TABLE page_argument ADD $codeTmp LONGTEXT;
+                                                                ALTER TABLE page_menu_name ADD $codeTmp VARCHAR(255) NOT NULL DEFAULT '-';");
             
             $query->execute();
         }
@@ -388,9 +388,9 @@ class SettingController extends AbstractController {
             $codeTmp = strlen($codeTmp) == true ? $codeTmp : "";
             $codeTmp = ctype_alpha($codeTmp) == true ? $codeTmp : "";
             
-            $query = $this->utility->getConnection()->prepare("ALTER TABLE pages_titles DROP $codeTmp;
-                                                                ALTER TABLE pages_arguments DROP $codeTmp;
-                                                                ALTER TABLE pages_menu_names DROP $codeTmp;");
+            $query = $this->utility->getConnection()->prepare("ALTER TABLE page_title DROP $codeTmp;
+                                                                ALTER TABLE page_argument DROP $codeTmp;
+                                                                ALTER TABLE page_menu_name DROP $codeTmp;");
             
             $query->execute();
         }

@@ -279,7 +279,7 @@ class MyPagePaymentController extends AbstractController {
     
     private function paymentDatabase($type, $id) {
         if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("UPDATE payments
+            $query = $this->utility->getConnection()->prepare("UPDATE payment
                                                                 SET status_delete = :statusDelete
                                                                 WHERE user_id = :userId
                                                                 AND id = :id");
@@ -291,7 +291,7 @@ class MyPagePaymentController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteAll") {
-            $query = $this->utility->getConnection()->prepare("UPDATE payments
+            $query = $this->utility->getConnection()->prepare("UPDATE payment
                                                                 SET status_delete = :statusDelete
                                                                 WHERE user_id = :userId");
             

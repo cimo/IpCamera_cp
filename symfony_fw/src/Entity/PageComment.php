@@ -4,7 +4,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="pages_comments", options={"collate"="utf8_unicode_ci", "charset"="utf8", "engine"="InnoDB"})
+ * @ORM\Table(name="page_comment", options={"collate"="utf8_unicode_ci", "charset"="utf8", "engine"="InnoDB"})
  * @ORM\Entity(repositoryClass="App\Repository\PageCommentRepository")
  */
 class PageComment {

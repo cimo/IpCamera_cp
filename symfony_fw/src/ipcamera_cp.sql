@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: ipcamera_cp
 -- ------------------------------------------------------
--- Server version	5.7.25-0ubuntu0.16.04.2
+-- Server version	5.7.26-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `ipCamera_devices`
+-- Table structure for table `ipCamera_device`
 --
 
-DROP TABLE IF EXISTS `ipCamera_devices`;
+DROP TABLE IF EXISTS `ipCamera_device`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ipCamera_devices` (
+CREATE TABLE `ipCamera_device` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
   `user_id` varchar(255) NOT NULL DEFAULT '1,',
@@ -39,23 +39,23 @@ CREATE TABLE `ipCamera_devices` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ipCamera_devices`
+-- Dumping data for table `ipCamera_device`
 --
 
-LOCK TABLES `ipCamera_devices` WRITE;
-/*!40000 ALTER TABLE `ipCamera_devices` DISABLE KEYS */;
-INSERT INTO `ipCamera_devices` VALUES (1,'Cosenza - Salone','1,','http://home-cs.ddns.net:1000/media/?action=stream','http://home-cs.ddns.net:1000/media/?action=snapshot','admin','l!\�y\�F�c���N)�	',0.010,0,'0',1);
-/*!40000 ALTER TABLE `ipCamera_devices` ENABLE KEYS */;
+LOCK TABLES `ipCamera_device` WRITE;
+/*!40000 ALTER TABLE `ipCamera_device` DISABLE KEYS */;
+INSERT INTO `ipCamera_device` VALUES (1,'Cosenza - Salone','1,','http://home-cs.ddns.net:1000/media/?action=stream','http://home-cs.ddns.net:1000/media/?action=snapshot','admin','l!\�y\�F�c���N)�	',0.010,0,'0',1);
+/*!40000 ALTER TABLE `ipCamera_device` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `languages`
+-- Table structure for table `language`
 --
 
-DROP TABLE IF EXISTS `languages`;
+DROP TABLE IF EXISTS `language`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `languages` (
+CREATE TABLE `language` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(2) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `date` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Y-m-d',
@@ -65,13 +65,13 @@ CREATE TABLE `languages` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `languages`
+-- Dumping data for table `language`
 --
 
-LOCK TABLES `languages` WRITE;
-/*!40000 ALTER TABLE `languages` DISABLE KEYS */;
-INSERT INTO `languages` VALUES (1,'en','Y-m-d',1),(2,'jp','Y-m-d',1),(3,'it','d-m-Y',1);
-/*!40000 ALTER TABLE `languages` ENABLE KEYS */;
+LOCK TABLES `language` WRITE;
+/*!40000 ALTER TABLE `language` DISABLE KEYS */;
+INSERT INTO `language` VALUES (1,'en','Y-m-d',1),(2,'jp','Y-m-d',1),(3,'it','d-m-Y',1);
+/*!40000 ALTER TABLE `language` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -230,13 +230,13 @@ LOCK TABLES `microservice_deploy` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `modules`
+-- Table structure for table `module`
 --
 
-DROP TABLE IF EXISTS `modules`;
+DROP TABLE IF EXISTS `module`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `modules` (
+CREATE TABLE `module` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `position` varchar(6) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'center',
   `position_tmp` varchar(6) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -250,23 +250,23 @@ CREATE TABLE `modules` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `modules`
+-- Dumping data for table `module`
 --
 
-LOCK TABLES `modules` WRITE;
-/*!40000 ALTER TABLE `modules` DISABLE KEYS */;
-INSERT INTO `modules` VALUES (1,'center','left',1,'Authentication','module_1','AuthenticationController::moduleAction',0),(2,'center',NULL,3,'Page','module_2','PageViewController::moduleAction',1),(3,'center','right',2,'Empty','module_3','EmptyController::moduleAction',0);
-/*!40000 ALTER TABLE `modules` ENABLE KEYS */;
+LOCK TABLES `module` WRITE;
+/*!40000 ALTER TABLE `module` DISABLE KEYS */;
+INSERT INTO `module` VALUES (1,'center','left',1,'Authentication','module_1','AuthenticationController::moduleAction',0),(2,'center',NULL,3,'Page','module_2','PageViewController::moduleAction',1),(3,'center','right',2,'Empty','module_3','EmptyController::moduleAction',0);
+/*!40000 ALTER TABLE `module` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `pages`
+-- Table structure for table `page`
 --
 
-DROP TABLE IF EXISTS `pages`;
+DROP TABLE IF EXISTS `page`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `pages` (
+CREATE TABLE `page` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `alias` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `parent` int(11) DEFAULT NULL,
@@ -291,23 +291,23 @@ CREATE TABLE `pages` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `pages`
+-- Dumping data for table `page`
 --
 
-LOCK TABLES `pages` WRITE;
-/*!40000 ALTER TABLE `pages` DISABLE KEYS */;
-INSERT INTO `pages` VALUES (1,'myPage',NULL,'App\\Controller\\MyPage\\MyPageProfileController::renderAction','1,',1,0,1,0,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 17:47:45','Personal page.','personal, page','noindex, nofollow'),(2,'home',NULL,'App\\Controller\\ControlPanel\\IpCameraController::renderAction','1,',1,1,2,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-04-25 14:47:22','Website home page.','website, home, page','index, follow'),(3,'registration',NULL,'App\\Controller\\RegistrationController::renderAction','1,',0,0,3,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:05:15','User registration page.','user, registration, page','index, follow'),(4,'recover_password',NULL,'App\\Controller\\RecoverPasswordController::renderAction','1,',0,0,4,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:05:40','User recover password.','user, recover, password','index, follow'),(5,'search',NULL,'App\\Controller\\SearchController::renderAction','1,',0,0,5,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:07:47','Website content search','website, content, search','noindex, nofollow');
-/*!40000 ALTER TABLE `pages` ENABLE KEYS */;
+LOCK TABLES `page` WRITE;
+/*!40000 ALTER TABLE `page` DISABLE KEYS */;
+INSERT INTO `page` VALUES (1,'myPage',NULL,'App\\Controller\\MyPage\\MyPageProfileController::renderAction','1,',1,0,1,0,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 17:47:45','Personal page.','personal, page','noindex, nofollow'),(2,'home',NULL,'App\\Controller\\ControlPanel\\IpCameraController::renderAction','1,',1,1,2,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-04-25 14:47:22','Website home page.','website, home, page','index, follow'),(3,'registration',NULL,'App\\Controller\\RegistrationController::renderAction','1,',0,0,3,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:05:15','User registration page.','user, registration, page','index, follow'),(4,'recover_password',NULL,'App\\Controller\\RecoverPasswordController::renderAction','1,',0,0,4,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:05:40','User recover password.','user, recover, password','index, follow'),(5,'search',NULL,'App\\Controller\\SearchController::renderAction','1,',0,0,5,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:07:47','Website content search','website, content, search','noindex, nofollow');
+/*!40000 ALTER TABLE `page` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `pages_arguments`
+-- Table structure for table `page_argument`
 --
 
-DROP TABLE IF EXISTS `pages_arguments`;
+DROP TABLE IF EXISTS `page_argument`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `pages_arguments` (
+CREATE TABLE `page_argument` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `en` longtext COLLATE utf8_unicode_ci,
   `it` longtext COLLATE utf8_unicode_ci,
@@ -318,23 +318,23 @@ CREATE TABLE `pages_arguments` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `pages_arguments`
+-- Dumping data for table `page_argument`
 --
 
-LOCK TABLES `pages_arguments` WRITE;
-/*!40000 ALTER TABLE `pages_arguments` DISABLE KEYS */;
-INSERT INTO `pages_arguments` VALUES (1,'User personal page.','Argomento my page.','My pageのアーギュメント。'),(2,'This is a cms created with symfony framework.','Argomento home.','ホームのアーギュメント。'),(3,'Registration argument.','Argomento registrazione.','登録のアーギュメント。'),(4,'Recover password argument.','Argomento recupero password.','パスワードを回復のアーギュメント。'),(5,'Search argument.','Argomento cerca.','サーチのアーギュメント。');
-/*!40000 ALTER TABLE `pages_arguments` ENABLE KEYS */;
+LOCK TABLES `page_argument` WRITE;
+/*!40000 ALTER TABLE `page_argument` DISABLE KEYS */;
+INSERT INTO `page_argument` VALUES (1,'User personal page.','Argomento my page.','My pageのアーギュメント。'),(2,'This is a cms created with symfony framework.','Argomento home.','ホームのアーギュメント。'),(3,'Registration argument.','Argomento registrazione.','登録のアーギュメント。'),(4,'Recover password argument.','Argomento recupero password.','パスワードを回復のアーギュメント。'),(5,'Search argument.','Argomento cerca.','サーチのアーギュメント。');
+/*!40000 ALTER TABLE `page_argument` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `pages_comments`
+-- Table structure for table `page_comment`
 --
 
-DROP TABLE IF EXISTS `pages_comments`;
+DROP TABLE IF EXISTS `page_comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `pages_comments` (
+CREATE TABLE `page_comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `page_id` int(11) NOT NULL DEFAULT '0',
   `username` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
@@ -347,22 +347,22 @@ CREATE TABLE `pages_comments` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `pages_comments`
+-- Dumping data for table `page_comment`
 --
 
-LOCK TABLES `pages_comments` WRITE;
-/*!40000 ALTER TABLE `pages_comments` DISABLE KEYS */;
-/*!40000 ALTER TABLE `pages_comments` ENABLE KEYS */;
+LOCK TABLES `page_comment` WRITE;
+/*!40000 ALTER TABLE `page_comment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `page_comment` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `pages_menu_names`
+-- Table structure for table `page_menu_name`
 --
 
-DROP TABLE IF EXISTS `pages_menu_names`;
+DROP TABLE IF EXISTS `page_menu_name`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `pages_menu_names` (
+CREATE TABLE `page_menu_name` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `en` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '-',
   `it` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '-',
@@ -372,23 +372,23 @@ CREATE TABLE `pages_menu_names` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `pages_menu_names`
+-- Dumping data for table `page_menu_name`
 --
 
-LOCK TABLES `pages_menu_names` WRITE;
-/*!40000 ALTER TABLE `pages_menu_names` DISABLE KEYS */;
-INSERT INTO `pages_menu_names` VALUES (1,'-','-','-'),(2,'Home','Home','ホーム'),(3,'-','-','-'),(4,'-','-','-'),(5,'-','-','-');
-/*!40000 ALTER TABLE `pages_menu_names` ENABLE KEYS */;
+LOCK TABLES `page_menu_name` WRITE;
+/*!40000 ALTER TABLE `page_menu_name` DISABLE KEYS */;
+INSERT INTO `page_menu_name` VALUES (1,'-','-','-'),(2,'Home','Home','ホーム'),(3,'-','-','-'),(4,'-','-','-'),(5,'-','-','-');
+/*!40000 ALTER TABLE `page_menu_name` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `pages_titles`
+-- Table structure for table `page_title`
 --
 
-DROP TABLE IF EXISTS `pages_titles`;
+DROP TABLE IF EXISTS `page_title`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `pages_titles` (
+CREATE TABLE `page_title` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `en` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
   `it` varchar(255) COLLATE utf8_unicode_ci DEFAULT '',
@@ -399,23 +399,23 @@ CREATE TABLE `pages_titles` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `pages_titles`
+-- Dumping data for table `page_title`
 --
 
-LOCK TABLES `pages_titles` WRITE;
-/*!40000 ALTER TABLE `pages_titles` DISABLE KEYS */;
-INSERT INTO `pages_titles` VALUES (1,'My page title','Titolo my page','My pageのタイトル'),(2,'Home title','Titolo home','ホームのタイトル'),(3,'Registration title','Titolo registrazione','登録のタイトル'),(4,'Recover password title','Titolo recupero password','パスワードを回復のタイトル'),(5,'Search title','Titolo cerca','サーチのタイトル');
-/*!40000 ALTER TABLE `pages_titles` ENABLE KEYS */;
+LOCK TABLES `page_title` WRITE;
+/*!40000 ALTER TABLE `page_title` DISABLE KEYS */;
+INSERT INTO `page_title` VALUES (1,'My page title','Titolo my page','My pageのタイトル'),(2,'Home title','Titolo home','ホームのタイトル'),(3,'Registration title','Titolo registrazione','登録のタイトル'),(4,'Recover password title','Titolo recupero password','パスワードを回復のタイトル'),(5,'Search title','Titolo cerca','サーチのタイトル');
+/*!40000 ALTER TABLE `page_title` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `payments`
+-- Table structure for table `payment`
 --
 
-DROP TABLE IF EXISTS `payments`;
+DROP TABLE IF EXISTS `payment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `payments` (
+CREATE TABLE `payment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL DEFAULT '0',
   `transaction` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
@@ -433,23 +433,23 @@ CREATE TABLE `payments` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `payments`
+-- Dumping data for table `payment`
 --
 
-LOCK TABLES `payments` WRITE;
-/*!40000 ALTER TABLE `payments` DISABLE KEYS */;
-INSERT INTO `payments` VALUES (1,2,'419530066K1260733','09:19:50 Jul 04, 2016 PDT','Completed','WGRYMAE6MYEP4','5CLM69V9C3PVW','USD','credits','0.01','1',0),(2,2,'1KY910617X114632S','05:16:37 Jul 07, 2016 PDT','Completed','WGRYMAE6MYEP4','5CLM69V9C3PVW','USD','credits','0.01','1',0),(3,2,'19U375700V802405E','05:31:11 Jul 07, 2016 PDT','Completed','WGRYMAE6MYEP4','5CLM69V9C3PVW','USD','credits','0.01','1',0),(4,2,'7JV630061G061150L','06:10:56 Jul 07, 2016 PDT','Completed','WGRYMAE6MYEP4','5CLM69V9C3PVW','USD','credits','0.01','1',0),(5,2,'87V61799HN941194T','06:15:57 Jul 07, 2016 PDT','Completed','WGRYMAE6MYEP4','5CLM69V9C3PVW','USD','credits','0.05','5',0),(6,2,'6FU073223W956013S','06:26:31 Jul 07, 2016 PDT','Completed','WGRYMAE6MYEP4','5CLM69V9C3PVW','USD','credits','0.02','2',0);
-/*!40000 ALTER TABLE `payments` ENABLE KEYS */;
+LOCK TABLES `payment` WRITE;
+/*!40000 ALTER TABLE `payment` DISABLE KEYS */;
+INSERT INTO `payment` VALUES (1,2,'419530066K1260733','09:19:50 Jul 04, 2016 PDT','Completed','WGRYMAE6MYEP4','5CLM69V9C3PVW','USD','credits','0.01','1',0),(2,2,'1KY910617X114632S','05:16:37 Jul 07, 2016 PDT','Completed','WGRYMAE6MYEP4','5CLM69V9C3PVW','USD','credits','0.01','1',0),(3,2,'19U375700V802405E','05:31:11 Jul 07, 2016 PDT','Completed','WGRYMAE6MYEP4','5CLM69V9C3PVW','USD','credits','0.01','1',0),(4,2,'7JV630061G061150L','06:10:56 Jul 07, 2016 PDT','Completed','WGRYMAE6MYEP4','5CLM69V9C3PVW','USD','credits','0.01','1',0),(5,2,'87V61799HN941194T','06:15:57 Jul 07, 2016 PDT','Completed','WGRYMAE6MYEP4','5CLM69V9C3PVW','USD','credits','0.05','5',0),(6,2,'6FU073223W956013S','06:26:31 Jul 07, 2016 PDT','Completed','WGRYMAE6MYEP4','5CLM69V9C3PVW','USD','credits','0.02','2',0);
+/*!40000 ALTER TABLE `payment` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `roles_users`
+-- Table structure for table `role_user`
 --
 
-DROP TABLE IF EXISTS `roles_users`;
+DROP TABLE IF EXISTS `role_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `roles_users` (
+CREATE TABLE `role_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `level` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'ROLE_USER',
   PRIMARY KEY (`id`)
@@ -457,23 +457,23 @@ CREATE TABLE `roles_users` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `roles_users`
+-- Dumping data for table `role_user`
 --
 
-LOCK TABLES `roles_users` WRITE;
-/*!40000 ALTER TABLE `roles_users` DISABLE KEYS */;
-INSERT INTO `roles_users` VALUES (1,'ROLE_USER'),(2,'ROLE_ADMIN'),(3,'ROLE_MODERATOR'),(4,'ROLE_MICROSERVICE'),(5,'ROLE_IPCAMERA');
-/*!40000 ALTER TABLE `roles_users` ENABLE KEYS */;
+LOCK TABLES `role_user` WRITE;
+/*!40000 ALTER TABLE `role_user` DISABLE KEYS */;
+INSERT INTO `role_user` VALUES (1,'ROLE_USER'),(2,'ROLE_ADMIN'),(3,'ROLE_MODERATOR'),(4,'ROLE_MICROSERVICE'),(5,'ROLE_IPCAMERA');
+/*!40000 ALTER TABLE `role_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `settings`
+-- Table structure for table `setting`
 --
 
-DROP TABLE IF EXISTS `settings`;
+DROP TABLE IF EXISTS `setting`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `settings` (
+CREATE TABLE `setting` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `template` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'basic',
   `template_column` int(1) NOT NULL DEFAULT '1',
@@ -504,23 +504,23 @@ CREATE TABLE `settings` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `settings`
+-- Dumping data for table `setting`
 --
 
-LOCK TABLES `settings` WRITE;
-/*!40000 ALTER TABLE `settings` DISABLE KEYS */;
-INSERT INTO `settings` VALUES (1,'basic',4,'en','cimo@reinventsoftware.org',1,'2,3,',1,1,15,3,0,1,0,0,0,0,1,'1234',0,0,1,'paypal.business@gmail.com','EUR','0.01');
-/*!40000 ALTER TABLE `settings` ENABLE KEYS */;
+LOCK TABLES `setting` WRITE;
+/*!40000 ALTER TABLE `setting` DISABLE KEYS */;
+INSERT INTO `setting` VALUES (1,'basic',4,'en','cimo@reinventsoftware.org',1,'2,3,',1,1,15,3,0,1,0,0,0,0,1,'1234',0,0,1,'paypal.business@gmail.com','EUR','0.01');
+/*!40000 ALTER TABLE `setting` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `settings_line_push`
+-- Table structure for table `setting_line_push`
 --
 
-DROP TABLE IF EXISTS `settings_line_push`;
+DROP TABLE IF EXISTS `setting_line_push`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `settings_line_push` (
+CREATE TABLE `setting_line_push` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `user_id_primary` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
@@ -531,23 +531,23 @@ CREATE TABLE `settings_line_push` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `settings_line_push`
+-- Dumping data for table `setting_line_push`
 --
 
-LOCK TABLES `settings_line_push` WRITE;
-/*!40000 ALTER TABLE `settings_line_push` DISABLE KEYS */;
-INSERT INTO `settings_line_push` VALUES (1,'api_basic','az09','+/=',1);
-/*!40000 ALTER TABLE `settings_line_push` ENABLE KEYS */;
+LOCK TABLES `setting_line_push` WRITE;
+/*!40000 ALTER TABLE `setting_line_push` DISABLE KEYS */;
+INSERT INTO `setting_line_push` VALUES (1,'api_basic','az09','+/=',1);
+/*!40000 ALTER TABLE `setting_line_push` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `settings_line_push_user`
+-- Table structure for table `setting_line_push_user`
 --
 
-DROP TABLE IF EXISTS `settings_line_push_user`;
+DROP TABLE IF EXISTS `setting_line_push_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `settings_line_push_user` (
+CREATE TABLE `setting_line_push_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `push_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `user_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
@@ -558,23 +558,23 @@ CREATE TABLE `settings_line_push_user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `settings_line_push_user`
+-- Dumping data for table `setting_line_push_user`
 --
 
-LOCK TABLES `settings_line_push_user` WRITE;
-/*!40000 ALTER TABLE `settings_line_push_user` DISABLE KEYS */;
-INSERT INTO `settings_line_push_user` VALUES (1,'api_basic','Abcd09','cimo@reinventsoftware.org',1);
-/*!40000 ALTER TABLE `settings_line_push_user` ENABLE KEYS */;
+LOCK TABLES `setting_line_push_user` WRITE;
+/*!40000 ALTER TABLE `setting_line_push_user` DISABLE KEYS */;
+INSERT INTO `setting_line_push_user` VALUES (1,'api_basic','Abcd09','cimo@reinventsoftware.org',1);
+/*!40000 ALTER TABLE `setting_line_push_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `settings_slack_iw`
+-- Table structure for table `setting_slack_iw`
 --
 
-DROP TABLE IF EXISTS `settings_slack_iw`;
+DROP TABLE IF EXISTS `setting_slack_iw`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `settings_slack_iw` (
+CREATE TABLE `setting_slack_iw` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `hook` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
@@ -585,23 +585,23 @@ CREATE TABLE `settings_slack_iw` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `settings_slack_iw`
+-- Dumping data for table `setting_slack_iw`
 --
 
-LOCK TABLES `settings_slack_iw` WRITE;
-/*!40000 ALTER TABLE `settings_slack_iw` DISABLE KEYS */;
-INSERT INTO `settings_slack_iw` VALUES (1,'api_basic','https://hooks.slack.com/services','#api_basic',1);
-/*!40000 ALTER TABLE `settings_slack_iw` ENABLE KEYS */;
+LOCK TABLES `setting_slack_iw` WRITE;
+/*!40000 ALTER TABLE `setting_slack_iw` DISABLE KEYS */;
+INSERT INTO `setting_slack_iw` VALUES (1,'api_basic','https://hooks.slack.com/services','#api_basic',1);
+/*!40000 ALTER TABLE `setting_slack_iw` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `users`
+-- Table structure for table `user`
 --
 
-DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `users` (
+CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `role_user_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '1,',
   `roles` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'ROLE_USER,',
@@ -635,13 +635,13 @@ CREATE TABLE `users` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `user`
 --
 
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'1,2,','ROLE_USER,ROLE_ADMIN','5cbfc82693953.jpg','cimo','Simone','D\'Agostino','cimo@reinventsoftware.org','080123456789','1984-4-11','m',NULL,NULL,NULL,'https://www.reinventsoftware.org','Japan','Tokyo','100-0001','Street','$2y$13$hOJvU2.m8vRl5YxsuY/J0OiQGFSS7DAa8mTA5uNGZGxmYoc8zFgde',0,1,'2016-08-04 10:25:12','2019-04-25 15:35:41','2019-04-25 15:34:27',NULL,'192.168.56.1',0),(2,'1,4,','ROLE_USER,ROLE_MICROSERVICE',NULL,'test_1',NULL,NULL,'test_1@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$Hi5SnSpKl9oKC79.G09MjeKOGUAzPEFjM3QPyp9z69m/gVXdnivJ2',0,1,'2016-09-10 17:39:31','2019-01-22 15:09:43','2019-01-22 14:55:58','','192.168.56.1',0),(3,'1,4,5,','ROLE_USER,ROLE_MICROSERVICE,ROLE_IPCAMERA',NULL,'test_2',NULL,NULL,'test_2@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$fo/L0jc1j4uWXAFjjOKE3eP0cgwv8DtBkjvUnMC9Eaa2B537B7uXq',0,0,'0000-00-00 00:00:00','2018-09-05 16:48:01','2018-09-05 16:47:23',NULL,'183.77.252.62',0);
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,'1,2,','ROLE_USER,ROLE_ADMIN','5cbfc82693953.jpg','cimo','Simone','D\'Agostino','cimo@reinventsoftware.org','080123456789','1984-4-11','m',NULL,NULL,NULL,'https://www.reinventsoftware.org','Japan','Tokyo','100-0001','Street','$2y$13$hOJvU2.m8vRl5YxsuY/J0OiQGFSS7DAa8mTA5uNGZGxmYoc8zFgde',0,1,'2016-08-04 10:25:12','2019-04-25 15:35:41','2019-04-25 15:34:27',NULL,'192.168.56.1',0),(2,'1,4,','ROLE_USER,ROLE_MICROSERVICE',NULL,'test_1',NULL,NULL,'test_1@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$Hi5SnSpKl9oKC79.G09MjeKOGUAzPEFjM3QPyp9z69m/gVXdnivJ2',0,1,'2016-09-10 17:39:31','2019-01-22 15:09:43','2019-01-22 14:55:58','','192.168.56.1',0),(3,'1,4,5,','ROLE_USER,ROLE_MICROSERVICE,ROLE_IPCAMERA',NULL,'test_2',NULL,NULL,'test_2@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$fo/L0jc1j4uWXAFjjOKE3eP0cgwv8DtBkjvUnMC9Eaa2B537B7uXq',0,0,'0000-00-00 00:00:00','2018-09-05 16:48:01','2018-09-05 16:47:23',NULL,'183.77.252.62',0);
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -657,4 +657,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-26 18:44:53
+-- Dump completed on 2019-05-08 12:26:34

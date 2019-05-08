@@ -564,7 +564,7 @@ class PageController extends AbstractController {
     }
     
     private function updatePageChildrenDatabase($id, $parentNew) {
-        $query = $this->utility->getConnection()->prepare("UPDATE pages
+        $query = $this->utility->getConnection()->prepare("UPDATE page
                                                             SET parent = :parentNew
                                                             WHERE parent = :id");
         
@@ -582,7 +582,7 @@ class PageController extends AbstractController {
             if (empty($value) == true)
                 $value = $pageId;
 
-            $query = $this->utility->getConnection()->prepare("UPDATE pages
+            $query = $this->utility->getConnection()->prepare("UPDATE page
                                                                 SET rank_in_menu = :rankInMenu
                                                                 WHERE id = :id");
 
@@ -595,20 +595,20 @@ class PageController extends AbstractController {
     
     private function pageDatabase($type, $id, $urlLocale, $form) {
         if ($type == "insert") {
-            $query = $this->utility->getConnection()->prepare("INSERT INTO pages_titles (
-                                                                    pages_titles.$urlLocale
+            $query = $this->utility->getConnection()->prepare("INSERT INTO page_title (
+                                                                    page_title.$urlLocale
                                                                 )
                                                                 VALUES (
                                                                     :title
                                                                 );
-                                                                INSERT INTO pages_arguments (
-                                                                    pages_arguments.$urlLocale
+                                                                INSERT INTO page_argument (
+                                                                    page_argument.$urlLocale
                                                                 )
                                                                 VALUES (
                                                                     :argument
                                                                 );
-                                                                INSERT INTO pages_menu_names (
-                                                                    pages_menu_names.$urlLocale
+                                                                INSERT INTO page_menu_name (
+                                                                    page_menu_name.$urlLocale
                                                                 )
                                                                 VALUES (
                                                                     :menuName
@@ -626,13 +626,13 @@ class PageController extends AbstractController {
         else if ($type == "update") {
             $language = $form->get("language")->getData();
             
-            $query = $this->utility->getConnection()->prepare("UPDATE pages_titles, pages_arguments, pages_menu_names
-                                                                SET pages_titles.$language = :title,
-                                                                    pages_arguments.$language = :argument,
-                                                                    pages_menu_names.$language = :menuName
-                                                                WHERE pages_titles.id = :id
-                                                                AND pages_arguments.id = :id
-                                                                AND pages_menu_names.id = :id");
+            $query = $this->utility->getConnection()->prepare("UPDATE page_title, page_argument, page_menu_name
+                                                                SET page_title.$language = :title,
+                                                                    page_argument.$language = :argument,
+                                                                    page_menu_name.$language = :menuName
+                                                                WHERE page_title.id = :id
+                                                                AND page_argument.id = :id
+                                                                AND page_menu_name.id = :id");
             
             $query->bindValue(":title", $form->get("title")->getData());
             
@@ -645,11 +645,11 @@ class PageController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM pages WHERE id > :idExclude AND id = :id;
-                                                                DELETE FROM pages_titles WHERE id > :idExclude AND id = :id;
-                                                                DELETE FROM pages_arguments WHERE id > :idExclude AND id = :id;
-                                                                DELETE FROM pages_menu_names WHERE id > :idExclude AND id = :id;
-                                                                DELETE FROM pages_comments WHERE id > :idExclude AND id = :id;");
+            $query = $this->utility->getConnection()->prepare("DELETE FROM page WHERE id > :idExclude AND id = :id;
+                                                                DELETE FROM page_title WHERE id > :idExclude AND id = :id;
+                                                                DELETE FROM page_argument WHERE id > :idExclude AND id = :id;
+                                                                DELETE FROM page_menu_name WHERE id > :idExclude AND id = :id;
+                                                                DELETE FROM page_comment WHERE id > :idExclude AND id = :id;");
             
             $query->bindValue(":idExclude", 5);
             $query->bindValue(":id", $id);
@@ -657,11 +657,11 @@ class PageController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteAll") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM pages WHERE id > :idExclude;
-                                                                DELETE FROM pages_titles WHERE id > :idExclude;
-                                                                DELETE FROM pages_arguments WHERE id > :idExclude;
-                                                                DELETE FROM pages_menu_names WHERE id > :idExclude;
-                                                                DELETE FROM pages_comments WHERE id > :idExclude;");
+            $query = $this->utility->getConnection()->prepare("DELETE FROM page WHERE id > :idExclude;
+                                                                DELETE FROM page_title WHERE id > :idExclude;
+                                                                DELETE FROM page_argument WHERE id > :idExclude;
+                                                                DELETE FROM page_menu_name WHERE id > :idExclude;
+                                                                DELETE FROM page_comment WHERE id > :idExclude;");
             
             $query->bindValue(":idExclude", 5);
             

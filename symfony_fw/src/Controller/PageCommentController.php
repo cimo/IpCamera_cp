@@ -214,9 +214,11 @@ class PageCommentController extends AbstractController {
         foreach ($elements as $key => $value) {
             $row = $this->query->selectPageCommentDatabase("single", $value['id_reply']);
             
+            $userRow = $this->query->selectUserDatabase($value['username']);
+            
             $listHtml .= "<li class=\"mdc-list-item\" data-comment=\"{$value['id']}\">";
-                if (file_exists("{$this->utility->getPathPublic()}/files/user/{$value['username']}/Avatar.jpg") == true)
-                    $listHtml .= "<img class=\"mdc-list-item__graphic\" src=\"{$this->utility->getUrlRoot()}/files/user/{$value['username']}/Avatar.jpg\" aria-hidden=\"true\" alt=\"Avatar.jpg\"/>";
+                if ($userRow['image'] != null && file_exists("{$this->utility->getPathPublic()}/files/user/{$value['username']}/{$userRow['image']}") == true)
+                    $listHtml .= "<img class=\"mdc-list-item__graphic\" src=\"{$this->utility->getUrlRoot()}/files/user/{$value['username']}/{$userRow['image']}\" aria-hidden=\"true\" alt=\"{$userRow['image']}\"/>";
                 else
                     $listHtml .= "<img class=\"mdc-list-item__graphic\" src=\"{$this->utility->getUrlRoot()}/images/templates/{$setting['template']}/no_avatar.jpg\" aria-hidden=\"true\" alt=\"no_avatar.jpg\"/>";
                 
@@ -235,8 +237,8 @@ class PageCommentController extends AbstractController {
                 
                 $quoteAvatar = "<img class=\"quote_avatar\" src=\"{$this->utility->getUrlRoot()}/images/templates/{$setting['template']}/no_avatar.jpg\" alt=\"no_avatar.jpg\"/>";
                 
-                if (file_exists("{$this->utility->getPathPublic()}/files/user/{$row['username']}/Avatar.jpg") == true)
-                    $quoteAvatar = "<img class=\"quote_avatar\" src=\"{$this->utility->getUrlRoot()}/files/user/{$row['username']}/Avatar.jpg\" alt=\"Avatar.jpg\"/>";
+                if ($userRow['image'] != null && file_exists("{$this->utility->getPathPublic()}/files/user/{$row['username']}/{$userRow['image']}") == true)
+                    $quoteAvatar = "<img class=\"quote_avatar\" src=\"{$this->utility->getUrlRoot()}/files/user/{$row['username']}/{$userRow['image']}\" alt=\"{$userRow['image']}\"/>";
                 
                 $listHtml .= "<span class=\"mdc-list-item__text\">
                     <p class=\"detail\">$detail</p>";
@@ -274,7 +276,7 @@ class PageCommentController extends AbstractController {
     }
     
     private function pageCommentDatabase($id, $argument) {
-        $query = $this->utility->getConnection()->prepare("UPDATE pages_comments
+        $query = $this->utility->getConnection()->prepare("UPDATE page_comment
                                                             SET argument = :argument,
                                                                 date_modify = :dateModify
                                                             WHERE id = :id

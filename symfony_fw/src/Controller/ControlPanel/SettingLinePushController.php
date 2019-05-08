@@ -402,7 +402,7 @@ class SettingLinePushController extends AbstractController {
     
     private function linePushUserDatabase($type, $elements) {
         if ($type == "insert") {
-            $query = $this->utility->getConnection()->prepare("INSERT INTO settings_line_push_user (
+            $query = $this->utility->getConnection()->prepare("INSERT INTO setting_line_push_user (
                                                                     push_name,
                                                                     user_id,
                                                                     email,
@@ -422,7 +422,7 @@ class SettingLinePushController extends AbstractController {
         }
         else if ($type == "update") {
             if ($elements[0] != "" && $elements[1] != "" && $elements[2] != "") {
-                $query = $this->utility->getConnection()->prepare("UPDATE settings_line_push_user
+                $query = $this->utility->getConnection()->prepare("UPDATE setting_line_push_user
                                                                     SET push_name = :pushName,
                                                                         email = :email,
                                                                         active = :active
@@ -434,7 +434,7 @@ class SettingLinePushController extends AbstractController {
                 $query->bindValue(":userId", $elements[1]);
             }
             else if ($elements[0] != "" && $elements[1] != "" && $elements[2] == "") {
-                $query = $this->utility->getConnection()->prepare("UPDATE settings_line_push_user
+                $query = $this->utility->getConnection()->prepare("UPDATE setting_line_push_user
                                                                     SET push_name = :pushName
                                                                     WHERE user_id = :userId");
 
@@ -442,7 +442,7 @@ class SettingLinePushController extends AbstractController {
                 $query->bindValue(":userId", $elements[1]);
             }
             else if ($elements[0] == "" && $elements[1] != "" && $elements[2] == "") {
-                $query = $this->utility->getConnection()->prepare("UPDATE settings_line_push_user
+                $query = $this->utility->getConnection()->prepare("UPDATE setting_line_push_user
                                                                     SET active = :active
                                                                     WHERE user_id = :userId");
                 
@@ -451,7 +451,7 @@ class SettingLinePushController extends AbstractController {
             }
         }
         else if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM settings_line_push_user
+            $query = $this->utility->getConnection()->prepare("DELETE FROM setting_line_push_user
                                                                 WHERE push_name = :pushName");
             
             $query->bindValue(":pushName", $elements);

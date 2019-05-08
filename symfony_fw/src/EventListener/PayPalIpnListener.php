@@ -84,7 +84,7 @@ class PayPalIpnListener {
         $id = $userRow['id'];
         $credit = $userRow['credit'] + $payPalElements['quantity'];
         
-        $query = $this->utility->getConnection()->prepare("UPDATE users
+        $query = $this->utility->getConnection()->prepare("UPDATE user
                                                             SET credit = :credit
                                                             WHERE id = :id");
         

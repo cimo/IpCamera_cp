@@ -63,9 +63,9 @@ class ControlPanelController extends AbstractController {
         
         $this->response['url']['root'] = $this->utility->getUrlRoot();
         
-        $this->response['modules']['left'] = $this->query->selectAllModuleDatabase(null, "left");
-        $this->response['modules']['center'] = $this->query->selectAllModuleDatabase(null, "center");
-        $this->response['modules']['right'] = $this->query->selectAllModuleDatabase(null, "right");
+        $this->response['module']['left'] = $this->query->selectAllModuleDatabase(null, "left");
+        $this->response['module']['center'] = $this->query->selectAllModuleDatabase(null, "center");
+        $this->response['module']['right'] = $this->query->selectAllModuleDatabase(null, "right");
         
         $this->response['output']['phpinfo'] = $this->parsePhpinfo();
         

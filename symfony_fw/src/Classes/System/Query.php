@@ -14,7 +14,7 @@ class Query {
     
     public function selectUserWithHelpCodeDatabase($helpCode) {
         if (trim($helpCode) != "") {
-            $query = $this->connection->prepare("SELECT * FROM users
+            $query = $this->connection->prepare("SELECT * FROM user
                                                     WHERE help_code IS NOT NULL
                                                     AND help_code = :helpCode");
 
@@ -35,7 +35,7 @@ class Query {
         $levels = Array();
         
         foreach ($roleIdsExplode as $key => $value) {
-            $query = $this->connection->prepare("SELECT level FROM roles_users
+            $query = $this->connection->prepare("SELECT level FROM role_user
                                                     WHERE id = :value");
             
             $query->bindValue(":value", $value);
@@ -54,7 +54,7 @@ class Query {
     }
     
     public function selectAllRoleUserDatabase($change = false) {
-        $query = $this->connection->prepare("SELECT * FROM roles_users");
+        $query = $this->connection->prepare("SELECT * FROM role_user");
         
         $query->execute();
         
@@ -72,7 +72,7 @@ class Query {
     }
     
     public function selectSettingDatabase() {
-        $query = $this->connection->prepare("SELECT * FROM settings
+        $query = $this->connection->prepare("SELECT * FROM setting
                                                 WHERE id = :id");
         
         $query->bindValue(":id", 1);
@@ -83,7 +83,7 @@ class Query {
     }
     
     public function selectSettingSlackIwDatabase($name) {
-        $query = $this->connection->prepare("SELECT * FROM settings_slack_iw
+        $query = $this->connection->prepare("SELECT * FROM setting_slack_iw
                                                 WHERE name = :name
                                                 AND active = :active");
         
@@ -96,7 +96,7 @@ class Query {
     }
     
     public function selectAllSettingSlackIwDatabase() {
-        $query = $this->connection->prepare("SELECT * FROM settings_slack_iw");
+        $query = $this->connection->prepare("SELECT * FROM setting_slack_iw");
         
         $query->execute();
         
@@ -104,7 +104,7 @@ class Query {
     }
     
     public function selectSettingLinePushDatabase($name) {
-        $query = $this->connection->prepare("SELECT * FROM settings_line_push
+        $query = $this->connection->prepare("SELECT * FROM setting_line_push
                                                 WHERE name = :name
                                                 AND active = :active");
         
@@ -117,7 +117,7 @@ class Query {
     }
     
     public function selectAllSettingLinePushDatabase() {
-        $query = $this->connection->prepare("SELECT * FROM settings_line_push");
+        $query = $this->connection->prepare("SELECT * FROM setting_line_push");
         
         $query->execute();
         
@@ -126,13 +126,13 @@ class Query {
     
     public function selectSettingLinePushUserDatabase($type, $value) {
         if ($type == "userId") {
-            $query = $this->connection->prepare("SELECT * FROM settings_line_push_user
+            $query = $this->connection->prepare("SELECT * FROM setting_line_push_user
                                                     WHERE user_id = :userId");
             
             $query->bindValue(":userId", $value);
         }
         else if ($type == "pushName") {
-            $query = $this->connection->prepare("SELECT * FROM settings_line_push_user
+            $query = $this->connection->prepare("SELECT * FROM setting_line_push_user
                                                     WHERE push_name = :pushName");
             
             $query->bindValue(":pushName", $value);
@@ -145,9 +145,9 @@ class Query {
     
     public function selectAllSettingLinePushUserDatabase($type, $value = "") {
         if ($type == "all")
-            $query = $this->connection->prepare("SELECT * FROM settings_line_push_user");
+            $query = $this->connection->prepare("SELECT * FROM setting_line_push_user");
         else if ($type == "allPushName") {
-            $query = $this->connection->prepare("SELECT * FROM settings_line_push_user
+            $query = $this->connection->prepare("SELECT * FROM setting_line_push_user
                                                     WHERE push_name = :pushName");
             
             $query->bindValue(":pushName", $value);
@@ -159,7 +159,7 @@ class Query {
     }
     
     public function selectLanguageDatabase($code) {
-        $query = $this->connection->prepare("SELECT * FROM languages
+        $query = $this->connection->prepare("SELECT * FROM language
                                                 WHERE code = :code");
 
         $query->bindValue(":code", $code);
@@ -170,7 +170,7 @@ class Query {
     }
     
     public function selectAllLanguageDatabase() {
-        $query = $this->connection->prepare("SELECT * FROM languages");
+        $query = $this->connection->prepare("SELECT * FROM language");
         
         $query->execute();
         
@@ -178,15 +178,15 @@ class Query {
     }
     
     public function selectPageDatabase($language, $id) {
-        $query = $this->connection->prepare("SELECT pages.*,
-                                                pages_titles.$language AS title,
-                                                pages_arguments.$language AS argument,
-                                                pages_menu_names.$language AS menu_name
-                                                FROM pages, pages_titles, pages_arguments, pages_menu_names
-                                            WHERE pages.id = :id
-                                            AND pages_titles.id = pages.id
-                                            AND pages_arguments.id = pages.id
-                                            AND pages_menu_names.id = pages.id
+        $query = $this->connection->prepare("SELECT page.*,
+                                                page_title.$language AS title,
+                                                page_argument.$language AS argument,
+                                                page_menu_name.$language AS menu_name
+                                                FROM page, page_title, page_argument, page_menu_name
+                                            WHERE page.id = :id
+                                            AND page_title.id = page.id
+                                            AND page_argument.id = page.id
+                                            AND page_menu_name.id = page.id
                                             ORDER BY COALESCE(parent, rank_in_menu), rank_in_menu");
         
         $query->bindValue(":id", $id);
@@ -198,30 +198,30 @@ class Query {
     
     public function selectAllPageDatabase($language, $search = null) {
         if ($search == null) {
-            $query = $this->connection->prepare("SELECT pages.*,
-                                                    pages_titles.$language AS title,
-                                                    pages_arguments.$language AS argument,
-                                                    pages_menu_names.$language AS menu_name
-                                                FROM pages, pages_titles, pages_arguments, pages_menu_names
-                                                WHERE pages_titles.id = pages.id
-                                                AND pages_arguments.id = pages.id
-                                                AND pages_menu_names.id = pages.id
+            $query = $this->connection->prepare("SELECT page.*,
+                                                    page_title.$language AS title,
+                                                    page_argument.$language AS argument,
+                                                    page_menu_name.$language AS menu_name
+                                                FROM page, page_title, page_argument, page_menu_name
+                                                WHERE page_title.id = page.id
+                                                AND page_argument.id = page.id
+                                                AND page_menu_name.id = page.id
                                                 ORDER BY COALESCE(parent, rank_in_menu), rank_in_menu");
         }
         else {
-            $query = $this->connection->prepare("SELECT pages.*,
-                                                    pages_titles.$language AS title,
-                                                    pages_arguments.$language AS argument,
-                                                    pages_menu_names.$language AS menu_name
-                                                FROM pages, pages_titles, pages_arguments, pages_menu_names
-                                                WHERE pages_titles.id = pages.id
-                                                AND pages_arguments.id = pages.id
-                                                AND pages_menu_names.id = pages.id
-                                                AND pages.only_link = :onlyLink
-                                                AND (pages.id = :idStartA OR pages.id > :idStartB)
-                                                AND (pages_titles.$language LIKE :search
-                                                    OR pages_arguments.$language LIKE :search
-                                                    OR pages_menu_names.$language LIKE :search)");
+            $query = $this->connection->prepare("SELECT page.*,
+                                                    page_title.$language AS title,
+                                                    page_argument.$language AS argument,
+                                                    page_menu_name.$language AS menu_name
+                                                FROM page, page_title, page_argument, page_menu_name
+                                                WHERE page_title.id = page.id
+                                                AND page_argument.id = page.id
+                                                AND page_menu_name.id = page.id
+                                                AND page.only_link = :onlyLink
+                                                AND (page.id = :idStartA OR page.id > :idStartB)
+                                                AND (page_title.$language LIKE :search
+                                                    OR page_argument.$language LIKE :search
+                                                    OR page_menu_name.$language LIKE :search)");
             
             $query->bindValue(":onlyLink", 0);
             $query->bindValue(":idStartA", 2);
@@ -236,14 +236,14 @@ class Query {
     
     public function selectAllPageParentDatabase($parent = null) {
         if ($parent != null) {
-            $query = $this->connection->prepare("SELECT * FROM pages
+            $query = $this->connection->prepare("SELECT * FROM page
                                                     WHERE parent = :parent
                                                     ORDER BY COALESCE(parent, rank_in_menu), rank_in_menu");
 
             $query->bindValue(":parent", $parent);
         }
         else
-            $query = $this->connection->prepare("SELECT * FROM pages
+            $query = $this->connection->prepare("SELECT * FROM page
                                                     WHERE parent is NULL
                                                     ORDER BY COALESCE(parent, rank_in_menu), rank_in_menu");
         
@@ -253,7 +253,7 @@ class Query {
     }
     
     public function selectAllPageChildrenDatabase($parent) {
-        $query = $this->connection->prepare("SELECT * FROM pages
+        $query = $this->connection->prepare("SELECT * FROM page
                                                 WHERE parent = :parent");
 
         $query->bindValue(":parent", $parent);
@@ -265,18 +265,18 @@ class Query {
     
     public function selectPageCommentDatabase($type, $id, $username = null) {
         if ($type == "single") {
-            $query = $this->connection->prepare("SELECT * FROM pages_comments
+            $query = $this->connection->prepare("SELECT * FROM page_comment
                                                     WHERE id = :id");
         }
         else if ($type = "reply") {
-            $query = $this->connection->prepare("SELECT * FROM pages_comments
+            $query = $this->connection->prepare("SELECT * FROM page_comment
                                                     WHERE id_reply = :id
                                                     AND username = :username");
             
             $query->bindValue(":username", $username);
         }
         else if ($type = "edit") {
-            $query = $this->connection->prepare("SELECT * FROM pages_comments
+            $query = $this->connection->prepare("SELECT * FROM page_comment
                                                     WHERE id_reply = :id");
         }
 
@@ -288,7 +288,7 @@ class Query {
     }
         
     public function selectAllPageCommentDatabase($pageId) {
-        $query = $this->connection->prepare("SELECT * FROM pages_comments
+        $query = $this->connection->prepare("SELECT * FROM page_comment
                                                 WHERE page_id = :pageId");
 
         $query->bindValue(":pageId", $pageId);
@@ -300,19 +300,19 @@ class Query {
     
     public function selectUserDatabase($value) {
         if (is_numeric($value) == true) {
-            $query = $this->connection->prepare("SELECT * FROM users
+            $query = $this->connection->prepare("SELECT * FROM user
                                                     WHERE id = :id");
             
             $query->bindValue(":id", $value);
         }
         else if (filter_var($value, FILTER_VALIDATE_EMAIL) !== false) {
-            $query = $this->connection->prepare("SELECT * FROM users
+            $query = $this->connection->prepare("SELECT * FROM user
                                                     WHERE email = :email");
             
             $query->bindValue(":email", $value);
         }
         else {
-            $query = $this->connection->prepare("SELECT * FROM users
+            $query = $this->connection->prepare("SELECT * FROM user
                                                     WHERE username = :username");
             
             $query->bindValue(":username", $value);
@@ -324,7 +324,7 @@ class Query {
     }
     
     public function selectAllUserDatabase($idExclude = 0) {
-        $query = $this->connection->prepare("SELECT * FROM users
+        $query = $this->connection->prepare("SELECT * FROM user
                                                 WHERE id != :idExclude");
         
         $query->bindValue(":idExclude", $idExclude);
@@ -335,7 +335,7 @@ class Query {
     }
     
     public function selectModuleDatabase($id) {
-        $query = $this->connection->prepare("SELECT * FROM modules
+        $query = $this->connection->prepare("SELECT * FROM module
                                                 WHERE id = :id");
 
         $query->bindValue(":id", $id);
@@ -347,24 +347,24 @@ class Query {
     
     public function selectAllModuleDatabase($id = null, $position = null) {
         if ($id == null && $position != null) {
-            $query = $this->connection->prepare("SELECT * FROM modules
+            $query = $this->connection->prepare("SELECT * FROM module
                                                     WHERE position = :position
                                                     ORDER BY COALESCE(position, rank_in_column), rank_in_column");
             
             $query->bindValue(":position", $position);
         }
         else if ($id != null && $position != null) {
-            $query = $this->connection->prepare("SELECT * FROM modules
+            $query = $this->connection->prepare("SELECT * FROM module
                                                     WHERE position = :position
                                                 UNION
-                                                SELECT * FROM modules
+                                                SELECT * FROM module
                                                     WHERE id = :id");
             
             $query->bindValue(":id", $id);
             $query->bindValue(":position", $position);
         }
         else if ($id == null && $position == null)
-            $query = $this->connection->prepare("SELECT * FROM modules");
+            $query = $this->connection->prepare("SELECT * FROM module");
         
         $query->execute();
         
@@ -372,7 +372,7 @@ class Query {
     }
     
     public function selectPaymentDatabase($transaction) {
-        $query = $this->connection->prepare("SELECT * FROM payments
+        $query = $this->connection->prepare("SELECT * FROM payment
                                                 WHERE transaction = :transaction
                                                 AND status_delete = :statusDelete");
         
@@ -385,7 +385,7 @@ class Query {
     }
     
     public function selectAllPaymentDatabase($userId) {
-        $query = $this->connection->prepare("SELECT * FROM payments
+        $query = $this->connection->prepare("SELECT * FROM payment
                                                 WHERE user_id = :userId
                                                 AND status_delete = :statusDelete");
         

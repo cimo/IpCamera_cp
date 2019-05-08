@@ -401,7 +401,7 @@ class RoleUserController extends AbstractController {
     
     private function roleUserDatabase($type, $id = null, $roles = null) {
         if ($type == "update") {
-            $query = $this->utility->getConnection()->prepare("UPDATE users
+            $query = $this->utility->getConnection()->prepare("UPDATE user
                                                                 SET roles = :roles
                                                                 WHERE id = :id");
 
@@ -411,7 +411,7 @@ class RoleUserController extends AbstractController {
             $query->execute();
         }
         else if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM roles_users
+            $query = $this->utility->getConnection()->prepare("DELETE FROM role_user
                                                                 WHERE id > :idExclude
                                                                 AND id = :id");
             
@@ -421,7 +421,7 @@ class RoleUserController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteAll") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM roles_users
+            $query = $this->utility->getConnection()->prepare("DELETE FROM role_user
                                                                 WHERE id > :idExclude");
             
             $query->bindValue(":idExclude", 4);
@@ -446,7 +446,7 @@ class RoleUserController extends AbstractController {
                     
                     $roleImplode = implode(",", $roleExplode);
                     
-                    $query = $this->utility->getConnection()->prepare("UPDATE pages
+                    $query = $this->utility->getConnection()->prepare("UPDATE page
                                                                         SET role_user_id = :roleImplode
                                                                         WHERE id = :id");
                     
@@ -471,7 +471,7 @@ class RoleUserController extends AbstractController {
                     
                     $roleUserImplode = implode(",", $roleUserRow);
                     
-                    $query = $this->utility->getConnection()->prepare("UPDATE users
+                    $query = $this->utility->getConnection()->prepare("UPDATE user
                                                                         SET role_user_id = :roleImplode,
                                                                             roles = :roleUserImplode
                                                                         WHERE id = :id");
@@ -493,7 +493,7 @@ class RoleUserController extends AbstractController {
                 
                 $roleImplode = implode(",", $roleExplode);
                 
-                $query = $this->utility->getConnection()->prepare("UPDATE settings
+                $query = $this->utility->getConnection()->prepare("UPDATE setting
                                                                         SET role_user_id = :roleImplode
                                                                         WHERE id = :id");
                 
@@ -507,7 +507,7 @@ class RoleUserController extends AbstractController {
             foreach ($pageRows as $key => $value) {
                 $roleImplode = $this->roleImplode($value['role_user_id']);
                 
-                $query = $this->utility->getConnection()->prepare("UPDATE pages
+                $query = $this->utility->getConnection()->prepare("UPDATE page
                                                                     SET role_user_id = :roleImplode
                                                                     WHERE id = :id");
                 
@@ -524,7 +524,7 @@ class RoleUserController extends AbstractController {
                 
                 $roleUserImplode = implode(",", $roleUserRow);
                 
-                $query = $this->utility->getConnection()->prepare("UPDATE users
+                $query = $this->utility->getConnection()->prepare("UPDATE user
                                                                     SET role_user_id = :roleImplode,
                                                                         roles = :roleUserImplode
                                                                     WHERE id = :id");
@@ -538,7 +538,7 @@ class RoleUserController extends AbstractController {
             
             $roleImplode = $this->roleImplode($settingRow['role_user_id']);
             
-            $query = $this->utility->getConnection()->prepare("UPDATE settings
+            $query = $this->utility->getConnection()->prepare("UPDATE setting
                                                                 SET role_user_id = :roleImplode
                                                                 WHERE id = :id");
             

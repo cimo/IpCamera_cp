@@ -176,12 +176,12 @@ class Utility {
     public function createPageSelectHtml($urlLocale, $selectId, $label) {
         $rows = $this->query->selectAllPageDatabase($urlLocale);
         
-        $pagesList = $this->createPageList($rows, true);
+        $pageList = $this->createPageList($rows, true);
         
         $html = "<div id=\"$selectId\" class=\"mdc-select\">
             <select class=\"mdc-select__native-control\">
                 <option value=\"\"></option>";
-                foreach ($pagesList as $key => $value) {
+                foreach ($pageList as $key => $value) {
                     $html .= "<option value=\"$key\">$value</option>";
                 }
             $html .= "</select>
@@ -295,8 +295,8 @@ class Utility {
         return $list;
     }
     
-    public function createPageList($pagesRows, $onlyMenuName, $pagination = null) {
-        $pagesListHierarchy = $this->createPageListHierarchy($pagesRows, $pagination);
+    public function createPageList($pageRows, $onlyMenuName, $pagination = null) {
+        $pageListHierarchy = $this->createPageListHierarchy($pageRows, $pagination);
         
         if ($onlyMenuName == true) {
             $tag = "";
@@ -304,12 +304,12 @@ class Utility {
             $elements = Array();
             $count = 0;
 
-            $pagesListOnlyMenuName = $this->createPageListOnlyMenuName($pagesListHierarchy, $tag, $parentId, $elements, $count);
+            $pageListOnlyMenuName = $this->createPageListOnlyMenuName($pageListHierarchy, $tag, $parentId, $elements, $count);
             
-            return $pagesListOnlyMenuName;
+            return $pageListOnlyMenuName;
         }
         
-        return $pagesListHierarchy;
+        return $pageListHierarchy;
     }
     
     public function assignUserPassword($type, $user, $form) {
@@ -338,7 +338,7 @@ class Utility {
     }
     
     public function assignUserParameter($user) {
-        $query = $this->connection->prepare("SELECT id FROM users
+        $query = $this->connection->prepare("SELECT id FROM user
                                                 LIMIT 1");
         
         $query->execute();
@@ -379,7 +379,7 @@ class Utility {
         if (isset($row['id']) == true && $settingRow['login_attempt_time'] > 0) {
             $count = $row['attempt_login'] + 1;
             
-            $query = $this->connection->prepare("UPDATE users
+            $query = $this->connection->prepare("UPDATE user
                                                     SET date_current_login = :dateCurrentLogin,
                                                         date_last_login = :dateLastLogin,
                                                         ip = :ip,
@@ -1134,8 +1134,8 @@ class Utility {
             return $this->passwordEncoder->encodePassword($user, $form->get("password")->getData());
     }
     
-    private function createPageListHierarchy($pagesRows, $pagination) {
-        $elements = array_slice($pagesRows, $pagination['offset'], $pagination['show']);
+    private function createPageListHierarchy($pageRows, $pagination) {
+        $elements = array_slice($pageRows, $pagination['offset'], $pagination['show']);
         
         $nodes = Array();
         $tree = Array();
@@ -1159,8 +1159,8 @@ class Utility {
         return $tree;
     }
     
-    private function createPageListOnlyMenuName($pagesListHierarchy, &$tag, &$parentId, &$elements, &$count) {
-        foreach ($pagesListHierarchy as $key => $value) {
+    private function createPageListOnlyMenuName($pageListHierarchy, &$tag, &$parentId, &$elements, &$count) {
+        foreach ($pageListHierarchy as $key => $value) {
             if ($value['parent'] == null) {
                 $count = 0;
                 

@@ -33,15 +33,14 @@
     {{form_row(form.passwordConfirm, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "linear_scale"})}}
     {{form_row(form.active)}}
     
-    <p>{% trans %}userProfile_2{% endtrans %} <span class="attemptLogin_reset_result">{{response.values.attemptLogin}}</span></p>
+    <p class="attemptLogin_reset_text">{% trans %}userProfile_2{% endtrans %} <span class="attemptLogin_reset_result">{{response.values.attemptLogin}}</span></p>
+    <button id="attemptLogin_reset" class="mdc-button mdc-button--dense mdc-button--raised" type="button">Attempt login reset</button>
     
     {{form_row(form.credit, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "monetization_on"})}}
 
     {{form_widget(form._token)}}
 
     {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
-    
-    <button id="attemptLogin_reset" class="mdc-button mdc-button--dense mdc-button--raised" type="button">Attempt login reset</button>
 </form>
 
 {% if is_granted("ROLE_ADMIN") == true and response.values.id > 1 %}

@@ -6,7 +6,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ModuleRepository")
- * @ORM\Table(name="modules", options={"collate"="utf8_unicode_ci", "charset"="utf8", "engine"="InnoDB"})
+ * @ORM\Table(name="module", options={"collate"="utf8_unicode_ci", "charset"="utf8", "engine"="InnoDB"})
  * @UniqueEntity(fields={"name"}, groups={"module_create", "module_profile"})
  */
 class Module {
