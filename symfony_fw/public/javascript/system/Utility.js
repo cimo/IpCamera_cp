@@ -298,30 +298,6 @@ function Utility() {
         });
     };
     
-    self.pageSelectFieldWithDisabledElement = function(id, xhr) {
-        var options = $(id).find("option");
-        
-        var disabled = false;
-        var optionLength = 0;
-        
-        $.each(options, function(key, val) {
-            var optionValue = parseInt(val.value);
-            var optionText = val.text.substr(0, val.text.indexOf("-|") + 2);
-            var pageIdElementSelected = parseInt(xhr.response.values.pageId);
-            var parentIdElementSelected = parseInt(xhr.response.values.parentId);
-            
-            if (optionValue === pageIdElementSelected || optionValue === parentIdElementSelected) {
-                disabled = true;
-                optionLength = optionText.length;
-            }
-            else if (optionText.length <= optionLength)
-                disabled = false;
-            
-            if (disabled === true)
-                $(id).find("option").eq(key).prop("disabled", true);
-        });
-    };
-    
     self.fileNameFromSrc = function(attribute, extension) {
         var value = attribute.replace(/\\/g, "/");
         value = value.substring(value.lastIndexOf("/") + 1);
@@ -461,20 +437,35 @@ function Utility() {
         return elements;
     };
     
-    self.unitFormat = function(bytes) {
-        if (bytes === 0)
-            return "0 Bytes";
+    self.unitFormat = function(value) {
+        var result = "";
         
-        var byte = 1024;
-        var sizes = new Array("Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB");
+        if (value === 0)
+            result = "0 Bytes";
+        else {
+            var reference = 1024;
+            var sizes = new Array("Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB");
+
+            var index = Math.floor(Math.log(value) / Math.log(reference));
+
+            result = parseFloat((value / Math.pow(reference, index)).toFixed(2)) + " " + sizes[index];
+        }
         
-        var value = Math.floor(Math.log(bytes) / Math.log(byte));
-        
-        return parseFloat((bytes / Math.pow(byte, value)).toFixed(2)) + " " + sizes[value];
+        return result;
     };
     
     self.padZero = function(value) {
         return (value < 10 ? "0" : "") + value;
+    };
+    
+    self.replaceUrlParameter = function(name, value) {
+        var ulr = window.location.search;
+        var regex = new RegExp("([?;&])" + name + "[^&;]*[;&]?");
+        var query = ulr.replace(regex, "$1").replace(/&$/, "");
+        
+        var result = (query.length > 2 ? query + "&" : "?") + (value ? name + "=" + value : "");
+        
+        window.history.replaceState("", "", window.location.pathname + result);
     };
     
     // Functions private

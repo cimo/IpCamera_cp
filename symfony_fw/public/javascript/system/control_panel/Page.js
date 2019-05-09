@@ -241,7 +241,7 @@ function ControlPanelPage() {
             
             fieldsVisibility();
             
-            utility.pageSelectFieldWithDisabledElement("#form_page_parent", xhr);
+            pageSelectFieldWithDisabledElement("#form_page_parent", xhr);
 
             utility.wordTag("#page_roleUserId", "#form_page_roleUserId");
             
@@ -411,7 +411,7 @@ function ControlPanelPage() {
                                 );
                             });
 
-                            utility.pageSelectFieldWithDisabledElement("#cp_page_delete_parent_new", xhr);
+                            pageSelectFieldWithDisabledElement("#cp_page_delete_parent_new", xhr);
                         }
                         else
                             deleteResponse(xhr);
@@ -422,6 +422,30 @@ function ControlPanelPage() {
             }
         );
     }
+    
+    function pageSelectFieldWithDisabledElement(id, xhr) {
+        var options = $(id).find("option");
+        
+        var disabled = false;
+        var optionLength = 0;
+        
+        $.each(options, function(key, val) {
+            var optionValue = parseInt(val.value);
+            var optionText = val.text.substr(0, val.text.indexOf("-|") + 2);
+            var pageIdElementSelected = parseInt(xhr.response.values.pageId);
+            var parentIdElementSelected = parseInt(xhr.response.values.parentId);
+            
+            if (optionValue === pageIdElementSelected || optionValue === parentIdElementSelected) {
+                disabled = true;
+                optionLength = optionText.length;
+            }
+            else if (optionText.length <= optionLength)
+                disabled = false;
+            
+            if (disabled === true)
+                $(id).find("option").eq(key).prop("disabled", true);
+        });
+    };
     
     function deleteResponse(xhr) {
         if (xhr.response.messages.success !== undefined) {

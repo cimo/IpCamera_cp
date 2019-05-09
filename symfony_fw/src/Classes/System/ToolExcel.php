@@ -26,10 +26,12 @@ class ToolExcel {
         $this->name = trim($value) . ".xlsx";
     }
     
+    public function getName() {
+        return $this->name;
+    }
+    
     // Functions public
     public function __construct($self = null, $encoding = "UTF-8") {
-        //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-        
         $this->self = $self;
         $this->encoding = $encoding;
         

@@ -655,11 +655,15 @@ class ApiBasicController extends AbstractController {
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "download_requestTestAction") {
-                    $_SESSION['download_path'] = "{$this->utility->getPathPublic()}/files/microservice/api/basic";
-                    $_SESSION['download_name'] = rand() . "_points";
+                    $downloadPath = "{$this->utility->getPathPublic()}/files/microservice/api/basic";
+                    $downloadName = rand() . "_points";
                     
-                    $this->toolExcel->setPath($_SESSION['download_path']);
-                    $this->toolExcel->setName($_SESSION['download_name']);
+                    $this->toolExcel->setPath($downloadPath);
+                    $this->toolExcel->setName($downloadName);
+                    
+                    $_SESSION['download']['path'] = $downloadPath;
+                    $_SESSION['download']['name'] = $this->toolExcel->getName();
+                    $_SESSION['download']['mime'] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     
                     $this->toolExcel->createSheet("Points");
                     
@@ -693,17 +697,16 @@ class ApiBasicController extends AbstractController {
                         else {
                             $url = "{$this->utility->getUrlRoot()}/files/microservice/api/basic";
 
-                            $this->response['values']['url'] = "{$url}/{$_SESSION['download_name']}.xlsx";
+                            $this->response['values']['url'] = "{$url}/{$_SESSION['download']['name']}";
                         }
                     }
                     else
                         $this->response['messages']['error'] = $this->utility->getTranslator()->trans("download_2");
                 }
                 else if ($request->get("event") == "download_delete") {
-                    unlink("{$_SESSION['download_path']}/{$_SESSION['download_name']}.xlsx");
+                    unlink("{$_SESSION['download']['path']}/{$_SESSION['download']['name']}");
                     
-                    unset($_SESSION['download_path']);
-                    unset($_SESSION['download_name']);
+                    unset($_SESSION['download']);
                     
                     $this->response['messages']['success'] = "";
                 }

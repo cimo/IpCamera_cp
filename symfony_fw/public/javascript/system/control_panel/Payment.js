@@ -13,8 +13,6 @@ function ControlPanelPayment() {
     
     // Functions public
     self.init = function() {
-        $(".button_accordion").eq(1).click();
-        
         selectDesktop();
         
         selectMobile();
@@ -35,30 +33,41 @@ function ControlPanelPayment() {
                     $("#cp_payment_select_result").html("");
                 },
                 function(xhr) {
-                    if (xhr.response.messages.success !== undefined)
-                        $("#cp_payment_select_result_desktop").find(".refresh").click();
-                    else
-                        ajax.reply(xhr, "#" + event.currentTarget.id);
+                    $("#cp_payment_select_result_desktop").find(".refresh").click();
+                    
+                    $("#form_payment_select_id").find("option").not(":eq(0)").remove();
+                    
+                    $.each(xhr.response.values.paymentRows, function(key, value) {
+                        $("#form_payment_select_id").append("<option value=\"" + value + "\">" + key + "</>");
+                    });
+                    
+                    ajax.reply(xhr, "#" + event.currentTarget.id);
                 },
                 null,
                 null
             );
         });
+        
+        $("#form_payment_user_select_userId").on("change", "", function() {
+            selectChangeClear();
+        });
+        
+        setTimeout(function() {$(".button_accordion").eq(1).click();}, 100);
     };
     
     self.changeView = function() {
         if (utility.checkWidthType() === "mobile") {
             if (selectSended === true) {
                 selectId = $("#cp_payment_select_mobile").find("select option:selected").val();
-
+                
                 selectSended = false;
             }
-
+            
             if (selectId >= 0) {
                 $("#cp_payment_select_result_desktop").find(".checkbox_column input[type='checkbox']").prop("checked", false);
-
+                
                 var id = $("#cp_payment_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
-
+                
                 $.each(id, function(key, value) {
                     if ($.trim($(value).text()) === String(selectId))
                         $(value).parents("tr").find(".checkbox_column input").prop("checked", true);
@@ -68,10 +77,10 @@ function ControlPanelPayment() {
         else {
             if (selectSended === true) {
                 selectId = $.trim($("#cp_payment_select_result_desktop").find(".checkbox_column input[type='checkbox']:checked").parents("tr").find(".id_column").text());
-
+                
                 selectSended = false;
             }
-
+            
             if (selectId > 0)
                 $("#cp_payment_select_mobile").find("select option[value='" + selectId + "']").prop("selected", true);
         }
@@ -156,7 +165,7 @@ function ControlPanelPayment() {
         
         $(document).on("click", "#cp_payment_select_button_desktop", function(event) {
             var id = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
-
+            
             ajax.send(
                 true,
                 window.url.cpPaymentProfile,
@@ -185,7 +194,7 @@ function ControlPanelPayment() {
     function selectMobile() {
         $(document).on("submit", "#form_cp_payment_select_mobile", function(event) {
             event.preventDefault();
-
+            
             ajax.send(
                 true,
                 $(this).prop("action"),
@@ -250,9 +259,9 @@ function ControlPanelPayment() {
                                 if (xhr.response.values.id === $.trim($(value).text()))
                                     $(value).parents("tr").remove();
                             });
-
+                            
                             $("#form_payment_select_id").find("option[value='" + xhr.response.values.id + "']").remove();
-
+                            
                             $("#cp_payment_select_result").html("");
                             
                             $("#cp_payment_select_result_desktop").find(".refresh").click();
@@ -263,5 +272,11 @@ function ControlPanelPayment() {
                 );
             }
         );
+    }
+    
+    function selectChangeClear() {
+        $("#cp_payment_select_result_desktop").find("tbody").html("");
+        $("#form_payment_select_id").find("option").not(":eq(0)").remove();
+        $("#cp_payment_select_result").html("");
     }
 }

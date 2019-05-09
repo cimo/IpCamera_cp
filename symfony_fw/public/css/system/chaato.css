@@ -1,2 +1,1 @@
-.graph_container{position:relative}.graph_container .canvas{position:absolute;top:0;left:0;width:820px;height:420px}.graph_container .info{display:none;position:absolute;top:0;left:0;background-color:#000000;opacity:0.8;color:#ffffff;padding:5px;width:215px;z-index:1}.graph_container .info p{margin:0}
-/*# sourceMappingURL=chaato.css.map */
+.graph_container{position:relative}.graph_container .canvas{position:absolute;top:0;left:0;width:820px;height:420px}.graph_container .info{display:none;position:absolute;top:0;left:0;background-color:#000;opacity:.8;color:#fff;padding:5px;width:auto;z-index:1}.graph_container .info p{margin:0}/*# sourceMappingURL=chaato.css.map */

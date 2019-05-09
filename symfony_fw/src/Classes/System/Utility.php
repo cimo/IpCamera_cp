@@ -716,21 +716,21 @@ class Utility {
         return join(" ", $result);
     }
     
-    public function unitFormat($bytes) {
-        if ($bytes >= 1073741824)
-            $bytes = number_format($bytes / 1073741824, 2) . " GB";
-        else if ($bytes >= 1048576)
-            $bytes = number_format($bytes / 1048576, 2) . " MB";
-        else if ($bytes >= 1024)
-            $bytes = number_format($bytes / 1024, 2) . " KB";
-        else if ($bytes > 1)
-            $bytes = "$bytes bytes";
-        else if ($bytes == 1)
-            $bytes = "$bytes byte";
-        else
-            $bytes = "0 bytes";
-
-        return $bytes;
+    public function unitFormat($value) {
+        $result = "";
+        
+        if ($value == 0)
+            $result = "0 Bytes";
+        else {
+            $reference = 1024;
+            $sizes = Array("Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB");
+            
+            $index = floor(log($value) / log($reference));
+            
+            $result = round(floatval(($value / pow($reference, $index))), 2) . " " . $sizes[$index];
+        }
+        
+        return $result;
     }
     
     public function cutStringOnLength($value, $length) {
@@ -1037,20 +1037,28 @@ class Utility {
         );
     }
     
-    public function download($path, $mime, $delete = false) {
-        header("Content-Description: File Transfer");
-        header("Content-Disposition: attachment; filename=\"" . basename($path) . "\"");
-        header("Content-Transfer-Encoding: binary");
-        header("Content-Length: " . filesize($path));
-        header("Content-Type: $mime");
-        header("Expires: 0");
-        header("Cache-Control: must-revalidate, pre-check=0, post-check=0");
-        header("Pragma: public");
+    public function download() {
+        if (isset($_SESSION['download']) == true) {
+            header("Content-Description: File Transfer");
+            header("Content-Disposition: attachment; filename=\"" . basename("{$_SESSION['download']['path']}/{$_SESSION['download']['name']}") . "\"");
+            header("Content-Transfer-Encoding: binary");
+            header("Content-Length: " . filesize("{$_SESSION['download']['path']}/{$_SESSION['download']['name']}"));
+            header("Content-Type: {$_SESSION['download']['mime']}");
+            header("Expires: 0");
+            header("Cache-Control: must-revalidate, pre-check=0, post-check=0");
+            header("Pragma: public");
+            
+            readfile("{$_SESSION['download']['path']}/{$_SESSION['download']['name']}");
+            
+            if ($_SESSION['download']['remove'] == true)
+                unlink("{$_SESSION['download']['path']}/{$_SESSION['download']['name']}");
+            
+            unset($_SESSION['download']);
+            
+            return;
+        }
         
-        readfile($path);
-
-        if ($delete == true)
-            unlink($path);
+        echo "404";
     }
     
     public function fileReadTail($path, $limit = 50) {

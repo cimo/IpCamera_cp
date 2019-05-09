@@ -74,7 +74,9 @@ class PaymentController extends AbstractController {
                 if ($form->get("userId")->getData() > 0) {
                     $_SESSION['paymentUserId'] = $form->get("userId")->getData();
                     
-                    $this->response['messages']['success'] = "";
+                    $paymentRows = $this->query->selectAllPaymentDatabase($_SESSION['paymentUserId']);
+                    
+                    $this->response['values']['paymentRows'] = array_reverse(array_column($paymentRows, "id", "transaction"), true);
                 }
                 else {
                     $this->response['messages']['error'] = $this->utility->getTranslator()->trans("paymentController_1");
@@ -130,19 +132,17 @@ class PaymentController extends AbstractController {
             $_SESSION['paymentUserId'] = 0;
         
         $paymentRows = $this->query->selectAllPaymentDatabase($_SESSION['paymentUserId']);
-
+        
         $tableAndPagination = $this->tableAndPagination->request($paymentRows, 20, "payment", true);
-
+        
         $this->response['values']['search'] = $tableAndPagination['search'];
         $this->response['values']['pagination'] = $tableAndPagination['pagination'];
         $this->response['values']['listHtml'] = $this->createListHtml($tableAndPagination['listHtml']);
         $this->response['values']['count'] = $tableAndPagination['count'];
         
-        $this->response['values']['paymentRows'] = $paymentRows;
-        
         $form = $this->createForm(PaymentSelectFormType::class, null, Array(
             'validation_groups' => Array('payment_select'),
-            'choicesId' => array_reverse(array_column($this->query->selectAllPaymentDatabase($_SESSION['paymentUserId']), "id", "transaction"), true)
+            'choicesId' => array_reverse(array_column($paymentRows, "id", "transaction"), true)
         ));
         $form->handleRequest($request);
         

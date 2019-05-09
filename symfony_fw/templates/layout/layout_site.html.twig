@@ -90,14 +90,7 @@
                 'languageTextCode': "{{php_session.languageTextCode}}",
                 'currentPageId': "{{php_session.currentPageId}}"
             };
-
-            var path = {
-                'documentRoot': "{{response.path.documentRoot}}",
-                'root': "{{response.path.root}}",
-                'src': "{{response.path.src}}",
-                'public': "{{response.path.public}}"
-            };
-
+            
             var url = {
                 'root': "{{response.url.root}}",
                 'rootRender': "{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
