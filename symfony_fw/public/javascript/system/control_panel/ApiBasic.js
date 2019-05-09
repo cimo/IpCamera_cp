@@ -184,25 +184,27 @@ function ControlPanelApiBasic() {
                                     if (this.readyState === 4) {
                                         window.location = xhr.response.values.url;
                                         
-                                        ajax.send(
-                                            false,
-                                            window.url.cpApiBasicDownloadDetail,
-                                            "post",
-                                            {
-                                                'event': "download_delete",
-                                                'token': window.session.token
-                                            },
-                                            "json",
-                                            false,
-                                            true,
-                                            "application/x-www-form-urlencoded; charset=UTF-8",
-                                            null,
-                                            function(xhr) {
-                                                ajax.reply(xhr, "");
-                                            },
-                                            null,
-                                            null
-                                        );
+                                        setTimeout(function() {
+                                            ajax.send(
+                                                false,
+                                                window.url.cpApiBasicDownloadDetail,
+                                                "post",
+                                                {
+                                                    'event': "download_delete",
+                                                    'token': window.session.token
+                                                },
+                                                "json",
+                                                false,
+                                                true,
+                                                "application/x-www-form-urlencoded; charset=UTF-8",
+                                                null,
+                                                function(xhr) {
+                                                    ajax.reply(xhr, "");
+                                                },
+                                                null,
+                                                null
+                                            );
+                                        }, 100);
                                     }
                                 };
                                 xhrRequest.open("head", xhr.response.values.url, true);
