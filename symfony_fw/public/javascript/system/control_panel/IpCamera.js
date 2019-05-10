@@ -174,6 +174,10 @@ function ControlPanelIpCamera() {
                 null
             );
         });
+        
+        $(document).on("click", ".checkbox_column input[type='checkbox']", function() {
+            $("#cp_ipCamera_select_result").html("");
+        });
     }
     
     function selectMobile() {
@@ -198,6 +202,10 @@ function ControlPanelIpCamera() {
                 null,
                 null
             );
+        });
+        
+        $(document).on("change", "#form_ipCamera_select_id", function() {
+            $("#cp_ipCamera_select_result").html("");
         });
     }
     

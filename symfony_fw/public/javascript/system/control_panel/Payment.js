@@ -52,7 +52,9 @@ function ControlPanelPayment() {
             selectChangeClear();
         });
         
-        setTimeout(function() {$(".button_accordion").eq(1).click();}, 100);
+        setTimeout(function() {
+            $(".button_accordion").eq(1).click();
+        }, 100);
     };
     
     self.changeView = function() {

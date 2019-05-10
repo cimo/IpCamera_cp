@@ -177,6 +177,10 @@ function ControlPanelRoleUser() {
                 null
             );
         });
+        
+        $(document).on("click", ".checkbox_column input[type='checkbox']", function() {
+            $("#cp_roleUser_select_result").html("");
+        });
     }
     
     function selectMobile() {
@@ -201,6 +205,10 @@ function ControlPanelRoleUser() {
                 null,
                 null
             );
+        });
+        
+        $(document).on("change", "#form_roleUser_select_id", function() {
+            $("#cp_roleUser_select_result").html("");
         });
     }
     

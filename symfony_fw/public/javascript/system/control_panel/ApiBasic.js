@@ -23,7 +23,7 @@ function ControlPanelApiBasic() {
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 function() {
-                    $("#cp_apiBasic_select_result").html("");
+                    $("#cp_api_select_result").html("");
                 },
                 function(xhr) {
                     profile(xhr, "#" + event.currentTarget.id);
@@ -66,7 +66,7 @@ function ControlPanelApiBasic() {
         ajax.reply(xhr, tag);
         
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
-            $("#cp_apiBasic_select_result").html(xhr.response.render);
+            $("#cp_api_select_result").html(xhr.response.render);
             
             upload.init();
             upload.setUrlRequest(window.url.cpApiBasicCsv + "?token=" + window.session.token + "&event=csv");
@@ -152,8 +152,8 @@ function ControlPanelApiBasic() {
                 );
             });
             
-            $("#download_up_show").on("click", "", function(event) {
-                $(".download_detail_container").toggle( "slow" );
+            $("#download_detail_button").on("click", "", function(event) {
+                $(".download_detail_container").toggle("slow");
                 
                 $("#button_apiBasic_download_detail").off("click").on("click", "", function(event) {
                     var event = $(this).attr("data-event");
@@ -239,7 +239,7 @@ function ControlPanelApiBasic() {
                         if (xhr.response.messages.success !== undefined) {
                             $("#form_apiBasic_select_id").find("option[value='" + selectValue + "']").text(name);
                             
-                            $("#cp_apiBasic_select_result").html("");
+                            $("#cp_api_select_result").html("");
                         }
                     },
                     null,
@@ -272,7 +272,7 @@ function ControlPanelApiBasic() {
                                 if (xhr.response.messages.success !== undefined) {
                                     $("#form_apiBasic_select_id").find("option[value='" + xhr.response.values.id + "']").remove();
 
-                                    $("#cp_apiBasic_select_result").html("");
+                                    $("#cp_api_select_result").html("");
                                 }
                             },
                             null,

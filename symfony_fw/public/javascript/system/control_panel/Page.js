@@ -197,6 +197,10 @@ function ControlPanelPage() {
                 null
             );
         });
+        
+        $(document).on("click", ".checkbox_column input[type='checkbox']", function() {
+            $("#cp_page_select_result").html("");
+        });
     }
     
     function selectMobile() {
@@ -221,6 +225,10 @@ function ControlPanelPage() {
                 null,
                 null
             );
+        });
+        
+        $(document).on("change", "#form_page_select_id", function() {
+            $("#cp_page_select_result").html("");
         });
     }
     

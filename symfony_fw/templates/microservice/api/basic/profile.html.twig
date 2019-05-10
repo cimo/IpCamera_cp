@@ -14,15 +14,16 @@
         {{-include("@templateRoot/include/upload.html.twig", {'label': "apiBasicProfile_2"|trans})-}}
     </div>
     <div>
-        <button id="download_up_show" class="mdc-fab" type="button" aria-label="label">
+        <button id="download_detail_button" class="mdc-fab" type="button" aria-label="label">
             <span class="mdc-fab__icon"><img src="{{asset("images/templates/" ~ settingRow['template'] ~ "/excel.svg")}}" alt="excel.svg"/></span>
         </button>
+        <p class="download_detail_text">{% trans %}apiBasicProfile_3{% endtrans %}</p>
     </div>
     <div class="download_detail_container">
         <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon mdc-text-field--dense">
             <input class="mdc-text-field__input widget_datePicker_input" type="text" value="" autocomplete="off" aria-label="label" name="download_date_start"/>
             <i class="material-icons mdc-text-field__icon" tabindex="0" role="button">date_range</i>
-            <label class="mdc-floating-label">{% trans %}apiBasicProfile_3{% endtrans %}</label>
+            <label class="mdc-floating-label">{% trans %}apiBasicProfile_4{% endtrans %}</label>
             <div class="mdc-notched-outline">
                 <svg>
                     <path class="mdc-notched-outline__path"/>
@@ -33,7 +34,7 @@
         <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon mdc-text-field--dense">
             <input class="mdc-text-field__input widget_datePicker_input" type="text" value="" autocomplete="off" aria-label="label" name="download_date_end"/>
             <i class="material-icons mdc-text-field__icon" tabindex="0" role="button">date_range</i>
-            <label class="mdc-floating-label">{% trans %}apiBasicProfile_4{% endtrans %}</label>
+            <label class="mdc-floating-label">{% trans %}apiBasicProfile_5{% endtrans %}</label>
             <div class="mdc-notched-outline">
                 <svg>
                     <path class="mdc-notched-outline__path"/>
@@ -42,7 +43,7 @@
             <div class="mdc-notched-outline__idle"></div>
         </div>
         <button id="button_apiBasic_download_detail" class="mdc-button mdc-button--dense mdc-button--raised button_svg" type="button" data-event="download_requestTestAction">
-            <span>{% trans %}apiBasicProfile_5{% endtrans %}</span>
+            <span>{% trans %}apiBasicProfile_6{% endtrans %}</span>
         </button>
     </div>
 </div>

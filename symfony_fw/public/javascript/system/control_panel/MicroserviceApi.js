@@ -51,6 +51,10 @@ function ControlPanelMicroserviceApi() {
                 null
             );
         });
+        
+        $(".form_cp_api_select").find("select").on("change", "", function() {
+            $("#cp_api_select_result").html("");
+        });
     };
     
     // Function private

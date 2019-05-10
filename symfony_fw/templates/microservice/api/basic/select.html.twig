@@ -5,13 +5,13 @@
     <div class="accordion">
         {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
 
-        <form id="form_cp_apiBasic_select" action="{{path("cp_apiBasic_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+        <form id="form_cp_apiBasic_select" class="form_cp_api_select" action="{{path("cp_apiBasic_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
             {{form_row(form.id)}}
 
             {{form_widget(form._token)}}
 
             {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
         </form>
-        <div id="cp_apiBasic_select_result"></div>
+        <div id="cp_api_select_result"></div>
     </div>
 </fieldset>

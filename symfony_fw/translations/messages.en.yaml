@@ -829,9 +829,10 @@ date.time: H:i:s
 
 "apiBasicProfile_1": "ApiBasic profile form"
 "apiBasicProfile_2": "Import user csv"
-"apiBasicProfile_3": "Date start"
-"apiBasicProfile_4": "Date end"
-"apiBasicProfile_5": "Download test"
+"apiBasicProfile_3": "Request log"
+"apiBasicProfile_4": "Date start"
+"apiBasicProfile_5": "Date end"
+"apiBasicProfile_6": "Download test"
 
 "apiBasicDelete_1": "Warning! If you delete the apiBasic is impossible return back."
 "apiBasicDelete_2": "Delete"

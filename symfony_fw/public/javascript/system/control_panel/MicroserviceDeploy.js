@@ -67,6 +67,10 @@ function ControlPanelMicroserviceDeploy() {
                 null
             );
         });
+        
+        $("#form_microservice_deploy_select_id").on("change", "", function() {
+            $("#cp_microservice_deploy_render_result").html("");
+        });
     };
     
     self.changeView = function() {
