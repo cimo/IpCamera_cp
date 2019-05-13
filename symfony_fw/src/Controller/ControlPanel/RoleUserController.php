@@ -128,7 +128,7 @@ class RoleUserController extends AbstractController {
         
         $userRoleRows = $this->query->selectAllRoleUserDatabase();
         
-        $tableAndPagination = $this->tableAndPagination->request($userRoleRows, 20, "role", true);
+        $tableAndPagination = $this->tableAndPagination->request($userRoleRows, 20, "role", false);
         
         $this->response['values']['search'] = $tableAndPagination['search'];
         $this->response['values']['pagination'] = $tableAndPagination['pagination'];
@@ -137,7 +137,7 @@ class RoleUserController extends AbstractController {
         
         $form = $this->createForm(RoleUserSelectFormType::class, null, Array(
             'validation_groups' => Array('roleUser_select'),
-            'choicesId' => array_reverse(array_column($userRoleRows, "id", "level"), true)
+            'choicesId' => array_column($userRoleRows, "id", "level")
         ));
         $form->handleRequest($request);
         

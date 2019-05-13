@@ -136,7 +136,7 @@ class ModuleController extends AbstractController {
         
         $moduleRows = $this->query->selectAllModuleDatabase();
         
-        $tableAndPagination = $this->tableAndPagination->request($moduleRows, 20, "module", true);
+        $tableAndPagination = $this->tableAndPagination->request($moduleRows, 20, "module", false);
         
         $this->response['values']['search'] = $tableAndPagination['search'];
         $this->response['values']['pagination'] = $tableAndPagination['pagination'];
@@ -145,7 +145,7 @@ class ModuleController extends AbstractController {
         
         $form = $this->createForm(ModuleSelectFormType::class, null, Array(
             'validation_groups' => Array('module_select'),
-            'choicesId' => array_reverse(array_column($moduleRows, "id", "name"), true)
+            'choicesId' => array_column($moduleRows, "id", "name")
         ));
         $form->handleRequest($request);
         

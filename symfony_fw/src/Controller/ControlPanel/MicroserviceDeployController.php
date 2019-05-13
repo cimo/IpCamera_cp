@@ -65,7 +65,7 @@ class MicroserviceDeployController extends AbstractController {
 
         $form = $this->createForm(MicroserviceDeploySelectFormType::class, null, Array(
             'validation_groups' => Array('microservice_deploy_render'),
-            'choicesId' => array_reverse(array_column($microserviceDeployRows, "id", "name"), true)
+            'choicesId' => array_column($microserviceDeployRows, "id", "name")
         ));
         $form->handleRequest($request);
         
@@ -198,7 +198,7 @@ class MicroserviceDeployController extends AbstractController {
         
         $microserviceDeployRows = $this->query->selectAllMicroserviceDeployDatabase();
         
-        $tableAndPagination = $this->tableAndPagination->request($microserviceDeployRows, 20, "microserviceDeploy", true);
+        $tableAndPagination = $this->tableAndPagination->request($microserviceDeployRows, 20, "microserviceDeploy", false);
         
         $this->response['values']['search'] = $tableAndPagination['search'];
         $this->response['values']['pagination'] = $tableAndPagination['pagination'];
@@ -207,7 +207,7 @@ class MicroserviceDeployController extends AbstractController {
         
         $form = $this->createForm(MicroserviceDeploySelectFormType::class, null, Array(
             'validation_groups' => Array('microservice_deploy_select'),
-            'choicesId' => array_reverse(array_column($microserviceDeployRows, "id", "name"), true)
+            'choicesId' => array_column($microserviceDeployRows, "id", "name")
         ));
         $form->handleRequest($request);
         
@@ -771,7 +771,8 @@ class MicroserviceDeployController extends AbstractController {
                                                                         AES_DECRYPT(:keyPrivatePassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS key_private_password,
                                                                         AES_DECRYPT(:gitCloneUrlPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS git_clone_url_password
                                                                         FROM microservice_deploy
-                                                                    WHERE id = :id");
+                                                                    WHERE id = :id
+                                                                    ORDER by name ASC");
                 
                 $query->bindValue(":sshPassword", $sshPassword);
                 $query->bindValue(":keyPrivatePassword", $keyPrivatePassword);

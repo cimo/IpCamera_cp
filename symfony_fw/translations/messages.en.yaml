@@ -828,11 +828,13 @@ date.time: H:i:s
 "apiBasicSelect_2": "..."
 
 "apiBasicProfile_1": "ApiBasic profile form"
-"apiBasicProfile_2": "Import user csv"
-"apiBasicProfile_3": "Request log"
-"apiBasicProfile_4": "Date start"
-"apiBasicProfile_5": "Date end"
-"apiBasicProfile_6": "Download test"
+"apiBasicProfile_2": "Show error log"
+"apiBasicProfile_3": "Show graph"
+"apiBasicProfile_4": "Import user csv"
+"apiBasicProfile_5": "Request log"
+"apiBasicProfile_6": "Date start"
+"apiBasicProfile_7": "Date end"
+"apiBasicProfile_8": "Download test"
 
 "apiBasicDelete_1": "Warning! If you delete the apiBasic is impossible return back."
 "apiBasicDelete_2": "Delete"

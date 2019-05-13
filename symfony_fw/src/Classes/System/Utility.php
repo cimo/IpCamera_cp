@@ -339,7 +339,7 @@ class Utility {
     
     public function assignUserParameter($user) {
         $query = $this->connection->prepare("SELECT id FROM user
-                                                LIMIT 1");
+                                                ORDER BY id ASC LIMIT 1");
         
         $query->execute();
         

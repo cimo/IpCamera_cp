@@ -139,7 +139,7 @@ class ApiBasicController extends AbstractController {
         
         $form = $this->createForm(ApiBasicSelectFormType::class, null, Array(
             'validation_groups' => Array('apiBasic_select'),
-            'choicesId' => array_reverse(array_column($rows, "id", "name"), true)
+            'choicesId' => array_column($rows, "id", "name")
         ));
         $form->handleRequest($request);
         
@@ -966,13 +966,15 @@ class ApiBasicController extends AbstractController {
             if ($onlyActive == true) {
                 $query = $connection->prepare("SELECT * FROM microservice_apiBasic
                                                 WHERE id = :id
-                                                AND active = :active");
+                                                AND active = :active
+                                                ORDER by name ASC");
                 
                 $query->bindValue(":active", 1);
             }
             else {
                 $query = $connection->prepare("SELECT * FROM microservice_apiBasic
-                                                WHERE id = :id");
+                                                WHERE id = :id
+                                                ORDER by name ASC");
             }
             
             $query->bindValue(":id", $value);
@@ -981,13 +983,15 @@ class ApiBasicController extends AbstractController {
             if ($onlyActive == true) {
                 $query = $connection->prepare("SELECT * FROM microservice_apiBasic
                                                 WHERE token_name = :tokenName
-                                                AND active = :active");
+                                                AND active = :active
+                                                ORDER by name ASC");
                 
                 $query->bindValue(":active", 1);
             }
             else {
                 $query = $connection->prepare("SELECT * FROM microservice_apiBasic
-                                                WHERE token_name = :tokenName");
+                                                WHERE token_name = :tokenName
+                                                ORDER by name ASC");
             }
             
             $query->bindValue(":tokenName", $value);
@@ -1003,12 +1007,14 @@ class ApiBasicController extends AbstractController {
         
         if ($onlyActive == false) {
             $query = $connection->prepare("SELECT * FROM microservice_apiBasic
-                                            WHERE active = :active");
+                                            WHERE active = :active
+                                            ORDER by name ASC");
 
             $query->bindValue(":active", 1);
         }
         else
-            $query = $connection->prepare("SELECT * FROM microservice_apiBasic");
+            $query = $connection->prepare("SELECT * FROM microservice_apiBasic
+                                            ORDER by name ASC");
         
         $query->execute();
         
@@ -1021,7 +1027,8 @@ class ApiBasicController extends AbstractController {
         $query = $connection->prepare("SELECT * FROM microservice_apiBasic_request
                                         WHERE api_id = :apiId
                                         AND name = :name
-                                        AND date LIKE :date");
+                                        AND date LIKE :date
+                                        ORDER by name ASC");
         
         $query->bindValue(":apiId", $apiId);
         $query->bindValue(":name", $name);
@@ -1038,7 +1045,8 @@ class ApiBasicController extends AbstractController {
         $query = $connection->prepare("SELECT * FROM microservice_apiBasic_request
                                         WHERE api_id = :apiId
                                         AND name = :name
-                                        AND date LIKE :date");
+                                        AND date LIKE :date
+                                        ORDER by name ASC");
         
         $query->bindValue(":apiId", $apiId);
         $query->bindValue(":name", $name);
@@ -1056,19 +1064,22 @@ class ApiBasicController extends AbstractController {
             return false;
         else if ($dateStart != "" && $dateEnd == "") {
             $query = $connection->prepare("SELECT * FROM microservice_apiBasic_request_detail
-                                            WHERE name = :name AND DATE(date) >= :dateStart");
+                                            WHERE name = :name AND DATE(date) >= :dateStart
+                                            ORDER by name ASC");
             
             $query->bindValue(":dateStart", $dateStart);
         }
         else if ($dateStart == "" && $dateEnd != "") {
             $query = $connection->prepare("SELECT * FROM microservice_apiBasic_request_detail
-                                            WHERE name = :name AND DATE(date) <= :dateEnd");
+                                            WHERE name = :name AND DATE(date) <= :dateEnd
+                                            ORDER by name ASC");
             
             $query->bindValue(":dateEnd", $dateEnd);
         }
         else if ($dateStart != "" && $dateEnd != "") {
             $query = $connection->prepare("SELECT * FROM microservice_apiBasic_request_detail
-                                            WHERE name = :name AND DATE(date) >= :dateStart AND DATE(date) <= :dateEnd");
+                                            WHERE name = :name AND DATE(date) >= :dateStart AND DATE(date) <= :dateEnd
+                                            ORDER by name ASC");
             
             $query->bindValue(":dateStart", $dateStart);
             $query->bindValue(":dateEnd", $dateEnd);

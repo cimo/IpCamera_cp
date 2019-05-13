@@ -16,7 +16,8 @@ class Query {
         if (trim($helpCode) != "") {
             $query = $this->connection->prepare("SELECT * FROM user
                                                     WHERE help_code IS NOT NULL
-                                                    AND help_code = :helpCode");
+                                                    AND help_code = :helpCode
+                                                    ORDER by username ASC");
 
             $query->bindValue(":helpCode", $helpCode);
 
@@ -36,7 +37,8 @@ class Query {
         
         foreach ($roleIdsExplode as $key => $value) {
             $query = $this->connection->prepare("SELECT level FROM role_user
-                                                    WHERE id = :value");
+                                                    WHERE id = :value
+                                                    ORDER by level ASC");
             
             $query->bindValue(":value", $value);
             
@@ -54,7 +56,8 @@ class Query {
     }
     
     public function selectAllRoleUserDatabase($change = false) {
-        $query = $this->connection->prepare("SELECT * FROM role_user");
+        $query = $this->connection->prepare("SELECT * FROM role_user
+                                                ORDER by level ASC");
         
         $query->execute();
         
@@ -85,7 +88,8 @@ class Query {
     public function selectSettingSlackIwDatabase($name) {
         $query = $this->connection->prepare("SELECT * FROM setting_slack_iw
                                                 WHERE name = :name
-                                                AND active = :active");
+                                                AND active = :active
+                                                ORDER by name ASC");
         
         $query->bindValue(":name", $name);
         $query->bindValue(":active", true);
@@ -96,7 +100,8 @@ class Query {
     }
     
     public function selectAllSettingSlackIwDatabase() {
-        $query = $this->connection->prepare("SELECT * FROM setting_slack_iw");
+        $query = $this->connection->prepare("SELECT * FROM setting_slack_iw
+                                                ORDER by name ASC");
         
         $query->execute();
         
@@ -106,7 +111,8 @@ class Query {
     public function selectSettingLinePushDatabase($name) {
         $query = $this->connection->prepare("SELECT * FROM setting_line_push
                                                 WHERE name = :name
-                                                AND active = :active");
+                                                AND active = :active
+                                                ORDER by name ASC");
         
         $query->bindValue(":name", $name);
         $query->bindValue(":active", true);
@@ -117,7 +123,8 @@ class Query {
     }
     
     public function selectAllSettingLinePushDatabase() {
-        $query = $this->connection->prepare("SELECT * FROM setting_line_push");
+        $query = $this->connection->prepare("SELECT * FROM setting_line_push
+                                                ORDER by name ASC");
         
         $query->execute();
         
@@ -127,13 +134,15 @@ class Query {
     public function selectSettingLinePushUserDatabase($type, $value) {
         if ($type == "userId") {
             $query = $this->connection->prepare("SELECT * FROM setting_line_push_user
-                                                    WHERE user_id = :userId");
+                                                    WHERE user_id = :userId
+                                                    ORDER by push_name ASC");
             
             $query->bindValue(":userId", $value);
         }
         else if ($type == "pushName") {
             $query = $this->connection->prepare("SELECT * FROM setting_line_push_user
-                                                    WHERE push_name = :pushName");
+                                                    WHERE push_name = :pushName
+                                                    ORDER by push_name ASC");
             
             $query->bindValue(":pushName", $value);
         }
@@ -145,10 +154,12 @@ class Query {
     
     public function selectAllSettingLinePushUserDatabase($type, $value = "") {
         if ($type == "all")
-            $query = $this->connection->prepare("SELECT * FROM setting_line_push_user");
+            $query = $this->connection->prepare("SELECT * FROM setting_line_push_user
+                                                    ORDER by push_name ASC");
         else if ($type == "allPushName") {
             $query = $this->connection->prepare("SELECT * FROM setting_line_push_user
-                                                    WHERE push_name = :pushName");
+                                                    WHERE push_name = :pushName
+                                                    ORDER by push_name ASC");
             
             $query->bindValue(":pushName", $value);
         }
@@ -301,19 +312,22 @@ class Query {
     public function selectUserDatabase($value) {
         if (is_numeric($value) == true) {
             $query = $this->connection->prepare("SELECT * FROM user
-                                                    WHERE id = :id");
+                                                    WHERE id = :id
+                                                    ORDER by username ASC");
             
             $query->bindValue(":id", $value);
         }
         else if (filter_var($value, FILTER_VALIDATE_EMAIL) !== false) {
             $query = $this->connection->prepare("SELECT * FROM user
-                                                    WHERE email = :email");
+                                                    WHERE email = :email
+                                                    ORDER by username ASC");
             
             $query->bindValue(":email", $value);
         }
         else {
             $query = $this->connection->prepare("SELECT * FROM user
-                                                    WHERE username = :username");
+                                                    WHERE username = :username
+                                                    ORDER by username ASC");
             
             $query->bindValue(":username", $value);
         }
@@ -325,7 +339,8 @@ class Query {
     
     public function selectAllUserDatabase($idExclude = 0) {
         $query = $this->connection->prepare("SELECT * FROM user
-                                                WHERE id != :idExclude");
+                                                WHERE id != :idExclude
+                                                ORDER by username ASC");
         
         $query->bindValue(":idExclude", $idExclude);
         
@@ -336,7 +351,8 @@ class Query {
     
     public function selectModuleDatabase($id) {
         $query = $this->connection->prepare("SELECT * FROM module
-                                                WHERE id = :id");
+                                                WHERE id = :id
+                                                ORDER BY COALESCE(position, rank_in_column), rank_in_column");
 
         $query->bindValue(":id", $id);
         
@@ -356,15 +372,18 @@ class Query {
         else if ($id != null && $position != null) {
             $query = $this->connection->prepare("SELECT * FROM module
                                                     WHERE position = :position
+                                                    ORDER BY COALESCE(position, rank_in_column), rank_in_column
                                                 UNION
                                                 SELECT * FROM module
-                                                    WHERE id = :id");
+                                                    WHERE id = :id
+                                                    ORDER BY COALESCE(position, rank_in_column), rank_in_column");
             
             $query->bindValue(":id", $id);
             $query->bindValue(":position", $position);
         }
         else if ($id == null && $position == null)
-            $query = $this->connection->prepare("SELECT * FROM module");
+            $query = $this->connection->prepare("SELECT * FROM module
+                                                    ORDER BY COALESCE(position, rank_in_column), rank_in_column");
         
         $query->execute();
         
@@ -401,13 +420,15 @@ class Query {
         if ($bypass == false) {
             $query = $this->connection->prepare("SELECT * FROM microservice_api
                                                     WHERE id = :id
-                                                    AND active = :active");
+                                                    AND active = :active
+                                                    ORDER by name ASC");
             
             $query->bindValue(":active", 1);
         }
         else
             $query = $this->connection->prepare("SELECT * FROM microservice_api
-                                                    WHERE id = :id");
+                                                    WHERE id = :id
+                                                    ORDER by name ASC");
         
         $query->bindValue(":id", $id);
         
@@ -419,12 +440,14 @@ class Query {
     public function selectAllMicroserviceApiDatabase($bypass = false) {
         if ($bypass == false) {
             $query = $this->connection->prepare("SELECT * FROM microservice_api
-                                                    WHERE active = :active");
+                                                    WHERE active = :active
+                                                    ORDER by name ASC");
 
             $query->bindValue(":active", 1);
         }
         else
-            $query = $this->connection->prepare("SELECT * FROM microservice_api");
+            $query = $this->connection->prepare("SELECT * FROM microservice_api
+                                                    ORDER by name ASC");
         
         $query->execute();
         
@@ -433,7 +456,8 @@ class Query {
     
     public function selectMicroserviceDeployDatabase($id) {
         $query = $this->connection->prepare("SELECT * FROM microservice_deploy
-                                                WHERE id = :id");
+                                                WHERE id = :id
+                                                ORDER by name ASC");
         
         $query->bindValue(":id", $id);
         
@@ -443,7 +467,8 @@ class Query {
     }
     
     public function selectAllMicroserviceDeployDatabase() {
-        $query = $this->connection->prepare("SELECT * FROM microservice_deploy");
+        $query = $this->connection->prepare("SELECT * FROM microservice_deploy
+                                                ORDER by name ASC");
         
         $query->execute();
         

@@ -141,7 +141,7 @@ class UserController extends AbstractController {
         
         $userRows = $this->query->selectAllUserDatabase(1);
         
-        $tableAndPagination = $this->tableAndPagination->request($userRows, 20, "user", true);
+        $tableAndPagination = $this->tableAndPagination->request($userRows, 20, "user", false);
         
         $this->response['values']['search'] = $tableAndPagination['search'];
         $this->response['values']['pagination'] = $tableAndPagination['pagination'];
@@ -150,7 +150,7 @@ class UserController extends AbstractController {
         
         $form = $this->createForm(UserSelectFormType::class, null, Array(
             'validation_groups' => Array('user_select'),
-            'choicesId' => array_reverse(array_column($userRows, "id", "username"), true)
+            'choicesId' => array_column($userRows, "id", "username")
         ));
         $form->handleRequest($request);
         

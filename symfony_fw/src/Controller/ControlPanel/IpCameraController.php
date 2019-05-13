@@ -206,7 +206,7 @@ class IpCameraController extends AbstractController {
         
         $form = $this->createForm(IpCameraSelectFormType::class, null, Array(
             'validation_groups' => Array('ipCamera_select'),
-            'choicesId' => array_reverse(array_column($elements[0], "id", "name"), true)
+            'choicesId' => array_column($elements[0], "id", "name")
         ));
         $form->handleRequest($request);
         
@@ -720,7 +720,8 @@ class IpCameraController extends AbstractController {
             
             $query = $this->utility->getConnection()->prepare("SELECT AES_DECRYPT(:password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS password
                                                                     FROM ipCamera_device
-                                                                WHERE id = :id");
+                                                                WHERE id = :id
+                                                                ORDER by name ASC");
 
             $query->bindValue(":password", $password);
             $query->bindValue(":id", $id);
@@ -766,7 +767,8 @@ class IpCameraController extends AbstractController {
     }
     
     private function selectAllIpCameraDatabase() {
-        $query = $this->utility->getConnection()->prepare("SELECT * FROM ipCamera_device");
+        $query = $this->utility->getConnection()->prepare("SELECT * FROM ipCamera_device
+                                                            ORDER by name ASC");
         
         $query->execute();
         
