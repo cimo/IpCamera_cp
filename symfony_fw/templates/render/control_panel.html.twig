@@ -347,7 +347,7 @@
                     </div>
                     
                     <p>{% trans %}controlPanelMicroserviceUnitTest_2{% endtrans %}</p>
-                    {% set iframe = "<iframe id=\"unitTest_iframe\" src=\"url\" style=\"width: 100%; height: 400px;\"></iframe>" %}
+                    {% set iframe = "<iframe id=\"unitTest_iframe\" src=\"[website_public_url]/files/microservice/unit_test/run/[filen_name].html\" style=\"width: 100%; height: 400px;\"></iframe>" %}
                     {% set script = "<script id=\"unitTest_script\">
                             window.addEventListener(\"load\", function(event) {
                                 var page = JSON.stringify({\"page\": document.body.innerHTML});
