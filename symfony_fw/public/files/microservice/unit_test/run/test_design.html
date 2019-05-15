@@ -16,41 +16,7 @@
                 <link href="favicon.ico" rel="icon" type="image/x-icon">
                 
                 <!-- Css -->
-                <link href="https://lsv2.machine.local/project/uebusaito/root/symfony_fw/public/files/microservice/unit_test/library/qunit_2.9.2.css" rel="stylesheet"/>
+                <link href="https://lsv2.machine.local/project/ipcamera_cp/root/symfony_fw/public/files/microservice/unit_test/library/qunit_2.9.2.css" rel="stylesheet"/>
             </head>
-            <body><div id="qunit"></div>
-                    <div id="qunit-fixture"></div>
-                    <div id="qunit_result" style="display: none;"></div>
-                    <script src="https://lsv2.machine.local/project/uebusaito/root/symfony_fw/public/files/microservice/unit_test/library/jquery_3.3.1.min.js"></script>
-                    <script src="https://lsv2.machine.local/project/uebusaito/root/symfony_fw/public/files/microservice/unit_test/library/qunit_2.9.2.js"></script>
-                    <script>
-                        var unitTestMessage = function(event) {
-                            var data = event.data;
-                            var origin = event.origin;
-                            var source = event.source;
-
-                            if ("https://lsv2.machine.local" === origin) {
-                                var json = JSON.parse(data);
-
-                                var page = $(json.page).not("#unitTest_script").remove();
-                                page = $(page).find("iframe").remove().end();
-
-                                var result = $("#qunit_result");
-                                result.html(page);
-
-                                QUnit.test("test_design", function(assert) {
-                                    var expectedValue = 0;
-
-var tags = new Array();
-tags.push(".column_left");
-
-$.each(tags, function(key, value) {
-    assert.ok($(value).length > expectedValue, value + " greater than " + expectedValue);
-});
-                                });
-                            }
-                        };
-
-                        window.addEventListener("message", unitTestMessage, false);
-                    </script></body>
+            <body><p>Test is not active.</p></body>
         </html>
