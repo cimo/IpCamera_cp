@@ -478,8 +478,9 @@
         {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
     {%- endif -%#}
     {# cimo : #}
+    {% set attributeId = attr['id'] | default('') %}
     {% set attributeClass = attr['class'] | default('') %}
-    <div class="form_row {{attributeClass}}">
+    <div id="{{attributeId}}" class="form_row {{attributeClass}}">
         {#{- form_label(form) -}#}
         {{- form_errors(form) -}}
         {{- form_widget(form, widget_attr) -}}

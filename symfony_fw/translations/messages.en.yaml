@@ -280,6 +280,7 @@ date.time: H:i:s
 "controlPanel_15": "Deploy"
 "controlPanel_16": "Api"
 "controlPanel_17": "Ecommerce"
+"controlPanel_18": "Unit test"
 
 "controlPanelPayment_1": "Payments section."
 "controlPanelPayment_2": "Really delete this payment?"
@@ -317,6 +318,11 @@ date.time: H:i:s
 "controlPanelMicroserviceDeploy_4": "Are you sure to execute the command?"
 
 "controlPanelMicroserviceApi_1": "Api section."
+
+"controlPanelMicroserviceUnitTest_1": "Unit test section."
+"controlPanelMicroserviceUnitTest_2": "Insert iframe code in your page and script code on bottom of your page."
+"controlPanelMicroserviceUnitTest_3": "Really delete this unit test?"
+"controlPanelMicroserviceUnitTest_4": "Really delete all unit test?"
 
 # IpCamera
 "controlPanelMenuIpCamera_1": "Ip camera"
@@ -875,6 +881,47 @@ date.time: H:i:s
 "apiBasicController_14": "Year"
 "apiBasicController_15": "Month"
 "apiBasicController_16": "ApiBasic problem with curl."
+
+# Microservice unit test
+"microserviceUnitTestCreate_1": "Unit test create form"
+"microserviceUnitTestCreate_2": "..."
+
+"microserviceUnitTestSelect_1": "Unite test selection form"
+"microserviceUnitTestSelect_2": "..."
+"microserviceUnitTestSelect_3": "Id"
+"microserviceUnitTestSelect_4": "Select"
+"microserviceUnitTestSelect_5": "Name"
+"microserviceUnitTestSelect_6": "Active"
+"microserviceUnitTestSelect_7": "Remove"
+"microserviceUnitTestSelect_8": "Select"
+
+"microserviceUnitTestProfile_1": "Unit test profile form"
+
+"microserviceUnitTestDelete_1": "Warning! If you delete the unit test is impossible return back."
+"microserviceUnitTestDelete_2": "Delete"
+
+"microserviceUnitTestFormType_1": "Name"
+"microserviceUnitTestFormType_2": "Origin"
+"microserviceUnitTestFormType_3": "Code"
+"microserviceUnitTestFormType_4": "Active"
+"microserviceUnitTestFormType_5": "No"
+"microserviceUnitTestFormType_6": "Yes"
+"microserviceUnitTestFormType_7": "Send"
+
+"microserviceUnitTestSelectFormType_1": "Name"
+"microserviceUnitTestSelectFormType_2": "Select"
+
+"microserviceUnitTestController_1": "Unit test create completed."
+"microserviceUnitTestController_2": "Unit test not created!"
+"microserviceUnitTestController_3": "Unit test not selected!"
+"microserviceUnitTestController_4": "Unit test update completed."
+"microserviceUnitTestController_5": "Unit test update not completed!"
+"microserviceUnitTestController_6": "Unit test deletion completed."
+"microserviceUnitTestController_7": "All Unit test deletion completed."
+"microserviceUnitTestController_8": "Unit test not deleted!"
+"microserviceUnitTestController_9": "No"
+"microserviceUnitTestController_10": "Yes"
+"microserviceUnitTestController_11": "Test is not active."
 
 # IpCamera
 "ipCameraCreate_1": "Device create form"

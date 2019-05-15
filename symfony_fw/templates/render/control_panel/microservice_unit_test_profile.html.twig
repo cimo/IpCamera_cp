@@ -1,0 +1,17 @@
+{% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
+
+<h2 class="mdc-typography--headline6">{% trans %}microserviceUnitTestProfile_1{% endtrans %}</h2>
+<form id="form_cp_microservice_unit_test_profile" action="{{path("cp_microservice_unit_test_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+    {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+    {{form_row(form.origin, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+    {{form_row(form.code, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms", 'attr' : {'id': "unit_test_code_row"}})}}
+    {{form_row(form.active)}}
+
+    {{form_widget(form._token)}}
+
+    {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+</form>
+
+{% if is_granted("ROLE_ADMIN") == true %}
+    {{-include("@templateRoot/render/control_panel/microservice_unit_test_delete.html.twig")-}}
+{% endif %}

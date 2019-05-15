@@ -540,8 +540,8 @@ class PageController extends AbstractController {
                 $this->listHtml .= "</td>
                 <td>";
                     if ($value['id'] > 5)
-                        $this->listHtml .= "<button class=\"mdc-fab mdc-fab--mini cp_page_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
-                </td>
+                        $this->listHtml .= "<button class=\"mdc-fab mdc-fab--mini cp_page_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>";
+                $this->listHtml .= "</td>
             </tr>";
             
             if (count($value['children']) > 0)

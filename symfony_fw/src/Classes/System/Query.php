@@ -475,5 +475,26 @@ class Query {
         return $query->fetchAll();
     }
     
+    public function selectMicroserviceUnitTestDatabase($id) {
+        $query = $this->connection->prepare("SELECT * FROM microservice_unit_test
+                                                WHERE id = :id
+                                                ORDER by name ASC");
+        
+        $query->bindValue(":id", $id);
+        
+        $query->execute();
+        
+        return $query->fetch();
+    }
+    
+    public function selectAllMicroserviceUnitTestDatabase() {
+        $query = $this->connection->prepare("SELECT * FROM microservice_unit_test
+                                                ORDER by name ASC");
+        
+        $query->execute();
+        
+        return $query->fetchAll();
+    }
+    
     // Functions private
 }

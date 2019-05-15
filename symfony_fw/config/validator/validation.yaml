@@ -152,6 +152,16 @@ App\Form\Model\ApiBasicSelectModel:
                 htmlPattern: false
                 pattern: /^[0-9]+$/
 
+App\Form\Model\MicroserviceUnitTestSelectModel:
+    properties:
+        id:
+            - NotBlank:
+                groups: [microservice_unit_test_select]
+            - Regex:
+                groups: [microservice_unit_test_select]
+                htmlPattern: false
+                pattern: /^[0-9]+$/
+
 App\Form\Model\IpCameraSelectModel:
     properties:
         id:
@@ -880,6 +890,26 @@ App\Entity\ApiBasic:
                 groups: [apiBasic_create, apiBasic_profile]
                 htmlPattern: false
                 pattern: /^1$|^0$/
+
+App\Entity\MicroserviceUnitTest:
+    properties:
+        name:
+            - NotBlank:
+                groups: [microservice_unit_test_create, microservice_unit_test_profile]
+            - Regex:
+                groups: [microservice_unit_test_create, microservice_unit_test_profile]
+                htmlPattern: false
+                pattern: /^[a-zA-Z0-9_\- ]+$/
+        origin:
+            - NotBlank:
+                groups: [microservice_unit_test_create, microservice_unit_test_profile]
+            - Regex:
+                groups: [microservice_unit_test_create, microservice_unit_test_profile]
+                htmlPattern: false
+                pattern: /^(https?:\/\/)([a-zA-Z0-9\/._\-]+)$/
+        code:
+            - NotBlank:
+                groups: [microservice_unit_test_create, microservice_unit_test_profile]
 
 App\Entity\IpCamera:
     properties:

@@ -338,6 +338,54 @@
                     <script src="{{asset("javascript/system/control_panel/MicroserviceApi.min.js")}}"></script>
                     <script src="{{asset("javascript/system/control_panel/ApiBasic.min.js")}}"></script>
                 {% endif %}
+            {% elseif urlExtra == "cp_microservice_unit_test" or urlExtra == "cp_microservice_unit_test_create" or "cp_microservice_unit_test_select" in urlExtra %}
+                {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
+                    <p>{% trans %}controlPanelMicroserviceUnitTest_1{% endtrans %}</p>
+                    <div class="cp_section_button">
+                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_unit_test_create"})}}">{% trans %}controlPanel_1{% endtrans %}</a>
+                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_unit_test_select"})}}">{% trans %}controlPanel_2{% endtrans %}</a>
+                    </div>
+                    
+                    <p>{% trans %}controlPanelMicroserviceUnitTest_2{% endtrans %}</p>
+                    {% set iframe = "<iframe id=\"unitTest_iframe\" src=\"url\" style=\"width: 100%; height: 400px;\"></iframe>" %}
+                    {% set script = "<script id=\"unitTest_script\">
+                            window.addEventListener(\"load\", function(event) {
+                                var page = JSON.stringify({\"page\": document.body.innerHTML});
+                                        var iframe = document.querySelectorAll(\"#unitTest_iframe\")[0];
+
+                                iframe.contentWindow.postMessage(page, iframe.src);
+                            }, false);
+                        </script>" %}
+                    <p class="unit_test_howTo_example">
+                        {{iframe}}
+                    </p>
+                    <p class="unit_test_howTo_example">
+                        {{script|nl2br}}
+                    </p>
+                    
+                    {% if urlExtra == "cp_microservice_unit_test_create" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceUnitTestController::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% elseif urlExtra == "cp_microservice_unit_test_select" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceUnitTestController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% endif %}
+                    
+                    <script>
+                        window.addEventListener("load", function() {
+                            controlPanelMicroserviceUnitTest.init();
+                            controlPanelMicroserviceUnitTest.changeView();
+                        }, false);
+                        
+                        window.addEventListener("resize", function() {
+                            controlPanelMicroserviceUnitTest.changeView();
+                        }, false);
+
+                        var textMicroserviceUnitTest = {
+                            'label_1': "{{"controlPanelMicroserviceUnitTest_3"|trans}}",
+                            'label_2': "{{"controlPanelMicroserviceUnitTest_4"|trans}}"
+                        };
+                    </script>
+                    <script src="{{asset("javascript/system/control_panel/MicroserviceUnitTest.min.js")}}"></script>
+                {% endif %}
             {% endif %}
             
             {{-include("@templateRoot/render/control_panel_page_custom.html.twig")-}}
@@ -402,6 +450,10 @@
         <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_api"})}}">
             <i class="material-icons mdc-list-item__graphic">perm_data_setting</i>
             <span>{% trans %}controlPanel_16{% endtrans %}</span>
+        </a>
+        <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_unit_test"})}}">
+            <i class="material-icons mdc-list-item__graphic">bug_report</i>
+            <span>{% trans %}controlPanel_18{% endtrans %}</span>
         </a>
     {% endif %}
     
