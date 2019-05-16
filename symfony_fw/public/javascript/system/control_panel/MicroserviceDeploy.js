@@ -70,6 +70,7 @@ function ControlPanelMicroserviceDeploy() {
         
         $("#form_microservice_deploy_select_id").on("change", "", function() {
             $("#cp_microservice_deploy_render_result").html("");
+            $("#cp_microservice_deploy_ssh_connection_result").html("");
         });
     };
     

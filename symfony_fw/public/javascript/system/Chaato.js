@@ -176,7 +176,7 @@ function Chaato() {
         
         if (step < 2)
             step = 1;
-        else if (step == 2)
+        else if (step === 2)
             step = 3;
         
         for (var a = 0; a <= (itemMax + step); a += step) {

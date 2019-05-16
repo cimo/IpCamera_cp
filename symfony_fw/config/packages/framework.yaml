@@ -7,15 +7,15 @@ framework:
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
     session:
-        # cimo -
+        # cimo :
         #handler_id: ~
-        # cimo +
         handler_id: session.handler.native_file
         #save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
         save_path: '/var/lib/php/sessions'
         name: ipCameraCp_dev
         cookie_domain: .machine.local
         cookie_lifetime: 0
+        gc_maxlifetime: 0
         gc_probability: 0
 
     # cimo +
