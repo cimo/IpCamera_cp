@@ -52,3 +52,4 @@ nbproject
 /symfony_fw/public/.sass-cache
 /symfony_fw/src/files/ipCamera/*
 !/symfony_fw/src/files/ipCamera/.gitkeep
+symfony_fw/config/packages/framework.yaml
