@@ -23,7 +23,7 @@ class MicroserviceUnitTest {
     private $name = "";
     
     /**
-     * @ORM\Column(name="origin", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT ''")
+     * @ORM\Column(name="origin", type="string", columnDefinition="longtext NOT NULL")
      */
     private $origin = "";
     

@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: ipcamera_cp
 -- ------------------------------------------------------
@@ -239,7 +239,7 @@ DROP TABLE IF EXISTS `microservice_unit_test`;
 CREATE TABLE `microservice_unit_test` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `origin` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `origin` longtext COLLATE utf8_unicode_ci NOT NULL,
   `code` longtext COLLATE utf8_unicode_ci NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -684,4 +684,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-15 15:05:04
+-- Dump completed on 2019-05-21 21:19:05
