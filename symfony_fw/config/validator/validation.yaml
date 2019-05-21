@@ -906,7 +906,7 @@ App\Entity\MicroserviceUnitTest:
             - Regex:
                 groups: [microservice_unit_test_create, microservice_unit_test_profile]
                 htmlPattern: false
-                pattern: /^(https?:\/\/)([a-zA-Z0-9\/._\-]+)$/
+                pattern: /^([a-zA-Z0-9:\/._\-\r\n|\r|\n]+)$/
         code:
             - NotBlank:
                 groups: [microservice_unit_test_create, microservice_unit_test_profile]
