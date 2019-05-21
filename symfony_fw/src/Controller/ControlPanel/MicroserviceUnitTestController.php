@@ -56,7 +56,7 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->ajax = new Ajax($this->utility);
         
         // Logic
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $microserviceUnitTestEntity = new MicroserviceUnitTest();
         
@@ -123,7 +123,7 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->tableAndPagination = new TableAndPagination($this->utility);
         
         // Logic
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $_SESSION['microserviceUnitTestProfileId'] = 0;
         
@@ -186,7 +186,7 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->ajax = new Ajax($this->utility);
         
         // Logic
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -249,7 +249,7 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->ajax = new Ajax($this->utility);
         
         // Logic
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $microserviceUnitTestEntity = $this->entityManager->getRepository("App\Entity\MicroserviceUnitTest")->find($_SESSION['microserviceUnitTestProfileId']);
         
