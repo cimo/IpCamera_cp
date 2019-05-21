@@ -58,6 +58,7 @@ class RequestListener {
              $urlCurrentPageId = $request->get("urlCurrentPageId");
         
         $phpSession = Array(
+            'name' => $session->getName(),
             'userInform' => $_SESSION['userInform'],
             'languageTextCode' => $_SESSION['languageTextCode'],
             'currentPageId' => $urlCurrentPageId

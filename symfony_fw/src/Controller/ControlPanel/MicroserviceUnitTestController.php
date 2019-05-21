@@ -440,6 +440,8 @@ class MicroserviceUnitTestController extends AbstractController {
             </head>
             <body>";
                 if ($microserviceUnitTestEntity->getActive() == true) {
+                    $originReplace = trim(preg_replace("/\r\n|\r|\n/", ",", $microserviceUnitTestEntity->getOrigin()));
+                    
                     $html .= "<div id=\"qunit\"></div>
                     <div id=\"qunit-fixture\"></div>
                     <div id=\"qunit_result\" style=\"display: none;\"></div>
@@ -450,22 +452,29 @@ class MicroserviceUnitTestController extends AbstractController {
                             var data = event.data;
                             var origin = event.origin;
                             var source = event.source;
-
-                            if (\"{$microserviceUnitTestEntity->getOrigin()}\" === origin) {
+                            
+                            var originFilter = \"{$originReplace}\";
+                            
+                            var originFilterSplit = originFilter.split(\",\");
+                            
+                            var result = $(\"#qunit_result\");
+                            
+                            if (originFilterSplit.includes(origin) === true) {
                                 var json = JSON.parse(data);
-
+                                
                                 var page = $(json.page).not(\"#unitTest_script\").remove();
                                 page = $(page).find(\"iframe\").remove().end();
-
-                                var result = $(\"#qunit_result\");
+                                
                                 result.html(page);
-
+                                
                                 QUnit.test(\"{$microserviceUnitTestEntity->getName()}\", function(assert) {
                                     {$microserviceUnitTestEntity->getCode()}
                                 });
                             }
+                            else
+                                result.html(\"\");
                         };
-
+                        
                         window.addEventListener(\"message\", unitTestMessage, false);
                     </script>";
                 }

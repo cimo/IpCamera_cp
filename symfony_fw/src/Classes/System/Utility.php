@@ -909,29 +909,31 @@ class Utility {
     }
     
     public function checkSessionOverTime($request, $router) {
-        if (isset($_SESSION['userActionCount']) == false)
-            $_SESSION['userActionCount'] = 0;
+        if (isset($_SESSION['userTimestamp']) == false)
+            $_SESSION['userTimestamp'] = time();
         
-        if (isset($_SESSION['userInform']) == false || isset($_SESSION['userInformCount']) == false) {
+        if (isset($_SESSION['userInform']) == false)
             $_SESSION['userInform'] = "";
-            $_SESSION['userInformCount'] = 0;
-        }
+        
+        if (isset($_SESSION['userOver']) == false)
+            $_SESSION['userOver'] = false;
+        
+        if (isset($_SESSION['userLogin']) == false)
+            $_SESSION['userLogin'] = false;
         
         if ($this->tokenStorage->getToken() != null && $request->cookies->has($this->session->getName() . "_REMEMBERME") == false && $this->authorizationChecker->isGranted("IS_AUTHENTICATED_FULLY") == true) {
-            if (isset($_SESSION['userTimestamp']) == false)
-                $_SESSION['userTimestamp'] = time();
-            
-            $_SESSION['userActionCount'] ++;
-            
+            // Inactivity
             $timeElapsed = time() - $_SESSION['userTimestamp'];
             
-            $isOver = false;
-            
-            // Inactivity
-            if ($_SESSION['userActionCount'] > 1 && $timeElapsed >= $this->sessionMaxIdleTime) {
-                $_SESSION['userInform'] = $this->translator->trans("classUtility_6");
+            if ($_SESSION['userLogin'] == true && $timeElapsed >= $this->sessionMaxIdleTime) {
+                $_SESSION['userOver'] = true;
                 
-                $isOver = true;
+                $_SESSION['userInform'] = $this->translator->trans("classUtility_6");
+            }
+            else {
+                $_SESSION['userTimestamp'] = time();
+                
+                $_SESSION['userLogin'] = true;
             }
             
             // Roles changed
@@ -939,39 +941,37 @@ class Utility {
             
             if (is_string($currentUser) == false) {
                 $userRow = $this->query->selectUserDatabase($currentUser->getId());
-
+                
                 $rolesExplode = explode(",", $userRow['roles']);
                 
                 $arrayDiff = array_diff($currentUser->getRoles(), $rolesExplode);
                 
                 if (count($arrayDiff) > 0) {
-                    $_SESSION['userActionCount'] = 0;
+                    $_SESSION['userOver'] = true;
                     
                     $_SESSION['userInform'] = $this->translator->trans("classUtility_7");
-                    
-                    $isOver = true;
                 }
             }
             
-            if ($isOver == true) {
+            if ($_SESSION['userOver'] == true) {
                 if ($request->isXmlHttpRequest() == true) {
                     echo json_encode(Array(
                         'userInform' => $_SESSION['userInform']
                     ));
-
+                    
                     exit;
                 }
                 else {
-                    $_SESSION['userActionCount'] = 0;
-
                     $userInform = $_SESSION['userInform'];
+                    $userOver = $_SESSION['userOver'];
                     $language = $_SESSION['languageTextCode'];
-
+                    
                     $this->tokenStorage->setToken(null);
-
+                    
                     $_SESSION['userInform'] = $userInform;
+                    $_SESSION['userOver'] = $userOver;
                     $_SESSION['languageTextCode'] = $language;
-
+                    
                     return $router->generate(
                         "root_render",
                         Array(
@@ -982,16 +982,16 @@ class Utility {
                     );
                 }
             }
-            
-            $_SESSION['userTimestamp'] = time();
         }
-        
-        if ($_SESSION['userInform'] != "")
-            $_SESSION['userInformCount'] ++;
-
-        if ($_SESSION['userInformCount'] > 1) {
-            $_SESSION['userInform'] = "";
-            $_SESSION['userInformCount'] = 0;
+        else {
+            $_SESSION['userTimestamp'] = time();
+            
+            if ($_SESSION['userOver'] == false)
+                $_SESSION['userInform'] = "";
+            
+            $_SESSION['userOver'] = false;
+            
+            $_SESSION['userLogin'] = false;
         }
         
         return false;

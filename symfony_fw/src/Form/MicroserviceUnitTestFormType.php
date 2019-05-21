@@ -27,7 +27,7 @@ class MicroserviceUnitTestFormType extends AbstractType {
             'required' => true,
             'label' => "microserviceUnitTestFormType_1"
         ))
-        ->add("origin", TextType::class, Array(
+        ->add("origin", TextareaType::class, Array(
             'required' => true,
             'label' => "microserviceUnitTestFormType_2"
         ))   

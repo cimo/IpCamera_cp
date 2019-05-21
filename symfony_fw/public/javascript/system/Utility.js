@@ -489,15 +489,27 @@ function Utility() {
     
     self.blockMultiTab = function(active) {
         if (active === true) {
-            if (self.readCookie("multiTabBlock") === null) {
-                self.createCookie("multiTabBlock", {"active":true}, "Fri, 31 Dec 9999 23:59:59 GMT", true, true);
+            var cookieValues = self.readCookie(window.session.name + "_multiTabBlock");
+            
+            if (cookieValues === null) {
+                self.createCookie(window.session.name + "_multiTabBlock", {"active":true}, "Fri, 31 Dec 9999 23:59:59 GMT", true, true);
                 
                 $(window).on("unload", "", function(event) {
-                    self.removeCookie("multiTabBlock");
+                    self.removeCookie(window.session.name + "_multiTabBlock");
                 });
             }
-            else
-                $("body").html("<h1 style=\"margin: 10px; text-align: center;\">" + window.text.index_11 + "</h1>");
+            else {
+                $("body").html("<h1 style=\"margin: 10px; text-align: center;\">"
+                    + window.text.index_11 +
+                "</h1>\n\
+                <script>\n\
+                    $(window).on(\"focus\", \"\", function() {\n\
+                        alert(window.text.index_11);\n\
+                        window.close();\n\
+                        $(window).off(\"focus\");\n\
+                    });\n\
+                </script>");
+            }
         }
     };
     
