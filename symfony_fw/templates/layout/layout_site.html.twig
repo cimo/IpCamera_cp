@@ -6,6 +6,12 @@
     {% set templateColumnCenter = "12" %}
 {% endif %}
 
+{% if (settingRow['javascript_minify'] == 1) %}
+    {% set javascriptMinify = ".min.js" %}
+{% else %}
+    {% set javascriptMinify = ".js" %}
+{% endif %}
+
 <!DOCTYPE html>
 <html lang="{{app.request.getLocale()}}">
     <head>
@@ -196,36 +202,36 @@
                 'label_3': "{{"widgetDatePicker_3"|trans}}"
             };
         </script>
-
+        
         <script src="{{asset("javascript/library/jquery_3.3.1.min.js")}}"></script>
         <script src="{{asset("javascript/library/jquery-ui_1.12.1.min.js")}}"></script>
         <script src="{{asset("javascript/library/jquery-mobile_1.5.0.min.js")}}"></script>
         <script src="{{asset("javascript/library/material-components-web_custom.min.js")}}"></script>
 
-        <script src="{{asset("javascript/system/Utility.min.js")}}"></script>
-        <script src="{{asset("javascript/system/MaterialDesign.min.js")}}"></script>
-        <script src="{{asset("javascript/system/WidgetSearch.min.js")}}"></script>
-        <script src="{{asset("javascript/system/WidgetDatePicker.min.js")}}"></script>
-        <script src="{{asset("javascript/system/Ajax.min.js")}}"></script>
-        <script src="{{asset("javascript/system/Loader.min.js")}}"></script>
-        <script src="{{asset("javascript/system/FlashBag.min.js")}}"></script>
-        <script src="{{asset("javascript/system/PopupEasy.min.js")}}"></script>
-        <script src="{{asset("javascript/system/Search.min.js")}}"></script>
-        <script src="{{asset("javascript/system/TableAndPagination.min.js")}}"></script>
-        <script src="{{asset("javascript/system/Captcha.min.js")}}"></script>
-        <script src="{{asset("javascript/system/Upload.min.js")}}"></script>
-        <script src="{{asset("javascript/system/Language.min.js")}}"></script>
-        <script src="{{asset("javascript/system/Wysiwyg.min.js")}}"></script>
-        <script src="{{asset("javascript/system/Chaato.min.js")}}"></script>
-        <script src="{{asset("javascript/system/PageComment.min.js")}}"></script>
-        <script src="{{asset("javascript/system/Authentication.min.js")}}"></script>
-        <script src="{{asset("javascript/system/Registration.min.js")}}"></script>
-        <script src="{{asset("javascript/system/RecoverPassword.min.js")}}"></script>
-        <script src="{{asset("javascript/system/MenuUser.min.js")}}"></script>
+        <script src="{{asset("javascript/system/Utility" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/MaterialDesign" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/WidgetSearch" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/WidgetDatePicker" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/Ajax" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/Loader" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/FlashBag" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/PopupEasy" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/Search" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/TableAndPagination" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/Captcha" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/Upload" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/Language" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/Wysiwyg" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/Chaato" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/PageComment" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/Authentication" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/Registration" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/RecoverPassword" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/MenuUser" ~ javascriptMinify)}}"></script>
         
         {{-include("@templateRoot/layout/layout_site_custom_bottom.html.twig")-}}
         
-        <script src="{{asset("javascript/system/Index.min.js")}}"></script>
-        <script src="{{asset("javascript/system/Index_custom.min.js")}}"></script>
+        <script src="{{asset("javascript/system/Index" ~ javascriptMinify)}}"></script>
+        <script src="{{asset("javascript/system/Index_custom" ~ javascriptMinify)}}"></script>
     </body>
 </html>

@@ -651,7 +651,8 @@ date.time: H:i:s
 "settingFormType_28": "Paypal business active"
 "settingFormType_29": "Paypal currency code"
 "settingFormType_30": "Paypal credit amount"
-"settingFormType_31": "Send"
+"settingFormType_31": "Javascript minify"
+"settingFormType_32": "Send"
 
 "settingController_1": "Roles maintenance"
 "settingController_2": "Protocol value has changed, please login again (if you have changed from https to http you need close and to open browser for to do login)."

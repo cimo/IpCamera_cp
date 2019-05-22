@@ -1,3 +1,9 @@
+{% if (settingRow['javascript_minify'] == 1) %}
+    {% set javascriptMinify = ".min.js" %}
+{% else %}
+    {% set javascriptMinify = ".js" %}
+{% endif %}
+
 <p>{% trans %}myPage_1{% endtrans %}</p>
 <nav class="mdc-tab-bar mdc-tab-bar--icons-with-text">
     <a class="mdc-tab mdc-tab--with-icon-and-text" href="{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': 1, 'urlExtra': "mp_profile"})}}">
@@ -41,5 +47,5 @@
         'label_2': "{{"myPage_5"|trans}}"
     };
 </script>
-<script src="{{asset("javascript/system/my_page/MyPageProfile.min.js")}}"></script>
-<script src="{{asset("javascript/system/my_page/MyPagePayment.min.js")}}"></script>
+<script src="{{asset("javascript/system/my_page/MyPageProfile" ~ javascriptMinify)}}"></script>
+<script src="{{asset("javascript/system/my_page/MyPagePayment" ~ javascriptMinify)}}"></script>

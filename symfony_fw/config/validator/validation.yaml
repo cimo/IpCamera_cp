@@ -605,6 +605,13 @@ App\Entity\Setting:
                 groups: [setting]
                 htmlPattern: false
                 pattern: /^[0-9]+(\.[0-9][0-9]?)?$/
+        javascriptMinify:
+            - NotBlank:
+                groups: [setting]
+            - Regex:
+                groups: [setting]
+                htmlPattern: false
+                pattern: /^1$|^0$/
 
 App\Entity\SettingSlackIw:
     properties:

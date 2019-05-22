@@ -135,6 +135,11 @@ class Setting {
      */
     private $payPalCreditAmount = "0.01";
     
+    /**
+     * @ORM\Column(name="javascript_minify", type="boolean", columnDefinition="tinyint(1) NOT NULL DEFAULT 0")
+     */
+    private $javascriptMinify = 0;
+    
     // Properties
     public function setTemplate($value) {
         $this->template = $value;
@@ -230,6 +235,10 @@ class Setting {
     
     public function setPayPalCreditAmount($value) {
         $this->payPalCreditAmount = $value;
+    }
+    
+    public function setJavascriptMinify($value) {
+        $this->javascriptMinify = $value;
     }
     
     // ---
@@ -332,5 +341,9 @@ class Setting {
     
     public function getPayPalCreditAmount() {
         return $this->payPalCreditAmount;
+    }
+    
+    public function getJavascriptMinify() {
+        return $this->javascriptMinify;
     }
 }
