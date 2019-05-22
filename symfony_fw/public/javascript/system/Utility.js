@@ -208,7 +208,7 @@ function Utility() {
             $.each(inputValueSplit, function(key, value) {
                 html += "<div class=\"mdc-chip\">\n\
                     <i class=\"material-icons mdc-chip__icon mdc-chip__icon--leading\">delete</i>\n\
-                    <div class=\"mdc-chip__text wordTag_elemet_data\" data-id=\"" + value + "\">" + $(tagInput + "_select").find("option").eq(value).text() + "</div>\n\
+                    <div class=\"mdc-chip__text wordTag_elemet_data\" data-id=\"" + value + "\">" + $(tagInput + "_select").find("option[value=\"" + value + "\"]").text() + "</div>\n\
                 </div>";
             });
             
