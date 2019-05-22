@@ -537,7 +537,7 @@ CREATE TABLE `setting` (
 
 LOCK TABLES `setting` WRITE;
 /*!40000 ALTER TABLE `setting` DISABLE KEYS */;
-INSERT INTO `setting` VALUES (1,'basic',4,'en','cimo@reinventsoftware.org',1,'2,3,',1,1,15,3,0,1,0,0,0,0,1,'1234',0,0,1,'paypal.business@gmail.com','EUR','0.01',0);
+INSERT INTO `setting` VALUES (1,'basic',4,'en','cimo@reinventsoftware.org',1,'3,4,',1,1,15,3,0,1,0,0,0,0,1,'1234',0,0,1,'paypal.business@gmail.com','EUR','0.01',0);
 /*!40000 ALTER TABLE `setting` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -685,4 +685,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-22 11:28:07
+-- Dump completed on 2019-05-22 12:46:22
