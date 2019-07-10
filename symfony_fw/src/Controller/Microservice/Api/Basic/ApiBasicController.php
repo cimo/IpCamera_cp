@@ -859,13 +859,15 @@ class ApiBasicController extends AbstractController {
                     else
                         $this->response['messages']['error'] = $this->utility->getTranslator()->trans("apiBasicController_9");
                     
-                    $this->saveRequest($this->apiBasicRow['id'], $name, "apiBasic -> $name");
-                    
-                    $this->saveRequestDetail($name, $postFields, $this->response['errorCode']);
-                    
-                    if ((isset($this->response['errorCode']) == true && $this->response['errorCode'] != 0) || isset($this->response['messages']['error']) == true) {
-                        $logPath = "{$this->utility->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $this->apiBasicRow['name']) . ".log";
-                        @file_put_contents($logPath, date("Y-m-d H:i:s") . " - $name - IP[{$_SERVER['REMOTE_ADDR']}]: " . print_r($this->response, true) . print_r($this->parameters, true) . PHP_EOL, FILE_APPEND);
+                    if ($this->apiSanyoMyPageRow != false) {
+                        $this->saveRequest($this->apiBasicRow['id'], $name, "apiBasic -> $name");
+
+                        $this->saveRequestDetail($name, $postFields, $this->response['errorCode']);
+
+                        if ((isset($this->response['errorCode']) == true && $this->response['errorCode'] != 0) || isset($this->response['messages']['error']) == true) {
+                            $logPath = "{$this->utility->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $this->apiBasicRow['name']) . ".log";
+                            @file_put_contents($logPath, date("Y-m-d H:i:s") . " - $name - IP[{$_SERVER['REMOTE_ADDR']}]: " . print_r($this->response, true) . print_r($this->parameters, true) . PHP_EOL, FILE_APPEND);
+                        }
                     }
                 }
                 else
