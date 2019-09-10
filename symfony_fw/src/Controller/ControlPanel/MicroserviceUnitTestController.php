@@ -445,7 +445,7 @@ class MicroserviceUnitTestController extends AbstractController {
                     $html .= "<div id=\"qunit\"></div>
                     <div id=\"qunit-fixture\"></div>
                     <div id=\"qunit_result\" style=\"display: none;\"></div>
-                    <script src=\"{$this->utility->getUrlRoot()}/files/microservice/unit_test/library/jquery_3.3.1.min.js\"></script>
+                    <script src=\"{$this->utility->getUrlRoot()}/files/microservice/unit_test/library/jquery_3.4.1.min.js\"></script>
                     <script src=\"{$this->utility->getUrlRoot()}/files/microservice/unit_test/library/qunit_2.9.2.js\"></script>
                     <script>
                         var unitTestMessage = function(event) {
