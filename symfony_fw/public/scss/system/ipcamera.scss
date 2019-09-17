@@ -6,7 +6,8 @@
     }
     
     .command_container {
-        display: none !important;
+        display: block !important;
+        margin: 0 !important;
     }
 }
 @media(min-width: $widthDesktop) {
@@ -28,6 +29,50 @@
     .command_container {
         display: inline-block;
         vertical-align: top;
+        position: absolute;
+        margin: 0 10%;
+        
+        .icon {
+            position: absolute;
+            font-size: 50px;
+            cursor: pointer;
+        }
+        
+        .move_container {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            
+            .move_up {
+                top: 0;
+                left: 50px;
+            }
+            .move_right {
+                top: 50px;
+                left: 100px;
+            }
+            .move_down {
+                top: 100px;
+                left: 50px;
+            }
+            .move_left {
+                top: 50px;
+                left: 0;
+            }
+        }
+        
+        .action_container {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            
+            .action_video {
+                
+            }
+            .action_photo {
+                
+            }
+        }
     }
 }
 

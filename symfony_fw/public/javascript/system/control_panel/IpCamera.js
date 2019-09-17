@@ -1,8 +1,8 @@
 /* global utility, ajax, popupEasy, materialDesign */
 
-var controlPanelIpCamera = new ControlPanelIpCamera();
+var ipCamera = new ipCamera();
 
-function ControlPanelIpCamera() {
+function ipCamera() {
     // Vars
     var self = this;
     
@@ -72,6 +72,10 @@ function ControlPanelIpCamera() {
             if (selectId > 0)
                 $("#cp_ipCamera_select_mobile").find("select option[value='" + selectId + "']").prop("selected", true);
         }
+    };
+    
+    self.commands = function() {
+        
     };
     
     // Function private

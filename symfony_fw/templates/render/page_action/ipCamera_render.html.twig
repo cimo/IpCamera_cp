@@ -2,9 +2,19 @@
     <div class="video_container">
         {{response.values.video|raw}}
     </div>
-    <div class="command_container">
-        <p>Commands</p>
+    <div class="command_container user_select_none">
+        <div class="move_container">
+            <i class="material-icons icon move_up">arrow_upward</i>
+            <i class="material-icons icon move_right">arrow_forward</i>
+            <i class="material-icons icon move_down">arrow_downward</i>
+            <i class="material-icons icon move_left">arrow_back</i>
+        </div>
+        <div class="action_container">
+            <i class="material-icons icon action_video">arrow_upward</i>
+            <i class="material-icons icon action_photo">arrow_forward</i>
+        </div>
     </div>
+    <script src="{{asset("javascript/system/control_panel/IpCamera.min.js")}}"></script>
     <script>
         function deferred(method) {
             if (window.$ !== undefined)
@@ -19,5 +29,7 @@
                 $(".video_container").parents(".page_container").find(".argument").hide();
             });
         });
+        
+        ipCamera.commands();
     </script>
 {% endif %}
