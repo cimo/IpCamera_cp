@@ -507,6 +507,7 @@ function Utility() {
                         alert(window.text.index_11);\n\
                         window.close();\n\
                         $(window).off(\"focus\");\n\
+                        document.cookie = window.session.name + _multiTabBlock + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';\n\
                     });\n\
                 </script>");
             }

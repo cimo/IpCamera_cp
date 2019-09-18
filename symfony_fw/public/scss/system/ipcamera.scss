@@ -7,7 +7,14 @@
     
     .command_container {
         display: block !important;
-        margin: 0 !important;
+        margin: auto !important;
+        width: 400px !important;
+        height: 150px !important;
+        
+        .action_container {
+            top: -100px !important;
+            left: 200px !important;
+        }
     }
 }
 @media(min-width: $widthDesktop) {
@@ -29,8 +36,8 @@
     .command_container {
         display: inline-block;
         vertical-align: top;
-        position: absolute;
-        margin: 0 10%;
+        margin: 9% 0 0 9%;
+        
         
         .icon {
             position: absolute;
@@ -63,14 +70,17 @@
         
         .action_container {
             width: 150px;
-            height: 150px;
+            height: 50px;
             position: relative;
+            top: 50px;
             
             .action_video {
-                
+                top: 0;
+                left: 0;
             }
             .action_photo {
-                
+                top: 0;
+                left: 100px;
             }
         }
     }
