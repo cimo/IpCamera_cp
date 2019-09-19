@@ -645,7 +645,8 @@ class IpCameraController extends AbstractController {
     
     // Functions private
     private function createVideoHtml($index, $url) {
-        $html = "<img id=\"video_{$index}\" class=\"video\" src=\"$url\" alt=\"video\"/>";
+        $html = "<i class=\"material-icons video_loading rotate_loop\">cached</i>
+                <img id=\"video_{$index}\" class=\"video\" src=\"$url\" alt=\"video\"/>";
         
         return $html;
     }

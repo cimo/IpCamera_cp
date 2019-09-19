@@ -1,4 +1,10 @@
 {% if response.values is defined %}
+    {% if (settingRow['javascript_minify'] == 1) %}
+        {% set javascriptMinify = ".min.js" %}
+    {% else %}
+        {% set javascriptMinify = ".js" %}
+    {% endif %}
+    
     <div class="video_container">
         {{response.values.video|raw}}
     </div>
@@ -14,7 +20,7 @@
             <i class="material-icons icon action_photo">photo_camera</i>
         </div>
     </div>
-    <script src="{{asset("javascript/system/control_panel/IpCamera.min.js")}}"></script>
+    <script src="{{asset("javascript/system/control_panel/IpCamera" ~ javascriptMinify)}}"></script>
     <script>
         function deferred(method) {
             if (window.$ !== undefined)
@@ -27,9 +33,10 @@
             $(document).ready(function() {
                 $(".video_container").parents(".page_container").find(".header").hide();
                 $(".video_container").parents(".page_container").find(".argument").hide();
+                
+                ipCamera.videoContainer();
+                ipCamera.commandContainer();
             });
         });
-        
-        ipCamera.commands();
     </script>
 {% endif %}

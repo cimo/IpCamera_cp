@@ -74,7 +74,13 @@ function ipCamera() {
         }
     };
     
-    self.commands = function() {
+    self.videoContainer = function() {
+        $(".video_container").find(".video").on("load", "", function() {
+            $(".video_container").find(".video_loading").remove();
+        });
+    };
+    
+    self.commandContainer = function() {
         
     };
     

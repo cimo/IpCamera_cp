@@ -27,6 +27,12 @@
         display: inline-block;
         width: 70%;
         
+        .video_loading {
+            display: block;
+            text-align: center;
+            font-size: 50px;
+        }
+        
         .video {
             display: block;
             width: 100%;
@@ -37,7 +43,7 @@
         display: inline-block;
         vertical-align: top;
         margin: 9% 0 0 9%;
-        
+        height: 250px;
         
         .icon {
             position: absolute;
