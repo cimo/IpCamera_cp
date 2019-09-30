@@ -2,11 +2,7 @@
 
 {% block panelId %}panel_id_{{response.module.id}}{% endblock %}
 {% block panelClass %}
-{% spaceless %}
-    {% if urlExtra == "user_login" %}
-        user_login
-    {% endif %}
-{% endspaceless %}
+{% if urlExtra == "user_login" %}user_login{% endif %}
 {% endblock %}
 {% block moduleHeaderIcon %}
     <i class="material-icons">account_box</i>

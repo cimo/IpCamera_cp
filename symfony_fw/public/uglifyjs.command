@@ -4,7 +4,7 @@ clear
 
 echo Uglifyjs - Mac
 
-source="$(dirname ${BASH_SOURCE[0]})"/javascript/system
+source="$(dirname ${BASH_SOURCE[0]})"/js/system
 
 minifiedFiles=$(find "$source" -name *.min.js)
 

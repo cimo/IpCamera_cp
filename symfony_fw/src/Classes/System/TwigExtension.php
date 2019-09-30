@@ -1,7 +1,7 @@
 <?php
 namespace App\Classes\System;
 
-class TwigExtension extends \Twig_Extension {
+class TwigExtension extends \Twig\Extension\AbstractExtension {
     // Vars
     
     // Properties

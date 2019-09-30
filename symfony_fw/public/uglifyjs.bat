@@ -2,7 +2,7 @@
 
 echo Uglifyjs - Windows
 
-set source=%cd%\javascript\system
+set source=%cd%\js\system
 
 cd %source%
 

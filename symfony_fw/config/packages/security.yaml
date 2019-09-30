@@ -2,7 +2,7 @@ security:
     # cimo +
     encoders:
         App\Entity\User:
-            algorithm: bcrypt
+            algorithm: auto
     #role_hierarchy:
     #    ROLE_USER: [ROLE_USER]
     #    ROLE_ADMIN: [ROLE_USER, ROLE_ADMIN]

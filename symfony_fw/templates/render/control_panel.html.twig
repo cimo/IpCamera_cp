@@ -102,7 +102,7 @@
                             'label_2': "{{"controlPanelPayment_3"|trans}}"
                         };
                     </script>
-                    <script src="{{asset("javascript/system/control_panel/Payment" ~ javascriptMinify)}}"></script>
+                    <script src="{{asset("js/system/control_panel/Payment" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_page" or urlExtra == "cp_page_create" or urlExtra == "cp_page_select" %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
@@ -133,7 +133,7 @@
                             'label_2': "{{"controlPanelPage_3"|trans}}"
                         };
                     </script>
-                    <script src="{{asset("javascript/system/control_panel/Page" ~ javascriptMinify)}}"></script>
+                    <script src="{{asset("js/system/control_panel/Page" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_user" or urlExtra == "cp_user_create" or urlExtra == "cp_user_select" %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
@@ -164,7 +164,7 @@
                             'label_2': "{{"controlPanelUser_3"|trans}}"
                         };
                     </script>
-                    <script src="{{asset("javascript/system/control_panel/User" ~ javascriptMinify)}}"></script>
+                    <script src="{{asset("js/system/control_panel/User" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_module" or urlExtra == "cp_module_create" or urlExtra == "cp_module_select" %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
@@ -195,7 +195,7 @@
                             'label_2': "{{"controlPanelModule_3"|trans}}"
                         };
                     </script>
-                    <script src="{{asset("javascript/system/control_panel/Module" ~ javascriptMinify)}}"></script>
+                    <script src="{{asset("js/system/control_panel/Module" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_role" or urlExtra == "cp_role_create" or urlExtra == "cp_role_select" %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
@@ -226,7 +226,7 @@
                             'label_2': "{{"controlPanelRole_3"|trans}}"
                         };
                     </script>
-                    <script src="{{asset("javascript/system/control_panel/RoleUser" ~ javascriptMinify)}}"></script>
+                    <script src="{{asset("js/system/control_panel/RoleUser" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_setting" %}
                 {% if is_granted("ROLE_ADMIN") == true %}
@@ -246,7 +246,7 @@
                             'label_4': "{{"settingController_11"|trans}}"
                         };
                     </script>
-                    <script src="{{asset("javascript/system/control_panel/Setting" ~ javascriptMinify)}}"></script>
+                    <script src="{{asset("js/system/control_panel/Setting" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_setting_slack_iw" %}
                 {% if is_granted("ROLE_ADMIN") == true %}
@@ -263,7 +263,7 @@
                             'label_1': "{{"controlPanelSettingSlack_2"|trans}}"
                         };
                     </script>
-                    <script src="{{asset("javascript/system/control_panel/SettingSlackIw" ~ javascriptMinify)}}"></script>
+                    <script src="{{asset("js/system/control_panel/SettingSlackIw" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_setting_line" %}
                 {% if is_granted("ROLE_ADMIN") == true %}
@@ -280,7 +280,7 @@
                             'label_1': "{{"controlPanelSettingLine_2"|trans}}"
                         };
                     </script>
-                    <script src="{{asset("javascript/system/control_panel/SettingLinePush" ~ javascriptMinify)}}"></script>
+                    <script src="{{asset("js/system/control_panel/SettingLinePush" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_microservice_deploy" or urlExtra == "cp_microservice_deploy_create" or "cp_microservice_deploy_select" in urlExtra %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
@@ -314,7 +314,7 @@
                             'label_3': "{{"controlPanelMicroserviceDeploy_4"|trans}}"
                         };
                     </script>
-                    <script src="{{asset("javascript/system/control_panel/MicroserviceDeploy" ~ javascriptMinify)}}"></script>
+                    <script src="{{asset("js/system/control_panel/MicroserviceDeploy" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_microservice_api" or urlExtra == "cp_microservice_api_create" or "cp_microservice_api_profile" in urlExtra %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
@@ -341,8 +341,8 @@
                             'label_1': "{{"apiBasic_1"|trans}}"
                         };
                     </script>
-                    <script src="{{asset("javascript/system/control_panel/MicroserviceApi" ~ javascriptMinify)}}"></script>
-                    <script src="{{asset("javascript/system/control_panel/ApiBasic" ~ javascriptMinify)}}"></script>
+                    <script src="{{asset("js/system/control_panel/MicroserviceApi" ~ javascriptMinify)}}"></script>
+                    <script src="{{asset("js/system/control_panel/ApiBasic" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_microservice_unit_test" or urlExtra == "cp_microservice_unit_test_create" or "cp_microservice_unit_test_select" in urlExtra %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
@@ -390,7 +390,7 @@
                             'label_2': "{{"controlPanelMicroserviceUnitTest_4"|trans}}"
                         };
                     </script>
-                    <script src="{{asset("javascript/system/control_panel/MicroserviceUnitTest" ~ javascriptMinify)}}"></script>
+                    <script src="{{asset("js/system/control_panel/MicroserviceUnitTest" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% endif %}
             
