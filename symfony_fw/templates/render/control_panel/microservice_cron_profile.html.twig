@@ -1,0 +1,19 @@
+{% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
+
+<h2 class="mdc-typography--headline6">{% trans %}microserviceCronProfile_1{% endtrans %}</h2>
+<form id="form_cp_microservice_cron_profile" action="{{path("cp_microservice_cron_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+    {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+    {{form_row(form.time, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+    {{form_row(form.code, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms", 'attr' : {'id': "cron_code_row"}})}}
+    
+    <p class="info_field">{% trans %}microserviceCronFormType_4{% endtrans %}</p>
+    <p>{{response.values.lastExecution}}</p>
+    
+    {{form_widget(form._token)}}
+
+    {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+</form>
+
+{% if is_granted("ROLE_ADMIN") == true %}
+    {{-include("@templateRoot/render/control_panel/microservice_cron_delete.html.twig")-}}
+{% endif %}

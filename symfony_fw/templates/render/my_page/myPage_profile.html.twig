@@ -7,10 +7,12 @@
     <div class="accordion">
         <form id="form_myPage_profile" action="{{path("myPage_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
             <div class="upload_image_container">
-                {{form_row(form.image)}}
-                {{form_row(form.removeImage)}}
+                <img class="avatar" src="{{avatar}}" alt="Avatar"/>
+                <div class="uploader">
+                    {{form_row(form.image)}}
+                    {{form_row(form.removeImage)}}
+                </div>
             </div>
-            <img class="avatar" src="{{avatar}}" alt="Avatar"/>
             
             {% if is_granted("ROLE_ADMIN") == true %}
                 {{form_row(form.username, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "pets"})}}

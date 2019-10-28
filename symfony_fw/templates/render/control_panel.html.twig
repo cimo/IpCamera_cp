@@ -353,21 +353,19 @@
                     </div>
                     
                     <p>{% trans %}controlPanelMicroserviceUnitTest_2{% endtrans %}</p>
+                    
                     {% set iframe = "<iframe id=\"unitTest_iframe\" src=\"[website_public_url]/files/microservice/unit_test/run/[filen_name].html\" style=\"width: 100%; height: 400px;\"></iframe>" %}
-                    {% set script = "<script id=\"unitTest_script\">
-                            window.addEventListener(\"load\", function(event) {
-                                var page = JSON.stringify({\"page\": document.body.innerHTML});
-                                        var iframe = document.querySelectorAll(\"#unitTest_iframe\")[0];
-
-                                iframe.contentWindow.postMessage(page, iframe.src);
-                            }, false);
-                        </script>" %}
-                    <p class="unit_test_howTo_example">
-                        {{iframe}}
-                    </p>
-                    <p class="unit_test_howTo_example">
-                        {{script|nl2br}}
-                    </p>
+                    
+                    {% set script = "<script id=\"unitTest_script\">\n"~
+                    "   window.addEventListener(\"load\", function(event) {\n"~
+                    "       var page = JSON.stringify({\"page\": document.body.innerHTML});\n"~
+                    "       var iframe = document.querySelectorAll(\"#unitTest_iframe\")[0];\n\n"~
+                    "       iframe.contentWindow.postMessage(page, iframe.src);\n"~
+                    "   }, false);\n"~
+                    "</script>" %}
+                    
+                    <pre class="square_code">{{iframe}}</pre>
+                    <pre class="square_code">{{script}}</pre>
                     
                     {% if urlExtra == "cp_microservice_unit_test_create" %}
                         {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceUnitTestController::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
@@ -392,6 +390,50 @@
                     </script>
                     <script src="{{asset("js/system/control_panel/MicroserviceUnitTest" ~ javascriptMinify)}}"></script>
                 {% endif %}
+            {% elseif urlExtra == "cp_microservice_cron" or urlExtra == "cp_microservice_cron_create" or "cp_microservice_cron_select" in urlExtra %}
+                {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
+                    <p>{% trans %}controlPanelMicroserviceCron_1{% endtrans %}</p>
+                    <div class="cp_section_button">
+                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_cron_create"})}}">{% trans %}controlPanel_1{% endtrans %}</a>
+                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_cron_select"})}}">{% trans %}controlPanel_2{% endtrans %}</a>
+                    </div>
+                    
+                    {% set text = "At minutes [0-59]\n"~
+                    "|   At hours [0-23]\n"~
+                    "|   |   At days [1-31]\n"~
+                    "|   |   |   At months [1-12]\n"~
+                    "|   |   |   |   At days of the Week [Numeric, 0-6]\n"~
+                    "|   |   |   |   |\n"~
+                    "*   *   *   *   *   /symfony_fw/public/files/microservice/cron/file_name\n\n"~
+                    "*/X is for repeat every X\n\n"~
+                    "Start on reboot:\n"~
+                    "@reboot /symfony_fw/public/files/microservice/cron/file_name" %}
+                    
+                    <pre class="square_code">{{text}}</pre>
+                    
+                    {% if urlExtra == "cp_microservice_cron_create" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceCronController::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% elseif urlExtra == "cp_microservice_cron_select" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceCronController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% endif %}
+                    
+                    <script>
+                        window.addEventListener("load", function() {
+                            controlPanelMicroserviceCron.init();
+                            controlPanelMicroserviceCron.changeView();
+                        }, false);
+                        
+                        window.addEventListener("resize", function() {
+                            controlPanelMicroserviceCron.changeView();
+                        }, false);
+
+                        var textMicroserviceCron = {
+                            'label_1': "{{"controlPanelMicroserviceCron_2"|trans}}",
+                            'label_2': "{{"controlPanelMicroserviceCron_3"|trans}}"
+                        };
+                    </script>
+                    <script src="{{asset("js/system/control_panel/MicroserviceCron" ~ javascriptMinify)}}"></script>
+                {% endif %}
             {% endif %}
             
             {{-include("@templateRoot/render/control_panel_page_custom.html.twig")-}}
@@ -401,6 +443,77 @@
             <p>{% trans %}controlPanel_3{% endtrans %}</p>
         </div>
     {% endif %}
+{% endblock %}
+
+{% block scriptContainer %}
+    <script>
+        var cpUrl = {
+            'cpPaymentUserSelect': "{{path("cp_payment_user_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpPaymentSelect': "{{path("cp_payment_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpPaymentProfile': "{{path("cp_payment_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpPaymentDelete': "{{path("cp_payment_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpPageCreate': "{{path("cp_page_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpPageSelect': "{{path("cp_page_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpPageProfile': "{{path("cp_page_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpPageProfileSort': "{{path("cp_page_profile_sort", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpPageProfileSave': "{{path("cp_page_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpPageDelete': "{{path("cp_page_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpUserCreate': "{{path("cp_user_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpUserSelect': "{{path("cp_user_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpUserProfile': "{{path("cp_user_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpUserProfileSave': "{{path("cp_user_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpUserAttemptLoginReset': "{{path("cp_user_attemptLoginReset", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpUserDelete': "{{path("cp_user_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpModuleCreate': "{{path("cp_module_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpModuleSelect': "{{path("cp_module_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpModuleProfile': "{{path("cp_module_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpModuleProfileSort': "{{path("cp_module_profile_sort", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpModuleProfileSave': "{{path("cp_module_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpModuleDelete': "{{path("cp_module_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpRoleUserCreate': "{{path("cp_roleUser_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpRoleUserSelect': "{{path("cp_roleUser_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpRoleUserProfile': "{{path("cp_roleUser_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpRoleUserProfileSave': "{{path("cp_roleUser_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpRoleUserDelete': "{{path("cp_roleUser_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpSettingSave': "{{path("cp_setting_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpSettingLanguageManage': "{{path("cp_setting_language_manage", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpSettingSlackIwRender': "{{path("cp_setting_slack_iw_render", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpSettingSlackIwDelete': "{{path("cp_setting_slack_iw_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpSettingSlackIwReset': "{{path("cp_setting_slack_iw_reset", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpSettingLinePushRender': "{{path("cp_setting_line_push_render", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpSettingLinePushDelete': "{{path("cp_setting_line_push_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpSettingLinePushReset': "{{path("cp_setting_line_push_reset", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceDeployCreate': "{{path("cp_microservice_deploy_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceDeploySelect': "{{path("cp_microservice_deploy_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceDeployProfile': "{{path("cp_microservice_deploy_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceDeployProfileSave': "{{path("cp_microservice_deploy_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceDeployExecute': "{{path("cp_microservice_deploy_execute", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceDeployDelete': "{{path("cp_microservice_deploy_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceApiCreate': "{{path("cp_microservice_api_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceApiProfileSave': "{{path("cp_microservice_api_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpApiBasicCreate': "{{path("cp_apiBasic_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpApiBasicSelect': "{{path("cp_apiBasic_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpApiBasicProfile': "{{path("cp_apiBasic_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpApiBasicProfileSave': "{{path("cp_apiBasic_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpApiBasicDelete': "{{path("cp_apiBasic_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpApiBasicLog': "{{path("cp_apiBasic_log", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpApiBasicGraph': "{{path("cp_apiBasic_graph", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpApiBasicCsv': "{{path("cp_apiBasic_csv", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpApiBasicDownloadDetail': "{{path("cp_apiBasic_download_detail", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceUnitTestCreate': "{{path("cp_microservice_unit_test_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceUnitTestSelect': "{{path("cp_microservice_unit_test_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceUnitTestProfile': "{{path("cp_microservice_unit_test_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceUnitTestProfileSave': "{{path("cp_microservice_unit_test_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceUnitTestDelete': "{{path("cp_microservice_unit_test_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceCronCreate': "{{path("cp_microservice_cron_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceCronSelect': "{{path("cp_microservice_cron_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceCronProfile': "{{path("cp_microservice_cron_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceCronProfileSave': "{{path("cp_microservice_cron_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceCronDelete': "{{path("cp_microservice_cron_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}"
+        };
+        
+        $.extend(window.url, cpUrl);
+    </script>
 {% endblock %}
 
 {% macro menuControlPanel(urlLocale) %}
@@ -460,6 +573,10 @@
         <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_unit_test"})}}">
             <i class="material-icons mdc-list-item__graphic">bug_report</i>
             <span>{% trans %}controlPanel_18{% endtrans %}</span>
+        </a>
+        <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_cron"})}}">
+            <i class="material-icons mdc-list-item__graphic">update</i>
+            <span>{% trans %}controlPanel_19{% endtrans %}</span>
         </a>
     {% endif %}
     

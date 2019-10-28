@@ -496,5 +496,26 @@ class Query {
         return $query->fetchAll();
     }
     
+    public function selectMicroserviceCronDatabase($id) {
+        $query = $this->connection->prepare("SELECT * FROM microservice_cron
+                                                WHERE id = :id
+                                                ORDER by name ASC");
+        
+        $query->bindValue(":id", $id);
+        
+        $query->execute();
+        
+        return $query->fetch();
+    }
+    
+    public function selectAllMicroserviceCronDatabase() {
+        $query = $this->connection->prepare("SELECT * FROM microservice_cron
+                                                ORDER by name ASC");
+        
+        $query->execute();
+        
+        return $query->fetchAll();
+    }
+    
     // Functions private
 }
