@@ -162,6 +162,16 @@ App\Form\Model\MicroserviceUnitTestSelectModel:
                 htmlPattern: false
                 pattern: /^[0-9]+$/
 
+App\Form\Model\MicroserviceCronSelectModel:
+    properties:
+        id:
+            - NotBlank:
+                groups: [microservice_cron_select]
+            - Regex:
+                groups: [microservice_cron_select]
+                htmlPattern: false
+                pattern: /^[0-9]+$/
+
 App\Form\Model\IpCameraSelectModel:
     properties:
         id:
@@ -917,6 +927,19 @@ App\Entity\MicroserviceUnitTest:
         code:
             - NotBlank:
                 groups: [microservice_unit_test_create, microservice_unit_test_profile]
+
+App\Entity\MicroserviceCron:
+    properties:
+        name:
+            - NotBlank:
+                groups: [microservice_cron_create, microservice_cron_profile]
+            - Regex:
+                groups: [microservice_cron_create, microservice_cron_profile]
+                htmlPattern: false
+                pattern: /^[a-zA-Z0-9_\- ]+$/
+        time:
+            - NotBlank:
+                groups: [microservice_cron_create, microservice_cron_profile]
 
 App\Entity\IpCamera:
     properties:

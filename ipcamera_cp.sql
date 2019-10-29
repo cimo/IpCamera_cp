@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: ipcamera_cp
 -- ------------------------------------------------------
--- Server version	5.7.26-0ubuntu0.16.04.1
+-- Server version	5.7.27-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -44,7 +44,7 @@ CREATE TABLE `ipCamera_device` (
 
 LOCK TABLES `ipCamera_device` WRITE;
 /*!40000 ALTER TABLE `ipCamera_device` DISABLE KEYS */;
-INSERT INTO `ipCamera_device` VALUES (1,'Cosenza - Salone','1,','http://home-cs.ddns.net:1000/media/?action=stream','http://home-cs.ddns.net:1000/media/?action=snapshot','admin','l!\ÍØy\ÔFòcåè£N)•	',0.010,0,'0',1);
+INSERT INTO `ipCamera_device` VALUES (1,'Cosenza - Salone','1,','http://home-cs.ddns.net:1000/media/?action=stream','http://home-cs.ddns.net:1000/media/?action=snapshot','admin','l!\ÔøΩy\ÔøΩFÔøΩcÔøΩÔøΩÔøΩN)ÔøΩ	',0.010,0,'0',1);
 /*!40000 ALTER TABLE `ipCamera_device` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -185,6 +185,32 @@ CREATE TABLE `microservice_apiBasic_request_detail` (
 LOCK TABLES `microservice_apiBasic_request_detail` WRITE;
 /*!40000 ALTER TABLE `microservice_apiBasic_request_detail` DISABLE KEYS */;
 /*!40000 ALTER TABLE `microservice_apiBasic_request_detail` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `microservice_cron`
+--
+
+DROP TABLE IF EXISTS `microservice_cron`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `microservice_cron` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `time` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `code` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `last_execution` varchar(19) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `microservice_cron`
+--
+
+LOCK TABLES `microservice_cron` WRITE;
+/*!40000 ALTER TABLE `microservice_cron` DISABLE KEYS */;
+/*!40000 ALTER TABLE `microservice_cron` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -668,7 +694,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'1,2,','ROLE_USER,ROLE_ADMIN','5cbfc82693953.jpg','cimo','Simone','D\'Agostino','cimo@reinventsoftware.org','080123456789','1984-4-11','m',NULL,NULL,NULL,'https://www.reinventsoftware.org','Japan','Tokyo','100-0001','Street','$2y$13$hOJvU2.m8vRl5YxsuY/J0OiQGFSS7DAa8mTA5uNGZGxmYoc8zFgde',0,1,'2016-08-04 10:25:12','2019-05-16 15:28:57','2019-05-15 15:08:42',NULL,'192.168.56.1',0),(2,'1,4,','ROLE_USER,ROLE_MICROSERVICE',NULL,'test_1',NULL,NULL,'test_1@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$Hi5SnSpKl9oKC79.G09MjeKOGUAzPEFjM3QPyp9z69m/gVXdnivJ2',0,1,'2016-09-10 17:39:31','2019-01-22 15:09:43','2019-01-22 14:55:58','','192.168.56.1',0),(3,'1,4,5,','ROLE_USER,ROLE_MICROSERVICE,ROLE_IPCAMERA',NULL,'test_2',NULL,NULL,'test_2@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$fo/L0jc1j4uWXAFjjOKE3eP0cgwv8DtBkjvUnMC9Eaa2B537B7uXq',0,0,'0000-00-00 00:00:00','2018-09-05 16:48:01','2018-09-05 16:47:23',NULL,'183.77.252.62',0);
+INSERT INTO `user` VALUES (1,'1,2,','ROLE_USER,ROLE_ADMIN','5cbfc82693953.jpg','cimo','Simone','D\'Agostino','cimo@reinventsoftware.org','080123456789','1984-4-11','m',NULL,NULL,NULL,'https://www.reinventsoftware.org','Japan','Tokyo','100-0001','Street','$2y$13$hOJvU2.m8vRl5YxsuY/J0OiQGFSS7DAa8mTA5uNGZGxmYoc8zFgde',0,1,'2016-08-04 10:25:12','2019-09-19 12:23:21','2019-09-18 14:30:47',NULL,'192.168.56.1',0),(2,'1,4,','ROLE_USER,ROLE_MICROSERVICE',NULL,'test_1',NULL,NULL,'test_1@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$Hi5SnSpKl9oKC79.G09MjeKOGUAzPEFjM3QPyp9z69m/gVXdnivJ2',0,1,'2016-09-10 17:39:31','2019-01-22 15:09:43','2019-01-22 14:55:58','','192.168.56.1',0),(3,'1,4,5,','ROLE_USER,ROLE_MICROSERVICE,ROLE_IPCAMERA',NULL,'test_2',NULL,NULL,'test_2@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$fo/L0jc1j4uWXAFjjOKE3eP0cgwv8DtBkjvUnMC9Eaa2B537B7uXq',0,0,'0000-00-00 00:00:00','2018-09-05 16:48:01','2018-09-05 16:47:23',NULL,'183.77.252.62',0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -685,4 +711,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-22 13:14:15
+-- Dump completed on 2019-10-29 11:48:00

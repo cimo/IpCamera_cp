@@ -414,17 +414,18 @@ class MicroserviceCronController extends AbstractController {
     private function settingJob($delete, $microserviceCronEntity) {
         $path = "{$this->utility->getPathSrc()}/files/microservice/cron";
         
-        $code = "{$microserviceCronEntity->getTime()} (echo $(date) && {$microserviceCronEntity->getCode()} && echo \"\" && php {$path}/system/job.php {$microserviceCronEntity->getId()}) >> {$path}/{$microserviceCronEntity->getName()}.log";
+        $code = $microserviceCronEntity->getCode() != "" ? " && {$microserviceCronEntity->getCode()}" : "";
+        
+        $command = "{$microserviceCronEntity->getTime()} (echo $(date){$code} && echo \"\" && php {$path}/system/job.php {$microserviceCronEntity->getId()}) >> {$path}/{$microserviceCronEntity->getName()}.log";
         
         shell_exec("crontab -r");
         
+        $this->utility->searchInFile("{$path}/system/job.txt", "{$microserviceCronEntity->getName()}.log", " ");
+        
         if ($delete == false)
-            shell_exec("grep -qxF '{$code}' {$path}/system/job.txt || echo '{$code}' >> {$path}/system/job.txt");
-        else {
-            $this->utility->searchInFile("{$path}/system/job.txt", $code, " ");
-            
+            shell_exec("grep -qxF '{$command}' {$path}/system/job.txt || echo '{$command}' >> {$path}/system/job.txt");
+        else
             unlink("{$path}/{$microserviceCronEntity->getName()}.log");
-        }
         
         shell_exec("crontab {$path}/system/job.txt");
     }

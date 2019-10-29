@@ -31,7 +31,7 @@ class MicroserviceCronFormType extends AbstractType {
             'label' => "microserviceCronFormType_2"
         ))
         ->add("code", TextareaType::class, Array(
-            'required' => true,
+            'required' => false,
             'label' => "microserviceCronFormType_3"
         ))
         ->add("submit", SubmitType::class, Array(

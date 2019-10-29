@@ -19,7 +19,7 @@ date.time: H:i:s
 "index_5": "Warning!"
 "index_6": "Ok"
 "index_7": "Close"
-"index_8": "Connection error, please reload the page."
+"index_8": "Session time is over, please login again."
 "index_9": "Expand"
 "index_10": "Collapse"
 "index_11": "Multi tab are not allowed!"
@@ -282,6 +282,7 @@ date.time: H:i:s
 "controlPanel_16": "Api"
 "controlPanel_17": "Ecommerce"
 "controlPanel_18": "Unit test"
+"controlPanel_19": "Cron"
 
 "controlPanelPayment_1": "Payments section."
 "controlPanelPayment_2": "Really delete this payment?"
@@ -324,6 +325,10 @@ date.time: H:i:s
 "controlPanelMicroserviceUnitTest_2": "Insert iframe code in your page and script code on bottom of your page."
 "controlPanelMicroserviceUnitTest_3": "Really delete this unit test?"
 "controlPanelMicroserviceUnitTest_4": "Really delete all unit test?"
+
+"controlPanelMicroserviceCron_1": "Cron section."
+"controlPanelMicroserviceCron_2": "Really delete this cron?"
+"controlPanelMicroserviceCron_3": "Really delete all cron?"
 
 # IpCamera
 "controlPanelMenuIpCamera_1": "Ip camera"
@@ -924,7 +929,43 @@ date.time: H:i:s
 "microserviceUnitTestController_8": "Unit test not deleted!"
 "microserviceUnitTestController_9": "No"
 "microserviceUnitTestController_10": "Yes"
-"microserviceUnitTestController_11": "Test is not active."
+"microserviceUnitTestController_11": "Unit test is not active."
+
+# Microservice cron
+"microserviceCronCreate_1": "Cron create form"
+"microserviceCronCreate_2": "..."
+
+"microserviceCronSelect_1": "Cron selection form"
+"microserviceCronSelect_2": "..."
+"microserviceCronSelect_3": "Id"
+"microserviceCronSelect_4": "Select"
+"microserviceCronSelect_5": "Name"
+"microserviceCronSelect_6": "Last execution"
+"microserviceCronSelect_7": "Remove"
+"microserviceCronSelect_8": "Select"
+
+"microserviceCronProfile_1": "Cron profile form"
+
+"microserviceCronDelete_1": "Warning! If you delete the cron is impossible return back."
+"microserviceCronDelete_2": "Delete"
+
+"microserviceCronFormType_1": "Name"
+"microserviceCronFormType_2": "Time"
+"microserviceCronFormType_3": "Code"
+"microserviceCronFormType_4": "Last execution"
+"microserviceCronFormType_5": "Send"
+
+"microserviceCronSelectFormType_1": "Name"
+"microserviceCronSelectFormType_2": "Select"
+
+"microserviceCronController_1": "Cron create completed."
+"microserviceCronController_2": "Cron not created!"
+"microserviceCronController_3": "Cron not selected!"
+"microserviceCronController_4": "Cron update completed."
+"microserviceCronController_5": "Cron update not completed!"
+"microserviceCronController_6": "Cron deletion completed."
+"microserviceCronController_7": "All Cron deletion completed."
+"microserviceCronController_8": "Cron not deleted!"
 
 # IpCamera
 "ipCameraCreate_1": "Device create form"
