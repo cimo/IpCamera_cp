@@ -6,7 +6,7 @@
         <p>{% trans %}paymentUserSelect_2{% endtrans %}</p>
         <button class="mdc-button mdc-button--dense mdc-button--raised button_accordion" type="button">{% trans %}index_9{% endtrans %}</button>
         <div class="accordion">
-            {{form_row(form.userId)}}
+            {{form_row(form.userId, {'dense': "", 'firstOption': "empty"})}}
 
             {{form_widget(form._token)}}
 

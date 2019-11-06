@@ -178,7 +178,7 @@
     {# cimo : #}
     <div class="mdc-select{% if styleType is defined %} {{styleType}}{% endif %}">
         <select class="mdc-select__native-control" {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %} aria-label="label">
-            {%- if placeholder is not none -%}
+            {%- if firstOption is defined and firstOption == "empty" -%}
                 <option value="" {% if required and value is empty %}selected="selected"{% endif %}></option>
             {%- endif -%}
             {%- if preferred_choices|length > 0 -%}

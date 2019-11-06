@@ -45,7 +45,7 @@ class RequestListener {
         
         $settingRow = $this->query->selectSettingDatabase();
         
-        $this->utility->configureCookie($session->getName(), 0, $settingRow['https'], true);
+        $this->utility->configureCookie($session->getName(), time() + (10 * 365 * 24 * 60 * 60), $settingRow['https'], true);
         
         $checkLanguage = $this->utility->checkLanguage($request, $this->router, $settingRow);
         $request = $checkLanguage[0];
@@ -59,8 +59,8 @@ class RequestListener {
         
         $phpSession = Array(
             'name' => $session->getName(),
-            'userInform' => $_SESSION['userInform'],
-            'languageTextCode' => $_SESSION['languageTextCode'],
+            'userInform' => $session->get("userInform"),
+            'languageTextCode' => $session->get("languageTextCode"),
             'currentPageId' => $urlCurrentPageId
         );
         

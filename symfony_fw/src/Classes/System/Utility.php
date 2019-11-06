@@ -3,6 +3,7 @@ namespace App\Classes\System;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 use App\Config;
 use App\Classes\System\Query;
@@ -909,34 +910,23 @@ class Utility {
     }
     
     public function checkSessionOverTime($request, $router) {
-        if (isset($_SESSION['userTimestamp']) == false)
-            $_SESSION['userTimestamp'] = time();
+        $timeElapsed = 0;
+        $userOverTime = false;
+        $userOverRole = false;
         
-        if (isset($_SESSION['userInform']) == false)
-            $_SESSION['userInform'] = "";
+        if ($this->session->get("userTimestamp") != null)
+            $timeElapsed = time() - $this->session->get("userTimestamp");
         
-        if (isset($_SESSION['userOver']) == false)
-            $_SESSION['userOver'] = false;
+        if ($this->session->get("userOverCount") == null)
+            $this->session->set("userOverCount", 0);
         
-        if (isset($_SESSION['userLogin']) == false)
-            $_SESSION['userLogin'] = false;
-        
-        if ($this->tokenStorage->getToken() != null && $request->cookies->has($this->session->getName() . "_REMEMBERME") == false && $this->authorizationChecker->isGranted("IS_AUTHENTICATED_FULLY") == true) {
-            // Inactivity
-            $timeElapsed = time() - $_SESSION['userTimestamp'];
+        if (($timeElapsed >= $this->sessionMaxIdleTime && isset($_COOKIE[session_name() . '_REMEMBERME']) == false) || (isset($_COOKIE[$this->session->getName()]) == true && $this->session->get("userTimestamp") == null)) {
+            $userOverTime = true;
             
-            if ($_SESSION['userLogin'] == true && $timeElapsed >= $this->sessionMaxIdleTime) {
-                $_SESSION['userOver'] = true;
-                
-                $_SESSION['userInform'] = $this->translator->trans("classUtility_6");
-            }
-            else {
-                $_SESSION['userTimestamp'] = time();
-                
-                $_SESSION['userLogin'] = true;
-            }
-            
-            // Roles changed
+            $this->session->set("userInform", $this->translator->trans("classUtility_6"));
+        }
+        
+        if ($this->tokenStorage->getToken() != null) {
             $currentUser = $this->tokenStorage->getToken()->getUser();
             
             if (is_string($currentUser) == false) {
@@ -947,52 +937,59 @@ class Utility {
                 $arrayDiff = array_diff($currentUser->getRoles(), $rolesExplode);
                 
                 if (count($arrayDiff) > 0) {
-                    $_SESSION['userOver'] = true;
+                    $userOverRole = true;
                     
-                    $_SESSION['userInform'] = $this->translator->trans("classUtility_7");
-                }
-            }
-            
-            if ($_SESSION['userOver'] == true) {
-                if ($request->isXmlHttpRequest() == true) {
-                    echo json_encode(Array(
-                        'userInform' => $_SESSION['userInform']
-                    ));
-                    
-                    exit;
-                }
-                else {
-                    $userInform = $_SESSION['userInform'];
-                    $userOver = $_SESSION['userOver'];
-                    $language = $_SESSION['languageTextCode'];
-                    
-                    $this->tokenStorage->setToken(null);
-                    
-                    $_SESSION['userInform'] = $userInform;
-                    $_SESSION['userOver'] = $userOver;
-                    $_SESSION['languageTextCode'] = $language;
-                    
-                    return $router->generate(
-                        "root_render",
-                        Array(
-                            '_locale' => $_SESSION['languageTextCode'],
-                            'urlCurrentPageId' => 2,
-                            'urlExtra' => ""
-                        )
-                    );
+                    $this->session->set("userInform", $this->translator->trans("classUtility_7"));
                 }
             }
         }
-        else {
-            $_SESSION['userTimestamp'] = time();
-            
-            if ($_SESSION['userOver'] == false)
-                $_SESSION['userInform'] = "";
-            
-            $_SESSION['userOver'] = false;
-            
-            $_SESSION['userLogin'] = false;
+        
+        if ($userOverTime == true || $userOverRole == true) {
+            if ($request->isXmlHttpRequest() == true) {
+                echo json_encode(Array(
+                    'userInform' => $_SESSION['userInform']
+                ));
+                
+                $this->session->set("userTimestamp", time());
+                
+                $this->session->set("userOverCount", 0);
+                
+                exit;
+            }
+            else {
+                $userInform = $this->session->get("userInform");
+                $language = $this->session->get("languageTextCode");
+                
+                $this->session->invalidate();
+                
+                $this->session->set("userInform", $userInform);
+                $this->session->set("languageTextCode", $language);
+                
+                $this->session->set("userTimestamp", time());
+                
+                $this->session->set("userOverCount", 0);
+                
+                return $router->generate(
+                    "root_render",
+                    Array(
+                        '_locale' => $this->session->get("languageTextCode"),
+                        'urlCurrentPageId' => 2,
+                        'urlExtra' => ""
+                    )
+                );
+            }
         }
+        
+        if ($this->session->get("userOverCount") >= 2)
+            $this->session->set("userInform", "");
+        
+        $this->session->set("userTimestamp", time());
+        
+        $userOverCount = $this->session->get("userOverCount") + 1;
+        $this->session->set("userOverCount", $userOverCount);
+        
+        if ($this->session->get("userOverCount") > 3)
+            $this->session->set("userOverCount", 3);
         
         return false;
     }

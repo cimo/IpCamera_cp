@@ -1,1 +1,1 @@
- */1 * * * * (echo $(date) && ls -l /home && echo "" && php /home/cimo/www/project/uebusaito/root/symfony_fw/src/files/microservice/cron/system/job.php 2) >> /home/cimo/www/project/uebusaito/root/symfony_fw/src/files/microservice/cron/test_1.log
+ 

@@ -927,6 +927,13 @@ App\Entity\MicroserviceUnitTest:
         code:
             - NotBlank:
                 groups: [microservice_unit_test_create, microservice_unit_test_profile]
+        active:
+            - NotBlank:
+                groups: [microservice_unit_test_create, microservice_unit_test_profile]
+            - Regex:
+                groups: [microservice_unit_test_create, microservice_unit_test_profile]
+                htmlPattern: false
+                pattern: /^1$|^0$/
 
 App\Entity\MicroserviceCron:
     properties:
@@ -940,6 +947,13 @@ App\Entity\MicroserviceCron:
         time:
             - NotBlank:
                 groups: [microservice_cron_create, microservice_cron_profile]
+        active:
+            - NotBlank:
+                groups: [microservice_cron_create, microservice_cron_profile]
+            - Regex:
+                groups: [microservice_cron_create, microservice_cron_profile]
+                htmlPattern: false
+                pattern: /^1$|^0$/
 
 App\Entity\IpCamera:
     properties:

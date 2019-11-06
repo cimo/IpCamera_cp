@@ -475,7 +475,7 @@ class SettingLinePushController extends AbstractController {
                         
                         $isActive = $value['active'] == true ? $this->utility->getTranslator()->trans("settingLinePushController_10") : $this->utility->getTranslator()->trans("settingLinePushController_11");
                     
-                        $listHtml .= "$isActive
+                        $listHtml .= "<b>Status:</b> $isActive
                     </span>
                 </span>
             </li>";

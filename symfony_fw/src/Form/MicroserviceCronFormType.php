@@ -6,6 +6,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class MicroserviceCronFormType extends AbstractType {
@@ -34,8 +35,16 @@ class MicroserviceCronFormType extends AbstractType {
             'required' => false,
             'label' => "microserviceCronFormType_3"
         ))
+        ->add("active", ChoiceType::class, Array(
+            'required' => true,
+            'placeholder' => "microserviceCronFormType_4",
+            'choices' => Array(
+                "microserviceUnitTestFormType_5" => "0",
+                "microserviceUnitTestFormType_6" => "1"
+            )
+        ))
         ->add("submit", SubmitType::class, Array(
-            'label' => "microserviceCronFormType_5"
+            'label' => "microserviceCronFormType_8"
         ));
     }
 }

@@ -7,7 +7,8 @@
         {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
         {{form_row(form.time, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
         {{form_row(form.code, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms", 'attr' : {'id': "cron_code_row"}})}}
-
+        {{form_row(form.active)}}
+        
         {{form_widget(form._token)}}
 
         {{form_widget(form.submit, {'dense': "", 'raised': ""})}}

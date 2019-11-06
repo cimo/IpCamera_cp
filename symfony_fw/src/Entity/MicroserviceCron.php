@@ -33,6 +33,11 @@ class MicroserviceCron {
     private $code = "";
     
     /**
+     * @ORM\Column(name="active", type="boolean", columnDefinition="tinyint(1) NOT NULL DEFAULT 0")
+     */
+    private $active = false;
+    
+    /**
      * @ORM\Column(name="last_execution", type="string", columnDefinition="varchar(19) NOT NULL DEFAULT '0000-00-00 00:00:00'")
      */
     private $lastExecution = "0000-00-00 00:00:00";
@@ -48,6 +53,10 @@ class MicroserviceCron {
     
     public function setCode($value) {
         $this->code = base64_encode($value);
+    }
+    
+    public function setActive($value) {
+        $this->active = $value;
     }
     
     public function setLastExecution($value) {
@@ -70,6 +79,10 @@ class MicroserviceCron {
     
     public function getCode() {
         return base64_decode($this->code);
+    }
+    
+    public function getActive() {
+        return $this->active;
     }
     
     public function getLastExecution() {

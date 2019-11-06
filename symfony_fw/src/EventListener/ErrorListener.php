@@ -56,9 +56,7 @@ class ErrorListener {
                     )
                 );
                 
-                $response = new RedirectResponse($url);
-                
-                $event->setResponse($response);
+                $event->setResponse(new RedirectResponse($url));
             }
         }
     }

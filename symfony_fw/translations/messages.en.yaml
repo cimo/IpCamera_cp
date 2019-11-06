@@ -58,7 +58,7 @@ date.time: H:i:s
 "myPagePaymentSelect_6": "Date"
 "myPagePaymentSelect_7": "Status"
 "myPagePaymentSelect_8": "Payer"
-"myPagePaymentSelect_9": "Remove"
+"myPagePaymentSelect_9": "Delete"
 "myPagePaymentSelect_10": "Send"
 
 "myPagePaymentProfile_1": "Payment profile"
@@ -241,10 +241,10 @@ date.time: H:i:s
 "wysiwyg_15": "Element settings"
 "wysiwyg_16": "Row:"
 "wysiwyg_17": "Add"
-"wysiwyg_18": "Remove"
+"wysiwyg_18": "Delete"
 "wysiwyg_19": "Colum:"
 "wysiwyg_20": "Add"
-"wysiwyg_21": "Remove"
+"wysiwyg_21": "Delete"
 
 # Widget date picker
 "widgetDatePicker_1": "Today"
@@ -353,7 +353,7 @@ date.time: H:i:s
 "paymentSelect_6": "Date"
 "paymentSelect_7": "Status"
 "paymentSelect_8": "Payer"
-"paymentSelect_9": "Remove"
+"paymentSelect_9": "Delete"
 "paymentSelect_10": "Send"
 
 "paymentProfile_1": "Payment profile"
@@ -400,7 +400,7 @@ date.time: H:i:s
 "pageSelect_8": "Protected"
 "pageSelect_9": "Show in menu"
 "pageSelect_10": "Only link"
-"pageSelect_11": "Remove"
+"pageSelect_11": "Delete"
 "pageSelect_12": "Send"
 
 "pageProfile_1": "Page profile form"
@@ -465,7 +465,7 @@ date.time: H:i:s
 "userSelect_6": "Email"
 "userSelect_7": "Company name"
 "userSelect_8": "Active"
-"userSelect_9": "Remove"
+"userSelect_9": "Delete"
 "userSelect_10": "Select"
 
 "userProfile_1": "User profile form"
@@ -475,7 +475,7 @@ date.time: H:i:s
 "userDelete_2": "Delete"
 
 "userFormType_1": "Avatar"
-"userFormType_2": "Remove avatar"
+"userFormType_2": "Delete avatar"
 "userFormType_3": "Username"
 "userFormType_4": "Name"
 "userFormType_5": "Surname"
@@ -536,7 +536,7 @@ date.time: H:i:s
 "moduleSelect_5": "Name"
 "moduleSelect_6": "File name"
 "moduleSelect_7": "Active"
-"moduleSelect_8": "Remove"
+"moduleSelect_8": "Delete"
 "moduleSelect_9": "Select"
 
 "moduleProfile_1": "Module profile form"
@@ -547,7 +547,7 @@ date.time: H:i:s
 "moduleDelete_1": "Warning! If you delete the module is impossible return back."
 "moduleDelete_2": "Delete"
 
-"moduleFormType_1": "Position"
+"moduleFormType_1": "Position in layout"
 "moduleFormType_2": "Left"
 "moduleFormType_3": "Center"
 "moduleFormType_4": "Right"
@@ -586,7 +586,7 @@ date.time: H:i:s
 "roleUserSelect_3": "Id"
 "roleUserSelect_4": "Select"
 "roleUserSelect_5": "Level"
-"roleUserSelect_6": "Remove"
+"roleUserSelect_6": "Delete"
 "roleUserSelect_7": "Select"
 
 "roleUserProfile_1": "Role profile form"
@@ -742,7 +742,7 @@ date.time: H:i:s
 "microserviceDeploySelect_6": "Name"
 "microserviceDeploySelect_7": "Description"
 "microserviceDeploySelect_8": "Active"
-"microserviceDeploySelect_9": "Remove"
+"microserviceDeploySelect_9": "Delete"
 "microserviceDeploySelect_10": "Select"
 
 "microserviceDeployProfile_1": "Microservice deploy profile form"
@@ -757,9 +757,9 @@ date.time: H:i:s
 "microserviceDeployFormType_4": "Ssh username"
 "microserviceDeployFormType_5": "Ssh password"
 "microserviceDeployFormType_6": "Key public"
-"microserviceDeployFormType_7": "Remove key public"
+"microserviceDeployFormType_7": "Delete key public"
 "microserviceDeployFormType_8": "Key private"
-"microserviceDeployFormType_9": "Remove key private"
+"microserviceDeployFormType_9": "Delete key private"
 "microserviceDeployFormType_10": "Key private password"
 "microserviceDeployFormType_11": "Ip"
 "microserviceDeployFormType_12": "Git user email"
@@ -820,7 +820,7 @@ date.time: H:i:s
 "microserviceApiFormType_2": "Controller"
 "microserviceApiFormType_3": "Description"
 "microserviceApiFormType_4": "Logo"
-"microserviceApiFormType_5": "Remove logo"
+"microserviceApiFormType_5": "Delete logo"
 "microserviceApiFormType_6": "Active"
 "microserviceApiFormType_7": "No"
 "microserviceApiFormType_8": "Yes"
@@ -899,7 +899,7 @@ date.time: H:i:s
 "microserviceUnitTestSelect_4": "Select"
 "microserviceUnitTestSelect_5": "Name"
 "microserviceUnitTestSelect_6": "Active"
-"microserviceUnitTestSelect_7": "Remove"
+"microserviceUnitTestSelect_7": "Delete"
 "microserviceUnitTestSelect_8": "Select"
 
 "microserviceUnitTestProfile_1": "Unit test profile form"
@@ -940,9 +940,10 @@ date.time: H:i:s
 "microserviceCronSelect_3": "Id"
 "microserviceCronSelect_4": "Select"
 "microserviceCronSelect_5": "Name"
-"microserviceCronSelect_6": "Last execution"
-"microserviceCronSelect_7": "Remove"
-"microserviceCronSelect_8": "Select"
+"microserviceCronSelect_6": "Active"
+"microserviceCronSelect_7": "Last execution"
+"microserviceCronSelect_8": "Delete"
+"microserviceCronSelect_9": "Select"
 
 "microserviceCronProfile_1": "Cron profile form"
 
@@ -952,8 +953,11 @@ date.time: H:i:s
 "microserviceCronFormType_1": "Name"
 "microserviceCronFormType_2": "Time"
 "microserviceCronFormType_3": "Code"
-"microserviceCronFormType_4": "Last execution"
-"microserviceCronFormType_5": "Send"
+"microserviceCronFormType_4": "Active"
+"microserviceCronFormType_5": "No"
+"microserviceCronFormType_6": "Yes"
+"microserviceCronFormType_7": "Last execution"
+"microserviceCronFormType_8": "Send"
 
 "microserviceCronSelectFormType_1": "Name"
 "microserviceCronSelectFormType_2": "Select"
@@ -966,6 +970,8 @@ date.time: H:i:s
 "microserviceCronController_6": "Cron deletion completed."
 "microserviceCronController_7": "All Cron deletion completed."
 "microserviceCronController_8": "Cron not deleted!"
+"microserviceCronController_9": "No"
+"microserviceCronController_10": "Yes"
 
 # IpCamera
 "ipCameraCreate_1": "Device create form"

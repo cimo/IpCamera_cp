@@ -383,6 +383,12 @@ class MicroserviceCronController extends AbstractController {
                 <td>
                     {$value['name']}
                 </td>
+                <td>";
+                    if ($value['active'] == 0)
+                        $listHtml .= $this->utility->getTranslator()->trans("microserviceCronController_9");
+                    else
+                        $listHtml .= $this->utility->getTranslator()->trans("microserviceCronController_10");
+                $listHtml .= "</td>
                 <td>
                     {$value['last_execution']}
                 </td>
@@ -422,8 +428,10 @@ class MicroserviceCronController extends AbstractController {
         
         $this->utility->searchInFile("{$path}/system/job.txt", "{$microserviceCronEntity->getName()}.log", " ");
         
-        if ($delete == false)
-            shell_exec("grep -qxF '{$command}' {$path}/system/job.txt || echo '{$command}' >> {$path}/system/job.txt");
+        if ($delete == false) {
+            if ($microserviceCronEntity->getActive() == true)
+                shell_exec("grep -qxF '{$command}' {$path}/system/job.txt || echo '{$command}' >> {$path}/system/job.txt");
+        }
         else
             unlink("{$path}/{$microserviceCronEntity->getName()}.log");
         

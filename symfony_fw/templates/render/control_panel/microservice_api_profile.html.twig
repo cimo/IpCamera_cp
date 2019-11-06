@@ -9,10 +9,6 @@
         <legend>{% trans %}microserviceApiProfile_2{% endtrans %}</legend>
         <p>{% trans %}microserviceApiProfile_3{% endtrans %}</p>
         <form id="form_cp_microservice_api_profile" action="{{path("cp_microservice_api_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
-            {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
-            {{form_row(form.controllerName, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
-            {{form_row(form.description, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
-            
             <div class="upload_image_container">
                 <img class="avatar" src="{{logo}}" alt="Logo"/>
                 <div class="uploader">
@@ -21,7 +17,9 @@
                 </div>
             </div>
             
-            
+            {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+            {{form_row(form.controllerName, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+            {{form_row(form.description, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
             {{form_row(form.active)}}
 
             {{form_widget(form._token)}}

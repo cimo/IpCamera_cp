@@ -79,6 +79,9 @@ class PaymentController extends AbstractController {
                     $this->response['values']['paymentRows'] = array_reverse(array_column($paymentRows, "id", "transaction"), true);
                 }
                 else {
+                    $_SESSION['paymentUserId'] = 0;
+                    
+                    $this->response['values']['paymentRows'] = 0;
                     $this->response['messages']['error'] = $this->utility->getTranslator()->trans("paymentController_1");
                     $this->response['errors'] = $this->ajax->errors($form);
                 }

@@ -437,9 +437,6 @@ table {
     margin-bottom: 10px;
 }
 .cp_system_info {
-    overflow-y: scroll;
-    height: 510px;
-    
     .mdc-list-item {
         height: auto;
     }
@@ -653,8 +650,6 @@ table {
 }
 
 .upload_image_container {
-    padding: 5px 5px 0 5px;
-    
     .uploader {
         display: inline-block;
         vertical-align: top;

@@ -63,10 +63,8 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
             $checkAttemptLogin = $this->utility->checkAttemptLogin("success", $user->getId(), $this->settingRow, $user);
             $arrayExplodeFindValue = $this->utility->arrayExplodeFindValue($this->settingRow['role_user_id'], $user->getRoleUserId());
             
-            if ($checkCaptcha == true && (($this->settingRow['website_active'] == true && $checkAttemptLogin[0] == true)
-                || ($this->settingRow['website_active'] == false && $checkAttemptLogin[0] == true && $arrayExplodeFindValue == true))) {
+            if ($checkCaptcha == true && (($this->settingRow['website_active'] == true && $checkAttemptLogin[0] == true) || ($this->settingRow['website_active'] == false && $checkAttemptLogin[0] == true && $arrayExplodeFindValue == true)))
                 $this->response['values']['url'] = $referer;
-            }
             else {
                 $this->utility->getTokenStorage()->setToken(null);
                 
