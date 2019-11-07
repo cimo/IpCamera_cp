@@ -435,10 +435,10 @@ class Utility {
     public function checkUserActive($username) {
         $row = $this->query->selectUserDatabase($username);
         
-        if ($row == false)
+        if ($row['active'] == false)
             return false;
         else
-            return $row['active'];
+            return true;
     }
     
     public function checkUserRole($roleName, $user) {
@@ -920,13 +920,14 @@ class Utility {
         if ($this->session->get("userOverCount") == null)
             $this->session->set("userOverCount", 0);
         
-        if (($timeElapsed >= $this->sessionMaxIdleTime && isset($_COOKIE[session_name() . '_REMEMBERME']) == false) || (isset($_COOKIE[$this->session->getName()]) == true && $this->session->get("userTimestamp") == null)) {
+        if (($this->tokenStorage->getToken() != null && $this->authorizationChecker->isGranted("IS_AUTHENTICATED_FULLY") == true && $timeElapsed >= $this->sessionMaxIdleTime && isset($_COOKIE[$this->session->getName() . '_REMEMBERME']) == false) ||
+                (isset($_COOKIE[$this->session->getName() . '_logged']) == true && $this->session->get("userTimestamp") == null)) {
             $userOverTime = true;
             
             $this->session->set("userInform", $this->translator->trans("classUtility_6"));
         }
         
-        if ($this->tokenStorage->getToken() != null) {
+        if ($this->tokenStorage->getToken() != null && $this->authorizationChecker->isGranted("IS_AUTHENTICATED_FULLY") == true) {
             $currentUser = $this->tokenStorage->getToken()->getUser();
             
             if (is_string($currentUser) == false) {
@@ -945,6 +946,8 @@ class Utility {
         }
         
         if ($userOverTime == true || $userOverRole == true) {
+            setcookie($this->session->getName() . "_logged", 0, time() - 3600, "/", $_SERVER['SERVER_NAME'], true, false);
+            
             if ($request->isXmlHttpRequest() == true) {
                 echo json_encode(Array(
                     'userInform' => $_SESSION['userInform']
@@ -980,16 +983,16 @@ class Utility {
             }
         }
         
-        if ($this->session->get("userOverCount") >= 2)
+        if ($this->session->get("userOverCount") >= 2) {
+            $this->session->set("userOverCount", 0);
+            
             $this->session->set("userInform", "");
-        
-        $this->session->set("userTimestamp", time());
+        }
         
         $userOverCount = $this->session->get("userOverCount") + 1;
         $this->session->set("userOverCount", $userOverCount);
         
-        if ($this->session->get("userOverCount") > 3)
-            $this->session->set("userOverCount", 3);
+        $this->session->set("userTimestamp", time());
         
         return false;
     }

@@ -35,18 +35,8 @@ CREATE TABLE `ipCamera_device` (
   `detection_pid` varchar(4) DEFAULT '0',
   `active` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ipCamera_device`
---
-
-LOCK TABLES `ipCamera_device` WRITE;
-/*!40000 ALTER TABLE `ipCamera_device` DISABLE KEYS */;
-INSERT INTO `ipCamera_device` VALUES (1,'Cosenza - Salone','1,','http://home-cs.ddns.net:1000/media/?action=stream','http://home-cs.ddns.net:1000/media/?action=snapshot','admin','l!\�y\�F�c���N)�	',0.010,0,'0',1);
-/*!40000 ALTER TABLE `ipCamera_device` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `language`

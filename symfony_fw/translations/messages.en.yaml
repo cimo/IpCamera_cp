@@ -138,11 +138,12 @@ date.time: H:i:s
 "authenticationFomType_4": "Login"
 
 "authenticationListener_1": "Your level does not allow the access."
-"authenticationListener_2": "Your account is locked."
-"authenticationListener_3": "Bad credentials."
-"authenticationListener_4a": "A lot attempts, wait "
-"authenticationListener_4b": " minutes before retrying."
+"authenticationListener_2": "Insert username and password."
+"authenticationListener_3": "Your account is locked."
+"authenticationListener_4": "Bad credentials."
 "authenticationListener_5": "Attempt: "
+"authenticationListener_6a": "A lot attempts, wait "
+"authenticationListener_6b": " minutes before retrying."
 
 # Page view
 "pageView_1": "Created from: "
