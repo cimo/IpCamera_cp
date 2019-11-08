@@ -24,6 +24,8 @@ class EmptyController extends AbstractController {
     private $query;
     private $ajax;
     
+    private $session;
+    
     // Properties
     
     // Functions public
@@ -38,10 +40,6 @@ class EmptyController extends AbstractController {
     * @Template("@templateRoot/render/module/empty.html.twig")
     */
     public function moduleAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -50,7 +48,15 @@ class EmptyController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         return Array(
             'urlLocale' => $this->urlLocale,
             'urlCurrentPageId' => $this->urlCurrentPageId,

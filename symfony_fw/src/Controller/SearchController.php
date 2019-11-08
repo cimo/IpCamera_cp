@@ -28,6 +28,8 @@ class SearchController extends AbstractController {
     private $ajax;
     private $tableAndPagination;
     
+    private $session;
+    
     // Properties
     
     // Functions public
@@ -42,10 +44,6 @@ class SearchController extends AbstractController {
     * @Template("@templateRoot/render/module/widget_search.html.twig")
     */
     public function moduleAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -54,7 +52,15 @@ class SearchController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $form = $this->createForm(SearchFormType::class, null, Array(
             'validation_groups' => Array('search_module')
         ));
@@ -99,10 +105,6 @@ class SearchController extends AbstractController {
     * @Template("@templateRoot/include/search.html.twig")
     */
     public function renderAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -112,7 +114,15 @@ class SearchController extends AbstractController {
         $this->ajax = new Ajax($this->utility);
         $this->tableAndPagination = new TableAndPagination($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $pageRows = $this->query->selectAllPageDatabase($this->urlLocale, $this->urlExtra);
         
         if (empty($this->urlExtra) == true)

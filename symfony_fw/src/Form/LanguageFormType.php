@@ -19,7 +19,7 @@ class LanguageFormType extends AbstractType {
         ));
     }
     
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, Array $options) {
         $builder->add("codePage", HiddenType::class, Array(
             'required' => true
         ));

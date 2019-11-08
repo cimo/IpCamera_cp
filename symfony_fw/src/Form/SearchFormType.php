@@ -19,7 +19,7 @@ class SearchFormType extends AbstractType {
         ));
     }
     
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, Array $options) {
         $builder->add("words", TextType::class, Array(
             'required' => true,
             'attr' => array(

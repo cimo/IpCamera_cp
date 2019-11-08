@@ -20,7 +20,7 @@ class RecoverPasswordFormType extends AbstractType {
         ));
     }
     
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, Array $options) {
         $builder->add("email", EmailType::class, Array(
             'required' => true,
             'label' => "recoverPasswordFormType_1"

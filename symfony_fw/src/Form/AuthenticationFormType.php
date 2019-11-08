@@ -20,7 +20,7 @@ class AuthenticationFormType extends AbstractType {
         ));
     }
     
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, Array $options) {
         $builder->add("_username", TextType::class, Array(
             'required' => true,
             'label' => "authenticationFomType_1"

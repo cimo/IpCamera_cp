@@ -20,7 +20,7 @@ class ForgotPasswordFormType extends AbstractType {
         ));
     }
     
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, Array $options) {
         $builder->add("password", PasswordType::class, Array(
             'required' => true,
             'label' => "forgotPasswordFormType_1"

@@ -31,6 +31,8 @@ class UserController extends AbstractController {
     private $ajax;
     private $tableAndPagination;
     
+    private $session;
+    
     // Properties
     
     // Functions public
@@ -45,10 +47,6 @@ class UserController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/user_create.html.twig")
     */
     public function createAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator, UserPasswordEncoderInterface $passwordEncoder) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -57,12 +55,20 @@ class UserController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         $userEntity = new User();
         
-        $_SESSION['userProfileId'] = 0;
+        $this->session->set("userProfileId", 0);
         
         $form = $this->createForm(UserFormType::class, $userEntity, Array(
             'validation_groups' => Array('user_create')
@@ -121,10 +127,6 @@ class UserController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/user_select.html.twig")
     */
     public function selectAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -134,10 +136,18 @@ class UserController extends AbstractController {
         $this->ajax = new Ajax($this->utility);
         $this->tableAndPagination = new TableAndPagination($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
-        $_SESSION['userProfileId'] = 0;
+        $this->session->set("userProfileId", 0);
         
         $userRows = $this->query->selectAllUserDatabase(1);
         
@@ -185,10 +195,6 @@ class UserController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/user_profile.html.twig")
     */
     public function profileAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -197,7 +203,15 @@ class UserController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
@@ -207,7 +221,7 @@ class UserController extends AbstractController {
                 $userEntity = $this->entityManager->getRepository("App\Entity\User")->find($id);
 
                 if ($userEntity != null) {
-                    $_SESSION['userProfileId'] = $id;
+                    $this->session->set("userProfileId", $id);
 
                     $form = $this->createForm(UserFormType::class, $userEntity, Array(
                         'validation_groups' => Array('user_profile')
@@ -215,7 +229,7 @@ class UserController extends AbstractController {
                     $form->handleRequest($request);
 
                     $this->response['values']['userRoleSelectHtml'] = $this->utility->createUserRoleSelectHtml("form_user_roleUserId_select", "userController_1", true);
-                    $this->response['values']['id'] = $_SESSION['userProfileId'];
+                    $this->response['values']['id'] = $this->session->get("userProfileId");
                     $this->response['values']['attemptLogin'] = $userEntity->getAttemptLogin();
                     $this->response['values']['credit'] = $userEntity->getCredit();
 
@@ -251,10 +265,6 @@ class UserController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/user_profile.html.twig")
     */
     public function profileSaveAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator, UserPasswordEncoderInterface $passwordEncoder) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -263,10 +273,18 @@ class UserController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
-        $userEntity = $this->entityManager->getRepository("App\Entity\User")->find($_SESSION['userProfileId']);
+        $userEntity = $this->entityManager->getRepository("App\Entity\User")->find($this->session->get("userProfileId"));
         
         $form = $this->createForm(UserFormType::class, $userEntity, Array(
             'validation_groups' => Array('user_profile')
@@ -329,10 +347,6 @@ class UserController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/user_profile.html.twig")
     */
     public function attemptLoginResetAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -341,13 +355,21 @@ class UserController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "reset") {
-                    $userEntity = $this->entityManager->getRepository("App\Entity\User")->find($_SESSION['userProfileId']);
+                    $userEntity = $this->entityManager->getRepository("App\Entity\User")->find($this->session->get("userProfileId"));
                     
                     $userEntity->setAttemptLogin(0);
                     
@@ -380,10 +402,6 @@ class UserController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/user_delete.html.twig")
     */
     public function deleteAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -392,13 +410,21 @@ class UserController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "delete") {
-                    $id = $request->get("id") == null ? $_SESSION['userProfileId'] : $request->get("id");
+                    $id = $request->get("id") == null ? $this->session->get("userProfileId") : $request->get("id");
 
                     $userEntity = $this->entityManager->getRepository("App\Entity\User")->find($id);
 

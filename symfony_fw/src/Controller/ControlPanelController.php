@@ -26,6 +26,8 @@ class ControlPanelController extends AbstractController {
     private $ajax;
     private $captcha;
     
+    private $session;
+    
     // Properties
     
     // Functions public
@@ -40,10 +42,6 @@ class ControlPanelController extends AbstractController {
     * @Template("@templateRoot/render/control_panel.html.twig")
     */
     public function renderAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -53,8 +51,16 @@ class ControlPanelController extends AbstractController {
         $this->ajax = new Ajax($this->utility);
         $this->captcha = new Captcha($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
-        $_SESSION['currentPageId'] = $urlCurrentPageId;
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
+        $this->session->set("currentPageId", $urlCurrentPageId);
         
         $this->response['url']['root'] = $this->utility->getUrlRoot();
         

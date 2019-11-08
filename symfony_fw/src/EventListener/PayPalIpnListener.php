@@ -23,6 +23,8 @@ class PayPalIpnListener {
     private $utility;
     private $query;
     
+    private $session;
+    
     // Properties
     
     // Functions public
@@ -34,6 +36,8 @@ class PayPalIpnListener {
         
         $this->utility = new Utility($this->container, $this->entityManager, $translator);
         $this->query = $this->utility->getQuery();
+        
+        $this->session = $this->utility->getSession();
     }
     
     public function onKernelResponse(FilterResponseEvent $event) {

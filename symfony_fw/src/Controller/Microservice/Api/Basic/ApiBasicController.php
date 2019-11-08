@@ -33,6 +33,8 @@ class ApiBasicController extends AbstractController {
     private $upload;
     private $toolExcel;
     
+    private $session;
+    
     private $parameters;
     
     private $apiBasicRow;
@@ -51,10 +53,6 @@ class ApiBasicController extends AbstractController {
     * @Template("@templateRoot/microservice/api/basic/create.html.twig")
     */
     public function createAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -63,7 +61,15 @@ class ApiBasicController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $apiBasicEntity = new ApiBasic();
@@ -118,10 +124,6 @@ class ApiBasicController extends AbstractController {
     * @Template("@templateRoot/microservice/api/basic/select.html.twig")
     */
     public function selectAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-                
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -130,10 +132,18 @@ class ApiBasicController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
-        $_SESSION['apiBasicProfileId'] = 0;
+        $this->session->set("apiBasicProfileId", 0);
         
         $rows = $this->selectAllApiBasicDatabase(true);
         
@@ -174,10 +184,6 @@ class ApiBasicController extends AbstractController {
     * @Template("@templateRoot/microservice/api/basic/profile.html.twig")
     */
     public function profileAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -186,7 +192,15 @@ class ApiBasicController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
@@ -196,7 +210,7 @@ class ApiBasicController extends AbstractController {
                 $apiBasicEntity = $this->entityManager->getRepository("App\Entity\ApiBasic")->find($id);
 
                 if ($apiBasicEntity != null) {
-                    $_SESSION['apiBasicProfileId'] = $id;
+                    $this->session->set("apiBasicProfileId", $id);
 
                     $form = $this->createForm(ApiBasicFormType::class, $apiBasicEntity, Array(
                         'validation_groups' => Array('apiBasic_profile')
@@ -235,10 +249,6 @@ class ApiBasicController extends AbstractController {
     * @Template("@templateRoot/microservice/api/basic/profile.html.twig")
     */
     public function profileSaveAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -247,10 +257,18 @@ class ApiBasicController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
-        $apiBasicEntity = $this->entityManager->getRepository("App\Entity\ApiBasic")->find($_SESSION['apiBasicProfileId']);
+        $apiBasicEntity = $this->entityManager->getRepository("App\Entity\ApiBasic")->find($this->session->get("apiBasicProfileId"));
         $nameOld = $apiBasicEntity->getName();
         $databasePasswordOld = $apiBasicEntity->getDatabasePassword();
         
@@ -319,10 +337,6 @@ class ApiBasicController extends AbstractController {
     * @Template("@templateRoot/microservice/api/basic/delete.html.twig")
     */
     public function deleteAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -331,13 +345,21 @@ class ApiBasicController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "delete") {
-                    $id = $request->get("id") == null ? $_SESSION['apiBasicProfileId'] : $request->get("id");
+                    $id = $request->get("id") == null ? $this->session->get("apiBasicProfileId") : $request->get("id");
                     
                     $apiBasicEntity = $this->entityManager->getRepository("App\Entity\ApiBasic")->find($id);
 
@@ -384,10 +406,6 @@ class ApiBasicController extends AbstractController {
     * )
     */
     public function logAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -396,13 +414,21 @@ class ApiBasicController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "log") {
-                    $row = $this->selectApiBasicDatabase($_SESSION['apiBasicProfileId'], false);
+                    $row = $this->selectApiBasicDatabase($this->session->get("apiBasicProfileId"), false);
                     
                     $logPath = "{$this->utility->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $row['name']) . ".log";
                     $fileReadTail = $this->utility->fileReadTail($logPath, "500");
@@ -429,10 +455,6 @@ class ApiBasicController extends AbstractController {
     * )
     */
     public function graphAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -441,7 +463,15 @@ class ApiBasicController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
@@ -463,7 +493,7 @@ class ApiBasicController extends AbstractController {
                     );
                     
                     // Elements
-                    $requestTestActionRows = $this->selectAllApiBasicRequestDatabase($_SESSION['apiBasicProfileId'], "requestTestAction");
+                    $requestTestActionRows = $this->selectAllApiBasicRequestDatabase($this->session->get("apiBasicProfileId"), "requestTestAction");
                     
                     $elementBasicNames = Array();
                     $elementBasicItems = Array();
@@ -474,7 +504,7 @@ class ApiBasicController extends AbstractController {
                             $dateExplode = explode(" ", $requestTestActionRows[$countBasic]['date']);
                             $date = $dateExplode[0];
                             
-                            $dateA = new \DateTime("{$_SESSION['apiBasicGraphPeriod_year']}-{$_SESSION['apiBasicGraphPeriod_month']}-{$labelItems[$key]}");
+                            $dateA = new \DateTime("{$this->session->get("apiBasicGraphPeriod_year")}-{$this->session->get("apiBasicGraphPeriod_month")}-{$labelItems[$key]}");
                             $dateB = new \DateTime($date);
                             
                             if (date_diff($dateA, $dateB)->y == 0 && date_diff($dateA, $dateB)->m == 0 && date_diff($dateA, $dateB)->d == 0) {
@@ -530,10 +560,6 @@ class ApiBasicController extends AbstractController {
     * )
     */
     public function csvAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -544,13 +570,21 @@ class ApiBasicController extends AbstractController {
         $this->upload = new Upload($this->utility);
         $this->toolExcel = new ToolExcel($this);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "csv") {
-                    $this->apiBasicRow = $this->selectApiBasicDatabase($_SESSION['apiBasicProfileId'], true);
+                    $this->apiBasicRow = $this->selectApiBasicDatabase($this->session->get("apiBasicProfileId"), true);
                     $apiBasicDatabaseRow = $this->apiBasicDatabase("select", $this->apiBasicRow['id'], $this->apiBasicRow['database_password']);
                     
                     $lockPath = "{$this->utility->getPathSrc()}/files/lock/{$this->apiBasicRow['name']}_lock";
@@ -573,9 +607,9 @@ class ApiBasicController extends AbstractController {
                             $this->utility->closeAjaxRequest($this->response, true);
                             
                             file_put_contents($lockPath, "");
-
-                            $_SESSION['lockPath'] = $lockPath;
-                            $_SESSION['totalLineCsv'] = $this->toolExcel->totalLineCsv("$path/{$uploadProcessFile['fileName']}", ",");
+                            
+                            $this->session->set("lockPath", $lockPath);
+                            $this->session->set("totalLineCsv", $this->toolExcel->totalLineCsv("$path/{$uploadProcessFile['fileName']}", ","));
 
                             $readCsv = $this->toolExcel->readCsv("$path/{$uploadProcessFile['fileName']}", ",", $apiBasicDatabaseRow);
 
@@ -600,17 +634,19 @@ class ApiBasicController extends AbstractController {
     
     public function toolExcelCsvCallback($index, $cell, $extra) {
         if ($index == 0)
-            $this->apiBasicRow = $this->selectApiBasicDatabase($_SESSION['apiBasicProfileId'], true);
+            $this->apiBasicRow = $this->selectApiBasicDatabase($this->session->get("apiBasicProfileId"), true);
         else if ($index > 0) {
             $parameters = Array();
             
             $databaseExternal = $this->databaseExternal($parameters, $this->apiBasicRow, $extra);
             
+            $sessionLockPath = $this->session->get("lockPath");
+            
             if ($databaseExternal != false)
-                file_put_contents($_SESSION['lockPath'], "{$_SESSION['totalLineCsv']}|$index");
+                file_put_contents($sessionLockPath, "{$this->session->get("totalLineCsv")}|$index");
             else {
-                if (file_exists($_SESSION['lockPath']) == true)
-                    unlink($_SESSION['lockPath']);
+                if (file_exists($sessionLockPath) == true)
+                    unlink($sessionLockPath);
                 
                 $this->response['errorCode'] = 100;
             }
@@ -636,10 +672,6 @@ class ApiBasicController extends AbstractController {
     * )
     */
     public function downloadDetailAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -649,23 +681,35 @@ class ApiBasicController extends AbstractController {
         $this->ajax = new Ajax($this->utility);
         $this->toolExcel = new ToolExcel();
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
+                $sessionDownload = $this->session->get("download");
+                
                 if ($request->get("event") == "download_requestTestAction") {
                     $downloadPath = "{$this->utility->getPathPublic()}/files/microservice/api/basic";
-                    $downloadName = rand() . "_points";
+                    $downloadName = rand() . "_point";
                     
                     $this->toolExcel->setPath($downloadPath);
                     $this->toolExcel->setName($downloadName);
                     
-                    $_SESSION['download']['path'] = $downloadPath;
-                    $_SESSION['download']['name'] = $this->toolExcel->getName();
-                    $_SESSION['download']['mime'] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    $sessionDownload['path'] = $downloadPath;
+                    $sessionDownload['name'] = $this->toolExcel->getName();
+                    $sessionDownload['mime'] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     
-                    $this->toolExcel->createSheet("Points");
+                    $this->session->set("download", $sessionDownload);
+                    
+                    $this->toolExcel->createSheet("Point");
                     
                     $elements = Array(
                         'labels' => Array(
@@ -697,16 +741,16 @@ class ApiBasicController extends AbstractController {
                         else {
                             $url = "{$this->utility->getUrlRoot()}/files/microservice/api/basic";
 
-                            $this->response['values']['url'] = "{$url}/{$_SESSION['download']['name']}";
+                            $this->response['values']['url'] = "{$url}/{$sessionDownload['name']}";
                         }
                     }
                     else
                         $this->response['messages']['error'] = $this->utility->getTranslator()->trans("download_2");
                 }
                 else if ($request->get("event") == "download_delete") {
-                    unlink("{$_SESSION['download']['path']}/{$_SESSION['download']['name']}");
+                    unlink("{$sessionDownload['path']}/{$sessionDownload['name']}");
                     
-                    unset($_SESSION['download']);
+                    $this->session->remove("download");
                     
                     $this->response['messages']['success'] = "";
                 }
@@ -1052,7 +1096,7 @@ class ApiBasicController extends AbstractController {
         
         $query->bindValue(":apiId", $apiId);
         $query->bindValue(":name", $name);
-        $query->bindValue(":date", "%{$_SESSION['apiBasicGraphPeriod_year']}-{$_SESSION['apiBasicGraphPeriod_month']}%");
+        $query->bindValue(":date", "%{$this->session->get("apiBasicGraphPeriod_year")}-{$this->session->get("apiBasicGraphPeriod_month")}%");
         
         $query->execute();
         
@@ -1107,13 +1151,15 @@ class ApiBasicController extends AbstractController {
                 $date = $periodMin->add(new \DateInterval("P1Y"));
                 
                 $year = date("Y");
+                
+                $sessionApiBasicGraphPeriodYear = $this->session->get("apiBasicGraphPeriod_year");
 
                 if ($request->get("year") != null && $request->get("year") != "")
                     $year = $request->get("year");
-                else if (isset($_SESSION['apiBasicGraphPeriod_year']) == true)
-                    $year = $_SESSION['apiBasicGraphPeriod_year'];
-
-                $_SESSION["apiBasicGraphPeriod_year"] = $year;
+                else if ($sessionApiBasicGraphPeriodYear != null)
+                    $year = $sessionApiBasicGraphPeriodYear;
+                
+                $this->session->set("apiBasicGraphPeriod_year", $year);
                 
                 $periodMax = new \DateTime(date("$year/01/01"));
                 
@@ -1136,12 +1182,14 @@ class ApiBasicController extends AbstractController {
     private function createSelectPeriodMonthHtml($request) {
         $month = date("m");
         
+        $sessionApiBasicGraphPeriodMonth = $this->session->get("apiBasicGraphPeriod_month");
+        
         if ($request->get("month") != null && $request->get("month") != "")
             $month = $request->get("month");
-        else if (isset($_SESSION['apiBasicGraphPeriod_month']) == true)
-            $month = $_SESSION['apiBasicGraphPeriod_month'];
+        else if ($sessionApiBasicGraphPeriodMonth != null)
+            $month = $sessionApiBasicGraphPeriodMonth;
         
-        $_SESSION["apiBasicGraphPeriod_month"] = $month;
+        $this->session->set("apiBasicGraphPeriod_month", $month);
         
         $html = "<div style=\"width: 100px;\" class=\"mdc-select\">
             <select class=\"mdc-select__native-control graph_period_month\" name=\"graph_period_month\">";

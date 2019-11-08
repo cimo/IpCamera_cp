@@ -23,6 +23,8 @@ class MenuRootController extends AbstractController {
     private $query;
     private $ajax;
     
+    private $session;
+    
     // Properties
     
     // Functions public
@@ -30,10 +32,6 @@ class MenuRootController extends AbstractController {
     * @Template("@templateRoot/render/module/menu_root.html.twig")
     */
     public function moduleAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -42,7 +40,15 @@ class MenuRootController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $pageRows = $this->query->selectAllPageDatabase($this->urlLocale);
         
         $this->response['values']['pageList'] = $this->utility->createPageList($pageRows, false);

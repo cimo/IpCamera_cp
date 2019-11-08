@@ -28,7 +28,7 @@ class UserFormType extends AbstractType {
         ));
     }
     
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, Array $options) {
         $builder->add("roleUserId", HiddenType::class, Array(
             'required' => true
         ))

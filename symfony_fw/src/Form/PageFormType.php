@@ -26,7 +26,7 @@ class PageFormType extends AbstractType {
         ));
     }
     
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, Array $options) {
         $builder->add("language", HiddenType::class, Array(
             'required' => true,
             'data' => $options['urlLocale']

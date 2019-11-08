@@ -29,6 +29,8 @@ class PaymentController extends AbstractController {
     private $ajax;
     private $tableAndPagination;
     
+    private $session;
+    
     // Properties
     
     // Functions public
@@ -43,10 +45,6 @@ class PaymentController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/payment_user_select.html.twig")
     */
     public function userSelectAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -55,31 +53,40 @@ class PaymentController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
-        if (isset($_SESSION['paymentUserId']) == false)
-            $_SESSION['paymentUserId'] = 0;
+        if ($this->session->get("paymentUserId") == null)
+            $this->session->set("paymentUserId", 0);
         
-        $_SESSION['paymentProfileId'] = 0;
+        $this->session->set("paymentProfileId", 0);
         
         $form = $this->createForm(PaymentUserSelectFormType::class, null, Array(
             'validation_groups' => Array('payment_user_select'),
-            'choicesId' => array_column($this->query->selectAllUserDatabase($this->getUser()->getId()), "id", "username")
+            'choicesId' => array_column($this->query->selectAllUserDatabase($this->getUser()->getId()), "id", "username"),
+            'paymentUserId' => $this->session->get("paymentUserId")
         ));
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
                 if ($form->get("userId")->getData() > 0) {
-                    $_SESSION['paymentUserId'] = $form->get("userId")->getData();
+                    $this->session->set("paymentUserId", $form->get("userId")->getData());
                     
-                    $paymentRows = $this->query->selectAllPaymentDatabase($_SESSION['paymentUserId']);
+                    $paymentRows = $this->query->selectAllPaymentDatabase($this->session->get("paymentUserId"));
                     
                     $this->response['values']['paymentRows'] = array_reverse(array_column($paymentRows, "id", "transaction"), true);
                 }
                 else {
-                    $_SESSION['paymentUserId'] = 0;
+                    $this->session->set("paymentUserId", 0);
                     
                     $this->response['values']['paymentRows'] = 0;
                     $this->response['messages']['error'] = $this->utility->getTranslator()->trans("paymentController_1");
@@ -115,10 +122,6 @@ class PaymentController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/payment_select.html.twig")
     */
     public function selectAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -128,13 +131,21 @@ class PaymentController extends AbstractController {
         $this->ajax = new Ajax($this->utility);
         $this->tableAndPagination = new TableAndPagination($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
-        if (isset($_SESSION['paymentUserId']) == false)
-            $_SESSION['paymentUserId'] = 0;
+        if ($this->session->get("paymentUserId") == null)
+            $this->session->set("paymentUserId", 0);
         
-        $paymentRows = $this->query->selectAllPaymentDatabase($_SESSION['paymentUserId']);
+        $paymentRows = $this->query->selectAllPaymentDatabase($this->session->get("paymentUserId"));
         
         $tableAndPagination = $this->tableAndPagination->request($paymentRows, 20, "payment", true);
         
@@ -180,10 +191,6 @@ class PaymentController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/payment_profile.html.twig")
     */
     public function profileAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -192,7 +199,15 @@ class PaymentController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
@@ -202,7 +217,7 @@ class PaymentController extends AbstractController {
                 $paymentEntity = $this->entityManager->getRepository("App\Entity\Payment")->find($id);
 
                 if ($paymentEntity != null) {
-                    $_SESSION['paymentProfileId'] = $id;
+                    $this->session->set("paymentProfileId", $id);
 
                     $this->response['values']['payment'] = $paymentEntity;
 
@@ -237,10 +252,6 @@ class PaymentController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/payment_delete.html.twig")
     */
     public function deleteAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -249,13 +260,21 @@ class PaymentController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "delete") {
-                    $id = $request->get("id") == null ? $_SESSION['paymentProfileId'] : $request->get("id");
+                    $id = $request->get("id") == null ? $this->session->get("paymentProfileId") : $request->get("id");
 
                     $paymentDatabase = $this->paymentDatabase("delete", $id);
 
@@ -338,7 +357,7 @@ class PaymentController extends AbstractController {
                                                                 WHERE user_id = :userId
                                                                 AND id = :id");
             
-            $query->bindValue(":userId", $_SESSION['paymentUserId']);
+            $query->bindValue(":userId", $this->session->get("paymentUserId"));
             $query->bindValue(":id", $id);
             
             return $query->execute();
@@ -347,7 +366,7 @@ class PaymentController extends AbstractController {
             $query = $this->utility->getConnection()->prepare("DELETE FROM payment
                                                                 WHERE user_id = :userId");
             
-            $query->bindValue(":userId", $_SESSION['paymentUserId']);
+            $query->bindValue(":userId", $this->session->get("paymentUserId"));
             
             return $query->execute();
         }

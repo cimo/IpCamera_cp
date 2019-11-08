@@ -22,7 +22,7 @@ class RoleUserFormType extends AbstractType {
         ));
     }
     
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, Array $options) {
         $builder->add("level", TextType::class, Array(
             'required' => true,
             'label' => "roleUserFormType_1"

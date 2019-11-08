@@ -30,6 +30,8 @@ class PageController extends AbstractController {
     private $ajax;
     private $tableAndPagination;
     
+    private $session;
+    
     private $listHtml;
     private $removedId;
     
@@ -47,10 +49,6 @@ class PageController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/page_create.html.twig")
     */
     public function createAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -59,12 +57,20 @@ class PageController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         $pageEntity = new Page();
         
-        $_SESSION['pageProfileId'] = 0;
+        $this->session->set("pageProfileId", 0);
         
         $pageRows = $this->query->selectAllPageDatabase($this->urlLocale);
         
@@ -130,10 +136,6 @@ class PageController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/page_select.html.twig")
     */
     public function selectAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -143,12 +145,20 @@ class PageController extends AbstractController {
         $this->ajax = new Ajax($this->utility);
         $this->tableAndPagination = new TableAndPagination($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $this->listHtml = "";
         
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
-        $_SESSION['pageProfileId'] = 0;
+        $this->session->set("pageProfileId", 0);
         
         $pageRows = $this->query->selectAllPageDatabase($this->urlLocale);
         
@@ -196,10 +206,6 @@ class PageController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/page_profile.html.twig")
     */
     public function profileAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -208,7 +214,15 @@ class PageController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
@@ -218,7 +232,7 @@ class PageController extends AbstractController {
                 $pageEntity = $this->entityManager->getRepository("App\Entity\Page")->find($id);
 
                 if ($pageEntity != null) {
-                    $_SESSION['pageProfileId'] = $id;
+                    $this->session->set("pageProfileId", $id);
 
                     $pageRows = $this->query->selectAllPageDatabase($this->urlLocale);
                     
@@ -232,7 +246,7 @@ class PageController extends AbstractController {
 
                     $pageParentRows = array_column($this->query->selectAllPageParentDatabase($form->get("parent")->getData()), "alias", "id");
                     
-                    $this->response['values']['pageId'] = $_SESSION['pageProfileId'];
+                    $this->response['values']['pageId'] = $this->session->get("pageProfileId");
                     $this->response['values']['userRoleSelectHtml'] = $this->utility->createUserRoleSelectHtml("form_page_roleUserId_select", "pageController_1", true);
                     $this->response['values']['pageSortListHtml'] = $this->utility->createPageSortListHtml($pageParentRows);
                     $this->response['values']['userCreate'] = $pageEntity->getUserCreate();
@@ -272,10 +286,6 @@ class PageController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/page_profile.html.twig")
     */
     public function profileSortAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -284,15 +294,25 @@ class PageController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 $rows = array_column($this->query->selectAllPageParentDatabase($request->get("id")), "alias", "id");
                 
-                if ($_SESSION['pageProfileId'] > 0) {
-                    $pageEntity = $this->entityManager->getRepository("App\Entity\Page")->find($_SESSION['pageProfileId']);
+                $sessionPageProfileId = $this->session->get("pageProfileId");
+                
+                if ($sessionPageProfileId > 0) {
+                    $pageEntity = $this->entityManager->getRepository("App\Entity\Page")->find($sessionPageProfileId);
                     
                     $rows[$pageEntity->getId()] = $pageEntity->getAlias();
                 }
@@ -320,10 +340,6 @@ class PageController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/page_profile.html.twig")
     */
     public function profileSaveAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -332,10 +348,18 @@ class PageController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
-        $pageEntity = $this->entityManager->getRepository("App\Entity\Page")->find($_SESSION['pageProfileId']);
+        $pageEntity = $this->entityManager->getRepository("App\Entity\Page")->find($this->session->get("pageProfileId"));
         
         $pageRows = $this->query->selectAllPageDatabase($this->urlLocale);
         
@@ -396,10 +420,6 @@ class PageController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/page_delete.html.twig")
     */
     public function deleteAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -408,13 +428,21 @@ class PageController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "delete") {
-                    $id = $request->get("id") == null ? $_SESSION['pageProfileId'] : $request->get("id");
+                    $id = $request->get("id") == null ? $this->session->get("pageProfileId") : $request->get("id");
 
                     $pageChildrenRows = $this->query->selectAllPageChildrenDatabase($id);
 
@@ -444,7 +472,7 @@ class PageController extends AbstractController {
                         $this->response['messages']['success'] = $this->utility->getTranslator()->trans("pageController_11");
                 }
                 else if ($request->get("event") == "parentAll") {
-                    $id = $request->get("id") == null ? $_SESSION['pageProfileId'] : $request->get("id");
+                    $id = $request->get("id") == null ? $this->session->get("pageProfileId") : $request->get("id");
 
                     $this->removedId = Array();
 
@@ -461,7 +489,7 @@ class PageController extends AbstractController {
                     }
                 }
                 else if ($request->get("event") == "parentNew") {
-                    $id = $request->get("id") == null ? $_SESSION['pageProfileId'] : $request->get("id");
+                    $id = $request->get("id") == null ? $this->session->get("pageProfileId") : $request->get("id");
 
                     $this->updatePageChildrenDatabase($id, $request->get("parentNew"));
 

@@ -22,6 +22,8 @@ class ErrorListener {
     private $utility;
     private $query;
     
+    private $session;
+    
     // Properties
     
     // Functions public
@@ -33,6 +35,8 @@ class ErrorListener {
         
         $this->utility = new Utility($this->container, $this->entityManager, $translator);
         $this->query = $this->utility->getQuery();
+        
+        $this->session = $this->utility->getSession();
     }
     
     public function onKernelException(GetResponseForExceptionEvent $event) {
@@ -49,7 +53,7 @@ class ErrorListener {
                 $url = $this->router->generate(
                     "root_render",
                     Array(
-                        '_locale' => $_SESSION['languageTextCode'],
+                        '_locale' => $this->session->get("languageTextCode"),
                         'urlCurrentPageId' => 2,
                         'urlExtra' => "",
                         'error' => "404"

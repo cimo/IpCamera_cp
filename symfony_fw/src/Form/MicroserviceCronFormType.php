@@ -22,7 +22,7 @@ class MicroserviceCronFormType extends AbstractType {
         ));
     }
     
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, Array $options) {
         $builder->add("name", TextType::class, Array(
             'required' => true,
             'label' => "microserviceCronFormType_1"

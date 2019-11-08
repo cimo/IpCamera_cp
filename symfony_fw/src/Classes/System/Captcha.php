@@ -5,19 +5,23 @@ class Captcha {
     // Vars
     private $utility;
     
+    private $session;
+    
     // Properties
     
     // Functions public
     public function __construct($utility) {
         $this->utility = $utility;
+        
+        $this->session = $this->utility->getSession();
     }
     
     public function create($length) {
         $randomString = $this->utility->generateRandomString($length);
         
-        $_SESSION['captcha'] = $randomString;
+        $this->session->set("captcha", $randomString);
         
-        return $this->image($_SESSION['captcha']);
+        return $this->image($this->session->get("captcha"));
     }
     
     // Functions private
@@ -44,7 +48,9 @@ class Captcha {
     }
     
     public function check($captchaEnabled, $captcha) {
-        if ($captchaEnabled == false || ($captchaEnabled == true && isset($_SESSION['captcha']) == true && $_SESSION['captcha'] == $captcha))
+        $sessionCaptcha = $this->session->get("captcha");
+        
+        if ($captchaEnabled == false || ($captchaEnabled == true && $sessionCaptcha != null && $sessionCaptcha == $captcha))
             return true;
         
         return false;

@@ -20,7 +20,7 @@ class CreditFormType extends AbstractType {
         ));
     }
     
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, Array $options) {
         $builder->add("credit", TextType::class, Array(
             'required' => true,
             'label' => "creditFormType_1"

@@ -29,6 +29,8 @@ class MicroserviceUnitTestController extends AbstractController {
     private $query;
     private $ajax;
     
+    private $session;
+    
     // Properties
     
     // Functions public
@@ -43,10 +45,6 @@ class MicroserviceUnitTestController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/microservice_unit_test_create.html.twig")
     */
     public function createAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -55,12 +53,20 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $microserviceUnitTestEntity = new MicroserviceUnitTest();
         
-        $_SESSION['microserviceUnitTestProfileId'] = 0;
+        $this->session->set("microserviceUnitTestProfileId", 0);
         
         $form = $this->createForm(MicroserviceUnitTestFormType::class, $microserviceUnitTestEntity, Array(
             'validation_groups' => Array('microservice_unit_test_create')
@@ -109,10 +115,6 @@ class MicroserviceUnitTestController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/microservice_unit_test_select.html.twig")
     */
     public function selectAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -122,10 +124,18 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->ajax = new Ajax($this->utility);
         $this->tableAndPagination = new TableAndPagination($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
-        $_SESSION['microserviceUnitTestProfileId'] = 0;
+        $this->session->set("microserviceUnitTestProfileId", 0);
         
         $microserviceUnitTestRows = $this->query->selectAllMicroserviceUnitTestDatabase();
         
@@ -173,10 +183,6 @@ class MicroserviceUnitTestController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/microservice_unit_test_profile.html.twig")
     */
     public function profileAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -185,7 +191,15 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
@@ -195,14 +209,14 @@ class MicroserviceUnitTestController extends AbstractController {
                 $microserviceUnitTestEntity = $this->entityManager->getRepository("App\Entity\MicroserviceUnitTest")->find($id);
 
                 if ($microserviceUnitTestEntity != null) {
-                    $_SESSION['microserviceUnitTestProfileId'] = $id;
+                    $this->session->set("microserviceUnitTestProfileId", $id);
 
                     $form = $this->createForm(MicroserviceUnitTestFormType::class, $microserviceUnitTestEntity, Array(
                         'validation_groups' => Array('microservice_unit_test_profile')
                     ));
                     $form->handleRequest($request);
 
-                    $this->response['values']['id'] = $_SESSION['microserviceUnitTestProfileId'];
+                    $this->response['values']['id'] = $this->session->get("microserviceUnitTestProfileId");
 
                     $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/microservice_unit_test_profile.html.twig", Array(
                         'urlLocale' => $this->urlLocale,
@@ -236,10 +250,6 @@ class MicroserviceUnitTestController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/microservice_unit_test_profile.html.twig")
     */
     public function profileSaveAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -248,10 +258,18 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
-        $microserviceUnitTestEntity = $this->entityManager->getRepository("App\Entity\MicroserviceUnitTest")->find($_SESSION['microserviceUnitTestProfileId']);
+        $microserviceUnitTestEntity = $this->entityManager->getRepository("App\Entity\MicroserviceUnitTest")->find($this->session->get("microserviceUnitTestProfileId"));
         
         $form = $this->createForm(MicroserviceUnitTestFormType::class, $microserviceUnitTestEntity, Array(
             'validation_groups' => Array('microservice_unit_test_profile')
@@ -300,10 +318,6 @@ class MicroserviceUnitTestController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/microservice_unit_test_delete.html.twig")
     */
     public function deleteAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -312,13 +326,21 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "delete") {
-                    $id = $request->get("id") == null ? $_SESSION['microserviceUnitTestProfileId'] : $request->get("id");
+                    $id = $request->get("id") == null ? $this->session->get("microserviceUnitTestProfileId") : $request->get("id");
                     
                     $microserviceUnitTestEntity = $this->entityManager->getRepository("App\Entity\MicroserviceUnitTest")->find($id);
                     

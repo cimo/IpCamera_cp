@@ -29,6 +29,8 @@ class SettingLinePushController extends AbstractController {
     private $query;
     private $ajax;
     
+    private $session;
+    
     // Properties
     
     // Functions public
@@ -43,10 +45,6 @@ class SettingLinePushController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/setting_line_push.html.twig")
     */
     public function renderAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -56,17 +54,25 @@ class SettingLinePushController extends AbstractController {
         $this->ajax = new Ajax($this->utility);
         $this->tableAndPagination = new TableAndPagination($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
-        if (isset($_SESSION['settingLinePushProfileId']) == false && $request->get("id") == null)
+        if ($this->session->get("settingLinePushProfileId") == null && $request->get("id") == null)
             $settingLinePushEntity = new SettingLinePush();
         else {
-            $id = $request->get("id") == null ? $_SESSION['settingLinePushProfileId'] : $request->get("id");
+            $id = $request->get("id") == null ? $this->session->get("settingLinePushProfileId") : $request->get("id");
             
-            $_SESSION['settingLinePushProfileId'] = $id;
+            $this->session->set("settingLinePushProfileId", $id);
             
-            $settingLinePushEntity = $this->entityManager->getRepository("App\Entity\SettingLinePush")->find($_SESSION['settingLinePushProfileId']);
+            $settingLinePushEntity = $this->entityManager->getRepository("App\Entity\SettingLinePush")->find($this->session->get("settingLinePushProfileId"));
         }
         
         $linePushNameOld = $settingLinePushEntity->getName();
@@ -110,8 +116,8 @@ class SettingLinePushController extends AbstractController {
             }
             
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                if (isset($_SESSION['settingLinePushProfileId']) == true)
-                    unset($_SESSION['settingLinePushProfileId']);
+                if ($this->session->get("settingLinePushProfileId") != null)
+                    $this->session->remove("settingLinePushProfileId");
                 
                 $this->entityManager->persist($settingLinePushEntity);
                 $this->entityManager->flush();
@@ -166,10 +172,6 @@ class SettingLinePushController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/setting_line_push.html.twig")
     */
     public function deleteAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -179,7 +181,15 @@ class SettingLinePushController extends AbstractController {
         $this->ajax = new Ajax($this->utility);
         $this->tableAndPagination = new TableAndPagination($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
@@ -190,8 +200,8 @@ class SettingLinePushController extends AbstractController {
                     $settingLinePushEntity = $this->entityManager->getRepository("App\Entity\SettingLinePush")->find($id);
                     
                     if ($settingLinePushEntity != null) {
-                        if (isset($_SESSION['settingLinePushProfileId']) == true)
-                            unset($_SESSION['settingLinePushProfileId']);
+                        if ($this->session->get("settingLinePushProfileId") != null)
+                            $this->session->remove("settingLinePushProfileId");
                         
                         $this->linePushUserDatabase("delete", $settingLinePushEntity->getName());
                         
@@ -236,10 +246,6 @@ class SettingLinePushController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/setting_line_push.html.twig")
     */
     public function resetAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -249,13 +255,21 @@ class SettingLinePushController extends AbstractController {
         $this->ajax = new Ajax($this->utility);
         $this->tableAndPagination = new TableAndPagination($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "reset") {
-                    unset($_SESSION['settingLinePushProfileId']);
+                    $this->session->remove("settingLinePushProfileId");
                     
                     $this->tableAndPaginationResult(null);
                     
@@ -296,6 +310,8 @@ class SettingLinePushController extends AbstractController {
         $this->utility = new Utility($this->container, $this->entityManager, $translator);
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
+        
+        $this->session = $this->utility->getSession();
         
         // Logic
         if ($request->isMethod("POST") == true) {

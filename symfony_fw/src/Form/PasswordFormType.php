@@ -20,7 +20,7 @@ class PasswordFormType extends AbstractType {
         ));
     }
     
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, Array $options) {
         $builder->add("old", PasswordType::class, Array(
             'required' => true,
             'label' => "passwordFormType_1"

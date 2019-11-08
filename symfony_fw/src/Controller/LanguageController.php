@@ -26,6 +26,8 @@ class LanguageController extends AbstractController {
     private $query;
     private $ajax;
     
+    private $session;
+    
     // Properties
     
     // Functions public
@@ -40,10 +42,6 @@ class LanguageController extends AbstractController {
     * @Template("@templateRoot/render/module/language_text.html.twig")
     */
     public function textAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -52,7 +50,15 @@ class LanguageController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $this->response['values']['languageRows'] = $this->query->selectAllLanguageDatabase();
         
         if ($request->isMethod("POST") == true) {
@@ -94,10 +100,6 @@ class LanguageController extends AbstractController {
     * @Template("@templateRoot/render/module/language_page.html.twig")
     */
     public function pageAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -106,7 +108,15 @@ class LanguageController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $form = $this->createForm(LanguageFormType::class, null, Array(
             'validation_groups' => Array('language_code')
         ));
@@ -118,7 +128,7 @@ class LanguageController extends AbstractController {
         if ($request->isMethod("POST") == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
                 $codePage = $form->get("codePage")->getData();
-                $pageRow = $this->query->selectPageDatabase($codePage, $_SESSION['pageProfileId']);
+                $pageRow = $this->query->selectPageDatabase($codePage, $this->session->get("pageProfileId"));
                 
                 $this->response['values']['codePage'] = $codePage;
                 $this->response['values']['pageTitle'] = $pageRow['title'];

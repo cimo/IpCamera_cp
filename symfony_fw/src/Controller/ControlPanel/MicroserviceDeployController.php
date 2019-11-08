@@ -32,6 +32,8 @@ class MicroserviceDeployController extends AbstractController {
     private $ajax;
     private $tableAndPagination;
     
+    private $session;
+    
     // Properties
     
     // Functions public
@@ -46,10 +48,6 @@ class MicroserviceDeployController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/microservice_deploy.html.twig")
     */
     public function renderAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -58,7 +56,15 @@ class MicroserviceDeployController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $microserviceDeployRows = $this->query->selectAllMicroserviceDeployDatabase();
@@ -108,10 +114,6 @@ class MicroserviceDeployController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/microservice_deploy_create.html.twig")
     */
     public function createAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -120,12 +122,20 @@ class MicroserviceDeployController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $microserviceDeployEntity = new MicroserviceDeploy();
         
-        $_SESSION['microserviceDeployProfileId'] = 0;
+        $this->session->set("microserviceDeployProfileId", 0);
         
         $form = $this->createForm(MicroserviceDeployFormType::class, $microserviceDeployEntity, Array(
             'validation_groups' => Array('microservice_deploy_create')
@@ -178,10 +188,6 @@ class MicroserviceDeployController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/microservice_deploy_select.html.twig")
     */
     public function selectAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -191,10 +197,18 @@ class MicroserviceDeployController extends AbstractController {
         $this->ajax = new Ajax($this->utility);
         $this->tableAndPagination = new TableAndPagination($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
-        $_SESSION['microserviceDeployProfileId'] = 0;
+        $this->session->set("microserviceDeployProfileId", 0);
         
         $microserviceDeployRows = $this->query->selectAllMicroserviceDeployDatabase();
         
@@ -242,10 +256,6 @@ class MicroserviceDeployController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/microservice_deploy_profile.html.twig")
     */
     public function profileAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -254,7 +264,15 @@ class MicroserviceDeployController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
@@ -264,14 +282,14 @@ class MicroserviceDeployController extends AbstractController {
                 $microserviceDeployEntity = $this->entityManager->getRepository("App\Entity\MicroserviceDeploy")->find($id);
                 
                 if ($microserviceDeployEntity != null) {
-                    $_SESSION['microserviceDeployProfileId'] = $id;
+                    $this->session->set("microserviceDeployProfileId", $id);
 
                     $form = $this->createForm(MicroserviceDeployFormType::class, $microserviceDeployEntity, Array(
                         'validation_groups' => Array('microservice_deploy_profile')
                     ));
                     $form->handleRequest($request);
                     
-                    $this->response['values']['id'] = $_SESSION['microserviceDeployProfileId'];
+                    $this->response['values']['id'] = $this->session->get("microserviceDeployProfileId");
 
                     $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/microservice_deploy_profile.html.twig", Array(
                         'urlLocale' => $this->urlLocale,
@@ -305,10 +323,6 @@ class MicroserviceDeployController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/microservice_deploy_profile.html.twig")
     */
     public function profileSaveAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -317,10 +331,18 @@ class MicroserviceDeployController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
-        $microserviceDeployEntity = $this->entityManager->getRepository("App\Entity\MicroserviceDeploy")->find($_SESSION['microserviceDeployProfileId']);
+        $microserviceDeployEntity = $this->entityManager->getRepository("App\Entity\MicroserviceDeploy")->find($this->session->get("microserviceDeployProfileId"));
         $sshPasswordOld = $microserviceDeployEntity->getSshPassword();
         $keyPrivatePasswordOld = $microserviceDeployEntity->getKeyPrivatePassword();
         $gitCloneUrlPasswordOld = $microserviceDeployEntity->getGitCloneUrlPassword();
@@ -409,10 +431,6 @@ class MicroserviceDeployController extends AbstractController {
     * )
     */
     public function executeAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -421,7 +439,15 @@ class MicroserviceDeployController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
@@ -466,10 +492,6 @@ class MicroserviceDeployController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/microservice_deploy_delete.html.twig")
     */
     public function deleteAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -478,13 +500,21 @@ class MicroserviceDeployController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "delete") {
-                    $id = $request->get("id") == null ? $_SESSION['microserviceDeployProfileId'] : $request->get("id");
+                    $id = $request->get("id") == null ? $this->session->get("microserviceDeployProfileId") : $request->get("id");
 
                     $microserviceDeployDatabase = $this->microserviceDeployDatabase("delete", $id);
 
@@ -825,7 +855,7 @@ class MicroserviceDeployController extends AbstractController {
     }
     
     private function fileUpload($form, $entity) {
-        $row = $this->query->selectMicroserviceDeployDatabase($_SESSION['microserviceDeployProfileId']);
+        $row = $this->query->selectMicroserviceDeployDatabase($this->session->get("microserviceDeployProfileId"));
         
         $pathKeyPublic = $this->utility->getPathSrc() . "/files/microservice/deploy";
         $pathKeyPrivate = $this->utility->getPathSrc() . "/files/microservice/deploy";

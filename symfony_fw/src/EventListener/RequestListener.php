@@ -22,6 +22,8 @@ class RequestListener {
     private $utility;
     private $query;
     
+    private $session;
+    
     // Properties
     
     // Functions public
@@ -33,6 +35,8 @@ class RequestListener {
         
         $this->utility = new Utility($this->container, $this->entityManager, $translator);
         $this->query = $this->utility->getQuery();
+        
+        $this->session = $this->utility->getSession();
     }
     
     public function onKernelRequest(GetResponseEvent $event) {
@@ -41,11 +45,9 @@ class RequestListener {
         
         $request = $event->getRequest();
         
-        $session = $request->getSession();
-        
         $settingRow = $this->query->selectSettingDatabase();
         
-        $this->utility->configureCookie($session->getName(), time() + (10 * 365 * 24 * 60 * 60), $settingRow['https'], true);
+        $this->utility->configureCookie($this->session->getName(), time() + (10 * 365 * 24 * 60 * 60), $settingRow['https'], true);
         
         $checkLanguage = $this->utility->checkLanguage($request, $this->router, $settingRow);
         $request = $checkLanguage[0];
@@ -58,9 +60,9 @@ class RequestListener {
              $urlCurrentPageId = $request->get("urlCurrentPageId");
         
         $phpSession = Array(
-            'name' => $session->getName(),
-            'userInform' => $session->get("userInform"),
-            'languageTextCode' => $session->get("languageTextCode"),
+            'name' => $this->session->getName(),
+            'userInform' => $this->session->get("userInform"),
+            'languageTextCode' => $this->session->get("languageTextCode"),
             'currentPageId' => $urlCurrentPageId
         );
         

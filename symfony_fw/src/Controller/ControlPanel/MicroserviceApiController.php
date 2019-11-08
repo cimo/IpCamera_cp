@@ -27,6 +27,8 @@ class MicroserviceApiController extends AbstractController {
     private $query;
     private $ajax;
     
+    private $session;
+    
     // Properties
     
     // Functions public
@@ -41,10 +43,6 @@ class MicroserviceApiController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/microservice_api.html.twig")
     */
     public function renderAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -53,7 +51,15 @@ class MicroserviceApiController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("GET") == true && $checkUserRole == true)
@@ -78,10 +84,6 @@ class MicroserviceApiController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/microservice_api_create.html.twig")
     */
     public function createAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -90,12 +92,20 @@ class MicroserviceApiController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $microserviceApiEntity = new MicroserviceApi();
         
-        $_SESSION['microserviceApiProfileId'] = 0;
+        $this->session->set("microserviceApiProfileId", 0);
         
         $form = $this->createForm(MicroserviceApiFormType::class, $microserviceApiEntity, Array(
             'validation_groups' => Array('microservice_api_create')
@@ -144,10 +154,6 @@ class MicroserviceApiController extends AbstractController {
     * @Template("@templateRoot/render/control_panel/microservice_api_profile.html.twig")
     */
     public function profileSaveAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->urlLocale = isset($_SESSION['languageTextCode']) == true ? $_SESSION['languageTextCode'] : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-                
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -156,7 +162,15 @@ class MicroserviceApiController extends AbstractController {
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
         
+        $this->session = $this->utility->getSession();
+        
         // Logic
+        $sessionLanguageTextCode = $this->session->get("languageTextCode");
+        
+        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
         $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $settingRow = $this->query->selectSettingDatabase();
@@ -165,7 +179,7 @@ class MicroserviceApiController extends AbstractController {
         
         $id = isset($urlExtraExplode[4]) == true ? $urlExtraExplode[4] : 0;
         
-        $_SESSION['microserviceApiProfileId'] = $id;
+        $this->session->set("microserviceApiProfileId", $id);
         
         $microserviceApiEntity = $this->entityManager->getRepository("App\Entity\MicroserviceApi")->find($id);
         
@@ -216,7 +230,7 @@ class MicroserviceApiController extends AbstractController {
     
     // Functions private
     private function fileUpload($form, $entity) {
-        $row = $this->query->selectMicroserviceApiDatabase($_SESSION['microserviceApiProfileId'], true);
+        $row = $this->query->selectMicroserviceApiDatabase($this->session->get("microserviceApiProfileId"), true);
         
         $pathImage = "{$this->utility->getPathPublic()}/files/microservice/api";
         

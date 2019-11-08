@@ -21,7 +21,7 @@ class PageCommentFormType extends AbstractType {
         ));
     }
     
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, Array $options) {
         $builder->add("type", HiddenType::class, Array(
             'required' => true
         ))

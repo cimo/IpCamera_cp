@@ -22,7 +22,7 @@ class UserSelectFormType extends AbstractType {
         ));
     }
     
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, Array $options) {
         $builder->add("id", ChoiceType::class, Array(
             'required' => true,
             'placeholder' => "userSelectFormType_1",

@@ -7,11 +7,15 @@ class Ajax {
     // Vars
     private $utility;
     
+    private $session;
+    
     // Properties
     
     // Functions public
     public function __construct($utility) {
         $this->utility = $utility;
+        
+        $this->session = $this->utility->getSession();
     }
     
     public function response($array) {

@@ -221,8 +221,8 @@ class Utility {
                 </li>";
             }
             
-            if ($_SESSION['pageProfileId'] == 0) {
-                $pageRows = $this->query->selectAllPageDatabase($_SESSION['languageTextCode']);
+            if ($this->session->get("pageProfileId") == 0) {
+                $pageRows = $this->query->selectAllPageDatabase($this->session->get("languageTextCode"));
                 $id = count($pageRows) + 1;
                 
                 $html .= "<li class=\"ui-state-default\">
@@ -248,7 +248,7 @@ class Utility {
                 </li>";
             }
             
-            if ($_SESSION['moduleProfileId'] == 0) {
+            if ($this->session->get("moduleProfileId") == 0) {
                 $moduleRows = $this->query->selectAllModuleDatabase();
                 $id = count($moduleRows) + 1;
                 
@@ -676,7 +676,9 @@ class Utility {
         if (count($dateExplode) == 0)
             $dateExplode = $newData;
         else {
-            $languageDate = isset($_SESSION['languageDate']) == false ? "Y-m-d" : $_SESSION['languageDate'];
+            $sessionLanguageDate = $this->session->get("languageDate");
+            
+            $languageDate = $sessionLanguageDate == null ? "Y-m-d" : $sessionLanguageDate;
             
             if (strpos($dateExplode[0], "0000") === false)
                 $dateExplode[0] = date($languageDate, strtotime($dateExplode[0]));
@@ -876,16 +878,16 @@ class Utility {
     public function checkLanguage($request, $router, $settingRow) {
         $url = false;
         
-        if (isset($_SESSION['languageTextCode']) == false)
-            $_SESSION['languageTextCode'] = $settingRow['language'];
+        if ($this->session->get("languageTextCode") == null)
+            $this->session->set("languageTextCode", $settingRow['language']);
         
         if ($request->get("languageTextCode") != null)
-            $_SESSION['languageTextCode'] = $request->get("languageTextCode");
+            $this->session->set("languageTextCode", $request->get("languageTextCode"));
         else if ($request->get("languageTextCode") == null && $request->get("_locale") != null)
-            $_SESSION['languageTextCode'] = $request->get("_locale");
+            $this->session->set("languageTextCode", $request->get("_locale"));
         
-        $request->setLocale($_SESSION['languageTextCode']);
-        $request->setDefaultLocale($_SESSION['languageTextCode']);
+        $request->setLocale($this->session->get("languageTextCode"));
+        $request->setDefaultLocale($this->session->get("languageTextCode"));
         
         $languageRow = $this->query->selectLanguageDatabase($request->getLocale()); 
         
@@ -950,7 +952,7 @@ class Utility {
             
             if ($request->isXmlHttpRequest() == true) {
                 echo json_encode(Array(
-                    'userInform' => $_SESSION['userInform']
+                    'userInform' => $this->session->get("userInform")
                 ));
                 
                 $this->session->set("userTimestamp", time());
@@ -1038,22 +1040,24 @@ class Utility {
     }
     
     public function download() {
-        if (isset($_SESSION['download']) == true) {
+        $sessionDownload = $this->session->get("download");
+        
+        if ($sessionDownload != null) {
             header("Content-Description: File Transfer");
-            header("Content-Disposition: attachment; filename=\"" . basename("{$_SESSION['download']['path']}/{$_SESSION['download']['name']}") . "\"");
+            header("Content-Disposition: attachment; filename=\"" . basename("{$sessionDownload['path']}/{$sessionDownload['name']}") . "\"");
             header("Content-Transfer-Encoding: binary");
-            header("Content-Length: " . filesize("{$_SESSION['download']['path']}/{$_SESSION['download']['name']}"));
-            header("Content-Type: {$_SESSION['download']['mime']}");
+            header("Content-Length: " . filesize("{$sessionDownload['path']}/{$sessionDownload['name']}"));
+            header("Content-Type: {$sessionDownload['mime']}");
             header("Expires: 0");
             header("Cache-Control: must-revalidate, pre-check=0, post-check=0");
             header("Pragma: public");
             
-            readfile("{$_SESSION['download']['path']}/{$_SESSION['download']['name']}");
+            readfile("{$sessionDownload['path']}/{$sessionDownload['name']}");
             
-            if ($_SESSION['download']['remove'] == true)
-                unlink("{$_SESSION['download']['path']}/{$_SESSION['download']['name']}");
+            if ($sessionDownload['remove'] == true)
+                unlink("{$sessionDownload['path']}/{$sessionDownload['name']}");
             
-            unset($_SESSION['download']);
+            $this->session->remove("download");
             
             return;
         }
