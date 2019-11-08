@@ -31,6 +31,8 @@ Class CronJob {
             }
         }
     }
+    
+    // Functions private
 }
 
 $job = new CronJob();
