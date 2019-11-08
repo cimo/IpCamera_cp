@@ -366,31 +366,25 @@ function Utility() {
     };
     
     self.bodyProgress = function() {
-        $(document).on("readystatechange", "", function(event) {
-            var linearProgressMdc = new mdc.linearProgress.MDCLinearProgress.attachTo($("#body_progress").find(".mdc-linear-progress")[0]);
+        var linearProgressMdc = new mdc.linearProgress.MDCLinearProgress.attachTo($("#body_progress").find(".mdc-linear-progress")[0]);
+        
+        var performanceTiming = window.performance.timing;
+        var estimatedTime = performanceTiming.loadEventEnd - performanceTiming.navigationStart;
+        var time = parseInt((estimatedTime / 1000) % 60) * 100;
+        var stepTime = Math.abs(Math.floor(time / 100));
+        var current = 0;
+        
+        var interval = setInterval(function() {
+            current += 0.1;
             
-            var elements = new Array();
+            linearProgressMdc.progress = current;
             
-            var progress = 0;
-            
-            if ($(this)[0].readyState === "interactive") {
-                $.each($(this).find("*"), function(key, value) {
-                    elements.push(value);
-                });
+            if (current >= 2) {
+                $("#body_progress").fadeOut("slow");
                 
-                $.each(elements, function(key, value) {
-                    progress = key / elements.length;
-
-                    linearProgressMdc.progress = progress;
-                });
+                clearInterval(interval);
             }
-            
-            if (progress >= 0.99) {
-                document.fonts.ready.then(function() {
-                    $("#body_progress").fadeOut("slow");
-                });
-            }
-        });
+	}, stepTime);
     };
     
     self.uploadFakeClick = function() {

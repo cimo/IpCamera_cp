@@ -10,7 +10,7 @@ Class CronJob {
     
     // Functions public
     public function __construct() {
-        $id = intval($_SERVER['argv'][1]);
+        $id = isset($_SERVER['argv']) == true ? intval($_SERVER['argv'][1]) : 0;
         
         if ($id > 0) {
             $config = new \App\Config();
