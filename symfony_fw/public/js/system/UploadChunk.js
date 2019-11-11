@@ -1,8 +1,8 @@
 /* global utility, ajax, loader, flashBag, materialDesign */
 
-var upload = new Upload();
+var uploadChunk = new UploadChunk();
 
-function Upload() {
+function UploadChunk() {
     // Vars
     var self = this;
     
@@ -107,7 +107,7 @@ function Upload() {
             if (xhr.readyState === 4) {
                 var jsonParse = JSON.parse(xhr.response);
                 
-                var response = jsonParse.response.upload !== undefined ? jsonParse.response.upload.processFile : jsonParse.response;
+                var response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
                 
                 if (response.messages.error !== undefined) {
                     resetValue();
@@ -145,7 +145,7 @@ function Upload() {
             if (xhr.readyState === 4) {
                 var jsonParse = JSON.parse(xhr.response);
                 
-                var response = jsonParse.response.upload !== undefined ? jsonParse.response.upload.processFile : jsonParse.response;
+                var response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
                 
                 if (response.messages.error !== undefined) {
                     resetValue();
@@ -181,7 +181,7 @@ function Upload() {
             if (xhr.readyState === 4) {
                 var jsonParse = JSON.parse(xhr.response);
                 
-                var response = jsonParse.response.upload !== undefined ? jsonParse.response.upload.processFile : jsonParse.response;
+                var response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
                 
                 if (response.messages.error !== undefined) {
                     resetValue();
@@ -227,7 +227,7 @@ function Upload() {
             if (xhr.readyState === 4) {
                 var jsonParse = JSON.parse(xhr.response);
                 
-                var response = jsonParse.response.upload !== undefined ? jsonParse.response.upload.processFile : jsonParse.response;
+                var response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
                 
                 if (response.messages.error !== undefined) {
                     resetValue();
@@ -311,7 +311,7 @@ function Upload() {
                         $(tagContainer).find(".popupWait .content").hide();
                         
                         $(tagContainer).find(".popupWait .result").show();
-                        $(tagContainer).find(".popupWait .result").html("<p>" + window.textUpload.label_1 + "</p>");
+                        $(tagContainer).find(".popupWait .result").html("<p>" + window.textUploadChunk.label_1 + "</p>");
                     }
                     else if (xhr.response.status === "finish") {
                         $(tagContainer).find(".popupWait .close").prop("disabled", false);
@@ -321,7 +321,7 @@ function Upload() {
                         $(tagContainer).find(".popupWait .content").hide();
                         
                         $(tagContainer).find(".popupWait .result").show();
-                        $(tagContainer).find(".popupWait .result").html("<p>" + window.textUpload.label_2 + "</p>");
+                        $(tagContainer).find(".popupWait .result").html("<p>" + window.textUploadChunk.label_2 + "</p>");
                     }
                     else if (xhr.response.status === "loop")
                         lock(xhr.response.values.lockName);

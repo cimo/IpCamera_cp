@@ -38,7 +38,13 @@ class MyPageProfileController extends AbstractController {
     /**
     * @Template("@templateRoot/render/myPage.html.twig")
     */
-    public function renderAction($_locale, $urlCurrentPageId, $urlExtra, Request $request) {
+    public function renderAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
+        $this->entityManager = $this->getDoctrine()->getManager();
+        
+        $this->response = Array();
+        
+        $this->utility = new Utility($this->container, $this->entityManager, $translator);
+        
         $this->session = $this->utility->getSession();
         
         // Logic

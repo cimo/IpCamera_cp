@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use App\Classes\System\Utility;
 use App\Classes\System\Ajax;
-use App\Classes\System\Upload;
+use App\Classes\System\UploadChunk;
 use App\Classes\System\ToolExcel;
 
 use App\Entity\ApiBasic;
@@ -30,7 +30,7 @@ class ApiBasicController extends AbstractController {
     private $utility;
     private $query;
     private $ajax;
-    private $upload;
+    private $uploadChunk;
     private $toolExcel;
     
     private $session;
@@ -567,7 +567,7 @@ class ApiBasicController extends AbstractController {
         $this->utility = new Utility($this->container, $this->entityManager, $translator);
         $this->query = $this->utility->getQuery();
         $this->ajax = new Ajax($this->utility);
-        $this->upload = new Upload($this->utility);
+        $this->uploadChunk = new UploadChunk($this->utility);
         $this->toolExcel = new ToolExcel($this);
         
         $this->session = $this->utility->getSession();
@@ -592,16 +592,16 @@ class ApiBasicController extends AbstractController {
                     if (file_exists($lockPath) == false) {
                         $path = "{$this->utility->getPathSrc()}/files/microservice/api/basic";
 
-                        $this->upload->setSettings(Array(
+                        $this->uploadChunk->setSettings(Array(
                             'path' => $path,
                             'chunkSize' => 1048576,
                             'mimeType' => Array("text/plain")
                         ));
-                        $uploadProcessFile = $this->upload->processFile();
+                        $uploadChunkProcessFile = $this->uploadChunk->processFile();
 
-                        $this->response['upload']['processFile'] = $uploadProcessFile;
+                        $this->response['uploadChunk']['processFile'] = $uploadChunkProcessFile;
 
-                        if (isset($uploadProcessFile['status']) == true && $uploadProcessFile['status'] == "complete") {
+                        if (isset($uploadChunkProcessFile['status']) == true && $uploadChunkProcessFile['status'] == "complete") {
                             $this->response['values']['lockName'] = "{$this->apiBasicRow['name']}_lock";
 
                             $this->utility->closeAjaxRequest($this->response, true);
@@ -609,9 +609,9 @@ class ApiBasicController extends AbstractController {
                             file_put_contents($lockPath, "");
                             
                             $this->session->set("lockPath", $lockPath);
-                            $this->session->set("totalLineCsv", $this->toolExcel->totalLineCsv("$path/{$uploadProcessFile['fileName']}", ","));
+                            $this->session->set("totalLineCsv", $this->toolExcel->totalLineCsv("$path/{$uploadChunkProcessFile['fileName']}", ","));
 
-                            $readCsv = $this->toolExcel->readCsv("$path/{$uploadProcessFile['fileName']}", ",", $apiBasicDatabaseRow);
+                            $readCsv = $this->toolExcel->readCsv("$path/{$uploadChunkProcessFile['fileName']}", ",", $apiBasicDatabaseRow);
 
                             if ($readCsv == true) {
                                 //...

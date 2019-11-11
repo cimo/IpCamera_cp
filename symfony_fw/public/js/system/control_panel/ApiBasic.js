@@ -1,4 +1,4 @@
-/* global utility, ajax, upload, materialDesign, popupEasy, chaato, widgetDatePicker */
+/* global utility, ajax, uploadChunk, materialDesign, popupEasy, chaato, widgetDatePicker */
 
 var controlPanelApiBasic = new ControlPanelApiBasic();
 
@@ -68,12 +68,12 @@ function ControlPanelApiBasic() {
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
             $("#cp_api_select_result").html(xhr.response.render);
             
-            upload.init();
-            upload.setUrlRequest(window.url.cpApiBasicCsv + "?token=" + window.session.token + "&event=csv");
-            upload.setTagContainer("#upload_apiBasic_csv_container");
-            upload.setTagProgressBar("#upload_apiBasic_csv_container .upload_chunk .mdc-linear-progress");
-            upload.setLockUrl(window.url.root + "/listener/lockListener.php");
-            upload.processFile();
+            uploadChunk.init();
+            uploadChunk.setUrlRequest(window.url.cpApiBasicCsv + "?token=" + window.session.token + "&event=csv");
+            uploadChunk.setTagContainer("#upload_chunk_apiBasic_csv_container");
+            uploadChunk.setTagProgressBar("#upload_chunk_apiBasic_csv_container .upload_chunk .mdc-linear-progress");
+            uploadChunk.setLockUrl(window.url.root + "/listener/lockListener.php");
+            uploadChunk.processFile();
             
             widgetDatePicker.setInputFill(".widget_datePicker_input");
             widgetDatePicker.action();

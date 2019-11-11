@@ -649,14 +649,33 @@ table {
     border: 1px solid #000000;
 }
 
-.upload_image_container {
-    .uploader {
-        display: inline-block;
-        vertical-align: top;
-        margin-left: 5px;
+.upload_container {
+    .input {
+        margin: 0 0 5px 5px;
         
-        .material_upload {
-            margin-bottom: 5px;
+        .form_row {
+            display: inline-block;
+            
+            .material_upload {
+                .mdc-button {
+                    padding: 0 !important;
+                    min-width: 35px !important;
+                }
+                
+                .material-icons {
+                    margin: 0 !important;
+                }
+            }
+            
+            .mdc-form-field {
+                .mdc-checkbox {
+                    margin-top: 5px !important;
+                }
+
+                label {
+                    margin-top: 5px !important;
+                }
+            }
         }
     }
 }

@@ -15,8 +15,6 @@ use App\Entity\MicroserviceDeploy;
 use App\Form\MicroserviceDeployFormType;
 use App\Form\MicroserviceDeploySelectFormType;
 
-use App\Service\FileUploader;
-
 class MicroserviceDeployController extends AbstractController {
     // Vars
     private $urlLocale;

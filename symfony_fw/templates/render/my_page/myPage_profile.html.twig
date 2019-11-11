@@ -6,9 +6,9 @@
     <button class="mdc-button mdc-button--dense mdc-button--raised button_accordion" type="button">{% trans %}index_9{% endtrans %}</button>
     <div class="accordion">
         <form id="form_myPage_profile" action="{{path("myPage_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
-            <div class="upload_image_container">
+            <div class="upload_container">
                 <img class="avatar" src="{{avatar}}" alt="Avatar"/>
-                <div class="uploader">
+                <div class="input">
                     {{form_row(form.image)}}
                     {{form_row(form.removeImage)}}
                 </div>
