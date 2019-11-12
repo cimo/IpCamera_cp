@@ -352,17 +352,17 @@ class IpCameraController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                // Password
-                $password = $passwordOld;
+                $password = "";
                 
-                if ($form->get("password")->getData() == null || $form->get("password")->getData() == "") {
-                    $ipCameraEntity->setPassword($password);
-                    $password = "";
+                if ($form->get("username")->getData() == null)
+                    $ipCameraEntity->setPassword(null);
+                else {
+                    if ($form->get("password")->getData() == null)
+                        $ipCameraEntity->setPassword($passwordOld);
+                    else
+                        $password = $form->get("password")->getData();
                 }
-                else
-                    $password = $form->get("password")->getData();
                 
-                // Database
                 $this->entityManager->persist($ipCameraEntity);
                 $this->entityManager->flush();
                 

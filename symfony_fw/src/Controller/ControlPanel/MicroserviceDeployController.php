@@ -354,41 +354,38 @@ class MicroserviceDeployController extends AbstractController {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
                 $microserviceDeployEntity = $this->fileUpload($form, $microserviceDeployEntity);
                 
-                $sshPassword = $sshPasswordOld;
+                $sshPassword = "";
                 
-                if ($form->get("sshUsername")->getData() == null || $form->get("sshUsername")->getData() == "")
-                    $sshPassword = null;
-                
-                if ($form->get("sshPassword")->getData() == null || $form->get("sshPassword")->getData() == "") {
-                    $microserviceDeployEntity->setSshPassword($sshPassword);
-                    $sshPassword = "";
+                if ($form->get("sshUsername")->getData() == null)
+                    $microserviceDeployEntity->setSshPassword(null);
+                else {
+                    if ($form->get("sshPassword")->getData() == null)
+                        $microserviceDeployEntity->setSshPassword($sshPasswordOld);
+                    else
+                        $sshPassword = $form->get("sshPassword")->getData();
                 }
-                else
-                    $sshPassword = $form->get("sshPassword")->getData();
                 
-                $keyPrivatePassword = $keyPrivatePasswordOld;
+                $keyPrivatePassword = "";
                 
-                if ($form->get("keyPrivate")->getData() == null || $form->get("keyPrivate")->getData() == "")
-                    $keyPrivatePassword = null;
-                
-                if ($form->get("keyPrivatePassword")->getData() == null || $form->get("keyPrivatePassword")->getData() == "") {
-                    $microserviceDeployEntity->setKeyPrivatePassword($keyPrivatePassword);
-                    $keyPrivatePassword = "";
+                if ($form->get("keyPrivate")->getData() == null)
+                    $microserviceDeployEntity->setKeyPrivatePassword(null);
+                else {
+                    if ($form->get("keyPrivatePassword")->getData() == null)
+                        $microserviceDeployEntity->setKeyPrivatePassword($keyPrivatePasswordOld);
+                    else
+                        $keyPrivatePassword = $form->get("keyPrivatePassword")->getData();
                 }
-                else
-                    $keyPrivatePassword = $form->get("keyPrivatePassword")->getData();
                 
-                $gitCloneUrlPassword = $gitCloneUrlPasswordOld;
+                $gitCloneUrlPassword = "";
                 
-                if ($form->get("gitCloneUrlUsername")->getData() == null || $form->get("gitCloneUrlUsername")->getData() == "")
-                    $gitCloneUrlPassword = null;
-                
-                if ($form->get("gitCloneUrlPassword")->getData() == null || $form->get("gitCloneUrlPassword")->getData() == "") {
-                    $microserviceDeployEntity->setGitCloneUrlPassword($gitCloneUrlPassword);
-                    $gitCloneUrlPassword = "";
+                if ($form->get("gitCloneUrlUsername")->getData() == null)
+                    $microserviceDeployEntity->setGitCloneUrlPassword(null);
+                else {
+                    if ($form->get("gitCloneUrlPassword")->getData() == null)
+                        $microserviceDeployEntity->setGitCloneUrlPassword($gitCloneUrlPasswordOld);
+                    else
+                        $gitCloneUrlPassword = $form->get("gitCloneUrlPassword")->getData();
                 }
-                else
-                    $gitCloneUrlPassword = $form->get("gitCloneUrlPassword")->getData();
                 
                 $this->entityManager->persist($microserviceDeployEntity);
                 $this->entityManager->flush();
@@ -550,7 +547,7 @@ class MicroserviceDeployController extends AbstractController {
     
     // Functions private
     private function createRenderHtml($element) {
-        $command = nl2br($element['command']);
+        $command = nl2br(base64_decode($element['command']));
         
         $renderHtml = "<ul class=\"mdc-list mdc-list--two-line mdc-list--avatar-list\">
             <li class=\"mdc-list-item\">
@@ -590,7 +587,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_5")}
                     <span class=\"mdc-list-item__secondary-text\">";
-                        $renderHtml .= $element['ssh_password'] == null ? "" : "***";
+                        $renderHtml .= $element['ssh_password'] == null ? "" : "******";
                     $renderHtml .= "</span>
                 </span>
             </li>
@@ -616,7 +613,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_10")}
                     <span class=\"mdc-list-item__secondary-text\">";
-                        $renderHtml .= $element['key_private_password'] == null ? "" : "***";
+                        $renderHtml .= $element['key_private_password'] == null ? "" : "******";
                     $renderHtml .= "</span>
                 </span>
             </li>
@@ -666,7 +663,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__text\">
                     {$this->utility->getTranslator()->trans("microserviceDeployFormType_16")}
                     <span class=\"mdc-list-item__secondary-text\">";
-                        $renderHtml .= $element['git_clone_url_password'] == null ? "" : "***";
+                        $renderHtml .= $element['git_clone_url_password'] == null ? "" : "******";
                     $renderHtml .= "</span>
                 </span>
             </li>
@@ -977,7 +974,7 @@ class MicroserviceDeployController extends AbstractController {
                     );
                 }
                 
-                $rowCommandSplit = preg_split("/\r\n|\r|\n/", $row['command']);
+                $rowCommandSplit = preg_split("/\r\n|\r|\n/", base64_decode($row['command']));
                 
                 foreach ($rowCommandSplit as $key => $value) {
                     $commands[] = $value;

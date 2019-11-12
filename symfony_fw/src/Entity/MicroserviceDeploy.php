@@ -207,7 +207,7 @@ class MicroserviceDeploy {
     }
     
     public function setCommand($value) {
-        $this->command = $value;
+        $this->command = base64_encode($value);
     }
     
     public function setActive($value) {
@@ -301,7 +301,7 @@ class MicroserviceDeploy {
     }
     
     public function getCommand() {
-        return $this->command;
+        return base64_decode($this->command);
     }
     
     public function getActive() {

@@ -129,7 +129,6 @@ class MicroserviceDeployFormType extends AbstractType {
         
         $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $formEvent) {
             $data = $formEvent->getData();
-            $form = $formEvent->getForm();
             
             if ($data->getRemoveKeyPublic() == false)
                 $data->setRemoveKeyPublic("0");

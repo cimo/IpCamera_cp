@@ -14,6 +14,9 @@
         {# Attribute "required" is not supported #}
         {%- set required = false -%}
     {%- endif -%}
+    {%- if type == 'password' and data != "" -%}
+        {%- set isPassword = true -%}
+    {%- endif -%}
     {# cimo + #}
     {% if styleType is defined and styleType == "box" %}
         <div class="mdc-text-field mdc-text-field--box{% if icon is defined %} mdc-text-field--with-leading-icon{% endif %}{% if dense is defined %} mdc-text-field--dense{% endif %}">
@@ -21,7 +24,7 @@
                 <i class="material-icons mdc-text-field__icon" {% if iconTab is defined %}tabindex="0"{% endif %} role="button">{{icon}}</i>
             {%- endif -%}
             
-            <input class="mdc-text-field__input" type="{{type}}" {{ block('widget_attributes') }} {% if value is defined %}value="{{value}}"{% endif %} autocomplete="off" aria-label="label"/>
+            <input class="mdc-text-field__input" type="{{type}}" {{ block('widget_attributes') }} {% if value is defined %}value="{{value}}"{% endif %} autocomplete="off" aria-label="label" {% if isPassword is defined %}placeholder="******"{% endif %}/>
             
             {{- form_label(form) -}}
             
@@ -29,7 +32,7 @@
         </div>
     {% elseif styleType is defined and styleType == "boxTrailing" %}
         <div class="mdc-text-field mdc-text-field--box{% if icon is defined %} mdc-text-field--with-trailing-icon{% endif %}{% if dense is defined %} mdc-text-field--dense{% endif %}">
-            <input class="mdc-text-field__input" type="{{type}}" {{ block('widget_attributes') }} {% if value is defined %}value="{{value}}"{% endif %} autocomplete="off" aria-label="label"/>
+            <input class="mdc-text-field__input" type="{{type}}" {{ block('widget_attributes') }} {% if value is defined %}value="{{value}}"{% endif %} autocomplete="off" aria-label="label" {% if isPassword is defined %}placeholder="******"{% endif %}/>
             
             {{- form_label(form) -}}
             
@@ -45,7 +48,7 @@
                 <i class="material-icons mdc-text-field__icon" {% if iconTab is defined %}tabindex="0"{% endif %} role="button">{{icon}}</i>
             {%- endif -%}
             
-            <input class="mdc-text-field__input" type="{{type}}" {{ block('widget_attributes') }} {% if value is defined %}value="{{value}}"{% endif %} autocomplete="off" aria-label="label"/>
+            <input class="mdc-text-field__input" type="{{type}}" {{ block('widget_attributes') }} {% if value is defined %}value="{{value}}"{% endif %} autocomplete="off" aria-label="label" {% if isPassword is defined %}placeholder="******"{% endif %}/>
             
             {{- form_label(form) -}}
             
@@ -63,7 +66,7 @@
                 <i class="material-icons mdc-text-field__icon" {% if iconTab is defined %}tabindex="0"{% endif %} role="button">{{icon}}</i>
             {%- endif -%}
             
-            <input class="mdc-text-field__input" type="{{type}}" {{ block('widget_attributes') }} {% if value is defined %}value="{{value}}"{% endif %} autocomplete="off" aria-label="label"/>
+            <input class="mdc-text-field__input" type="{{type}}" {{ block('widget_attributes') }} {% if value is defined %}value="{{value}}"{% endif %} autocomplete="off" aria-label="label" {% if isPassword is defined %}placeholder="******"{% endif %}/>
             
             {{- form_label(form) -}}
             
@@ -81,7 +84,7 @@
                 <i class="material-icons mdc-text-field__icon" {% if iconTab is defined %}tabindex="0"{% endif %} role="button">{{icon}}</i>
             {%- endif -%}
             
-            <input class="mdc-text-field__input" type="{{type}}" {{ block('widget_attributes') }} {% if value is defined %}value="{{value}}"{% endif %} autocomplete="off" aria-label="label"/>
+            <input class="mdc-text-field__input" type="{{type}}" {{ block('widget_attributes') }} {% if value is defined %}value="{{value}}"{% endif %} autocomplete="off" aria-label="label" {% if isPassword is defined %}placeholder="******"{% endif %}/>
             
             {{- form_label(form) -}}
             
@@ -89,7 +92,7 @@
         </div>
     {% elseif styleType is defined and styleType == "basicTrailing" %}
         <div class="mdc-text-field mdc-text-field__basicTrailing{% if dense is defined %} mdc-text-field--dense{% endif %}">
-            <input class="mdc-text-field__input" type="{{type}}" {{ block('widget_attributes') }} {% if value is defined %}value="{{value}}"{% endif %} autocomplete="off" aria-label="label"/>
+            <input class="mdc-text-field__input" type="{{type}}" {{ block('widget_attributes') }} {% if value is defined %}value="{{value}}"{% endif %} autocomplete="off" aria-label="label" {% if isPassword is defined %}placeholder="******"{% endif %}/>
             
             {{- form_label(form) -}}
             

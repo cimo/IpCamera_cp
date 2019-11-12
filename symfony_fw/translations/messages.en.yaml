@@ -767,6 +767,7 @@ date.time: H:i:s
 "microserviceDeployFormType_13": "Git user name"
 "microserviceDeployFormType_14_i": "Without https:// (is setted by default)."
 "microserviceDeployFormType_14": "Git clone url"
+"microserviceDeployFormType_15_i": "If you remove 'Git clone url username' you clean 'Git clone url password' too."
 "microserviceDeployFormType_15": "Git clone url username"
 "microserviceDeployFormType_16": "Git clone url password"
 "microserviceDeployFormType_17": "Git clone path"

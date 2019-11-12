@@ -279,17 +279,16 @@ class ApiBasicController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                $databasePassword = $databasePasswordOld;
+                $databasePassword = "";
                 
-                if ($form->get("databaseUsername")->getData() == null || $form->get("databaseUsername")->getData() == "")
-                    $databasePassword = null;
-                
-                if ($form->get("databasePassword")->getData() == null || $form->get("databasePassword")->getData() == "") {
-                    $apiBasicEntity->setDatabasePassword($databasePassword);
-                    $databasePassword = "";
+                if ($form->get("databaseUsername")->getData() == null)
+                    $apiBasicEntity->setDatabasePassword(null);
+                else {
+                    if ($form->get("databasePassword")->getData() == null)
+                        $apiBasicEntity->setDatabasePassword($databasePasswordOld);
+                    else
+                        $databasePassword = $form->get("databasePassword")->getData();
                 }
-                else
-                    $databasePassword = $form->get("databasePassword")->getData();
                 
                 $this->entityManager->persist($apiBasicEntity);
                 $this->entityManager->flush();
