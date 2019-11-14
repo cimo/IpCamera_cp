@@ -165,6 +165,7 @@ date.time: H:i:s
 
 "pageCommentType_1": "Comment"
 "pageCommentType_2": "Send"
+"pageCommentType_3": "Reset"
 
 "pageCommentController_1": "Search not completed!"
 "pageCommentController_2": "Comment sended."

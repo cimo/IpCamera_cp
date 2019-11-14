@@ -16,6 +16,8 @@ function PageComment() {
         tableAndPagination.search();
         tableAndPagination.pagination();
         
+        $("#form_pageComment").find(".button_reset").hide();
+        
         $("#form_pageComment_type").val("new");
         
         $("#form_pageComment").on("submit", "", function(event) {
@@ -39,7 +41,18 @@ function PageComment() {
             );
         });
         
+        $("#form_pageComment .button_reset").on("click", "", function(event) {
+            $(this).hide();
+            
+            $("#form_pageComment_type").val("new");
+            
+            $("#form_pageComment").find(".mdc-text-field__input").next().removeClass("mdc-floating-label--float-above mdc-text-field--invalid");
+            $("#form_pageComment").find(".mdc-text-field__input").val("");
+        });
+        
         $(document).on("click", "#pageComment_result .button_reply", function(event) {
+            $("#form_pageComment").find(".button_reset").show();
+            
             var id = $(event.target).parent().attr("data-comment");
             
             $("#form_pageComment_type").val("reply_" + id);
@@ -48,6 +61,8 @@ function PageComment() {
         });
         
         $(document).on("click", "#pageComment_result .button_edit", function(event) {
+            $("#form_pageComment").find(".button_reset").show();
+            
             var id = $(event.target).parent().attr("data-comment");
             var argument = $(event.target).parent().find(".argument").text().trim();
             

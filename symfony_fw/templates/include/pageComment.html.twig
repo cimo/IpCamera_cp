@@ -24,6 +24,10 @@
                 {{form_widget(form._token)}}
                 
                 {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
+                
+                <button class="mdc-button mdc-button--dense mdc-button--raised mdc-theme--secondary-bg button_reset" type="button">
+                    {% trans %}pageCommentType_3{% endtrans %}
+                </button>
             </form>
         {% else %}
             <p>{% trans %}pageComment_1{% endtrans %}</p>
