@@ -174,8 +174,8 @@ class Utility {
         return $html;
     }
     
-    public function createPageSelectHtml($urlLocale, $selectId, $label) {
-        $rows = $this->query->selectAllPageDatabase($urlLocale);
+    public function createPageSelectHtml($urlLocale, $selectId, $label, $draft = false) {
+        $rows = $this->query->selectAllPageDatabase($urlLocale, null, $draft);
         
         $pageList = $this->createPageList($rows, true);
         
@@ -210,7 +210,7 @@ class Utility {
         return $html;
     }
     
-    public function createPageSortListHtml($rows) {
+    public function createPageSortListHtml($rows, $draft = false) {
         $html = "<ul class=\"sort_list\">";
             foreach ($rows as $key => $value) {
                 $html .= "<li class=\"ui-state-default\">
@@ -222,7 +222,7 @@ class Utility {
             }
             
             if ($this->session->get("pageProfileId") == 0) {
-                $pageRows = $this->query->selectAllPageDatabase($this->session->get("languageTextCode"));
+                $pageRows = $this->query->selectAllPageDatabase($this->session->get("languageTextCode"), null, $draft);
                 $id = count($pageRows) + 1;
                 
                 $html .= "<li class=\"ui-state-default\">

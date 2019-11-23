@@ -4,10 +4,13 @@ namespace App\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class PageFormType extends AbstractType {
@@ -129,8 +132,19 @@ class PageFormType extends AbstractType {
             'required' => false,
             'label' => "pageFormType_17"
         ))
+        ->add("draft", CheckboxType::class, Array(
+            'required' => false,
+            'label' => "pageFormType_18"
+        ))
         ->add("submit", SubmitType::class, Array(
-            'label' => "pageFormType_18",
+            'label' => "pageFormType_19",
         ));
+        
+        $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $formEvent) {
+            $data = $formEvent->getData();
+            
+            if ($data->getDraft() == false)
+                $data->setDraft("0");
+        });
     }
 }

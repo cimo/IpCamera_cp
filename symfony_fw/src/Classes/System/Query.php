@@ -188,17 +188,34 @@ class Query {
         return $query->fetchAll();
     }
     
-    public function selectPageDatabase($language, $id) {
-        $query = $this->connection->prepare("SELECT page.*,
-                                                page_title.$language AS title,
-                                                page_argument.$language AS argument,
-                                                page_menu_name.$language AS menu_name
-                                                FROM page, page_title, page_argument, page_menu_name
-                                            WHERE page.id = :id
-                                            AND page_title.id = page.id
-                                            AND page_argument.id = page.id
-                                            AND page_menu_name.id = page.id
-                                            ORDER BY COALESCE(parent, rank_in_menu), rank_in_menu");
+    public function selectPageDatabase($language, $id, $draft = false) {
+        if ($draft == false) {
+            $query = $this->connection->prepare("SELECT page.*,
+                                                    page_title.$language AS title,
+                                                    page_argument.$language AS argument,
+                                                    page_menu_name.$language AS menu_name
+                                                    FROM page, page_title, page_argument, page_menu_name
+                                                WHERE page.draft = :draft
+                                                AND page.id = :id
+                                                AND page_title.id = page.id
+                                                AND page_argument.id = page.id
+                                                AND page_menu_name.id = page.id
+                                                ORDER BY COALESCE(parent, rank_in_menu), rank_in_menu");
+            
+            $query->bindValue(":draft", 0);
+        }
+        else {
+            $query = $this->connection->prepare("SELECT page.*,
+                                                    page_title.$language AS title,
+                                                    page_argument.$language AS argument,
+                                                    page_menu_name.$language AS menu_name
+                                                    FROM page, page_title, page_argument, page_menu_name
+                                                WHERE page.id = :id
+                                                AND page_title.id = page.id
+                                                AND page_argument.id = page.id
+                                                AND page_menu_name.id = page.id
+                                                ORDER BY COALESCE(parent, rank_in_menu), rank_in_menu");
+        }
         
         $query->bindValue(":id", $id);
         
@@ -207,37 +224,113 @@ class Query {
         return $query->fetch();
     }
     
-    public function selectAllPageDatabase($language, $search = null) {
-        if ($search == null) {
-            $query = $this->connection->prepare("SELECT page.*,
-                                                    page_title.$language AS title,
-                                                    page_argument.$language AS argument,
-                                                    page_menu_name.$language AS menu_name
-                                                FROM page, page_title, page_argument, page_menu_name
-                                                WHERE page_title.id = page.id
-                                                AND page_argument.id = page.id
-                                                AND page_menu_name.id = page.id
-                                                ORDER BY COALESCE(parent, rank_in_menu), rank_in_menu");
+    public function selectAllPageDatabase($language, $search = null, $draft = false) {
+        if ($draft == false) {
+            if ($search == null) {
+                $query = $this->connection->prepare("SELECT page.*,
+                                                        page_title.$language AS title,
+                                                        page_argument.$language AS argument,
+                                                        page_menu_name.$language AS menu_name
+                                                    FROM page, page_title, page_argument, page_menu_name
+                                                    WHERE page.draft = :draft
+                                                    AND page_title.id = page.id
+                                                    AND page_argument.id = page.id
+                                                    AND page_menu_name.id = page.id
+                                                    ORDER BY COALESCE(parent, rank_in_menu), rank_in_menu");
+            }
+            else {
+                $query = $this->connection->prepare("SELECT page.*,
+                                                        page_title.$language AS title,
+                                                        page_argument.$language AS argument,
+                                                        page_menu_name.$language AS menu_name
+                                                    FROM page, page_title, page_argument, page_menu_name
+                                                    WHERE page.draft = :draft
+                                                    AND page_title.id = page.id
+                                                    AND page_argument.id = page.id
+                                                    AND page_menu_name.id = page.id
+                                                    AND page.only_link = :onlyLink
+                                                    AND (page.id = :idStartA OR page.id > :idStartB)
+                                                    AND (page_title.$language LIKE :search
+                                                        OR page_argument.$language LIKE :search
+                                                        OR page_menu_name.$language LIKE :search)");
+                
+                $query->bindValue(":onlyLink", 0);
+                $query->bindValue(":idStartA", 2);
+                $query->bindValue(":idStartB", 5);
+                $query->bindValue(":search", "%$search%");
+            }
+            
+            $query->bindValue(":draft", 0);
         }
         else {
-            $query = $this->connection->prepare("SELECT page.*,
-                                                    page_title.$language AS title,
-                                                    page_argument.$language AS argument,
-                                                    page_menu_name.$language AS menu_name
-                                                FROM page, page_title, page_argument, page_menu_name
-                                                WHERE page_title.id = page.id
-                                                AND page_argument.id = page.id
-                                                AND page_menu_name.id = page.id
-                                                AND page.only_link = :onlyLink
-                                                AND (page.id = :idStartA OR page.id > :idStartB)
-                                                AND (page_title.$language LIKE :search
-                                                    OR page_argument.$language LIKE :search
-                                                    OR page_menu_name.$language LIKE :search)");
+            if ($search == null) {
+                $query = $this->connection->prepare("SELECT page.*,
+                                                        page_title.$language AS title,
+                                                        page_argument.$language AS argument,
+                                                        page_menu_name.$language AS menu_name
+                                                    FROM page, page_title, page_argument, page_menu_name
+                                                    WHERE page_title.id = page.id
+                                                    AND page_argument.id = page.id
+                                                    AND page_menu_name.id = page.id
+                                                    ORDER BY COALESCE(parent, rank_in_menu), rank_in_menu");
+            }
+            else {
+                $query = $this->connection->prepare("SELECT page.*,
+                                                        page_title.$language AS title,
+                                                        page_argument.$language AS argument,
+                                                        page_menu_name.$language AS menu_name
+                                                    FROM page, page_title, page_argument, page_menu_name
+                                                    WHERE page_title.id = page.id
+                                                    AND page_argument.id = page.id
+                                                    AND page_menu_name.id = page.id
+                                                    AND page.only_link = :onlyLink
+                                                    AND (page.id = :idStartA OR page.id > :idStartB)
+                                                    AND (page_title.$language LIKE :search
+                                                        OR page_argument.$language LIKE :search
+                                                        OR page_menu_name.$language LIKE :search)");
+                
+                $query->bindValue(":onlyLink", 0);
+                $query->bindValue(":idStartA", 2);
+                $query->bindValue(":idStartB", 5);
+                $query->bindValue(":search", "%$search%");
+            }
+        }
+        
+        $query->execute();
+        
+        return $query->fetchAll();
+    }
+    
+    public function selectAllPageParentDatabase($parent = 0, $draft = false) {
+        if ($draft == false) {
+            if ($parent != 0) {
+                $query = $this->connection->prepare("SELECT * FROM page
+                                                        WHERE draft = :draft
+                                                        AND parent = :parent
+                                                        ORDER BY COALESCE(parent, rank_in_menu), rank_in_menu");
+                
+                $query->bindValue(":parent", $parent);
+            }
+            else
+                $query = $this->connection->prepare("SELECT * FROM page
+                                                        WHERE draft = :draft
+                                                        AND parent is NULL
+                                                        ORDER BY COALESCE(parent, rank_in_menu), rank_in_menu");
             
-            $query->bindValue(":onlyLink", 0);
-            $query->bindValue(":idStartA", 2);
-            $query->bindValue(":idStartB", 5);
-            $query->bindValue(":search", "%$search%");
+            $query->bindValue(":draft", 0);
+        }
+        else {
+            if ($parent != 0) {
+                $query = $this->connection->prepare("SELECT * FROM page
+                                                        WHERE parent = :parent
+                                                        ORDER BY COALESCE(parent, rank_in_menu), rank_in_menu");
+                
+                $query->bindValue(":parent", $parent);
+            }
+            else
+                $query = $this->connection->prepare("SELECT * FROM page
+                                                        WHERE parent is NULL
+                                                        ORDER BY COALESCE(parent, rank_in_menu), rank_in_menu");
         }
         
         $query->execute();
@@ -245,28 +338,19 @@ class Query {
         return $query->fetchAll();
     }
     
-    public function selectAllPageParentDatabase($parent = null) {
-        if ($parent != null) {
+    public function selectAllPageChildrenDatabase($parent, $draft = false) {
+        if ($draft == false) {
             $query = $this->connection->prepare("SELECT * FROM page
-                                                    WHERE parent = :parent
-                                                    ORDER BY COALESCE(parent, rank_in_menu), rank_in_menu");
-
-            $query->bindValue(":parent", $parent);
+                                                    WHERE draft = :draft
+                                                    AND parent = :parent");
+            
+            $query->bindValue(":draft", 0);
         }
-        else
+        else {
             $query = $this->connection->prepare("SELECT * FROM page
-                                                    WHERE parent is NULL
-                                                    ORDER BY COALESCE(parent, rank_in_menu), rank_in_menu");
+                                                    WHERE parent = :parent");
+        }
         
-        $query->execute();
-        
-        return $query->fetchAll();
-    }
-    
-    public function selectAllPageChildrenDatabase($parent) {
-        $query = $this->connection->prepare("SELECT * FROM page
-                                                WHERE parent = :parent");
-
         $query->bindValue(":parent", $parent);
         
         $query->execute();
@@ -515,6 +599,17 @@ class Query {
         $query->execute();
         
         return $query->fetchAll();
+    }
+    
+    public function selectLastRowDatabase($tableName) {
+        $query = $this->connection->prepare("SELECT * FROM $tableName
+                                                ORDER BY id DESC LIMIT 1");
+        
+        $query->execute();
+        
+        $result = $query->fetchAll();
+        
+        return $result[0];
     }
     
     // Functions private

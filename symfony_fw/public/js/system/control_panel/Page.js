@@ -249,7 +249,7 @@ function ControlPanelPage() {
             
             fieldsVisibility();
             
-            pageSelectFieldWithDisabledElement("#form_page_parent", xhr);
+            selectFieldWithDisabledElement("#form_page_parent", xhr);
 
             utility.wordTag("#page_roleUserId", "#form_page_roleUserId");
             
@@ -303,6 +303,10 @@ function ControlPanelPage() {
             
             $("#cp_page_delete").on("click", "", function() {
                deleteElement(null);
+            });
+            
+            $("#cp_page_publishDraft").on("click", "", function() {
+                publishDraft(xhr);
             });
         }
     }
@@ -419,7 +423,7 @@ function ControlPanelPage() {
                                 );
                             });
 
-                            pageSelectFieldWithDisabledElement("#cp_page_delete_parent_new", xhr);
+                            selectFieldWithDisabledElement("#cp_page_delete_parent_new", xhr);
                         }
                         else
                             deleteResponse(xhr);
@@ -431,7 +435,38 @@ function ControlPanelPage() {
         );
     }
     
-    function pageSelectFieldWithDisabledElement(id, xhr) {
+    function publishDraft(xhr) {
+        popupEasy.create(
+            window.text.index_5,
+            window.textPage.label_3,
+            function() {
+                ajax.send(
+                    true,
+                    window.url.cpPagePublishDraft,
+                    "post",
+                    {
+                        'event': "publish_draft",
+                        'id': xhr.response.values.pageId,
+                        'token': window.session.token
+                    },
+                    "json",
+                    false,
+                    true,
+                    "application/x-www-form-urlencoded; charset=UTF-8",
+                    null,
+                    function(xhr) {
+                        ajax.reply(xhr, "");
+                        
+                        deleteResponse(xhr);
+                    },
+                    null,
+                    null
+                );
+            }
+        );
+    }
+    
+    function selectFieldWithDisabledElement(id, xhr) {
         var options = $(id).find("option");
         
         var disabled = false;

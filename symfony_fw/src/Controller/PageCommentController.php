@@ -127,7 +127,7 @@ class PageCommentController extends AbstractController {
         $this->urlExtra = $urlExtra;
         
         $settingRow = $this->query->selectSettingDatabase();
-        $pageRow = $this->query->selectPageDatabase($this->urlLocale, $this->urlCurrentPageId);
+        $pageRow = $this->query->selectPageDatabase($this->urlLocale, $this->urlCurrentPageId, true);
         
         if ($settingRow['pageComment'] == true && $settingRow['pageComment_active'] == true && $pageRow['comment'] == true) {
             $pageCommentEntity = new PageComment();

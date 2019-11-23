@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: ipcamera_cp
 -- ------------------------------------------------------
--- Server version	5.7.27-0ubuntu0.16.04.1
+-- Server version	5.7.28-0ubuntu0.16.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -37,16 +37,6 @@ CREATE TABLE `ipCamera_device` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ipCamera_device`
---
-
-LOCK TABLES `ipCamera_device` WRITE;
-/*!40000 ALTER TABLE `ipCamera_device` DISABLE KEYS */;
-INSERT INTO `ipCamera_device` VALUES (1,'Cosenza - Salone','1,','http://url/media/?action=stream','http://url/media/?action=snapshot','admin','uO\�\�K\�D�DG�\�7\�5',0.010,0,'0',1);
-/*!40000 ALTER TABLE `ipCamera_device` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `language`
@@ -202,7 +192,7 @@ CREATE TABLE `microservice_cron` (
   `active` tinyint(1) NOT NULL DEFAULT '0',
   `last_execution` varchar(19) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -211,7 +201,7 @@ CREATE TABLE `microservice_cron` (
 
 LOCK TABLES `microservice_cron` WRITE;
 /*!40000 ALTER TABLE `microservice_cron` DISABLE KEYS */;
-INSERT INTO `microservice_cron` VALUES (1,'test_1','Ki8xICogKiAqICo=','bHMgLWwgL2hvbWU=',0,'2019-10-30 10:35:01');
+INSERT INTO `microservice_cron` VALUES (2,'test_1','Ki8xICogKiAqICo=','bHMgLWwgL2hvbWU=',0,'2019-10-30 10:35:01');
 /*!40000 ALTER TABLE `microservice_cron` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -280,6 +270,7 @@ CREATE TABLE `microservice_unit_test` (
 
 LOCK TABLES `microservice_unit_test` WRITE;
 /*!40000 ALTER TABLE `microservice_unit_test` DISABLE KEYS */;
+INSERT INTO `microservice_unit_test` VALUES (1,'test_design','https://lsv2.machine.local','dmFyIGV4cGVjdGVkVmFsdWUgPSAwOw0KDQp2YXIgdGFncyA9IG5ldyBBcnJheSgpOw0KdGFncy5wdXNoKCIuY29sdW1uX2xlZnQiKTsNCg0KJC5lYWNoKHRhZ3MsIGZ1bmN0aW9uKGtleSwgdmFsdWUpIHsNCiAgICBhc3NlcnQub2soJCh2YWx1ZSkubGVuZ3RoID4gZXhwZWN0ZWRWYWx1ZSwgdmFsdWUgKyAiIGdyZWF0ZXIgdGhhbiAiICsgZXhwZWN0ZWRWYWx1ZSk7DQp9KTs=',0);
 /*!40000 ALTER TABLE `microservice_unit_test` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -340,6 +331,7 @@ CREATE TABLE `page` (
   `meta_description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `meta_keywords` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `meta_robots` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `draft` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -350,7 +342,7 @@ CREATE TABLE `page` (
 
 LOCK TABLES `page` WRITE;
 /*!40000 ALTER TABLE `page` DISABLE KEYS */;
-INSERT INTO `page` VALUES (1,'myPage',NULL,'App\\Controller\\MyPage\\MyPageProfileController::renderAction','1,',1,0,1,0,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 17:47:45','Personal page.','personal, page','noindex, nofollow'),(2,'home',NULL,'App\\Controller\\ControlPanel\\IpCameraController::renderAction','1,',1,1,2,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-04-25 14:47:22','Website home page.','website, home, page','index, follow'),(3,'registration',NULL,'App\\Controller\\RegistrationController::renderAction','1,',0,0,3,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:05:15','User registration page.','user, registration, page','index, follow'),(4,'recover_password',NULL,'App\\Controller\\RecoverPasswordController::renderAction','1,',0,0,4,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:05:40','User recover password.','user, recover, password','index, follow'),(5,'search',NULL,'App\\Controller\\SearchController::renderAction','1,',0,0,5,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:07:47','Website content search','website, content, search','noindex, nofollow');
+INSERT INTO `page` VALUES (1,'myPage',NULL,'App\\Controller\\MyPage\\MyPageProfileController::renderAction','1,',1,0,1,0,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 17:47:45','Personal page.','personal, page','noindex, nofollow',0),(2,'home',NULL,'App\\Controller\\ControlPanel\\IpCameraController::renderAction','1,',1,1,2,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-04-25 14:47:22','Website home page.','website, home, page','index, follow',0),(3,'registration',NULL,'App\\Controller\\RegistrationController::renderAction','1,',0,0,3,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:05:15','User registration page.','user, registration, page','index, follow',0),(4,'recover_password',NULL,'App\\Controller\\RecoverPasswordController::renderAction','1,',0,0,4,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:05:40','User recover password.','user, recover, password','index, follow',0),(5,'search',NULL,'App\\Controller\\SearchController::renderAction','1,',0,0,5,1,0,0,'-','-','0000-00-00 00:00:00','cimo','2019-01-07 19:07:47','Website content search','website, content, search','noindex, nofollow',0);
 /*!40000 ALTER TABLE `page` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -695,7 +687,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'1,2,','ROLE_USER,ROLE_ADMIN','5cbfc82693953.jpg','cimo','Simone','D\'Agostino','cimo@reinventsoftware.org','080123456789','1984-4-11','m',NULL,NULL,NULL,'https://www.reinventsoftware.org','Japan','Tokyo','100-0001','Street','$2y$13$hOJvU2.m8vRl5YxsuY/J0OiQGFSS7DAa8mTA5uNGZGxmYoc8zFgde',0,1,'2016-08-04 10:25:12','2019-11-12 15:27:07','2019-11-12 13:08:29',NULL,'192.168.56.1',0),(2,'1,4,','ROLE_USER,ROLE_MICROSERVICE',NULL,'test_1',NULL,NULL,'test_1@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$Hi5SnSpKl9oKC79.G09MjeKOGUAzPEFjM3QPyp9z69m/gVXdnivJ2',0,1,'2016-09-10 17:39:31','2019-01-22 15:09:43','2019-01-22 14:55:58','','192.168.56.1',0),(3,'1,4,5,','ROLE_USER,ROLE_MICROSERVICE,ROLE_IPCAMERA',NULL,'test_2',NULL,NULL,'test_2@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$fo/L0jc1j4uWXAFjjOKE3eP0cgwv8DtBkjvUnMC9Eaa2B537B7uXq',0,0,'0000-00-00 00:00:00','2018-09-05 16:48:01','2018-09-05 16:47:23',NULL,'183.77.252.62',0);
+INSERT INTO `user` VALUES (1,'1,2,','ROLE_USER,ROLE_ADMIN','5cbfc82693953.jpg','cimo','Simone','D\'Agostino','cimo@reinventsoftware.org','080123456789','1984-4-11','m',NULL,NULL,NULL,'https://www.reinventsoftware.org','Japan','Tokyo','100-0001','Street','$2y$13$hOJvU2.m8vRl5YxsuY/J0OiQGFSS7DAa8mTA5uNGZGxmYoc8zFgde',0,1,'2016-08-04 10:25:12','2019-11-07 21:26:44','2019-11-07 00:15:50',NULL,'192.168.56.1',0),(2,'1,4,','ROLE_USER,ROLE_MICROSERVICE',NULL,'test_1',NULL,NULL,'test_1@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$Hi5SnSpKl9oKC79.G09MjeKOGUAzPEFjM3QPyp9z69m/gVXdnivJ2',0,1,'2016-09-10 17:39:31','2019-01-22 15:09:43','2019-01-22 14:55:58','','192.168.56.1',0),(3,'1,4,5,','ROLE_USER,ROLE_MICROSERVICE,ROLE_IPCAMERA',NULL,'test_2',NULL,NULL,'test_2@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$fo/L0jc1j4uWXAFjjOKE3eP0cgwv8DtBkjvUnMC9Eaa2B537B7uXq',0,0,'0000-00-00 00:00:00','2018-09-05 16:48:01','2018-09-05 16:47:23',NULL,'183.77.252.62',0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -712,4 +704,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-11-12 15:29:15
+-- Dump completed on 2019-11-24  2:35:43

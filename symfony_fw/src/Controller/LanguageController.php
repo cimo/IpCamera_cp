@@ -128,7 +128,7 @@ class LanguageController extends AbstractController {
         if ($request->isMethod("POST") == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
                 $codePage = $form->get("codePage")->getData();
-                $pageRow = $this->query->selectPageDatabase($codePage, $this->session->get("pageProfileId"));
+                $pageRow = $this->query->selectPageDatabase($codePage, $this->session->get("pageProfileId"), true);
                 
                 $this->response['values']['codePage'] = $codePage;
                 $this->response['values']['pageTitle'] = $pageRow['title'];
