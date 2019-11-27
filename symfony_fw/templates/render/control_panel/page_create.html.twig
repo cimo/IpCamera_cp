@@ -47,10 +47,14 @@
         {{form_row(form.metaDescription, {'dense': "", 'styleType': "outlinedTrailing"})}}
         {{form_row(form.metaKeywords, {'dense': "", 'styleType': "outlinedTrailing"})}}
         {{form_row(form.metaRobots, {'dense': "", 'styleType': "outlinedTrailing"})}}
-        {{form_row(form.draft, {'dense': ""})}}
-
+        {{form_row(form.event)}}
+        
         {{form_widget(form._token)}}
-
+        
+        <button id="cp_page_saveDraft" class="mdc-button mdc-button--dense mdc-button--raised" type="button">
+            {% trans %}pageCreate_6{% endtrans %}
+        </button>
+        
         {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
     </form>
 </fieldset>

@@ -39,6 +39,16 @@ CREATE TABLE `ipCamera_device` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `ipCamera_device`
+--
+
+LOCK TABLES `ipCamera_device` WRITE;
+/*!40000 ALTER TABLE `ipCamera_device` DISABLE KEYS */;
+INSERT INTO `ipCamera_device` VALUES (1,'Cosenza - Salone','1,','http://home-cs.ddns.net:1000/media/?action=stream','http://home-cs.ddns.net:1000/media/?action=snapshot','admin','l!\�y\�F�c���N)�	',0.010,0,'0',1);
+/*!40000 ALTER TABLE `ipCamera_device` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `language`
 --
 
@@ -331,7 +341,7 @@ CREATE TABLE `page` (
   `meta_description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `meta_keywords` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `meta_robots` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `draft` tinyint(1) NOT NULL DEFAULT '0',
+  `draft` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -687,7 +697,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'1,2,','ROLE_USER,ROLE_ADMIN','5cbfc82693953.jpg','cimo','Simone','D\'Agostino','cimo@reinventsoftware.org','080123456789','1984-4-11','m',NULL,NULL,NULL,'https://www.reinventsoftware.org','Japan','Tokyo','100-0001','Street','$2y$13$hOJvU2.m8vRl5YxsuY/J0OiQGFSS7DAa8mTA5uNGZGxmYoc8zFgde',0,1,'2016-08-04 10:25:12','2019-11-07 21:26:44','2019-11-07 00:15:50',NULL,'192.168.56.1',0),(2,'1,4,','ROLE_USER,ROLE_MICROSERVICE',NULL,'test_1',NULL,NULL,'test_1@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$Hi5SnSpKl9oKC79.G09MjeKOGUAzPEFjM3QPyp9z69m/gVXdnivJ2',0,1,'2016-09-10 17:39:31','2019-01-22 15:09:43','2019-01-22 14:55:58','','192.168.56.1',0),(3,'1,4,5,','ROLE_USER,ROLE_MICROSERVICE,ROLE_IPCAMERA',NULL,'test_2',NULL,NULL,'test_2@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$fo/L0jc1j4uWXAFjjOKE3eP0cgwv8DtBkjvUnMC9Eaa2B537B7uXq',0,0,'0000-00-00 00:00:00','2018-09-05 16:48:01','2018-09-05 16:47:23',NULL,'183.77.252.62',0);
+INSERT INTO `user` VALUES (1,'1,2,','ROLE_USER,ROLE_ADMIN','5cbfc82693953.jpg','cimo','Simone','D\'Agostino','cimo@reinventsoftware.org','080123456789','1984-4-11','m',NULL,NULL,NULL,'https://www.reinventsoftware.org','Japan','Tokyo','100-0001','Street','$2y$13$hOJvU2.m8vRl5YxsuY/J0OiQGFSS7DAa8mTA5uNGZGxmYoc8zFgde',0,1,'2016-08-04 10:25:12','2019-11-24 02:40:20','2019-11-07 21:26:44',NULL,'192.168.56.1',0),(2,'1,4,','ROLE_USER,ROLE_MICROSERVICE',NULL,'test_1',NULL,NULL,'test_1@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$Hi5SnSpKl9oKC79.G09MjeKOGUAzPEFjM3QPyp9z69m/gVXdnivJ2',0,1,'2016-09-10 17:39:31','2019-01-22 15:09:43','2019-01-22 14:55:58','','192.168.56.1',0),(3,'1,4,5,','ROLE_USER,ROLE_MICROSERVICE,ROLE_IPCAMERA',NULL,'test_2',NULL,NULL,'test_2@reinventsoftware.org',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'$2y$13$fo/L0jc1j4uWXAFjjOKE3eP0cgwv8DtBkjvUnMC9Eaa2B537B7uXq',0,0,'0000-00-00 00:00:00','2018-09-05 16:48:01','2018-09-05 16:47:23',NULL,'183.77.252.62',0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -704,4 +714,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-11-24  2:35:43
+-- Dump completed on 2019-11-28  7:00:54

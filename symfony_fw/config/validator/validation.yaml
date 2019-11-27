@@ -271,11 +271,11 @@ App\Entity\Page:
                 groups: [page_create, page_profile]
                 htmlPattern: false
                 pattern: /^(index|noindex|follow|nofollow)[\s,]+(index|noindex|follow|nofollow)$/
-        draft:
+        event:
             - Regex:
                 groups: [page_create, page_profile]
                 htmlPattern: false
-                pattern: /^1$|^0$/
+                pattern: /^(save_draft_create|save_draft_modify|publish_draft)$/
 
 App\Entity\PageComment:
     properties:

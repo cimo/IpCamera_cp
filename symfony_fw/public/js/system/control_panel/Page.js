@@ -37,6 +37,10 @@ function ControlPanelPage() {
         
         utility.wordTag("#page_roleUserId", "#form_page_roleUserId");
         
+        $("#cp_page_saveDraft").on("click", "", function() {
+            saveDraft("create");
+        });
+        
         $("#form_cp_page_create").on("submit", "", function(event) {
             event.preventDefault();
             
@@ -52,6 +56,12 @@ function ControlPanelPage() {
                 null,
                 function(xhr) {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
+                    
+                    if (xhr.response.values !== undefined && xhr.response.values.id !== undefined) {
+                        $("#cp_page_select_result").html("");
+
+                        $("#cp_page_select_result_desktop").find(".refresh").click();
+                    }
                 },
                 null,
                 null
@@ -273,6 +283,14 @@ function ControlPanelPage() {
                 if (iframeMouseOver === true)
                     profileFocus = true;
             });
+            
+            $("#cp_page_saveDraft").on("click", "", function() {
+                saveDraft("modify");
+            });
+            
+            $("#cp_page_publishDraft").on("click", "", function() {
+                publishDraft();
+            });
 
             $("#form_cp_page_profile").on("submit", "", function(event) {
                 wysiwyg.save();
@@ -291,9 +309,15 @@ function ControlPanelPage() {
                     null,
                     function(xhr) {
                         ajax.reply(xhr, "#" + event.currentTarget.id);
-
+                        
                         if ($.isEmptyObject(xhr.response.messages.success) === false) {
                             profileFocus = false;
+                            
+                            $("#form_page_event").val("");
+                            
+                            $("#cp_page_select_result").html("");
+                            
+                            $("#cp_page_select_result_desktop").find(".refresh").click();
                         }
                     },
                     null,
@@ -303,10 +327,6 @@ function ControlPanelPage() {
             
             $("#cp_page_delete").on("click", "", function() {
                deleteElement(null);
-            });
-            
-            $("#cp_page_publishDraft").on("click", "", function() {
-                publishDraft(xhr);
             });
         }
     }
@@ -435,33 +455,33 @@ function ControlPanelPage() {
         );
     }
     
-    function publishDraft(xhr) {
+    function saveDraft(type) {
         popupEasy.create(
             window.text.index_5,
             window.textPage.label_3,
             function() {
-                ajax.send(
-                    true,
-                    window.url.cpPagePublishDraft,
-                    "post",
-                    {
-                        'event': "publish_draft",
-                        'id': xhr.response.values.pageId,
-                        'token': window.session.token
-                    },
-                    "json",
-                    false,
-                    true,
-                    "application/x-www-form-urlencoded; charset=UTF-8",
-                    null,
-                    function(xhr) {
-                        ajax.reply(xhr, "");
-                        
-                        deleteResponse(xhr);
-                    },
-                    null,
-                    null
-                );
+                $("#form_page_event").val("save_draft_" + type);
+                
+                if ($("#form_cp_page_create").length > 0)
+                    $("#form_cp_page_create").submit();
+                else
+                    $("#form_cp_page_profile").submit();
+                
+                $("#form_page_event").val("");
+            }
+        );
+    }
+    
+    function publishDraft() {
+        popupEasy.create(
+            window.text.index_5,
+            window.textPage.label_4,
+            function() {
+                $("#form_page_event").val("publish_draft");
+                
+                $("#form_cp_page_profile").submit();
+                
+                $("#form_page_event").val("");
             }
         );
     }

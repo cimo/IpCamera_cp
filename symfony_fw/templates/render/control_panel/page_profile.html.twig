@@ -56,16 +56,19 @@
     {{form_row(form.metaDescription, {'dense': "", 'styleType': "outlinedTrailing"})}}
     {{form_row(form.metaKeywords, {'dense': "", 'styleType': "outlinedTrailing"})}}
     {{form_row(form.metaRobots, {'dense': "", 'styleType': "outlinedTrailing"})}}
+    {{form_row(form.event)}}
     
-    {% if response.values.draft == false %}
-        {{form_row(form.draft, {'dense': ""})}}
-    {% else %}
-        <button id="cp_page_publishDraft" class="mdc-button mdc-button--dense mdc-button--raised" type="button">
+    {{form_widget(form._token)}}
+    
+    {% if response.values.draft == 0 %}
+        <button id="cp_page_saveDraft" class="mdc-button mdc-button--dense mdc-button--raised" type="button">
             {% trans %}pageProfile_9{% endtrans %}
         </button>
+    {% else %}
+        <button id="cp_page_publishDraft" class="mdc-button mdc-button--dense mdc-button--raised" type="button">
+            {% trans %}pageProfile_10{% endtrans %}
+        </button>
     {% endif %}
-
-    {{form_widget(form._token)}}
 
     {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
 </form>

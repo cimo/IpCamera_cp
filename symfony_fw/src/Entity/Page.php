@@ -122,14 +122,17 @@ class Page {
      */
     private $metaRobots = "";
     
-    private $draft = false;
+    /**
+     * @ORM\Column(name="draft", type="integer", columnDefinition="int(11) NOT NULL DEFAULT 0")
+     */
+    private $draft = 0;
+    
+    // #
+    private $event = "";
     
     // Properties
     public function setAlias($value) {
-        if ($this->draft == true)
-            $this->alias = "{$this->alias}_d";
-        else
-            $this->alias = $value;
+        $this->alias = $value;
     }
     
     public function setParent($value) {
@@ -224,6 +227,10 @@ class Page {
         $this->draft = $value;
     }
     
+    public function setEvent($value) {
+        $this->event = $value;
+    }
+    
     // ---
     
     public function getId() {
@@ -231,7 +238,9 @@ class Page {
     }
     
     public function getAlias() {
-        return $this->alias;
+        $alias = str_replace("_[draft]", "", $this->alias);
+        
+        return $alias;
     }
     
     public function getParent() {
@@ -324,5 +333,9 @@ class Page {
     
     public function getDraft() {
         return $this->draft;
+    }
+    
+    public function getEvent() {
+        return $this->event;
     }
 }
