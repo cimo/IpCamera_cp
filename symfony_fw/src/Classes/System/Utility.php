@@ -789,7 +789,7 @@ class Utility {
     
     public function arrayFindKeyWithValue($elements, $label, $item) {
         foreach ($elements as $key => $value) {
-            if ($value[$label] === $item )
+            if ($value[$label] === $item)
                 return $key;
         }
         
