@@ -789,7 +789,7 @@ class Utility {
     
     public function arrayFindKeyWithValue($elements, $label, $item) {
         foreach ($elements as $key => $value) {
-            if ($value[$label] === $item)
+            if ($value[$label] == $item )
                 return $key;
         }
         
@@ -1039,30 +1039,22 @@ class Utility {
         );
     }
     
-    public function download() {
-        $sessionDownload = $this->session->get("download");
+    public function download($path, $mime, $remove = false) {
+        header("Content-Description: File Transfer");
+        header("Content-Disposition: attachment; filename=\"" . basename($path) . "\"");
+        header("Content-Transfer-Encoding: binary");
+        header("Content-Length: " . filesize($path));
+        header("Content-Type: {$mime}");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, pre-check=0, post-check=0");
+        header("Pragma: public");
+
+        readfile($path);
+
+        if ($remove == true)
+            unlink($path);
         
-        if ($sessionDownload != null) {
-            header("Content-Description: File Transfer");
-            header("Content-Disposition: attachment; filename=\"" . basename("{$sessionDownload['path']}/{$sessionDownload['name']}") . "\"");
-            header("Content-Transfer-Encoding: binary");
-            header("Content-Length: " . filesize("{$sessionDownload['path']}/{$sessionDownload['name']}"));
-            header("Content-Type: {$sessionDownload['mime']}");
-            header("Expires: 0");
-            header("Cache-Control: must-revalidate, pre-check=0, post-check=0");
-            header("Pragma: public");
-            
-            readfile("{$sessionDownload['path']}/{$sessionDownload['name']}");
-            
-            if ($sessionDownload['remove'] == true)
-                unlink("{$sessionDownload['path']}/{$sessionDownload['name']}");
-            
-            $this->session->remove("download");
-            
-            return;
-        }
-        
-        echo "404";
+        return;
     }
     
     public function fileReadTail($path, $limit = 50) {

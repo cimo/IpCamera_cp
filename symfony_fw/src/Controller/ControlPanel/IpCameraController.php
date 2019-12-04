@@ -382,7 +382,7 @@ class IpCameraController extends AbstractController {
                     $detectionPid = 0;
                 }
                 
-                $this->ipCameraDatabase("update", $ipCameraEntity->getId(), $ipCameraPasswordRow['password'], $detectionPid);
+                $this->ipCameraDatabase("update", $ipCameraEntity->getId(), $password, $detectionPid);
                 
                 $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_5");
             }
@@ -585,15 +585,13 @@ class IpCameraController extends AbstractController {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 $elements = $this->elementFilter();
                 
-                foreach($elements[0] as $key => $value) {
-                    if (isset($value['name']) == true && trim($value['name']) == trim($request->get("deviceName"))) {
-                        $downloadPath = "{$this->utility->getPathSrc()}/files/ipCamera/{$value['id']}/{$request->get("name")}";
+                foreach($elements[1] as $key => $value) {
+                    $downloadPath = "{$this->utility->getPathSrc()}/files/ipCamera/{$key}/{$request->get("fileName")}";
+                    
+                    if (file_exists($downloadPath) == true) {
+                        $downloadMime = mime_content_type($downloadPath);
                         
-                        if (file_exists($downloadPath) == true) {
-                            $downloadMime = mime_content_type($downloadPath);
-
-                            $this->utility->download($downloadPath, $downloadMime);
-                        }
+                        $this->utility->download($downloadPath, $downloadMime);
                     }
                 }
             }
@@ -638,20 +636,19 @@ class IpCameraController extends AbstractController {
                 $elements = $this->elementFilter();
                 
                 if ($request->get("event") == "delete") {
-                    $deviceId = $this->utility->arrayFindKeyWithValue($elements[1], $request->get("name"), $request->get("name"));
+                    $findKey = $this->utility->arrayFindKeyWithValue($elements[0], "name", $request->get("deviceName"));
                     
-                    $this->deleteLogic("file", $deviceId, $request->get("name"));
+                    $this->deleteLogic("file", $elements[0][$findKey]['id'], $request->get("fileName"));
                     
                     $this->response['values']['id'] = $request->get("id");
                     
                     $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_10");
-                    
                 }
                 else if ($request->get("event") == "deleteAll") {
                     foreach($elements[1] as $key => $value) {
-                        $deviceId = $this->utility->arrayFindKeyWithValue($elements[1], $value, $value);
-                        
-                        $this->deleteLogic("file", $deviceId, $value);
+                        foreach($value as $keySub => $valueSub) {
+                            $this->deleteLogic("file", $key, $valueSub);
+                        }
                     }
                     
                     $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_11");
@@ -728,6 +725,8 @@ class IpCameraController extends AbstractController {
             $id = $key + 1;
             
             foreach ($value as $keySub => $valueSub) {
+                $fileSize = filesize("{$this->utility->getPathSrc()}/files/ipCamera/{$devices[$key]['id']}/{$valueSub}");
+                
                 $listHtml .= "<tr>
                     <td class=\"id_column\">
                         $id
@@ -736,13 +735,18 @@ class IpCameraController extends AbstractController {
                         {$devices[$key]['name']}
                     </td>
                     <td>
-                        <i class=\"material-icons\">arrow_drop_down_circle</i>
+                        <span class=\"cp_ipCamera_file_download cursor_custom\">
+                            <i class=\"material-icons\">arrow_drop_down_circle</i>
+                            <p>" . $this->utility->unitFormat($fileSize) . "</p>
+                        </span>
                     </td>
-                    <td class=\"name_column\">
-                        <span class=\"cp_ipCamera_file_download cursor_custom\"><p>$valueSub</p></span>
+                    <td class=\"fileName_column\">
+                        $valueSub
                     </td>
                     <td class=\"horizontal_center\">
-                        <button class=\"mdc-fab mdc-fab--mini cp_ipCamera_file_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
+                        <button class=\"mdc-fab mdc-fab--mini cp_ipCamera_file_delete\" type=\"button\" aria-label=\"label\">
+                            <span class=\"mdc-fab__icon material-icons\">delete</span>
+                        </button>
                     </td>
                 </tr>";
             }
@@ -768,15 +772,24 @@ class IpCameraController extends AbstractController {
             return $query->fetch();
         }
         else if ($type == "update") {
-            $settingRow = $this->query->selectSettingDatabase();
+            if ($password != "") {
+                $settingRow = $this->query->selectSettingDatabase();
+                
+                $query = $this->utility->getConnection()->prepare("UPDATE IGNORE ipCamera_device
+                                                                        SET password = AES_ENCRYPT(:password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
+                                                                    WHERE id = :id");
+                
+                $query->bindValue(":password", $password);
+                $query->bindValue(":id", $id);
+                
+                $query->execute();
+            }
             
-            $query = $this->utility->getConnection()->prepare("UPDATE IGNORE ipCamera_device
-                                                                SET password = AES_ENCRYPT(:password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))),
-                                                                    detection_active = :detectionActive,
-                                                                    detection_pid = :detectionPid
+            $query = $this->utility->getConnection()->prepare("UPDATE ipCamera_device
+                                                                    SET detection_active = :detectionActive,
+                                                                        detection_pid = :detectionPid
                                                                 WHERE id = :id");
             
-            $query->bindValue(":password", $password);
             $query->bindValue(":detectionActive", $detectionPid > 0 ? 1 : 0);
             $query->bindValue(":detectionPid", $detectionPid);
             $query->bindValue(":id", $id);
@@ -807,13 +820,13 @@ class IpCameraController extends AbstractController {
     private function elementFilter() {
         $ipCameraRows = $this->selectAllIpCameraDatabase();
         
-        $checkUserRoleSub = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         $devices = Array();
         
         foreach($ipCameraRows as $key => $value) {
             if ($value['user_id'] != null) {
-                if ($checkUserRoleSub == true)
+                if ($checkUserRole == true)
                     $devices[] = $ipCameraRows[$key];
                 else {
                     $arrayFindValueExplode = $this->utility->arrayExplodeFindValue($value['user_id'], $this->getUser()->getId(), false);
@@ -844,7 +857,7 @@ class IpCameraController extends AbstractController {
         return Array($devices, $files);
     }
     
-    private function checkProcess($pid, $id = 0, $ipCameraEntity = null) {
+    private function checkProcess($pid) {
         $name = trim(shell_exec("ps -p $pid -o comm="));
         
         if ($pid > 0 && $name != "")
@@ -857,7 +870,7 @@ class IpCameraController extends AbstractController {
         if ($type == "device") {
             if ($id > 0) {
                 $filePath = "{$this->utility->getPathSrc()}/files/ipCamera/$id";
-
+                
                 $this->utility->removeDirRecursive($filePath, true);
             }
         }

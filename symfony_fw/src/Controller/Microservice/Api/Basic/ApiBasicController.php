@@ -937,7 +937,7 @@ class ApiBasicController extends AbstractController {
             
             if ($type == "update") {
                 $query = $this->utility->getConnection()->prepare("UPDATE IGNORE microservice_apiBasic
-                                                                        SET database_password = AES_ENCRYPT(:databasePassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
+                                                                    SET database_password = AES_ENCRYPT(:databasePassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
                                                                     WHERE id = :id");
                 
                 $query->bindValue(":databasePassword", $databasePassword);

@@ -47,15 +47,15 @@ function ipCamera() {
         if (utility.checkWidthType() === "mobile") {
             if (selectSended === true) {
                 selectId = $("#cp_ipCamera_select_mobile").find("select option:selected").val();
-
+                
                 selectSended = false;
             }
-
+            
             if (selectId >= 0) {
                 $("#cp_ipCamera_select_result_desktop").find(".checkbox_column input[type='checkbox']").prop("checked", false);
-
+                
                 var id = $("#cp_ipCamera_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
-
+                
                 $.each(id, function(key, value) {
                     if ($.trim($(value).text()) === String(selectId))
                         $(value).parents("tr").find(".checkbox_column input").prop("checked", true);
@@ -65,7 +65,7 @@ function ipCamera() {
         else {
             if (selectSended === true) {
                 selectId = $.trim($("#cp_ipCamera_select_result_desktop").find(".checkbox_column input[type='checkbox']:checked").parents("tr").find(".id_column").text());
-
+                
                 selectSended = false;
             }
 
@@ -77,6 +77,7 @@ function ipCamera() {
     self.videoContainer = function() {
         $(".video_container").find(".video").on("load", "", function() {
             $(".video_container").find(".video_loading").remove();
+            $(".video_container").find(".video").show();
         });
     };
     
@@ -138,7 +139,7 @@ function ipCamera() {
                         null,
                         function(xhr) {
                             ajax.reply(xhr, "");
-
+                            
                             $.each($("#cp_ipCamera_select_result_desktop").find("table .id_column"), function(key, value) {
                                 $(value).parents("tr").remove();
                             });
@@ -160,7 +161,7 @@ function ipCamera() {
         
         $(document).on("click", "#cp_ipCamera_select_button_desktop", function(event) {
             var id = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
-
+            
             ajax.send(
                 true,
                 window.url.cpIpCameraProfile,
@@ -193,7 +194,7 @@ function ipCamera() {
     function selectMobile() {
         $(document).on("submit", "#form_cp_ipCamera_select_mobile", function(event) {
             event.preventDefault();
-
+            
             ajax.send(
                 true,
                 $(this).prop("action"),
@@ -233,7 +234,7 @@ function ipCamera() {
             
             $("#form_cp_ipCamera_profile").on("submit", "", function(event) {
                 event.preventDefault();
-
+                
                 ajax.send(
                     true,
                     $(this).prop("action"),
@@ -257,7 +258,7 @@ function ipCamera() {
                     null
                 );
             });
-
+            
             $("#cp_ipCamera_delete").on("click", "", function() {
                deleteElement(null);
             });
@@ -359,7 +360,7 @@ function ipCamera() {
                         null,
                         function(xhr) {
                             ajax.reply(xhr, "");
-
+                            
                             $.each($("#cp_ipCamera_file_result").find("table .id_column"), function(key, value) {
                                 $(value).parents("tr").remove();
                             });
@@ -371,26 +372,10 @@ function ipCamera() {
             );
         });
         
-        $(document).on("click", "#cp_ipCamera_file_result .cp_ipCamera_file_download", function() {
-            var deviceName = $.trim($(this).parents("tr").find(".deviceName_column").text());
-            var name = $.trim($(this).parents("tr").find(".name_column span p").text());
-            
-            $(document).ready(function(){
-                var html = "<form id=\"cp_ipCamera_file_download\" action=\"" + window.url.cpIpCameraFileDownload + "\" method=\"post\">\n\
-                    <input type=\"hidden\" name=\"deviceName\" value=\"" + deviceName + "\">\n\
-                    <input type=\"hidden\" name=\"name\" value=\"" + name + "\">\n\
-                    <input type=\"hidden\" name=\"token\" value=\"" + window.session.token + "\">\n\
-                </form>";
-                
-                $(html).appendTo("body").submit();
-                $("#cp_ipCamera_file_download").remove();
-            });
-        });
-        
         $(document).on("click", "#cp_ipCamera_file_result .cp_ipCamera_file_delete", function() {
             var id = $.trim($(this).parents("tr").find(".id_column").text());
             var deviceName = $.trim($(this).parents("tr").find(".deviceName_column").text());
-            var name = $.trim($(this).parents("tr").find(".name_column span").text());
+            var fileName = $.trim($(this).parents("tr").find(".fileName_column").text());
             
             popupEasy.create(
                 window.text.index_5,
@@ -404,7 +389,7 @@ function ipCamera() {
                             'event': "delete",
                             'id': id,
                             'deviceName': deviceName,
-                            'name': name,
+                            'fileName': fileName,
                             'token': window.session.token
                         },
                         "json",
@@ -414,7 +399,7 @@ function ipCamera() {
                         null,
                         function(xhr) {
                             ajax.reply(xhr, "");
-
+                            
                             if (xhr.response.messages.success !== undefined) {
                                 $.each($("#cp_ipCamera_file_result").find("table .id_column"), function(key, value) {
                                     if (xhr.response.values.id === $.trim($(value).text()))
@@ -429,6 +414,22 @@ function ipCamera() {
                     );
                 }
             );
+        });
+        
+        $(document).on("click", "#cp_ipCamera_file_result .cp_ipCamera_file_download", function() {
+            var deviceName = $.trim($(this).parents("tr").find(".deviceName_column").text());
+            var fileName = $.trim($(this).parents("tr").find(".fileName_column").text());
+            
+            $(document).ready(function(){
+                var html = "<form id=\"cp_ipCamera_file_download\" action=\"" + window.url.cpIpCameraFileDownload + "\" method=\"post\">\n\
+                    <input type=\"hidden\" name=\"deviceName\" value=\"" + deviceName + "\">\n\
+                    <input type=\"hidden\" name=\"fileName\" value=\"" + fileName + "\">\n\
+                    <input type=\"hidden\" name=\"token\" value=\"" + window.session.token + "\">\n\
+                </form>";
+                
+                $(html).appendTo("body").submit();
+                $("#cp_ipCamera_file_download").remove();
+            });
         });
     }
 }

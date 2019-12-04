@@ -34,7 +34,7 @@
         }
         
         .video {
-            display: block;
+            display: none;
             width: 100%;
         }
     }
@@ -96,11 +96,12 @@
     .cp_ipCamera_file_download {
         .material-icons {
             vertical-align: middle;
-            margin: -2px 2px 0 0;
+            margin: -2px 0px 0px 0px;
         }
         
         p {
-            display: inline;
+            display: inline-block;
+            argin: 6px 0px 0px 0px;
         }
     }
 }
