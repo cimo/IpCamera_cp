@@ -369,12 +369,12 @@ class IpCameraController extends AbstractController {
                 $ipCameraPasswordRow = $this->ipCameraDatabase("select", $ipCameraEntity->getId(), $ipCameraEntity->getPassword());
                 
                 if ($ipCameraEntity->getDetectionActive() == true && $this->checkProcess($detectionPidOld) == false) {
-                    $command = "-threads 0 -crf 23 -r 25 -pix_fmt yuv420p -vf \"select=gt(scene\,{$ipCameraEntity->getDetectionSensitivity()})\" -c:v libx264 -an";
+                    $input = "-i \"{$ipCameraEntity->getHostVideo()}&user={$ipCameraEntity->getUsername()}&pwd={$ipCameraPasswordRow['password']}\"";
+                    //$command = "-threads 0 -crf 23 -r 25 -pix_fmt yuvj420p -vf \"select=gt(scene\,{$ipCameraEntity->getDetectionSensitivity()})\" -c:v libx264 -an";
                     $pathResult = "{$this->utility->getPathSrc()}/files/ipCamera/{$ipCameraEntity->getId()}/" . date("Y_m_d-H_i_s") . ".avi";
+                    $command = "-threads 0 -vf \"select=gt(scene\,{$ipCameraEntity->getDetectionSensitivity()})\" -an";
                     
-                    $ffmpeg = "ffmpeg -y -i \"{$ipCameraEntity->getHostVideo()}&user={$ipCameraEntity->getUsername()}&pwd={$ipCameraPasswordRow['password']}\" $command \"{$pathResult}\"";
-                    
-                    $detectionPid = trim(shell_exec("$ffmpeg >/dev/null 2>&1 & echo $!"));
+                    $detectionPid = trim(shell_exec("ffmpeg -y $input $command \"{$pathResult}\" >/dev/null 2>&1 & echo $!"));
                 }
                 else if ($ipCameraEntity->getDetectionActive() == false) {
                     posix_kill($detectionPid, 3);

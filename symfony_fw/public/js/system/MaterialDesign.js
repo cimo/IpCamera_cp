@@ -134,13 +134,13 @@ function MaterialDesign() {
                 $(value).find(".mdc-floating-label").addClass("mdc-floating-label--float-above");
                 $(value).find(".mdc-floating-label").css("background-color", color);
                 $(value).find(".mdc-notched-outline").addClass("mdc-notched-outline--notched");
-                $(value).find(".mdc-notched-outline__path").attr("d", "M147.297,1h404.503a4,4 0 0 1 4,4v35.6a4,4 0 0 1 -4,4h-546.6a4,4 0 0 1 -4,-4v-35.6a4,4 0 0 1 4,-4h5.8");
+                $(value).find(".mdc-notched-outline__path").attr("d", "M78.995,1h472.805a4,4 0 0 1 4,4v35.6a4,4 0 0 1 -4,4h-546.6a4,4 0 0 1 -4,-4v-35.6a4,4 0 0 1 4,-4h5.8");
                 
                 $(value).find(".mdc-text-field__input[placeholder='******']").on("blur", "", function(event) {
                     $(value).find(".mdc-floating-label").addClass("mdc-floating-label--float-above");
                     $(value).find(".mdc-floating-label").css("background-color", color);
                     $(value).find(".mdc-notched-outline").addClass("mdc-notched-outline--notched");
-                    $(value).find(".mdc-notched-outline__path").attr("d", "M147.297,1h404.503a4,4 0 0 1 4,4v35.6a4,4 0 0 1 -4,4h-546.6a4,4 0 0 1 -4,-4v-35.6a4,4 0 0 1 4,-4h5.8");
+                    $(value).find(".mdc-notched-outline__path").attr("d", "M78.995,1h472.805a4,4 0 0 1 4,4v35.6a4,4 0 0 1 -4,4h-546.6a4,4 0 0 1 -4,-4v-35.6a4,4 0 0 1 4,-4h5.8");
                     $(value).removeClass("mdc-text-field--invalid");
                 });
             }
