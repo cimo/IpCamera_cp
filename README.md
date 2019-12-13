@@ -19,6 +19,5 @@ WORK IN PROGRESS...
 | Library: |
 |:---|
 | Uebusaito - https://github.com/cimo/Uebusaito/ |
-| FFmpeg - https://www.ffmpeg.org/ |
 
 <b>By CIMO - https://www.reinventsoftware.org</b>
