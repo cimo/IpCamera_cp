@@ -420,7 +420,10 @@
                     "   sudo nano /etc/sudoers\n"~
                     "Add this on end of file:\n"~
                     "   www-data ALL = NOPASSWD: /home/cimo/www/project/uebusaito/root/symfony_fw/src/files/microservice/selenium/server_start.sh\n"~
-                    "   www-data ALL = NOPASSWD: /home/cimo/www/project/uebusaito/root/symfony_fw/src/files/microservice/selenium/server_stop.sh\n"%}
+                    "   www-data ALL = NOPASSWD: /home/cimo/www/project/uebusaito/root/symfony_fw/src/files/microservice/selenium/server_stop.sh\n"~
+                    "Save, close the file and write on server terminal:\n"~
+                    "   sudo chmod +x /home/cimo/www/project/uebusaito/root/symfony_fw/src/files/microservice/selenium/server_start.sh\n"~
+                    "   sudo chmod +x /home/cimo/www/project/uebusaito/root/symfony_fw/src/files/microservice/selenium/server_stop.sh" %}
                     
                     <pre class="square_code">{{textA}}</pre>
                     
