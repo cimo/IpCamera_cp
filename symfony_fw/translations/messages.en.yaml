@@ -284,7 +284,8 @@ date.time: H:i:s
 "controlPanel_16": "Api"
 "controlPanel_17": "Ecommerce"
 "controlPanel_18": "Unit test"
-"controlPanel_19": "Cron"
+"controlPanel_19": "Selenium"
+"controlPanel_20": "Cron"
 
 "controlPanelPayment_1": "Payments section."
 "controlPanelPayment_2": "Really delete this payment?"
@@ -329,6 +330,11 @@ date.time: H:i:s
 "controlPanelMicroserviceUnitTest_2": "Insert iframe code in your page and script code on bottom of your page."
 "controlPanelMicroserviceUnitTest_3": "Really delete this unit test?"
 "controlPanelMicroserviceUnitTest_4": "Really delete all unit test?"
+
+"controlPanelMicroserviceSelenium_1": "Selenium section."
+"controlPanelMicroserviceSelenium_2": "Install."
+"controlPanelMicroserviceSelenium_3": "Test."
+"controlPanelMicroserviceSelenium_4": "Really delete all selenium project file?"
 
 "controlPanelMicroserviceCron_1": "Cron section."
 "controlPanelMicroserviceCron_2": "Really delete this cron?"
@@ -666,7 +672,8 @@ date.time: H:i:s
 "settingFormType_29": "Paypal currency code"
 "settingFormType_30": "Paypal credit amount"
 "settingFormType_31": "Javascript minify"
-"settingFormType_32": "Send"
+"settingFormType_32": "Server user"
+"settingFormType_33": "Send"
 
 "settingController_1": "Roles maintenance"
 "settingController_2": "Protocol value has changed, please login again (if you have changed from https to http you need close and to open browser for to do login)."
@@ -857,7 +864,7 @@ date.time: H:i:s
 "apiBasicProfile_5": "Request log"
 "apiBasicProfile_6": "Date start"
 "apiBasicProfile_7": "Date end"
-"apiBasicProfile_8": "Download test"
+"apiBasicProfile_8": "Download"
 
 "apiBasicDelete_1": "Warning! If you delete the apiBasic is impossible return back."
 "apiBasicDelete_2": "Delete"
@@ -940,6 +947,33 @@ date.time: H:i:s
 "microserviceUnitTestController_9": "No"
 "microserviceUnitTestController_10": "Yes"
 "microserviceUnitTestController_11": "Unit test is not active."
+
+# Microservice selenium
+"microserviceSeleniumSelect_1": "Selenium project file"
+"microserviceSeleniumSelect_2": "..."
+"microserviceSeleniumSelect_3": "Uplaod .side"
+"microserviceSeleniumSelect_4": "Id"
+"microserviceSeleniumSelect_5": "Select"
+"microserviceSeleniumSelect_6": "Name"
+"microserviceSeleniumSelect_7": "Delete"
+"microserviceSeleniumSelect_8": "Select"
+
+"microserviceSeleniumProfile_1": "Selenium project file profile"
+
+"microserviceSeleniumDelete_1": "Warning! If you delete the selenium project file is impossible return back."
+"microserviceSeleniumDelete_2": "Delete"
+
+"microserviceSeleniumSelectFormType_1": "Name"
+"microserviceSeleniumSelectFormType_2": "Select"
+
+"microserviceSeleniumController_1": "Selenium project file not selected!"
+"microserviceSeleniumController_2": "Selenium project file deletion completed."
+"microserviceSeleniumController_3": "All Selenium project file deletion completed."
+"microserviceSeleniumController_4": "Selenium project file not deleted!"
+"microserviceSeleniumController_5": "Selenium test completed."
+"microserviceSeleniumController_6": "Selenium test not completed!"
+"microserviceSeleniumController_7": "File upload completed."
+"microserviceSeleniumController_8": "File upload not completed!"
 
 # Microservice cron
 "microserviceCronCreate_1": "Cron create form"

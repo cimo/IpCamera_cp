@@ -148,14 +148,6 @@ class SettingFormType extends AbstractType {
             'required' => true,
             'label' => "settingFormType_24"
         ))
-        ->add("javascriptMinify", ChoiceType::class, Array(
-            'required' => true,
-            'placeholder' => "settingFormType_31",
-            'choices' => Array(
-                "settingFormType_7" => "0",
-                "settingFormType_8" => "1"
-            )
-        ))
         ->add("payment", ChoiceType::class, Array(
             'required' => true,
             'placeholder' => "settingFormType_25",
@@ -192,8 +184,20 @@ class SettingFormType extends AbstractType {
             'required' => true,
             'label' => "settingFormType_30"
         ))
-        ->add("submit", SubmitType::class, Array(
+        ->add("javascriptMinify", ChoiceType::class, Array(
+            'required' => true,
+            'placeholder' => "settingFormType_31",
+            'choices' => Array(
+                "settingFormType_7" => "0",
+                "settingFormType_8" => "1"
+            )
+        ))
+        ->add("serverUser", TextType::class, Array(
+            'required' => true,
             'label' => "settingFormType_32"
+        ))
+        ->add("submit", SubmitType::class, Array(
+            'label' => "settingFormType_33"
         ));
         
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $formEvent) {

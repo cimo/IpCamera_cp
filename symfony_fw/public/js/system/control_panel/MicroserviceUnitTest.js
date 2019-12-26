@@ -98,6 +98,8 @@ function ControlPanelMicroserviceUnitTest() {
                     ajax.reply(xhr, "");
                     
                     tableAndPagination.populate(xhr);
+                    
+                    $("#cp_microservice_unit_test_select_result").html("");
                 },
                 null,
                 null

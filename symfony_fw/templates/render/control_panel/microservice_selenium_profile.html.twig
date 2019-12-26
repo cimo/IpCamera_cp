@@ -1,0 +1,11 @@
+<h2 class="mdc-typography--headline6">{% trans %}microserviceSeleniumProfile_1{% endtrans %}</h2>
+<p>{{response.values.name}}</p>
+<div>
+    <img id="selenium_chrome" class="icon_logo cursor_custom selenium_icon" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/chrome.svg")}}" alt="chrome.svg"/>
+    <img id="selenium_firefox" class="icon_logo cursor_custom selenium_icon" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/firefox.svg")}}" alt="firefox.svg"/>
+</div>
+<pre id="cp_microservice_selenium_test_result"></pre>
+
+{% if is_granted("ROLE_ADMIN") == true %}
+    {{-include("@templateRoot/render/control_panel/microservice_selenium_delete.html.twig")-}}
+{% endif %}

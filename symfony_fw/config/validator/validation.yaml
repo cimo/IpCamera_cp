@@ -162,6 +162,23 @@ App\Form\Model\MicroserviceUnitTestSelectModel:
                 htmlPattern: false
                 pattern: /^[0-9]+$/
 
+App\Form\Model\MicroserviceSeleniumSelectModel:
+    properties:
+        id:
+            - NotBlank:
+                groups: [microservice_selenium_select]
+            - Regex:
+                groups: [microservice_selenium_select]
+                htmlPattern: false
+                pattern: /^[0-9]+$/
+        name:
+            - NotBlank:
+                groups: [microservice_selenium_select]
+            - Regex:
+                groups: [microservice_selenium_select]
+                htmlPattern: false
+                pattern: /^[a-zA-Z_0-9]+$/
+
 App\Form\Model\MicroserviceCronSelectModel:
     properties:
         id:
@@ -641,6 +658,13 @@ App\Entity\Setting:
                 groups: [setting]
                 htmlPattern: false
                 pattern: /^1$|^0$/
+        serverUser:
+            - NotBlank:
+                groups: [serverUser]
+            - Regex:
+                groups: [serverUser]
+                htmlPattern: false
+                pattern: /^[a-zA-Z]$/
 
 App\Entity\SettingSlackIw:
     properties:

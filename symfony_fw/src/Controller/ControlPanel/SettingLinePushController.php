@@ -28,6 +28,7 @@ class SettingLinePushController extends AbstractController {
     private $utility;
     private $query;
     private $ajax;
+    private $tableAndPagination;
     
     private $session;
     

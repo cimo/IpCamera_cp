@@ -207,6 +207,10 @@ table {
     }
 }
 
+pre {
+    white-space: pre-wrap;
+}
+
 .logo_main_big {
     display: block;
     width: 70px;
@@ -693,6 +697,10 @@ table {
     white-space: -moz-pre-wrap;
     white-space: -pre-wrap;
     white-space: -o-pre-wrap;
+}
+
+.icon_logo {
+    width: 30px;
 }
 
 #body_progress {

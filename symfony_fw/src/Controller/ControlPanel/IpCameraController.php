@@ -377,7 +377,7 @@ class IpCameraController extends AbstractController {
                     $detectionPid = trim(shell_exec("ffmpeg -y $input $command \"{$pathResult}\" >/dev/null 2>&1 & echo $!"));
                 }
                 else if ($ipCameraEntity->getDetectionActive() == false) {
-                    posix_kill($detectionPid, 3);
+                    posix_kill($detectionPid, 9);
                     
                     $detectionPid = 0;
                 }

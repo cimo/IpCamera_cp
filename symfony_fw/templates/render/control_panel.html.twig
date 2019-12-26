@@ -392,6 +392,62 @@
                     </script>
                     <script src="{{asset("js/system/control_panel/MicroserviceUnitTest" ~ javascriptMinify)}}"></script>
                 {% endif %}
+            {% elseif urlExtra == "cp_microservice_selenium" %}
+                {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
+                    <p>{% trans %}controlPanelMicroserviceSelenium_1{% endtrans %}</p>
+                    
+                    <p>{% trans %}controlPanelMicroserviceSelenium_2{% endtrans %}</p>
+                    
+                    {% set textA = "Require java, npm, chrome and firefox.\n\n"~
+                    "Java:\n"~
+                    "sudo apt-get update\n"~
+                    "sudo apt-get install openjdk-8-jdk\n\n"~
+                    
+                    "Npm:\n"~
+                    "curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -\n"~
+                    "sudo apt-get install nodejs\n"~
+                    "sudo npm -g update npm\n\n"~
+                    
+                    "Chrome and Firefox:\n"~
+                    "sudo sh -c 'echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google-chrome.list'\n"~
+                    "sudo apt-get update\n"~
+                    "sudo apt-get install xvfb google-chrome-stable firefox\n"~
+                    "sudo npm install -g selenium-side-runner --unsafe-perm=true --allow-root\n"~
+                    "sudo npm install -g chromedriver --unsafe-perm=true --allow-root\n"~
+                    "sudo npm install -g geckodriver --unsafe-perm=true --allow-root\n\n" ~
+                    
+                    "Digit on server terminal:\n"~
+                    "   sudo nano /etc/sudoers\n"~
+                    "Add this on end of file:\n"~
+                    "   www-data ALL = NOPASSWD: /home/cimo/www/project/uebusaito/root/symfony_fw/src/files/microservice/selenium/server_start.sh\n"~
+                    "   www-data ALL = NOPASSWD: /home/cimo/www/project/uebusaito/root/symfony_fw/src/files/microservice/selenium/server_stop.sh\n"%}
+                    
+                    <pre class="square_code">{{textA}}</pre>
+                    
+                    <p>{% trans %}controlPanelMicroserviceSelenium_3{% endtrans %}</p>
+                    
+                    {% set textB = "Click on enable for start the server test and on disable for stop.\n"~
+                    "Download selenium extension for chrome or firefox and record a \".side\" file.\n"~
+                    "Upload this file and select your test in the table." %}
+                    
+                    <pre class="square_code">{{textB}}</pre>
+                    
+                    {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceSeleniumController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    
+                    <script>
+                        window.addEventListener("load", function() {
+                            controlPanelMicroserviceSelenium.init();
+                        }, false);
+                        
+                        window.addEventListener("resize", function() {
+                        }, false);
+
+                        var textMicroserviceSelenium = {
+                            'label_1': "{{"controlPanelMicroserviceSelenium_4"|trans}}"
+                        };
+                    </script>
+                    <script src="{{asset("js/system/control_panel/MicroserviceSelenium" ~ javascriptMinify)}}"></script>
+                {% endif %}
             {% elseif urlExtra == "cp_microservice_cron" or urlExtra == "cp_microservice_cron_create" or "cp_microservice_cron_select" in urlExtra %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
                     <p>{% trans %}controlPanelMicroserviceCron_1{% endtrans %}</p>
@@ -507,6 +563,11 @@
             'cpMicroserviceUnitTestProfile': "{{path("cp_microservice_unit_test_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
             'cpMicroserviceUnitTestProfileSave': "{{path("cp_microservice_unit_test_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
             'cpMicroserviceUnitTestDelete': "{{path("cp_microservice_unit_test_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceSeleniumSelect': "{{path("cp_microservice_selenium_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceSeleniumProfile': "{{path("cp_microservice_selenium_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceSeleniumTest': "{{path("cp_microservice_selenium_test", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceSeleniumDelete': "{{path("cp_microservice_selenium_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
+            'cpMicroserviceSeleniumUpload': "{{path("cp_microservice_selenium_upload", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
             'cpMicroserviceCronCreate': "{{path("cp_microservice_cron_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
             'cpMicroserviceCronSelect': "{{path("cp_microservice_cron_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
             'cpMicroserviceCronProfile': "{{path("cp_microservice_cron_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
@@ -576,9 +637,13 @@
             <i class="material-icons mdc-list-item__graphic">bug_report</i>
             <span>{% trans %}controlPanel_18{% endtrans %}</span>
         </a>
+        <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_selenium"})}}">
+            <i class="material-icons mdc-list-item__graphic">dashboard</i>
+            <span>{% trans %}controlPanel_19{% endtrans %}</span>
+        </a>
         <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_cron"})}}">
             <i class="material-icons mdc-list-item__graphic">update</i>
-            <span>{% trans %}controlPanel_19{% endtrans %}</span>
+            <span>{% trans %}controlPanel_20{% endtrans %}</span>
         </a>
     {% endif %}
     

@@ -28,6 +28,7 @@ class MicroserviceUnitTestController extends AbstractController {
     private $utility;
     private $query;
     private $ajax;
+    private $tableAndPagination;
     
     private $session;
     
@@ -412,8 +413,8 @@ class MicroserviceUnitTestController extends AbstractController {
                     else
                         $listHtml .= $this->utility->getTranslator()->trans("microserviceUnitTestController_10");
                 $listHtml .= "</td>
-                <td class=\"horizontal_center\">";
-                    $listHtml .= "<button class=\"mdc-fab mdc-fab--mini cp_microservice_unit_test_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
+                <td class=\"horizontal_center\">
+                    <button class=\"mdc-fab mdc-fab--mini cp_microservice_unit_test_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
                 </td>
             </tr>";
         }

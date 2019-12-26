@@ -140,6 +140,11 @@ class Setting {
      */
     private $javascriptMinify = 0;
     
+    /**
+     * @ORM\Column(name="server_user", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT 'cimo'")
+     */
+    private $serverUser = 0;
+    
     // Properties
     public function setTemplate($value) {
         $this->template = $value;
@@ -239,6 +244,10 @@ class Setting {
     
     public function setJavascriptMinify($value) {
         $this->javascriptMinify = $value;
+    }
+    
+    public function setServerUser($value) {
+        $this->serverUser = $value;
     }
     
     // ---
@@ -345,5 +354,9 @@ class Setting {
     
     public function getJavascriptMinify() {
         return $this->javascriptMinify;
+    }
+    
+    public function getServerUser() {
+        return $this->serverUser;
     }
 }
