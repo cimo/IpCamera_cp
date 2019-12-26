@@ -416,7 +416,7 @@
                     "sudo npm install -g chromedriver --unsafe-perm=true --allow-root\n"~
                     "sudo npm install -g geckodriver --unsafe-perm=true --allow-root\n\n" ~
                     
-                    "Digit on server terminal:\n"~
+                    "Write on server terminal:\n"~
                     "   sudo nano /etc/sudoers\n"~
                     "Add this on end of file:\n"~
                     "   www-data ALL = NOPASSWD: /home/cimo/www/project/uebusaito/root/symfony_fw/src/files/microservice/selenium/server_start.sh\n"~
@@ -429,9 +429,9 @@
                     
                     <p>{% trans %}controlPanelMicroserviceSelenium_3{% endtrans %}</p>
                     
-                    {% set textB = "Click on enable for start the server test and on disable for stop.\n"~
-                    "Download selenium extension for chrome or firefox and record a \".side\" file.\n"~
-                    "Upload this file and select your test in the table." %}
+                    {% set textB = "Download selenium extension for chrome or firefox and record a \".side\" file.\n"~
+                    "Upload this file and select your test in the table.\n"~
+                    "Click on the browser icon for start the test." %}
                     
                     <pre class="square_code">{{textB}}</pre>
                     
