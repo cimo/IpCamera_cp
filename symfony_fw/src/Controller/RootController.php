@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 use App\Classes\System\Captcha;
 
@@ -21,7 +21,7 @@ class RootController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     private $captcha;
@@ -46,12 +46,12 @@ class RootController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->captcha = new Captcha($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->captcha = new Captcha($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -62,7 +62,7 @@ class RootController extends AbstractController {
         
         $this->session->set("currentPageId", $urlCurrentPageId);
         
-        $this->response['url']['root'] = $this->utility->getUrlRoot();
+        $this->response['url']['root'] = $this->helper->getUrlRoot();
         
         $this->response['module']['left'] = $this->query->selectAllModuleDatabase(null, "left");
         $this->response['module']['center'] = $this->query->selectAllModuleDatabase(null, "center");

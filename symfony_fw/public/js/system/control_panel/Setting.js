@@ -1,4 +1,4 @@
-/* global ajax, utility, popupEasy, materialDesign */
+/* global ajax, helper, popupEasy, materialDesign */
 
 var controlPanelSetting = new ControlPanelSetting();
 
@@ -12,7 +12,7 @@ function ControlPanelSetting() {
     self.init = function() {
         languageManage();
         
-        utility.wordTag("#setting_roleUserId", "#form_setting_roleUserId");
+        helper.wordTag("#setting_roleUserId", "#form_setting_roleUserId");
         
         $("#form_setting_payPalCurrencyCode").on("keyup", "", function() {
             $(this).val($(this).val().toUpperCase());

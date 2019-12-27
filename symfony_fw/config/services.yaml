@@ -52,3 +52,9 @@ services:
         arguments: ['@service_container', '@doctrine.orm.entity_manager', '@router', '@request_stack']
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+    
+    app.xss_listener:
+        class: App\EventListener\XssListener
+        arguments: ['@service_container', '@doctrine.orm.entity_manager', '@router', '@request_stack']
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }

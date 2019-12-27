@@ -1,4 +1,4 @@
-/* global utility, ajax, language, popupEasy, wysiwyg, materialDesign */
+/* global helper, ajax, language, popupEasy, wysiwyg, materialDesign */
 
 var controlPanelPage = new ControlPanelPage();
 
@@ -35,7 +35,7 @@ function ControlPanelPage() {
         
         fieldsVisibility();
         
-        utility.wordTag("#page_roleUserId", "#form_page_roleUserId");
+        helper.wordTag("#page_roleUserId", "#form_page_roleUserId");
         
         $("#cp_page_saveDraft").on("click", "", function() {
             saveDraft("create");
@@ -72,7 +72,7 @@ function ControlPanelPage() {
     self.changeView = function() {
         profileFocus = false;
 
-        if (utility.checkWidthType() === "mobile") {
+        if (helper.checkWidthType() === "mobile") {
             if (selectSended === true) {
                 selectId = $("#form_cp_page_select_mobile").find("select option:selected").val();
 
@@ -221,7 +221,7 @@ function ControlPanelPage() {
                 true,
                 $(this).prop("action"),
                 $(this).prop("method"),
-                utility.serializeJson($(this)),
+                helper.serializeJson($(this)),
                 "json",
                 false,
                 true,
@@ -261,7 +261,7 @@ function ControlPanelPage() {
             
             selectFieldWithDisabledElement("#form_page_parent", xhr);
 
-            utility.wordTag("#page_roleUserId", "#form_page_roleUserId");
+            helper.wordTag("#page_roleUserId", "#form_page_roleUserId");
             
             materialDesign.refresh();
             
@@ -332,7 +332,7 @@ function ControlPanelPage() {
     }
     
     function rankInMenu() {
-        utility.sortableElement("#page_rankMenuSort", "#form_page_rankMenuSort");
+        helper.sortableElement("#page_rankMenuSort", "#form_page_rankMenuSort");
         
         $("#form_page_parent").off("change").on("change", "", function() {
             ajax.send(
@@ -355,7 +355,7 @@ function ControlPanelPage() {
                     if (xhr.response.values.pageSortListHtml !== undefined) {
                         $("#page_rankMenuSort").find(".sort_result").html(xhr.response.values.pageSortListHtml);
 
-                        utility.sortableElement("#page_rankMenuSort", "#form_page_rankMenuSort");
+                        helper.sortableElement("#page_rankMenuSort", "#form_page_rankMenuSort");
                     }
                 },
                 null,

@@ -1,15 +1,15 @@
-/* global utility, materialDesign, widgetSearch, widgetDatePicker, flashBag, search, captcha, language, authentication, registration, recoverPassword, pageComment, menuUser */
+/* global helper, materialDesign, widgetSearch, widgetDatePicker, flashBag, search, captcha, language, authentication, registration, recoverPassword, pageComment, menuUser */
 
-utility.init();
-utility.bodyProgress();
+helper.init();
+helper.bodyProgress();
 
 $(document).ready(function() {
-    utility.checkMobile(true);
-    utility.linkPreventDefault();
-    utility.accordion("button");
-    utility.menuRoot();
-    utility.uploadFakeClick();
-    utility.blockMultiTab(true);
+    helper.checkMobile(true);
+    helper.linkPreventDefault();
+    helper.accordion("button");
+    helper.menuRoot();
+    helper.uploadFakeClick();
+    helper.blockMultiTab(true);
     
     // Material design
     materialDesign.init();

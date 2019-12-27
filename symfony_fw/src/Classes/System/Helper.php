@@ -3,12 +3,11 @@ namespace App\Classes\System;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 use App\Config;
 use App\Classes\System\Query;
 
-class Utility {
+class Helper {
     // Vars
     private $container;
     private $entityManager;
@@ -136,6 +135,14 @@ class Utility {
         $this->arrayColumnFix();
     }
     
+    public function xssProtection() {
+        $nonceCsp = base64_encode(random_bytes(20));
+        
+        $this->session->set("xssProtectionTag", "Content-Security-Policy");
+        $this->session->set("xssProtectionRule", "script-src 'strict-dynamic' 'nonce-{$nonceCsp}' 'unsafe-inline' http: https:; object-src 'none'; base-uri 'none';");
+        $this->session->set("xssProtectionValue", $nonceCsp);
+    }
+    
     public function createUserSelectHtml($selectId, $label, $isRequired = false) {
         $rows = $this->query->selectAllUserDatabase();
         
@@ -228,7 +235,7 @@ class Utility {
                 $html .= "<li class=\"ui-state-default\">
                     <div class=\"mdc-chip\">
                         <i class=\"material-icons mdc-chip__icon mdc-chip__icon--leading\">drag_handle</i>
-                        <div class=\"mdc-chip__text sort_elemet_data\" data-id=\"$id\">[$id] " . $this->translator->trans("classUtility_4") . "</div>
+                        <div class=\"mdc-chip__text sort_elemet_data\" data-id=\"$id\">[$id] " . $this->translator->trans("classHelper_4") . "</div>
                     </div>
                 </li>";
             }
@@ -255,7 +262,7 @@ class Utility {
                 $html .= "<li class=\"ui-state-default\">
                     <div class=\"mdc-chip\">
                         <i class=\"material-icons mdc-chip__icon mdc-chip__icon--leading\">drag_handle</i>
-                        <div class=\"mdc-chip__text sort_elemet_data\" data-id=\"$id\">[$id] " . $this->translator->trans("classUtility_5") . "</div>
+                        <div class=\"mdc-chip__text sort_elemet_data\" data-id=\"$id\">[$id] " . $this->translator->trans("classHelper_5") . "</div>
                     </div>
                 </li>";
             }
@@ -318,16 +325,16 @@ class Utility {
         
         if ($type == "withOld") {
             if (password_verify($form->get("old")->getData(), $row['password']) == false)
-                return $this->translator->trans("classUtility_1");
+                return $this->translator->trans("classHelper_1");
             else if ($form->get("new")->getData() != $form->get("newConfirm")->getData())
-                return $this->translator->trans("classUtility_2");
+                return $this->translator->trans("classHelper_2");
             
             $user->setPassword($this->createPasswordEncoder($type, $user, $form));
         }
         else if ($type == "withoutOld") {
             if ($form->get("password")->getData() != "" || $form->get("passwordConfirm")->getData() != "") {
                 if ($form->get("password")->getData() != $form->get("passwordConfirm")->getData())
-                    return $this->translator->trans("classUtility_3");
+                    return $this->translator->trans("classHelper_3");
                 
                 $user->setPassword($this->createPasswordEncoder($type, $user, $form));
             }
@@ -926,7 +933,7 @@ class Utility {
                 (isset($_COOKIE[$this->session->getName() . '_logged']) == true && $this->session->get("userTimestamp") == null)) {
             $userOverTime = true;
             
-            $this->session->set("userInform", $this->translator->trans("classUtility_6"));
+            $this->session->set("userInform", $this->translator->trans("classHelper_6"));
         }
         
         if ($this->tokenStorage->getToken() != null && $this->authorizationChecker->isGranted("IS_AUTHENTICATED_FULLY") == true) {
@@ -942,7 +949,7 @@ class Utility {
                 if (count($arrayDiff) > 0) {
                     $userOverRole = true;
                     
-                    $this->session->set("userInform", $this->translator->trans("classUtility_7"));
+                    $this->session->set("userInform", $this->translator->trans("classHelper_7"));
                 }
             }
         }

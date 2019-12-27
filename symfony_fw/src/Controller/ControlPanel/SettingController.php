@@ -8,7 +8,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 
 use App\Form\SettingFormType;
@@ -23,7 +23,7 @@ class SettingController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     
@@ -47,11 +47,11 @@ class SettingController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -60,7 +60,7 @@ class SettingController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         $settingEntity = $this->entityManager->getRepository("App\Entity\Setting")->find(1);
         
@@ -71,12 +71,12 @@ class SettingController extends AbstractController {
         
         $form = $this->createForm(SettingFormType::class, $settingEntity, Array(
             'validation_groups' => Array('setting'),
-            'choicesTemplate' => $this->utility->createTemplateList(),
+            'choicesTemplate' => $this->helper->createTemplateList(),
             'choicesLanguage' => array_column($languageCustomData, "value", "text")
         ));
         $form->handleRequest($request);
         
-        $this->response['values']['userRoleSelectHtml'] = $this->utility->createUserRoleSelectHtml("form_setting_roleUserId_select", "settingController_1", true);
+        $this->response['values']['userRoleSelectHtml'] = $this->helper->createUserRoleSelectHtml("form_setting_roleUserId_select", "settingController_1", true);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
@@ -87,20 +87,20 @@ class SettingController extends AbstractController {
                 $this->entityManager->flush();
                     
                 if ($form->get("https")->getData() != $https) {
-                    //$this->utility->getTokenStorage()->setToken(null);
+                    //$this->helper->getTokenStorage()->setToken(null);
                     $this->session->invalidate();
                     
-                    $message = $this->utility->getTranslator()->trans("settingController_2");
+                    $message = $this->helper->getTranslator()->trans("settingController_2");
                     
                     $this->session->set("userInform", $message);
                     
                     $this->response['messages']['info'] = $message;
                 }
                 else
-                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("settingController_3");
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingController_3");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("settingController_4");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("settingController_4");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -136,11 +136,11 @@ class SettingController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -149,7 +149,7 @@ class SettingController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -188,24 +188,24 @@ class SettingController extends AbstractController {
                         
                         if ($settingDatabase == true) {
                             if ($request->get("event") == "createLanguage") {
-                                touch("{$this->utility->getPathRoot()}/translations/messages.$code.yml");
+                                touch("{$this->helper->getPathRoot()}/translations/messages.$code.yml");
 
                                 $this->settingDatabase("insertLanguageInPage", $code);
 
-                                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("settingController_5");
+                                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingController_5");
                             }
                             else if ($request->get("event") == "modifyLanguage") {
                                 if ($code == $request->getLocale())
                                     $this->response['values']['url'] = $this->redirectOnModifySelected($settingRow);
                                 else
-                                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("settingController_6");
+                                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingController_6");
                             }
                         }
                         else
-                            $this->response['messages']['error'] = $this->utility->getTranslator()->trans("settingController_7");
+                            $this->response['messages']['error'] = $this->helper->getTranslator()->trans("settingController_7");
                     }
                     else
-                        $this->response['messages']['error'] = $this->utility->getTranslator()->trans("settingController_7");
+                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("settingController_7");
                 }
                 else if ($request->get("event") == "deleteLanguage") {
                     $code = $request->get("code");
@@ -214,20 +214,20 @@ class SettingController extends AbstractController {
                         $settingDatabase = $this->settingDatabase("deleteLanguage", $code);
 
                         if ($settingDatabase == true) {
-                            unlink("{$this->utility->getPathRoot()}/translations/messages.$code.yml");
+                            unlink("{$this->helper->getPathRoot()}/translations/messages.$code.yml");
 
                             $this->settingDatabase("deleteLanguageInPage", $code);
                             
                             if ($code == $request->getLocale())
                                 $this->response['values']['url'] = $this->redirectOnModifySelected($settingRow);
                             else
-                                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("settingController_8");
+                                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingController_8");
                         }
                         else
-                            $this->response['messages']['error'] = $this->utility->getTranslator()->trans("settingController_9");
+                            $this->response['messages']['error'] = $this->helper->getTranslator()->trans("settingController_9");
                     }
                     else
-                        $this->response['messages']['error'] = $this->utility->getTranslator()->trans("settingController_9");
+                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("settingController_9");
                 }
 
                 return $this->ajax->response(Array(
@@ -254,7 +254,7 @@ class SettingController extends AbstractController {
         $customData = Array();
         
         foreach($languageRows as $key => $value) {
-            $active = $value['active'] == 1 ? $this->utility->getTranslator()->trans("settingController_10") : $this->utility->getTranslator()->trans("settingController_11");
+            $active = $value['active'] == 1 ? $this->helper->getTranslator()->trans("settingController_10") : $this->helper->getTranslator()->trans("settingController_11");
             
             $customData[$key]['value'] = $value['code'];
             $customData[$key]['text'] = "{$value['code']} | {$value['date']} | $active";
@@ -265,7 +265,7 @@ class SettingController extends AbstractController {
     
     private function moduleDatabase($templateColumn) {
         if ($templateColumn == 1) {
-            $query = $this->utility->getConnection()->prepare("UPDATE module
+            $query = $this->helper->getConnection()->prepare("UPDATE module
                                                                 SET position_tmp = :positionTmp,
                                                                     position = :position
                                                                 WHERE position_tmp = :position");
@@ -282,7 +282,7 @@ class SettingController extends AbstractController {
             $query->execute();
         }
         else if ($templateColumn == 2 || $templateColumn == 3 || $templateColumn == 4) {
-            $query = $this->utility->getConnection()->prepare("UPDATE module
+            $query = $this->helper->getConnection()->prepare("UPDATE module
                                                                 SET position_tmp = :positionTmp,
                                                                     position = :position
                                                                 WHERE position = :positionTmp");
@@ -293,7 +293,7 @@ class SettingController extends AbstractController {
                 
                 $query->execute();
                 
-                $query = $this->utility->getConnection()->prepare("UPDATE module
+                $query = $this->helper->getConnection()->prepare("UPDATE module
                                                                     SET position_tmp = :positionTmp,
                                                                         position = :position
                                                                     WHERE position_tmp = :position");
@@ -309,7 +309,7 @@ class SettingController extends AbstractController {
                 
                 $query->execute();
                 
-                $query = $this->utility->getConnection()->prepare("UPDATE module
+                $query = $this->helper->getConnection()->prepare("UPDATE module
                                                                     SET position_tmp = :positionTmp,
                                                                         position = :position
                                                                     WHERE position_tmp = :position");
@@ -341,7 +341,7 @@ class SettingController extends AbstractController {
         $moduleRows = $this->query->selectAllModuleDatabase(null, $position);
         
         foreach($moduleRows as $key => $value) {
-            $query = $this->utility->getConnection()->prepare("UPDATE module
+            $query = $this->helper->getConnection()->prepare("UPDATE module
                                                                 SET rank_in_column = :rankInColumn
                                                                 WHERE id = :id");
             
@@ -354,7 +354,7 @@ class SettingController extends AbstractController {
     
     private function settingDatabase($type, $code, $date = null, $active = 0) {
         if ($type == "insertLanguage") {
-            $query = $this->utility->getConnection()->prepare("INSERT INTO language (code, date, active)
+            $query = $this->helper->getConnection()->prepare("INSERT INTO language (code, date, active)
                                                                 VALUES (:code, :date, :active)");
             
             $query->bindValue(":code", $code);
@@ -364,7 +364,7 @@ class SettingController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "updateLanguage") {
-            $query = $this->utility->getConnection()->prepare("UPDATE language
+            $query = $this->helper->getConnection()->prepare("UPDATE language
                                                                 SET date = :date,
                                                                     active = :active
                                                                 WHERE code = :code");
@@ -376,7 +376,7 @@ class SettingController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteLanguage") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM language
+            $query = $this->helper->getConnection()->prepare("DELETE FROM language
                                                                 WHERE code = :code");
             
             $query->bindValue(":code", $code);
@@ -388,7 +388,7 @@ class SettingController extends AbstractController {
             $codeTmp = strlen($codeTmp) == true ? $codeTmp : "";
             $codeTmp = ctype_alpha($codeTmp) == true ? $codeTmp : "";
             
-            $query = $this->utility->getConnection()->prepare("ALTER TABLE page_title ADD $codeTmp VARCHAR(255) DEFAULT '';
+            $query = $this->helper->getConnection()->prepare("ALTER TABLE page_title ADD $codeTmp VARCHAR(255) DEFAULT '';
                                                                 ALTER TABLE page_argument ADD $codeTmp LONGTEXT;
                                                                 ALTER TABLE page_menu_name ADD $codeTmp VARCHAR(255) NOT NULL DEFAULT '-';");
             
@@ -399,7 +399,7 @@ class SettingController extends AbstractController {
             $codeTmp = strlen($codeTmp) == true ? $codeTmp : "";
             $codeTmp = ctype_alpha($codeTmp) == true ? $codeTmp : "";
             
-            $query = $this->utility->getConnection()->prepare("ALTER TABLE page_title DROP $codeTmp;
+            $query = $this->helper->getConnection()->prepare("ALTER TABLE page_title DROP $codeTmp;
                                                                 ALTER TABLE page_argument DROP $codeTmp;
                                                                 ALTER TABLE page_menu_name DROP $codeTmp;");
             

@@ -20,8 +20,8 @@
             <i class="material-icons icon action_photo">photo_camera</i>
         </div>
     </div>
-    <script src="{{asset("js/system/control_panel/IpCamera" ~ javascriptMinify)}}"></script>
-    <script>
+    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/IpCamera" ~ javascriptMinify)}}"></script>
+    <script nonce="{{php_session.xssProtectionValue}}">
         function deferred(method) {
             if (window.$ !== undefined)
                 method();

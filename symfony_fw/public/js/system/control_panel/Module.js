@@ -1,4 +1,4 @@
-/* global utility, ajax, popupEasy, materialDesign */
+/* global helper, ajax, popupEasy, materialDesign */
 
 var controlPanelModule = new ControlPanelModule();
 
@@ -42,7 +42,7 @@ function ControlPanelModule() {
     };
     
     self.changeView = function() {
-        if (utility.checkWidthType() === "mobile") {
+        if (helper.checkWidthType() === "mobile") {
             if (selectSended === true) {
                 selectId = $("#cp_module_select_mobile").find("select option:selected").val();
 
@@ -191,7 +191,7 @@ function ControlPanelModule() {
                 true,
                 $(this).prop("action"),
                 $(this).prop("method"),
-                utility.serializeJson($(this)),
+                helper.serializeJson($(this)),
                 "json",
                 false,
                 true,
@@ -258,7 +258,7 @@ function ControlPanelModule() {
     }
     
     function rankInColumn() {
-        utility.sortableElement("#module_rankColumnSort", "#form_module_rankColumnSort");
+        helper.sortableElement("#module_rankColumnSort", "#form_module_rankColumnSort");
         
         $("#form_module_position").off("change").on("change", "", function() {
             ajax.send(
@@ -281,7 +281,7 @@ function ControlPanelModule() {
                     if (xhr.response.values.moduleSortListHtml !== undefined) {
                         $("#module_rankColumnSort").find(".sort_result").html(xhr.response.values.moduleSortListHtml);
 
-                        utility.sortableElement("#module_rankColumnSort", "#form_module_rankColumnSort");
+                        helper.sortableElement("#module_rankColumnSort", "#form_module_rankColumnSort");
                     }
                 },
                 null,

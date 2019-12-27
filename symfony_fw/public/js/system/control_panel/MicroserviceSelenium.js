@@ -1,4 +1,4 @@
-/* global utility, ajax, uploadChunk, popupEasy, materialDesign */
+/* global helper, ajax, uploadChunk, popupEasy, materialDesign */
 
 var controlPanelMicroserviceSelenium = new ControlPanelMicroserviceSelenium();
 
@@ -27,7 +27,7 @@ function ControlPanelMicroserviceSelenium() {
     };
     
     self.changeView = function() {
-        if (utility.checkWidthType() === "mobile") {
+        if (helper.checkWidthType() === "mobile") {
             if (selectSended === true) {
                 selectId = $("#cp_microservice_selenium_select_mobile").find("select option:selected").val();
                 
@@ -180,7 +180,7 @@ function ControlPanelMicroserviceSelenium() {
                 true,
                 $(this).prop("action"),
                 $(this).prop("method"),
-                utility.serializeJson($(this)),
+                helper.serializeJson($(this)),
                 "json",
                 false,
                 true,

@@ -37,7 +37,7 @@
     {% endif %}
 {% endif %}
 
-<script>
+<script nonce="{{php_session.xssProtectionValue}}">
     var textPageComment = {
         'label_1': "{{"pageComment_2"|trans}}",
         'label_2': "{{"pageComment_3"|trans}}"

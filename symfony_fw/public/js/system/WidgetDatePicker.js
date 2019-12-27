@@ -1,4 +1,4 @@
-/* global utility, mdc */
+/* global helper, mdc */
 
 var widgetDatePicker = new WidgetDatePicker();
 
@@ -391,10 +391,10 @@ function WidgetDatePicker() {
     function fillInput(type) {
         var currentMontTmp = currentMonth + 1;
         
-        result = currentYear + "-" + utility.padZero(currentMontTmp) + "-" + currentDay;
+        result = currentYear + "-" + helper.padZero(currentMontTmp) + "-" + currentDay;
         
         if (language === "it")
-            result = currentDay + "-" + utility.padZero(currentMontTmp) + "-" + currentYear;
+            result = currentDay + "-" + helper.padZero(currentMontTmp) + "-" + currentYear;
         
         if (type === true)
             $(currentInput).val(result);

@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Translation\TranslatorInterface;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 
 class RequestListener {
     // Vars
@@ -19,7 +19,7 @@ class RequestListener {
     private $router;
     private $requestStack;
     
-    private $utility;
+    private $helper;
     private $query;
     
     private $session;
@@ -33,26 +33,28 @@ class RequestListener {
         $this->router = $router;
         $this->requestStack = $requestStack;
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
     }
     
     public function onKernelRequest(GetResponseEvent $event) {
         if (HttpKernelInterface::MASTER_REQUEST != $event->getRequestType())
             return;
         
+        $this->helper->xssProtection();
+        
         $request = $event->getRequest();
         
         $settingRow = $this->query->selectSettingDatabase();
         
-        $this->utility->configureCookie($this->session->getName(), time() + (10 * 365 * 24 * 60 * 60), $settingRow['https'], true);
+        $this->helper->configureCookie($this->session->getName(), time() + (10 * 365 * 24 * 60 * 60), $settingRow['https'], true);
         
-        $checkLanguage = $this->utility->checkLanguage($request, $this->router, $settingRow);
+        $checkLanguage = $this->helper->checkLanguage($request, $this->router, $settingRow);
         $request = $checkLanguage[0];
         
-        $checkSessionOverTime = $this->utility->checkSessionOverTime($request, $this->router);
+        $checkSessionOverTime = $this->helper->checkSessionOverTime($request, $this->router);
         
         $urlCurrentPageId = 2;
         
@@ -63,11 +65,12 @@ class RequestListener {
             'name' => $this->session->getName(),
             'userInform' => $this->session->get("userInform"),
             'languageTextCode' => $this->session->get("languageTextCode"),
-            'currentPageId' => $urlCurrentPageId
+            'currentPageId' => $urlCurrentPageId,
+            'xssProtectionValue' => $this->session->get("xssProtectionValue")
         );
         
         $this->container->get("twig")->addGlobal("php_session", $phpSession);
-        $this->container->get("twig")->addGlobal("websiteName", $this->utility->getWebsiteName());
+        $this->container->get("twig")->addGlobal("websiteName", $this->helper->getWebsiteName());
         $this->container->get("twig")->addGlobal("settingRow", $settingRow);
         $this->container->get("twig")->addGlobal("pageRow", $this->query->selectPageDatabase($request->getLocale(), $urlCurrentPageId));
         

@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 use App\Classes\System\TableAndPagination;
 
@@ -24,7 +24,7 @@ class MyPagePaymentController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     private $tableAndPagination;
@@ -49,12 +49,12 @@ class MyPagePaymentController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -63,7 +63,7 @@ class MyPagePaymentController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_USER"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_USER"), $this->getUser());
         
         $settingRow = $this->query->selectSettingDatabase();
         
@@ -123,11 +123,11 @@ class MyPagePaymentController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -136,7 +136,7 @@ class MyPagePaymentController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_USER"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_USER"), $this->getUser());
         
         $settingRow = $this->query->selectSettingDatabase();
         
@@ -160,7 +160,7 @@ class MyPagePaymentController extends AbstractController {
                         ));
                     }
                     else
-                        $this->response['messages']['error'] = $this->utility->getTranslator()->trans("myPagePaymentController_1");
+                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("myPagePaymentController_1");
                 }
             }
             
@@ -190,11 +190,11 @@ class MyPagePaymentController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -203,7 +203,7 @@ class MyPagePaymentController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_USER"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_USER"), $this->getUser());
         
         $settingRow = $this->query->selectSettingDatabase();
         
@@ -218,17 +218,17 @@ class MyPagePaymentController extends AbstractController {
                         if ($paymentDatabase == true) {
                             $this->response['values']['id'] = $id;
 
-                            $this->response['messages']['success'] = $this->utility->getTranslator()->trans("myPagePaymentController_2");
+                            $this->response['messages']['success'] = $this->helper->getTranslator()->trans("myPagePaymentController_2");
                         }
                     }
                     else if ($request->get("event") == "deleteAll") {
                         $paymentDatabase = $this->paymentDatabase("deleteAll", null);
 
                         if ($paymentDatabase == true)
-                            $this->response['messages']['success'] = $this->utility->getTranslator()->trans("myPagePaymentController_3");
+                            $this->response['messages']['success'] = $this->helper->getTranslator()->trans("myPagePaymentController_3");
                     }
                     else
-                        $this->response['messages']['error'] = $this->utility->getTranslator()->trans("myPagePaymentController_4");
+                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("myPagePaymentController_4");
 
                     return $this->ajax->response(Array(
                         'urlLocale' => $this->urlLocale,
@@ -293,7 +293,7 @@ class MyPagePaymentController extends AbstractController {
     
     private function paymentDatabase($type, $id) {
         if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("UPDATE payment
+            $query = $this->helper->getConnection()->prepare("UPDATE payment
                                                                 SET status_delete = :statusDelete
                                                                 WHERE user_id = :userId
                                                                 AND id = :id");
@@ -305,7 +305,7 @@ class MyPagePaymentController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteAll") {
-            $query = $this->utility->getConnection()->prepare("UPDATE payment
+            $query = $this->helper->getConnection()->prepare("UPDATE payment
                                                                 SET status_delete = :statusDelete
                                                                 WHERE user_id = :userId");
             

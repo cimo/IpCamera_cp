@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\Translation\TranslatorInterface;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\PayPal;
 
 use App\Entity\Payment;
@@ -20,7 +20,7 @@ class PayPalIpnListener {
     private $router;
     private $requestStack;
     
-    private $utility;
+    private $helper;
     private $query;
     
     private $session;
@@ -34,10 +34,10 @@ class PayPalIpnListener {
         $this->router = $router;
         $this->requestStack = $requestStack;
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
     }
     
     public function onKernelResponse(FilterResponseEvent $event) {
@@ -88,7 +88,7 @@ class PayPalIpnListener {
         $id = $userRow['id'];
         $credit = $userRow['credit'] + $payPalElements['quantity'];
         
-        $query = $this->utility->getConnection()->prepare("UPDATE user
+        $query = $this->helper->getConnection()->prepare("UPDATE user
                                                             SET credit = :credit
                                                             WHERE id = :id");
         

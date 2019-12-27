@@ -1,4 +1,4 @@
-/* global utility, ajax */
+/* global helper, ajax */
 
 var pageComment = new PageComment();
 

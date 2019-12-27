@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 use App\Classes\System\UploadChunk;
 use App\Classes\System\TableAndPagination;
@@ -24,7 +24,7 @@ class MicroserviceSeleniumController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     private $tableAndPagination;
@@ -50,12 +50,12 @@ class MicroserviceSeleniumController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -64,7 +64,7 @@ class MicroserviceSeleniumController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $this->session->set("microserviceSeleniumProfileId", 0);
         $this->session->set("microserviceSeleniumProfileName", "");
@@ -119,11 +119,11 @@ class MicroserviceSeleniumController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -132,14 +132,14 @@ class MicroserviceSeleniumController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 $id = $request->get("id");
                 $name = $request->get("name");
                 
-                if (is_file("{$this->utility->getPathSrc()}/files/microservice/selenium/{$name}") == true) {
+                if (is_file("{$this->helper->getPathSrc()}/files/microservice/selenium/{$name}") == true) {
                     $this->session->set("microserviceUnitTestProfileId", $id);
                     $this->session->set("microserviceUnitTestProfileName", $name);
                     
@@ -154,7 +154,7 @@ class MicroserviceSeleniumController extends AbstractController {
                     ));
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceSeleniumController_1");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceSeleniumController_1");
             }
         }
         
@@ -181,11 +181,11 @@ class MicroserviceSeleniumController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -194,7 +194,7 @@ class MicroserviceSeleniumController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -202,19 +202,19 @@ class MicroserviceSeleniumController extends AbstractController {
                     $id = $request->get("id") == null ? $this->session->get("microserviceSeleniumProfileId") : $request->get("id");
                     $name = $request->get("name") == null ? $this->session->get("microserviceSeleniumProfileName") : $request->get("name");
                     
-                    unlink("{$this->utility->getPathSrc()}/files/microservice/selenium/{$name}");
+                    unlink("{$this->helper->getPathSrc()}/files/microservice/selenium/{$name}");
                     
                     $this->response['values']['id'] = $id;
                     
-                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceSeleniumController_2");
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceSeleniumController_2");
                 }
                 else if ($request->get("event") == "deleteAll") {
-                    $this->utility->removeDirRecursive("{$this->utility->getPathSrc()}/files/microservice/selenium", false);
+                    $this->helper->removeDirRecursive("{$this->helper->getPathSrc()}/files/microservice/selenium", false);
                     
-                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceSeleniumController_3");
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceSeleniumController_3");
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceSeleniumController_4");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceSeleniumController_4");
 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -248,11 +248,11 @@ class MicroserviceSeleniumController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -261,7 +261,7 @@ class MicroserviceSeleniumController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         $settingRow = $this->query->selectSettingDatabase();
         
@@ -270,8 +270,8 @@ class MicroserviceSeleniumController extends AbstractController {
                 $name = $request->get("name");
                 $onlyName = preg_replace("/\\.[^.\\s]{3,4}$/", "", $name);
                 
-                $path = "{$this->utility->getPathSrc()}/files/microservice/selenium";
-                $pathResult = "{$this->utility->getPathSrc()}/files/microservice/selenium/{$onlyName}.json";
+                $path = "{$this->helper->getPathSrc()}/files/microservice/selenium";
+                $pathResult = "{$this->helper->getPathSrc()}/files/microservice/selenium/{$onlyName}.json";
                 
                 $screen = "1280x720";
                 
@@ -328,10 +328,10 @@ class MicroserviceSeleniumController extends AbstractController {
                     
                     $this->response['result'] = $browserExecuted . "\r\n" . $result;
                     
-                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceSeleniumController_5");
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceSeleniumController_5");
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceSeleniumController_6");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceSeleniumController_6");
                 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -365,12 +365,12 @@ class MicroserviceSeleniumController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->uploadChunk = new UploadChunk($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->uploadChunk = new UploadChunk($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -379,13 +379,13 @@ class MicroserviceSeleniumController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "upload") {
                     $this->uploadChunk->setSettings(Array(
-                        'path' => "{$this->utility->getPathSrc()}/files/microservice/selenium",
+                        'path' => "{$this->helper->getPathSrc()}/files/microservice/selenium",
                         'chunkSize' => 1048576,
                         'mimeType' => Array("text/plain")
                     ));
@@ -394,10 +394,10 @@ class MicroserviceSeleniumController extends AbstractController {
                     $this->response['uploadChunk']['processFile'] = $uploadChunkProcessFile;
                     
                     if (isset($uploadChunkProcessFile['status']) == true && $uploadChunkProcessFile['status'] == "complete")
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceSeleniumController_7");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceSeleniumController_7");
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceSeleniumController_8");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceSeleniumController_8");
             }
         }
         
@@ -413,7 +413,7 @@ class MicroserviceSeleniumController extends AbstractController {
     private function testFiles() {
         $result = Array();
         
-        $filePath = "{$this->utility->getPathSrc()}/files/microservice/selenium";
+        $filePath = "{$this->helper->getPathSrc()}/files/microservice/selenium";
         
         $scanDirElements = preg_grep("/^([^.])/", scandir($filePath));
         

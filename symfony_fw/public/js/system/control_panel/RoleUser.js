@@ -1,4 +1,4 @@
-/* global utility, ajax, popupEasy, materialDesign */
+/* global helper, ajax, popupEasy, materialDesign */
 
 var controlPanelRoleUser = new ControlPanelRoleUser();
 
@@ -44,7 +44,7 @@ function ControlPanelRoleUser() {
     };
     
     self.changeView = function() {
-        if (utility.checkWidthType() === "mobile") {
+        if (helper.checkWidthType() === "mobile") {
             if (selectSended === true) {
                 selectId = $("#cp_roleUser_select_mobile").find("select option:selected").val();
 
@@ -191,7 +191,7 @@ function ControlPanelRoleUser() {
                 true,
                 $(this).prop("action"),
                 $(this).prop("method"),
-                utility.serializeJson($(this)),
+                helper.serializeJson($(this)),
                 "json",
                 false,
                 true,

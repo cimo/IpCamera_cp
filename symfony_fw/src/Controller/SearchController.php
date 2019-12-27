@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 use App\Classes\System\TableAndPagination;
 
@@ -23,7 +23,7 @@ class SearchController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     private $tableAndPagination;
@@ -48,11 +48,11 @@ class SearchController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -70,10 +70,10 @@ class SearchController extends AbstractController {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
                 $words = $form->get("words")->getData();
 
-                $this->response['values']['url'] = "{$this->utility->getUrlRoot()}{$this->utility->getWebsiteFile()}/{$this->urlLocale}/5/$words";
+                $this->response['values']['url'] = "{$this->helper->getUrlRoot()}{$this->helper->getWebsiteFile()}/{$this->urlLocale}/5/$words";
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("searchController_1");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("searchController_1");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
 
@@ -109,12 +109,12 @@ class SearchController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -144,7 +144,7 @@ class SearchController extends AbstractController {
             ));
         }
         else
-            $this->response['messages']['error'] = $this->utility->getTranslator()->trans("searchController_1");
+            $this->response['messages']['error'] = $this->helper->getTranslator()->trans("searchController_1");
         
         return Array(
             'urlLocale' => $this->urlLocale,
@@ -175,7 +175,7 @@ class SearchController extends AbstractController {
                             $listHtml .= $argument;
                     $listHtml .= "</span>
                 </span>
-                <a class=\"mdc-list-item__meta material-icons\" href=\"{$this->utility->getUrlRoot()}{$this->utility->getWebsiteFile()}/{$this->urlLocale}/{$value['id']}\">
+                <a class=\"mdc-list-item__meta material-icons\" href=\"{$this->helper->getUrlRoot()}{$this->helper->getWebsiteFile()}/{$this->urlLocale}/{$value['id']}\">
                     info
                 </a>
             </li>";

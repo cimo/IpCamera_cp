@@ -1,4 +1,4 @@
-/* global utility, ajax, loader, flashBag, materialDesign */
+/* global helper, ajax, loader, flashBag, materialDesign */
 
 var uploadChunk = new UploadChunk();
 
@@ -192,7 +192,7 @@ function UploadChunk() {
                     resetValue();
                     
                     if (tagImageRefresh !== "")
-                        utility.imageRefresh(tagImageRefresh, 1);
+                        helper.imageRefresh(tagImageRefresh, 1);
                     
                     if (lockUrl !== "")
                         lock(jsonParse.response.values.lockName);

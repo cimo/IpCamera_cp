@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 use App\Classes\System\TableAndPagination;
 
@@ -25,7 +25,7 @@ class ModuleController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     private $tableAndPagination;
@@ -50,11 +50,11 @@ class ModuleController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -63,7 +63,7 @@ class ModuleController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         $moduleEntity = new Module();
         
@@ -76,7 +76,7 @@ class ModuleController extends AbstractController {
         
         $moduleRows = Array();
         
-        $this->response['values']['moduleSortListHtml'] = $this->utility->createModuleSortListHtml($moduleRows);
+        $this->response['values']['moduleSortListHtml'] = $this->helper->createModuleSortListHtml($moduleRows);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
@@ -87,10 +87,10 @@ class ModuleController extends AbstractController {
                 
                 $this->updateRankInColumnDatabase($form->get("rankColumnSort")->getData(), $moduleEntity->getId());
 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("moduleController_1");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("moduleController_1");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("moduleController_2");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("moduleController_2");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -126,12 +126,12 @@ class ModuleController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -140,7 +140,7 @@ class ModuleController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         $this->session->set("moduleProfileId", 0);
         
@@ -194,11 +194,11 @@ class ModuleController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -207,7 +207,7 @@ class ModuleController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -225,7 +225,7 @@ class ModuleController extends AbstractController {
                     
                     $rows = array_column($this->query->selectAllModuleDatabase(null, $form->get("position")->getData()), "name", "id");
                     
-                    $this->response['values']['moduleSortListHtml'] = $this->utility->createModuleSortListHtml($rows);
+                    $this->response['values']['moduleSortListHtml'] = $this->helper->createModuleSortListHtml($rows);
                     $this->response['values']['id'] = $this->session->get("moduleProfileId");
 
                     $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/module_profile.html.twig", Array(
@@ -237,7 +237,7 @@ class ModuleController extends AbstractController {
                     ));
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("moduleController_3");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("moduleController_3");
             }
         }
         
@@ -264,11 +264,11 @@ class ModuleController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -277,7 +277,7 @@ class ModuleController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -295,7 +295,7 @@ class ModuleController extends AbstractController {
                 else
                     $rows = Array();
                 
-                $this->response['values']['moduleSortListHtml'] = $this->utility->createModuleSortListHtml($rows);
+                $this->response['values']['moduleSortListHtml'] = $this->helper->createModuleSortListHtml($rows);
             }
         }
         
@@ -322,11 +322,11 @@ class ModuleController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -335,7 +335,7 @@ class ModuleController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         $moduleEntity = $this->entityManager->getRepository("App\Entity\Module")->find($this->session->get("moduleProfileId"));
         
@@ -351,10 +351,10 @@ class ModuleController extends AbstractController {
                 
                 $this->updateRankInColumnDatabase($form->get("rankColumnSort")->getData(), $moduleEntity->getId());
 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("moduleController_4");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("moduleController_4");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("moduleController_5");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("moduleController_5");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -390,11 +390,11 @@ class ModuleController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -403,7 +403,7 @@ class ModuleController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -415,17 +415,17 @@ class ModuleController extends AbstractController {
                     if ($moduleDatabase == true) {
                         $this->response['values']['id'] = $id;
 
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("moduleController_6");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("moduleController_6");
                     }
                 }
                 else if ($request->get("event") == "deleteAll") {
                     $moduleDatabase = $this->moduleDatabase("deleteAll", null, null, null);
 
                     if ($moduleDatabase == true)
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("moduleController_7");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("moduleController_7");
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("moduleController_8");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("moduleController_8");
 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -472,9 +472,9 @@ class ModuleController extends AbstractController {
                 </td>
                 <td>";
                     if ($value['active'] == 0)
-                        $listHtml .= $this->utility->getTranslator()->trans("moduleController_9");
+                        $listHtml .= $this->helper->getTranslator()->trans("moduleController_9");
                     else
-                        $listHtml .= $this->utility->getTranslator()->trans("moduleController_10");
+                        $listHtml .= $this->helper->getTranslator()->trans("moduleController_10");
                 $listHtml .= "</td>
                 <td class=\"horizontal_center\">";
                     if ($value['id'] > 2)
@@ -494,7 +494,7 @@ class ModuleController extends AbstractController {
             if (empty($value) == true)
                 $value = $moduleId;
 
-            $query = $this->utility->getConnection()->prepare("UPDATE module
+            $query = $this->helper->getConnection()->prepare("UPDATE module
                                                                 SET rank_in_column = :rankInColumn
                                                                 WHERE id = :id");
 
@@ -507,7 +507,7 @@ class ModuleController extends AbstractController {
     
     private function moduleDatabase($type, $id, $rankInColumn, $position) {
         if ($type == "update") {
-            $query = $this->utility->getConnection()->prepare("UPDATE module
+            $query = $this->helper->getConnection()->prepare("UPDATE module
                                                                 SET position = :position,
                                                                     rank_in_column = :rankInColumn
                                                                 WHERE id = :id");
@@ -519,7 +519,7 @@ class ModuleController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM module
+            $query = $this->helper->getConnection()->prepare("DELETE FROM module
                                                                 WHERE id > :idExclude
                                                                 AND id = :id");
 
@@ -529,7 +529,7 @@ class ModuleController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteAll") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM module
+            $query = $this->helper->getConnection()->prepare("DELETE FROM module
                                                                 WHERE id > :idExclude");
 
             $query->bindValue(":idExclude", 2);

@@ -3,21 +3,21 @@ namespace App\Classes\System;
 
 class Captcha {
     // Vars
-    private $utility;
+    private $helper;
     
     private $session;
     
     // Properties
     
     // Functions public
-    public function __construct($utility) {
-        $this->utility = $utility;
+    public function __construct($helper) {
+        $this->helper = $helper;
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
     }
     
     public function create($length) {
-        $randomString = $this->utility->generateRandomString($length);
+        $randomString = $this->helper->generateRandomString($length);
         
         $this->session->set("captcha", $randomString);
         
@@ -32,7 +32,7 @@ class Captcha {
         
         imagefilledrectangle($image, 0, 0, 299, 99, $red);
         
-        $fontFile = "{$this->utility->getPathPublic()}/fonts/Roboto_light.ttf";
+        $fontFile = "{$this->helper->getPathPublic()}/fonts/Roboto_light.ttf";
         
         imagefttext($image, 10, 0, 12, 20, $black, $fontFile, $string);
         

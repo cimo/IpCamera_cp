@@ -103,7 +103,7 @@
     <iframe class="editor" src="about:blank"></iframe>
     <div class="source" contenteditable="true"></div>
 </div>
-<script>
+<script nonce="{{php_session.xssProtectionValue}}">
     var textWysiwyg = {
         'label_1': "{{"wysiwyg_1"|trans}}",
         'label_2': "{{"wysiwyg_2"|trans}}",

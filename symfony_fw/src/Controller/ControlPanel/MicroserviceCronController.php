@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 use App\Classes\System\TableAndPagination;
 
@@ -25,7 +25,7 @@ class MicroserviceCronController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     private $tableAndPagination;
@@ -50,11 +50,11 @@ class MicroserviceCronController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -63,7 +63,7 @@ class MicroserviceCronController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $microserviceCronEntity = new MicroserviceCron();
         
@@ -81,10 +81,10 @@ class MicroserviceCronController extends AbstractController {
                 
                 $this->settingJob(false, $microserviceCronEntity);
                 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceCronController_1");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceCronController_1");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceCronController_2");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceCronController_2");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -120,12 +120,12 @@ class MicroserviceCronController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -134,7 +134,7 @@ class MicroserviceCronController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $this->session->set("microserviceCronProfileId", 0);
         
@@ -188,11 +188,11 @@ class MicroserviceCronController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -201,7 +201,7 @@ class MicroserviceCronController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -230,7 +230,7 @@ class MicroserviceCronController extends AbstractController {
                     ));
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceCronController_3");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceCronController_3");
             }
         }
         
@@ -257,11 +257,11 @@ class MicroserviceCronController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -270,7 +270,7 @@ class MicroserviceCronController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $microserviceCronEntity = $this->entityManager->getRepository("App\Entity\MicroserviceCron")->find($this->session->get("microserviceCronProfileId"));
         
@@ -286,10 +286,10 @@ class MicroserviceCronController extends AbstractController {
                 
                 $this->settingJob(false, $microserviceCronEntity);
                 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceCronController_4");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceCronController_4");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceCronController_5");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceCronController_5");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -325,11 +325,11 @@ class MicroserviceCronController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -338,7 +338,7 @@ class MicroserviceCronController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -354,17 +354,17 @@ class MicroserviceCronController extends AbstractController {
                     if ($microserviceCronDatabase == true) {
                         $this->response['values']['id'] = $id;
                         
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceCronController_6");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceCronController_6");
                     }
                 }
                 else if ($request->get("event") == "deleteAll") {
                     $microserviceCronDatabase = $this->microserviceCronDatabase("deleteAll");
 
                     if ($microserviceCronDatabase == true)
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceCronController_7");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceCronController_7");
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceCronController_8");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceCronController_8");
 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -408,9 +408,9 @@ class MicroserviceCronController extends AbstractController {
                 </td>
                 <td>";
                     if ($value['active'] == 0)
-                        $listHtml .= $this->utility->getTranslator()->trans("microserviceCronController_9");
+                        $listHtml .= $this->helper->getTranslator()->trans("microserviceCronController_9");
                     else
-                        $listHtml .= $this->utility->getTranslator()->trans("microserviceCronController_10");
+                        $listHtml .= $this->helper->getTranslator()->trans("microserviceCronController_10");
                 $listHtml .= "</td>
                 <td>
                     {$value['last_execution']}
@@ -426,7 +426,7 @@ class MicroserviceCronController extends AbstractController {
     
     private function microserviceCronDatabase($type, $id = null) {
         if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM microservice_cron
+            $query = $this->helper->getConnection()->prepare("DELETE FROM microservice_cron
                                                                 WHERE id = :id");
             
             $query->bindValue(":id", $id);
@@ -434,14 +434,14 @@ class MicroserviceCronController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteAll") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM microservice_cron");
+            $query = $this->helper->getConnection()->prepare("DELETE FROM microservice_cron");
             
             return $query->execute();
         }
     }
     
     private function settingJob($delete, $microserviceCronEntity) {
-        $path = "{$this->utility->getPathSrc()}/files/microservice/cron";
+        $path = "{$this->helper->getPathSrc()}/files/microservice/cron";
         
         $code = $microserviceCronEntity->getCode() != "" ? " && {$microserviceCronEntity->getCode()}" : "";
         
@@ -449,7 +449,7 @@ class MicroserviceCronController extends AbstractController {
         
         shell_exec("crontab -r");
         
-        $this->utility->searchInFile("{$path}/system/cron_job.txt", "{$microserviceCronEntity->getName()}.log", " ");
+        $this->helper->searchInFile("{$path}/system/cron_job.txt", "{$microserviceCronEntity->getName()}.log", " ");
         
         if ($delete == false) {
             if ($microserviceCronEntity->getActive() == true)

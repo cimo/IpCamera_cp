@@ -8,7 +8,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 use App\Classes\System\TableAndPagination;
 
@@ -25,7 +25,7 @@ class SettingLinePushController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     private $tableAndPagination;
@@ -50,12 +50,12 @@ class SettingLinePushController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -64,7 +64,7 @@ class SettingLinePushController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($this->session->get("settingLinePushProfileId") == null && $request->get("id") == null)
             $settingLinePushEntity = new SettingLinePush();
@@ -98,7 +98,7 @@ class SettingLinePushController extends AbstractController {
                     );
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("settingLinePushController_3");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("settingLinePushController_3");
                 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -138,10 +138,10 @@ class SettingLinePushController extends AbstractController {
                     ));
                 }
                 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("settingLinePushController_1");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingLinePushController_1");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("settingLinePushController_2");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("settingLinePushController_2");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
 
@@ -177,12 +177,12 @@ class SettingLinePushController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -191,7 +191,7 @@ class SettingLinePushController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -213,11 +213,11 @@ class SettingLinePushController extends AbstractController {
                         
                         $this->tableAndPaginationResult(null);
 
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("settingLinePushController_4");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingLinePushController_4");
                     }
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("settingLinePushController_5");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("settingLinePushController_5");
 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -251,12 +251,12 @@ class SettingLinePushController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -265,7 +265,7 @@ class SettingLinePushController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -274,10 +274,10 @@ class SettingLinePushController extends AbstractController {
                     
                     $this->tableAndPaginationResult(null);
                     
-                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("settingLinePushController_6");
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingLinePushController_6");
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("settingLinePushController_7");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("settingLinePushController_7");
                 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -308,11 +308,11 @@ class SettingLinePushController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         if ($request->isMethod("POST") == true) {
@@ -378,10 +378,10 @@ class SettingLinePushController extends AbstractController {
                     ));
                 }
                 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("settingLinePushController_8");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingLinePushController_8");
             }
             else
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("settingLinePushController_9");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("settingLinePushController_9");
         }
         
         $response = new Response(json_encode($this->response));
@@ -414,12 +414,12 @@ class SettingLinePushController extends AbstractController {
     private function settingLinePushList() {
         $rows = $this->query->selectAllSettingLinePushDatabase();
         
-        $this->response['values']['wordTagListHtml'] = $this->utility->createWordTagListHtml($rows);
+        $this->response['values']['wordTagListHtml'] = $this->helper->createWordTagListHtml($rows);
     }
     
     private function linePushUserDatabase($type, $elements) {
         if ($type == "insert") {
-            $query = $this->utility->getConnection()->prepare("INSERT INTO setting_line_push_user (
+            $query = $this->helper->getConnection()->prepare("INSERT INTO setting_line_push_user (
                                                                     push_name,
                                                                     user_id,
                                                                     email,
@@ -439,7 +439,7 @@ class SettingLinePushController extends AbstractController {
         }
         else if ($type == "update") {
             if ($elements[0] != "" && $elements[1] != "" && $elements[2] != "") {
-                $query = $this->utility->getConnection()->prepare("UPDATE setting_line_push_user
+                $query = $this->helper->getConnection()->prepare("UPDATE setting_line_push_user
                                                                     SET push_name = :pushName,
                                                                         email = :email,
                                                                         active = :active
@@ -451,7 +451,7 @@ class SettingLinePushController extends AbstractController {
                 $query->bindValue(":userId", $elements[1]);
             }
             else if ($elements[0] != "" && $elements[1] != "" && $elements[2] == "") {
-                $query = $this->utility->getConnection()->prepare("UPDATE setting_line_push_user
+                $query = $this->helper->getConnection()->prepare("UPDATE setting_line_push_user
                                                                     SET push_name = :pushName
                                                                     WHERE user_id = :userId");
 
@@ -459,7 +459,7 @@ class SettingLinePushController extends AbstractController {
                 $query->bindValue(":userId", $elements[1]);
             }
             else if ($elements[0] == "" && $elements[1] != "" && $elements[2] == "") {
-                $query = $this->utility->getConnection()->prepare("UPDATE setting_line_push_user
+                $query = $this->helper->getConnection()->prepare("UPDATE setting_line_push_user
                                                                     SET active = :active
                                                                     WHERE user_id = :userId");
                 
@@ -468,7 +468,7 @@ class SettingLinePushController extends AbstractController {
             }
         }
         else if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM setting_line_push_user
+            $query = $this->helper->getConnection()->prepare("DELETE FROM setting_line_push_user
                                                                 WHERE push_name = :pushName");
             
             $query->bindValue(":pushName", $elements);
@@ -490,7 +490,7 @@ class SettingLinePushController extends AbstractController {
                         <b>Id:</b> {$value['user_id']}<br>
                         <b>Email:</b> {$value['email']}<br>";
                         
-                        $isActive = $value['active'] == true ? $this->utility->getTranslator()->trans("settingLinePushController_10") : $this->utility->getTranslator()->trans("settingLinePushController_11");
+                        $isActive = $value['active'] == true ? $this->helper->getTranslator()->trans("settingLinePushController_10") : $this->helper->getTranslator()->trans("settingLinePushController_11");
                     
                         $listHtml .= "<b>Status:</b> $isActive
                     </span>

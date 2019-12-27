@@ -3,17 +3,17 @@ namespace App\Classes\System;
 
 class TableAndPagination {
     // Vars
-    private $utility;
+    private $helper;
     
     private $session;
     
     // Properties
     
     // Functions public
-    public function __construct($utility) {
-        $this->utility = $utility;
+    public function __construct($helper) {
+        $this->helper = $helper;
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
     }
     
     public function request($rows, $page, $tag, $reverse) {
@@ -22,7 +22,7 @@ class TableAndPagination {
         // Search
         $searchWritten = isset($_REQUEST['searchWritten']) == true ? $_REQUEST['searchWritten'] : -1;
         $search = $this->search($tag . "_search", $searchWritten);
-        $elements = $this->utility->arrayLike($newRows, $search['value']);
+        $elements = $this->helper->arrayLike($newRows, $search['value']);
         
         // Pagination
         $paginationCurrent = isset($_REQUEST['paginationCurrent']) == true ? $_REQUEST['paginationCurrent'] : -1;
@@ -31,7 +31,7 @@ class TableAndPagination {
         if ($tag != "page")
             $listHtml = array_slice($elements, $pagination['offset'], $pagination['show']);
         else
-            $listHtml = $this->utility->createPageList($elements, false, $pagination);
+            $listHtml = $this->helper->createPageList($elements, false, $pagination);
         
         return Array(
             'search' => $search,

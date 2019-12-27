@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 
 use App\Entity\MicroserviceApi;
@@ -23,7 +23,7 @@ class MicroserviceApiController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     
@@ -47,11 +47,11 @@ class MicroserviceApiController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -60,7 +60,7 @@ class MicroserviceApiController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("GET") == true && $checkUserRole == true)
             $this->response['values']['microserviceApiRows'] = $this->query->selectAllMicroserviceApiDatabase(true);
@@ -88,11 +88,11 @@ class MicroserviceApiController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -101,7 +101,7 @@ class MicroserviceApiController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $microserviceApiEntity = new MicroserviceApi();
         
@@ -119,10 +119,10 @@ class MicroserviceApiController extends AbstractController {
                 $this->entityManager->persist($microserviceApiEntity);
                 $this->entityManager->flush();
 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceApiController_1");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceApiController_1");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceApiController_2");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceApiController_2");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -158,11 +158,11 @@ class MicroserviceApiController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -171,7 +171,7 @@ class MicroserviceApiController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $settingRow = $this->query->selectSettingDatabase();
         
@@ -183,10 +183,10 @@ class MicroserviceApiController extends AbstractController {
         
         $microserviceApiEntity = $this->entityManager->getRepository("App\Entity\MicroserviceApi")->find($id);
         
-        $logo = "{$this->utility->getUrlRoot()}/images/templates/{$settingRow['template']}/api.png";
+        $logo = "{$this->helper->getUrlRoot()}/images/templates/{$settingRow['template']}/api.png";
         
-        if ($microserviceApiEntity->getImage() != "" && file_exists("{$this->utility->getPathPublic()}/files/microservice/api/{$microserviceApiEntity->getImage()}") == true)
-            $logo = "{$this->utility->getUrlRoot()}/files/microservice/api/{$microserviceApiEntity->getImage()}";
+        if ($microserviceApiEntity->getImage() != "" && file_exists("{$this->helper->getPathPublic()}/files/microservice/api/{$microserviceApiEntity->getImage()}") == true)
+            $logo = "{$this->helper->getUrlRoot()}/files/microservice/api/{$microserviceApiEntity->getImage()}";
         
         $this->response['values']['microserviceApiEntity'] = $microserviceApiEntity;
 
@@ -202,10 +202,10 @@ class MicroserviceApiController extends AbstractController {
                 $this->entityManager->persist($microserviceApiEntity);
                 $this->entityManager->flush();
                 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceApiController_3");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceApiController_3");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceApiController_4");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceApiController_4");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -232,7 +232,7 @@ class MicroserviceApiController extends AbstractController {
     private function fileUpload($form, $entity) {
         $row = $this->query->selectMicroserviceApiDatabase($this->session->get("microserviceApiProfileId"), true);
         
-        $pathImage = "{$this->utility->getPathPublic()}/files/microservice/api";
+        $pathImage = "{$this->helper->getPathPublic()}/files/microservice/api";
         
         $image = $entity->getImage();
         

@@ -9,7 +9,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 
 use App\Form\UserFormType;
@@ -26,7 +26,7 @@ class MyPageProfileController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     
@@ -43,9 +43,9 @@ class MyPageProfileController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -77,11 +77,11 @@ class MyPageProfileController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -90,16 +90,16 @@ class MyPageProfileController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_USER"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_USER"), $this->getUser());
         
         $settingRow = $this->query->selectSettingDatabase();
         
         $usernameOld = $this->getUser()->getUsername();
         
-        $avatar = "{$this->utility->getUrlRoot()}/images/templates/{$settingRow['template']}/no_avatar.jpg";
+        $avatar = "{$this->helper->getUrlRoot()}/images/templates/{$settingRow['template']}/no_avatar.jpg";
         
-        if ($this->getUser()->getImage() != "" && file_exists("{$this->utility->getPathPublic()}/files/user/$usernameOld/{$this->getUser()->getImage()}") == true)
-            $avatar = "{$this->utility->getUrlRoot()}/files/user/$usernameOld/{$this->getUser()->getImage()}";
+        if ($this->getUser()->getImage() != "" && file_exists("{$this->helper->getPathPublic()}/files/user/$usernameOld/{$this->getUser()->getImage()}") == true)
+            $avatar = "{$this->helper->getUrlRoot()}/files/user/$usernameOld/{$this->getUser()->getImage()}";
         
         $form = $this->createForm(UserFormType::class, $this->getUser(), Array(
             'validation_groups' => Array('profile')
@@ -119,28 +119,28 @@ class MyPageProfileController extends AbstractController {
                 $this->fileUpload($form, $this->getUser());
                 
                 if ($form->has("username") == true) {
-                    if (file_exists("{$this->utility->getPathPublic()}/files/user/$usernameOld") == true)
-                        rename("{$this->utility->getPathPublic()}/files/user/$usernameOld", "{$this->utility->getPathPublic()}/files/user/{$form->get("username")->getData()}");
+                    if (file_exists("{$this->helper->getPathPublic()}/files/user/$usernameOld") == true)
+                        rename("{$this->helper->getPathPublic()}/files/user/$usernameOld", "{$this->helper->getPathPublic()}/files/user/{$form->get("username")->getData()}");
                 }
                 
                 $this->entityManager->persist($this->getUser());
                 $this->entityManager->flush();
 
                 if ($form->has("username") == true && $form->get("username")->getData() != $usernameOld) {
-                    //$this->utility->getTokenStorage()->setToken(null);
+                    //$this->helper->getTokenStorage()->setToken(null);
                     $this->session->invalidate();
                     
-                    $message = $this->utility->getTranslator()->trans("myPageProfileController_1");
+                    $message = $this->helper->getTranslator()->trans("myPageProfileController_1");
                     
                     $this->session->set("userInform", $message);
                     
                     $this->response['messages']['info'] = $message;
                 }
                 else
-                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("myPageProfileController_2");
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("myPageProfileController_2");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("myPageProfileController_3");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("myPageProfileController_3");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -178,11 +178,11 @@ class MyPageProfileController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator, $passwordEncoder);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator, $passwordEncoder);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -191,7 +191,7 @@ class MyPageProfileController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_USER"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_USER"), $this->getUser());
         
         $form = $this->createForm(PasswordFormType::class, null, Array(
             'validation_groups' => Array('profile_password')
@@ -200,19 +200,19 @@ class MyPageProfileController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                $messagePassword = $this->utility->assignUserPassword("withOld", $this->getUser(), $form);
+                $messagePassword = $this->helper->assignUserPassword("withOld", $this->getUser(), $form);
 
                 if ($messagePassword == "ok") {
                     $this->entityManager->persist($this->getUser());
                     $this->entityManager->flush();
 
-                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("myPageProfileController_4");
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("myPageProfileController_4");
                 }
                 else
                     $this->response['messages']['error'] = $messagePassword;
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("myPageProfileController_5");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("myPageProfileController_5");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -248,11 +248,11 @@ class MyPageProfileController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -261,7 +261,7 @@ class MyPageProfileController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_USER"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_USER"), $this->getUser());
         
         $settingRow = $this->query->selectSettingDatabase();
         
@@ -276,9 +276,9 @@ class MyPageProfileController extends AbstractController {
 
             if ($request->isMethod("POST") == true && $checkUserRole == true) {
                 if ($form->isSubmitted() == true && $form->isValid() == true)
-                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("myPageProfileController_6");
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("myPageProfileController_6");
                 else {
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("myPageProfileController_7");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("myPageProfileController_7");
                     $this->response['errors'] = $this->ajax->errors($form);
                 }
 
@@ -316,11 +316,11 @@ class MyPageProfileController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -336,7 +336,7 @@ class MyPageProfileController extends AbstractController {
     private function fileUpload($form, $user) {
         $row = $this->query->selectUserDatabase($user->getId());
         
-        $pathImage = "{$this->utility->getPathPublic()}/files/user/{$this->getUser()->getUsername()}";
+        $pathImage = "{$this->helper->getPathPublic()}/files/user/{$this->getUser()->getUsername()}";
         
         $image = $user->getImage();
         

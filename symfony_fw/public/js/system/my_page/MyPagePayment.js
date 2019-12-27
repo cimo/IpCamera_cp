@@ -1,4 +1,4 @@
-/* global utility, ajax, popupEasy, materialDesign */
+/* global helper, ajax, popupEasy, materialDesign */
 
 var myPagePayment = new MyPagePayment();
 
@@ -19,7 +19,7 @@ function MyPagePayment() {
     };
     
     self.changeView = function() {
-        if (utility.checkWidthType() === "mobile") {
+        if (helper.checkWidthType() === "mobile") {
             if (selectSended === true) {
                 selectId = $("#myPage_payment_select_mobile").find("select option:selected").val();
 
@@ -159,7 +159,7 @@ function MyPagePayment() {
                 true,
                 $(this).prop("action"),
                 $(this).prop("method"),
-                utility.serializeJson($(this)),
+                helper.serializeJson($(this)),
                 "json",
                 false,
                 true,

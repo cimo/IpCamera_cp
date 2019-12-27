@@ -1,4 +1,4 @@
-/* global utility, materialDesign, popupEasy */
+/* global helper, materialDesign, popupEasy */
 
 var wysiwyg = new Wysiwyg();
 

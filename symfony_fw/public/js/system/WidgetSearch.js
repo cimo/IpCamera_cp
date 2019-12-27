@@ -1,4 +1,4 @@
-/* global utility */
+/* global helper */
 
 var widgetSearch = new WidgetSearch();
 
@@ -56,7 +56,7 @@ function WidgetSearch() {
     };
     
     self.changeView = function() {
-        if (utility.checkWidthType() === "desktop")
+        if (helper.checkWidthType() === "desktop")
             $(topAppBarSectionStart[0]).css("display", "inline-flex");
         else {
             if ($(widgetSearchButtonOpen).hasClass("animate") === true)

@@ -1,4 +1,4 @@
-/* global utility, ajax, popupEasy, widgetDatePicker, materialDesign */
+/* global helper, ajax, popupEasy, widgetDatePicker, materialDesign */
 
 var controlPanelUser = new ControlPanelUser();
 
@@ -17,7 +17,7 @@ function ControlPanelUser() {
         
         selectMobile();
         
-        utility.wordTag("#user_roleUserId", "#form_user_roleUserId");
+        helper.wordTag("#user_roleUserId", "#form_user_roleUserId");
         
         $("#form_cp_user_create").on("submit", "", function(event) {
             event.preventDefault();
@@ -42,7 +42,7 @@ function ControlPanelUser() {
     };
     
     self.changeView = function() {
-        if (utility.checkWidthType() === "mobile") {
+        if (helper.checkWidthType() === "mobile") {
             if (selectSended === true) {
                 selectId = $("#cp_user_select_mobile").find("select option:selected").val();
 
@@ -189,7 +189,7 @@ function ControlPanelUser() {
                 true,
                 $(this).prop("action"),
                 $(this).prop("method"),
-                utility.serializeJson($(this)),
+                helper.serializeJson($(this)),
                 "json",
                 false,
                 true,
@@ -218,7 +218,7 @@ function ControlPanelUser() {
             
             $("#cp_user_select_result").html(xhr.response.render);
 
-            utility.wordTag("#user_roleUserId", "#form_user_roleUserId");
+            helper.wordTag("#user_roleUserId", "#form_user_roleUserId");
             
             widgetDatePicker.setInputFill(".widget_datePicker_input");
             widgetDatePicker.action();

@@ -86,7 +86,7 @@ class PayPal {
         curl_setopt($curl, CURLOPT_SSLVERSION, 6);
         curl_setopt($curl, CURLOPT_FORBID_REUSE, true);
         
-        $curlResponse = curl_exec($curl);
+        $curlResponse = trim(end(preg_split("/^\r?$/m", curl_exec($curl))));
         $curlInfo = curl_getinfo($curl);
         
         if($this->debug == true) {
@@ -98,9 +98,6 @@ class PayPal {
         }
         
         curl_close($curl);
-        
-        $curlResponse = preg_split("/^\r?$/m", $curlResponse);
-        $curlResponse = trim(end($curlResponse));
         
         if ($curlResponse == "VERIFIED") {
             if ($this->debug == true)

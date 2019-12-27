@@ -1,4 +1,4 @@
-/* global utility, ajax, popupEasy, materialDesign */
+/* global helper, ajax, popupEasy, materialDesign */
 
 var ipCamera = new ipCamera();
 
@@ -17,7 +17,7 @@ function ipCamera() {
         
         selectMobile();
         
-        utility.wordTag("#ipCamera_userId", "#form_ipCamera_userId");
+        helper.wordTag("#ipCamera_userId", "#form_ipCamera_userId");
         
         $("#form_cp_ipCamera_create").on("submit", "", function(event) {
             event.preventDefault();
@@ -44,7 +44,7 @@ function ipCamera() {
     };
     
     self.changeView = function() {
-        if (utility.checkWidthType() === "mobile") {
+        if (helper.checkWidthType() === "mobile") {
             if (selectSended === true) {
                 selectId = $("#cp_ipCamera_select_mobile").find("select option:selected").val();
                 
@@ -199,7 +199,7 @@ function ipCamera() {
                 true,
                 $(this).prop("action"),
                 $(this).prop("method"),
-                utility.serializeJson($(this)),
+                helper.serializeJson($(this)),
                 "json",
                 false,
                 true,
@@ -228,7 +228,7 @@ function ipCamera() {
             
             $("#cp_ipCamera_select_result").html(xhr.response.render);
             
-            utility.wordTag("#ipCamera_userId", "#form_ipCamera_userId");
+            helper.wordTag("#ipCamera_userId", "#form_ipCamera_userId");
             
             materialDesign.refresh();
             

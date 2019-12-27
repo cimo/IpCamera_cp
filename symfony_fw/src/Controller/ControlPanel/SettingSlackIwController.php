@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 
 use App\Entity\SettingSlackIw;
@@ -23,7 +23,7 @@ class SettingSlackIwController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     
@@ -47,11 +47,11 @@ class SettingSlackIwController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -60,7 +60,7 @@ class SettingSlackIwController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         $this->settingSlackIwList();
         
@@ -92,7 +92,7 @@ class SettingSlackIwController extends AbstractController {
                     $this->settingSlackIwList();
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("settingSlackIwController_1");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("settingSlackIwController_1");
 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -111,10 +111,10 @@ class SettingSlackIwController extends AbstractController {
                 
                 $this->settingSlackIwList();
 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("settingSlackIwController_2");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingSlackIwController_2");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("settingSlackIwController_3");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("settingSlackIwController_3");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
 
@@ -150,11 +150,11 @@ class SettingSlackIwController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -163,7 +163,7 @@ class SettingSlackIwController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -181,11 +181,11 @@ class SettingSlackIwController extends AbstractController {
                         
                         $this->settingSlackIwList();
 
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("settingSlackIwController_4");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingSlackIwController_4");
                     }
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("settingSlackIwController_5");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("settingSlackIwController_5");
 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -219,11 +219,11 @@ class SettingSlackIwController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -232,17 +232,17 @@ class SettingSlackIwController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "reset") {
                     $this->session->remove("settingSlackIwProfileId");
                     
-                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("settingSlackIwController_6");
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingSlackIwController_6");
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("settingSlackIwController_7");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("settingSlackIwController_7");
                 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -265,6 +265,6 @@ class SettingSlackIwController extends AbstractController {
     private function settingSlackIwList() {
         $rows = $this->query->selectAllSettingSlackIwDatabase();
         
-        $this->response['values']['wordTagListHtml'] = $this->utility->createWordTagListHtml($rows);
+        $this->response['values']['wordTagListHtml'] = $this->helper->createWordTagListHtml($rows);
     }
 }

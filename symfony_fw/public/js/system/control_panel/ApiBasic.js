@@ -1,4 +1,4 @@
-/* global utility, ajax, uploadChunk, materialDesign, popupEasy, chaato, widgetDatePicker */
+/* global helper, ajax, uploadChunk, materialDesign, popupEasy, chaato, widgetDatePicker */
 
 var controlPanelApiBasic = new ControlPanelApiBasic();
 
@@ -17,7 +17,7 @@ function ControlPanelApiBasic() {
                 true,
                 $(this).prop("action"),
                 $(this).prop("method"),
-                utility.serializeJson($(this)),
+                helper.serializeJson($(this)),
                 "json",
                 false,
                 true,

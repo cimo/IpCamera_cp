@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 use App\Classes\System\TableAndPagination;
 
@@ -25,7 +25,7 @@ class RoleUserController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     private $tableAndPagination;
@@ -50,11 +50,11 @@ class RoleUserController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -63,7 +63,7 @@ class RoleUserController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         $roleUserEntity = new RoleUser();
         
@@ -79,10 +79,10 @@ class RoleUserController extends AbstractController {
                 $this->entityManager->persist($roleUserEntity);
                 $this->entityManager->flush();
 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("roleUserController_1");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("roleUserController_1");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("roleUserController_2");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("roleUserController_2");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -118,12 +118,12 @@ class RoleUserController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -132,7 +132,7 @@ class RoleUserController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         $this->session->set("roleUserProfileId", 0);
         
@@ -186,11 +186,11 @@ class RoleUserController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -199,7 +199,7 @@ class RoleUserController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -226,7 +226,7 @@ class RoleUserController extends AbstractController {
                     ));
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("roleUserController_3");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("roleUserController_3");
             }
         }
         
@@ -253,11 +253,11 @@ class RoleUserController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -266,7 +266,7 @@ class RoleUserController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         $roleUserEntity = $this->entityManager->getRepository("App\Entity\RoleUser")->find($this->session->get("roleUserProfileId"));
         
@@ -290,10 +290,10 @@ class RoleUserController extends AbstractController {
                     $this->roleUserDatabase("update", $value['id'], $roleImplode);
                 }
                 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("roleUserController_4");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("roleUserController_4");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("roleUserController_5");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("roleUserController_5");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -329,11 +329,11 @@ class RoleUserController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -342,7 +342,7 @@ class RoleUserController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -356,7 +356,7 @@ class RoleUserController extends AbstractController {
                         
                         $this->response['values']['id'] = $id;
 
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("roleUserController_6");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("roleUserController_6");
                     }
                 }
                 else if ($request->get("event") == "deleteAll") {
@@ -365,11 +365,11 @@ class RoleUserController extends AbstractController {
                     if ($roleUserDatabase == true) {
                         $this->deleteFromTable("deleteAll");
                         
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("roleUserController_7");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("roleUserController_7");
                     }
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("roleUserController_8");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("roleUserController_8");
 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -423,7 +423,7 @@ class RoleUserController extends AbstractController {
     
     private function roleUserDatabase($type, $id = null, $roles = null) {
         if ($type == "update") {
-            $query = $this->utility->getConnection()->prepare("UPDATE user
+            $query = $this->helper->getConnection()->prepare("UPDATE user
                                                                 SET roles = :roles
                                                                 WHERE id = :id");
 
@@ -433,7 +433,7 @@ class RoleUserController extends AbstractController {
             $query->execute();
         }
         else if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM role_user
+            $query = $this->helper->getConnection()->prepare("DELETE FROM role_user
                                                                 WHERE id > :idExclude
                                                                 AND id = :id");
             
@@ -443,7 +443,7 @@ class RoleUserController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteAll") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM role_user
+            $query = $this->helper->getConnection()->prepare("DELETE FROM role_user
                                                                 WHERE id > :idExclude");
             
             $query->bindValue(":idExclude", 4);
@@ -468,7 +468,7 @@ class RoleUserController extends AbstractController {
                     
                     $roleImplode = implode(",", $roleExplode);
                     
-                    $query = $this->utility->getConnection()->prepare("UPDATE page
+                    $query = $this->helper->getConnection()->prepare("UPDATE page
                                                                         SET role_user_id = :roleImplode
                                                                         WHERE id = :id");
                     
@@ -493,7 +493,7 @@ class RoleUserController extends AbstractController {
                     
                     $roleUserImplode = implode(",", $roleUserRow);
                     
-                    $query = $this->utility->getConnection()->prepare("UPDATE user
+                    $query = $this->helper->getConnection()->prepare("UPDATE user
                                                                         SET role_user_id = :roleImplode,
                                                                             roles = :roleUserImplode
                                                                         WHERE id = :id");
@@ -515,7 +515,7 @@ class RoleUserController extends AbstractController {
                 
                 $roleImplode = implode(",", $roleExplode);
                 
-                $query = $this->utility->getConnection()->prepare("UPDATE setting
+                $query = $this->helper->getConnection()->prepare("UPDATE setting
                                                                         SET role_user_id = :roleImplode
                                                                         WHERE id = :id");
                 
@@ -529,7 +529,7 @@ class RoleUserController extends AbstractController {
             foreach ($pageRows as $key => $value) {
                 $roleImplode = $this->roleImplode($value['role_user_id']);
                 
-                $query = $this->utility->getConnection()->prepare("UPDATE page
+                $query = $this->helper->getConnection()->prepare("UPDATE page
                                                                     SET role_user_id = :roleImplode
                                                                     WHERE id = :id");
                 
@@ -546,7 +546,7 @@ class RoleUserController extends AbstractController {
                 
                 $roleUserImplode = implode(",", $roleUserRow);
                 
-                $query = $this->utility->getConnection()->prepare("UPDATE user
+                $query = $this->helper->getConnection()->prepare("UPDATE user
                                                                     SET role_user_id = :roleImplode,
                                                                         roles = :roleUserImplode
                                                                     WHERE id = :id");
@@ -560,7 +560,7 @@ class RoleUserController extends AbstractController {
             
             $roleImplode = $this->roleImplode($settingRow['role_user_id']);
             
-            $query = $this->utility->getConnection()->prepare("UPDATE setting
+            $query = $this->helper->getConnection()->prepare("UPDATE setting
                                                                 SET role_user_id = :roleImplode
                                                                 WHERE id = :id");
             

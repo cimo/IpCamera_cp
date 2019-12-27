@@ -1,4 +1,4 @@
-/* global utility, mdc */
+/* global helper, mdc */
 
 var materialDesign = new MaterialDesign();
 
@@ -211,13 +211,15 @@ function MaterialDesign() {
     };
     
     self.tabBar = function() {
-        if ($(".mdc-tab-bar").find(".mdc-tab").length > 0) {
+        if ($(".mdc-tab-bar").length > 0) {
             $.each($(".mdc-tab-bar").not(".mdc-tab-bar-scroller__scroll-frame__tabs"), function(key, value) {
                 var tabBarMdc = new mdc.tabs.MDCTabBar.attachTo(value);
 
                 mdcTabBarCustom("tabBar", tabBarMdc);
             });
-
+        }
+        
+        if ($(".mdc-tab-bar-scroller").length > 0) {
             $.each($(".mdc-tab-bar-scroller"), function(key, value) {
                 var tabBarScrollerMdc = new mdc.tabs.MDCTabBarScroller.attachTo(value);
 
@@ -252,7 +254,7 @@ function MaterialDesign() {
     
     // Functions private
     function mdcTabBarCustom(type, mdc) {
-        var parameters = utility.urlParameters(window.session.languageTextCode);
+        var parameters = helper.urlParameters(window.session.languageTextCode);
 
         $(".mdc-tab-bar").find(".mdc-tab").removeClass("mdc-tab--active");
 
@@ -267,7 +269,7 @@ function MaterialDesign() {
                 else if (type === "tabBarScroller") {
                     var element = $(value).parent().find(".mdc-tab-bar__indicator");
 
-                    utility.mutationObserver(['attributes'], element[0], function() {
+                    helper.mutationObserver(['attributes'], element[0], function() {
                         if (isActive === true)
                             return false;
 
@@ -288,7 +290,7 @@ function MaterialDesign() {
         if ($(".mdc-top-app-bar").length > 0) {
             var scrollLimit = 30;
 
-            if (utility.checkWidthType() === "desktop") {
+            if (helper.checkWidthType() === "desktop") {
                 $(".mdc-top-app-bar").addClass("mdc-top-app-bar--prominent");
 
                 if ($(document).scrollTop() > scrollLimit) {
@@ -298,7 +300,7 @@ function MaterialDesign() {
                 }
 
                 $(window).scroll(function() {
-                    if (utility.checkWidthType() === "desktop") {
+                    if (helper.checkWidthType() === "desktop") {
                         if ($(document).scrollTop() > scrollLimit) {
                             $(".mdc-top-app-bar__row").addClass("mdc-top-app-bar_shrink");
                             
@@ -320,12 +322,12 @@ function MaterialDesign() {
     }
     
     function mdcDrawerCustom() {
-        if (utility.checkWidthType() === "desktop") {
+        if (helper.checkWidthType() === "desktop") {
             $("body").removeClass("mdc-drawer-scroll-lock");
             $(".mdc-drawer").removeClass("mdc-drawer--open");
         }
         
-        var parameters = utility.urlParameters(window.session.languageTextCode);
+        var parameters = helper.urlParameters(window.session.languageTextCode);
         
         $(".mdc-drawer").find(".mdc-list-item").removeClass("mdc-list-item--activated");
         

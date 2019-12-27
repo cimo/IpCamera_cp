@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 
 use App\Form\AuthenticationFormType;
@@ -25,7 +25,7 @@ class AuthenticationController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     
@@ -49,11 +49,11 @@ class AuthenticationController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -70,9 +70,9 @@ class AuthenticationController extends AbstractController {
         $this->response['module']['id'] = $moduleEntity->getId();
         $this->response['module']['label'] = $moduleEntity->getLabel();
         
-        if ($this->utility->getAuthorizationChecker()->isGranted("IS_AUTHENTICATED_FULLY") == true) {
+        if ($this->helper->getAuthorizationChecker()->isGranted("IS_AUTHENTICATED_FULLY") == true) {
             $this->response['values']['user'] = $this->getUser();
-            $this->response['values']['dateLastLogin'] = $this->utility->dateFormat($this->getUser()->getDateLastLogin());
+            $this->response['values']['dateLastLogin'] = $this->helper->dateFormat($this->getUser()->getDateLastLogin());
             $this->response['values']['roleUserRow'] = $this->query->selectRoleUserDatabase($this->getUser()->getRoleUserId(), true);
 
             return Array(

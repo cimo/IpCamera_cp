@@ -19,7 +19,7 @@
         {{form_widget(form._token)}}
     </form>
 </div>
-<script>
+<script nonce="{{php_session.xssProtectionValue}}">
     var textLanguagePage = {
         'label_1': "{{"languagePage_1"|trans}}"
     };

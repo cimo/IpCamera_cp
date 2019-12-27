@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Translation\TranslatorInterface;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 use App\Classes\System\Captcha;
 
@@ -27,7 +27,7 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     private $captcha;
@@ -47,12 +47,12 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->captcha = new Captcha($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->captcha = new Captcha($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         $this->settingRow = $this->query->selectSettingDatabase();
     }
@@ -64,8 +64,8 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
             $user = $token->getUser();
             
             $checkCaptcha = $this->captcha->check($this->settingRow['captcha'], $request->get("captcha"));
-            $checkAttemptLogin = $this->utility->checkAttemptLogin("success", $user->getId(), $this->settingRow, $user);
-            $arrayExplodeFindValue = $this->utility->arrayExplodeFindValue($this->settingRow['role_user_id'], $user->getRoleUserId());
+            $checkAttemptLogin = $this->helper->checkAttemptLogin("success", $user->getId(), $this->settingRow, $user);
+            $arrayExplodeFindValue = $this->helper->arrayExplodeFindValue($this->settingRow['role_user_id'], $user->getRoleUserId());
             
             if ($checkCaptcha == true && (($this->settingRow['website_active'] == true && $checkAttemptLogin[0] == true) || ($this->settingRow['website_active'] == false && $checkAttemptLogin[0] == true && $arrayExplodeFindValue == true))) {
                 setcookie($this->session->getName() . "_logged", 1, time() + (10 * 365 * 24 * 60 * 60), "/", $_SERVER['SERVER_NAME'], true, false);
@@ -73,20 +73,20 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
                 $this->response['values']['url'] = $referer;
             }
             else {
-                //$this->utility->getTokenStorage()->setToken(null);
+                //$this->helper->getTokenStorage()->setToken(null);
                 $this->session->invalidate();
                 
                 if ($checkCaptcha == false) {
-                    $message = $this->utility->getTranslator()->trans("captcha_1");
+                    $message = $this->helper->getTranslator()->trans("captcha_1");
                     
                     $this->response['values']['captchaReload'] = true;
                 }
                 else {
                     if ($checkAttemptLogin[0] == true)
-                        $message = $this->utility->getTranslator()->trans("authenticationListener_1");
+                        $message = $this->helper->getTranslator()->trans("authenticationListener_1");
                     else {
                         if ($checkAttemptLogin[1] == "lock")
-                            $message = $this->utility->getTranslator()->trans("authenticationListener_6a") . $checkAttemptLogin[2] . $this->utility->getTranslator()->trans("authenticationListener_6b");
+                            $message = $this->helper->getTranslator()->trans("authenticationListener_6a") . $checkAttemptLogin[2] . $this->helper->getTranslator()->trans("authenticationListener_6b");
                     }
                 }
                 
@@ -108,26 +108,26 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
             $username = $request->get("_username");
             
             if ($username == "")
-                $message = $this->utility->getTranslator()->trans("authenticationListener_2");
-            else if ($this->utility->checkUserActive($username) == false)
-                $message = $this->utility->getTranslator()->trans("authenticationListener_3");
+                $message = $this->helper->getTranslator()->trans("authenticationListener_2");
+            else if ($this->helper->checkUserActive($username) == false)
+                $message = $this->helper->getTranslator()->trans("authenticationListener_3");
             else {
                 $checkCaptcha = $this->captcha->check($this->settingRow['captcha'], $request->get("captcha"));
-                $checkAttemptLogin = $this->utility->checkAttemptLogin("failure", $username, $this->settingRow);
+                $checkAttemptLogin = $this->helper->checkAttemptLogin("failure", $username, $this->settingRow);
 
                 if ($checkCaptcha == true && $checkAttemptLogin[0] == true)
-                    $message = $this->utility->getTranslator()->trans("authenticationListener_4");
+                    $message = $this->helper->getTranslator()->trans("authenticationListener_4");
                 else {
                     if ($checkCaptcha == false) {
-                        $message = $this->utility->getTranslator()->trans("captcha_1");
+                        $message = $this->helper->getTranslator()->trans("captcha_1");
 
                         $this->response['values']['captchaReload'] = true;
                     }
                     else {
                         if ($checkAttemptLogin[1] == "try")
-                            $message = $this->utility->getTranslator()->trans("authenticationListener_5") . "{$checkAttemptLogin[2]} / {$this->settingRow['login_attempt_count']}";
+                            $message = $this->helper->getTranslator()->trans("authenticationListener_5") . "{$checkAttemptLogin[2]} / {$this->settingRow['login_attempt_count']}";
                         else if ($checkAttemptLogin[1] == "lock")
-                            $message = $this->utility->getTranslator()->trans("authenticationListener_6a") . $checkAttemptLogin[2] . $this->utility->getTranslator()->trans("authenticationListener_6b");
+                            $message = $this->helper->getTranslator()->trans("authenticationListener_6a") . $checkAttemptLogin[2] . $this->helper->getTranslator()->trans("authenticationListener_6b");
                     }
                 }
             }
@@ -158,7 +158,7 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
         $url = $referer;
         
         if (strpos($request, "control_panel") !== false) {
-            $this->utility->checkLanguage($request, $this->router, $this->settingRow);
+            $this->helper->checkLanguage($request, $this->router, $this->settingRow);
             
             $url = $this->router->generate(
                 "root_render",

@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 use App\Classes\System\TableAndPagination;
 
@@ -25,7 +25,7 @@ class PageController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     private $tableAndPagination;
@@ -53,11 +53,11 @@ class PageController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -66,7 +66,7 @@ class PageController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         $pageEntity = new Page();
         
@@ -78,14 +78,14 @@ class PageController extends AbstractController {
             'validation_groups' => Array('page_create'),
             'urlLocale' => $this->urlLocale,
             'pageRow' => $this->query->selectPageDatabase($this->urlLocale, $pageEntity->getId()),
-            'choicesParent' => array_flip($this->utility->createPageList($pageRows, true))
+            'choicesParent' => array_flip($this->helper->createPageList($pageRows, true))
         ));
         $form->handleRequest($request);
         
         $pageParentRows = array_column($this->query->selectAllPageParentDatabase($form->get("parent")->getData()), "alias", "id");
         
-        $this->response['values']['userRoleSelectHtml'] = $this->utility->createUserRoleSelectHtml("form_page_roleUserId_select", "pageController_1", true);
-        $this->response['values']['pageSortListHtml'] = $this->utility->createPageSortListHtml($pageParentRows);
+        $this->response['values']['userRoleSelectHtml'] = $this->helper->createUserRoleSelectHtml("form_page_roleUserId_select", "pageController_1", true);
+        $this->response['values']['pageSortListHtml'] = $this->helper->createPageSortListHtml($pageParentRows);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
@@ -106,13 +106,13 @@ class PageController extends AbstractController {
                     $this->updateRankInMenuDatabase($form->get("rankMenuSort")->getData(), $pageEntity->getId());
                     
                     if ($form->get("event")->getData() == "save_draft_create")
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("pageController_16");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("pageController_16");
                     else
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("pageController_2");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("pageController_2");
                 }
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("pageController_3");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("pageController_3");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -148,12 +148,12 @@ class PageController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -164,7 +164,7 @@ class PageController extends AbstractController {
         
         $this->listHtml = "";
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         $this->session->set("pageProfileId", 0);
         
@@ -179,7 +179,7 @@ class PageController extends AbstractController {
         
         $form = $this->createForm(PageSelectFormType::class, null, Array(
             'validation_groups' => Array('page_select'),
-            'choicesId' => array_flip($this->utility->createPageList($pageRows, true))
+            'choicesId' => array_flip($this->helper->createPageList($pageRows, true))
         ));
         $form->handleRequest($request);
         
@@ -218,11 +218,11 @@ class PageController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -231,7 +231,7 @@ class PageController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -248,19 +248,19 @@ class PageController extends AbstractController {
                         'validation_groups' => Array('page_profile'),
                         'urlLocale' => $this->urlLocale,
                         'pageRow' => $this->query->selectPageDatabase($this->urlLocale, $pageEntity->getId(), true),
-                        'choicesParent' => array_flip($this->utility->createPageList($pageRows, true))
+                        'choicesParent' => array_flip($this->helper->createPageList($pageRows, true))
                     ));
                     $form->handleRequest($request);
 
                     $pageParentRows = array_column($this->query->selectAllPageParentDatabase($form->get("parent")->getData(), true), "alias", "id");
                     
                     $this->response['values']['pageId'] = $this->session->get("pageProfileId");
-                    $this->response['values']['userRoleSelectHtml'] = $this->utility->createUserRoleSelectHtml("form_page_roleUserId_select", "pageController_1", true);
-                    $this->response['values']['pageSortListHtml'] = $this->utility->createPageSortListHtml($pageParentRows, true);
+                    $this->response['values']['userRoleSelectHtml'] = $this->helper->createUserRoleSelectHtml("form_page_roleUserId_select", "pageController_1", true);
+                    $this->response['values']['pageSortListHtml'] = $this->helper->createPageSortListHtml($pageParentRows, true);
                     $this->response['values']['userCreate'] = $pageEntity->getUserCreate();
-                    $this->response['values']['dateCreate'] = $this->utility->dateFormat($pageEntity->getDateCreate());
+                    $this->response['values']['dateCreate'] = $this->helper->dateFormat($pageEntity->getDateCreate());
                     $this->response['values']['userModify'] = $pageEntity->getUserModify();
-                    $this->response['values']['dateModify'] = $this->utility->dateFormat($pageEntity->getDateModify());
+                    $this->response['values']['dateModify'] = $this->helper->dateFormat($pageEntity->getDateModify());
                     $this->response['values']['draft'] = $pageEntity->getDraft();
 
                     $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/page_profile.html.twig", Array(
@@ -272,7 +272,7 @@ class PageController extends AbstractController {
                     ));
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("pageController_4");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("pageController_4");
             }
         }
         
@@ -299,11 +299,11 @@ class PageController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -312,7 +312,7 @@ class PageController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -326,7 +326,7 @@ class PageController extends AbstractController {
                     $rows[$pageEntity->getId()] = $pageEntity->getAlias();
                 }
                 
-                $this->response['values']['pageSortListHtml'] = $this->utility->createPageSortListHtml($rows, true);
+                $this->response['values']['pageSortListHtml'] = $this->helper->createPageSortListHtml($rows, true);
             } 
         }
         
@@ -353,11 +353,11 @@ class PageController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -366,7 +366,7 @@ class PageController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         $pageEntity = $this->entityManager->getRepository("App\Entity\Page")->find($this->session->get("pageProfileId"));
         
@@ -376,7 +376,7 @@ class PageController extends AbstractController {
             'validation_groups' => Array('page_profile'),
             'urlLocale' => $this->urlLocale,
             'pageRow' => $this->query->selectPageDatabase($this->urlLocale, $pageEntity->getId(), true),
-            'choicesParent' => array_flip($this->utility->createPageList($pageRows, true))
+            'choicesParent' => array_flip($this->helper->createPageList($pageRows, true))
         ));
         $form->handleRequest($request);
         
@@ -388,10 +388,10 @@ class PageController extends AbstractController {
                     if ($pageDatabase == true) {
                         $this->response['values']['id'] = $pageEntity->getId();
                         
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("pageController_16");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("pageController_16");
                     }
                     else
-                        $this->response['messages']['error'] = $this->utility->getTranslator()->trans("pageController_17");
+                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("pageController_17");
                 }
                 else if ($form->get("event")->getData() == "publish_draft") {
                     $pageDatabase = $this->pageDatabase("publish_draft", $this->urlLocale, $pageEntity->getId(), null);
@@ -399,10 +399,10 @@ class PageController extends AbstractController {
                     if ($pageDatabase == true) {
                         $this->response['values']['id'] = $pageEntity->getId();
                         
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("pageController_18");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("pageController_18");
                     }
                     else
-                        $this->response['messages']['error'] = $this->utility->getTranslator()->trans("pageController_19");
+                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("pageController_19");
                 }
                 else {
                     $pageEntity->setUserModify($this->getUser()->getUsername());
@@ -416,12 +416,12 @@ class PageController extends AbstractController {
                     if ($pageDatabase == true) {
                         $this->updateRankInMenuDatabase($form->get("rankMenuSort")->getData(), $pageEntity->getId());
 
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("pageController_5");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("pageController_5");
                     }
                 }
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("pageController_6");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("pageController_6");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -457,11 +457,11 @@ class PageController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -470,7 +470,7 @@ class PageController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -485,7 +485,7 @@ class PageController extends AbstractController {
                         if ($pageDatabase == true) {
                             $this->response['values']['id'] = $id;
 
-                            $this->response['messages']['success'] = $this->utility->getTranslator()->trans("pageController_7");
+                            $this->response['messages']['success'] = $this->helper->getTranslator()->trans("pageController_7");
                         }
                     }
                     else {
@@ -493,16 +493,16 @@ class PageController extends AbstractController {
                         
                         $this->response['values']['pageId'] = $id;
                         $this->response['values']['parentId'] = $pageEntity->getParent();
-                        $this->response['values']['text'] = "<p>" . $this->utility->getTranslator()->trans("pageController_8") . "</p>";
-                        $this->response['values']['button'] = "<button id=\"cp_page_delete_parent_all\" class=\"mdc-button mdc-button--dense mdc-button--raised mdc-theme--secondary-bg\" type=\"button\" style=\"display: block;\">" . $this->utility->getTranslator()->trans("pageController_9") . "</button>";
-                        $this->response['values']['pageSelectHtml'] = $this->utility->createPageSelectHtml($this->urlLocale, "cp_page_delete_parent_new", $this->utility->getTranslator()->trans("pageController_10"), true);
+                        $this->response['values']['text'] = "<p>" . $this->helper->getTranslator()->trans("pageController_8") . "</p>";
+                        $this->response['values']['button'] = "<button id=\"cp_page_delete_parent_all\" class=\"mdc-button mdc-button--dense mdc-button--raised mdc-theme--secondary-bg\" type=\"button\" style=\"display: block;\">" . $this->helper->getTranslator()->trans("pageController_9") . "</button>";
+                        $this->response['values']['pageSelectHtml'] = $this->helper->createPageSelectHtml($this->urlLocale, "cp_page_delete_parent_new", $this->helper->getTranslator()->trans("pageController_10"), true);
                     }
                 }
                 else if ($request->get("event") == "deleteAll") {
                     $pageDatabase = $this->pageDatabase("deleteAll", null, null, null);
 
                     if ($pageDatabase == true)
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("pageController_11");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("pageController_11");
                 }
                 else if ($request->get("event") == "parentAll") {
                     $id = $request->get("id") == null ? $this->session->get("pageProfileId") : $request->get("id");
@@ -518,7 +518,7 @@ class PageController extends AbstractController {
                     if ($pageDatabase == true) {
                         $this->response['values']['removedId'] = $this->removedId;
 
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("pageController_11");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("pageController_11");
                     }
                 }
                 else if ($request->get("event") == "parentNew") {
@@ -531,11 +531,11 @@ class PageController extends AbstractController {
                     if ($pageDatabase == true) {
                         $this->response['values']['id'] = $id;
 
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("pageController_12");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("pageController_12");
                     }
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("pageController_13");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("pageController_13");
 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -579,21 +579,21 @@ class PageController extends AbstractController {
                 </td>
                 <td>";
                     if ($value['protected'] == 0)
-                        $this->listHtml .= $this->utility->getTranslator()->trans("pageController_14");
+                        $this->listHtml .= $this->helper->getTranslator()->trans("pageController_14");
                     else
-                        $this->listHtml .= $this->utility->getTranslator()->trans("pageController_15");
+                        $this->listHtml .= $this->helper->getTranslator()->trans("pageController_15");
                 $this->listHtml .= "</td>
                     <td>";
                         if ($value['show_in_menu'] == 0)
-                            $this->listHtml .= $this->utility->getTranslator()->trans("pageController_14");
+                            $this->listHtml .= $this->helper->getTranslator()->trans("pageController_14");
                         else
-                            $this->listHtml .= $this->utility->getTranslator()->trans("pageController_15");
+                            $this->listHtml .= $this->helper->getTranslator()->trans("pageController_15");
                 $this->listHtml .= "</td>
                     <td>";
                         if ($value['only_link'] == 0)
-                            $this->listHtml .= $this->utility->getTranslator()->trans("pageController_14");
+                            $this->listHtml .= $this->helper->getTranslator()->trans("pageController_14");
                         else
-                            $this->listHtml .= $this->utility->getTranslator()->trans("pageController_15");
+                            $this->listHtml .= $this->helper->getTranslator()->trans("pageController_15");
                 $this->listHtml .= "</td>
                 <td>";
                     if ($value['id'] > 5)
@@ -621,7 +621,7 @@ class PageController extends AbstractController {
     }
     
     private function updatePageChildrenDatabase($id, $parentNew) {
-        $query = $this->utility->getConnection()->prepare("UPDATE page
+        $query = $this->helper->getConnection()->prepare("UPDATE page
                                                             SET parent = :parentNew
                                                             WHERE parent = :id");
         
@@ -639,7 +639,7 @@ class PageController extends AbstractController {
             if (empty($value) == true)
                 $value = $pageId;
 
-            $query = $this->utility->getConnection()->prepare("UPDATE page
+            $query = $this->helper->getConnection()->prepare("UPDATE page
                                                                 SET rank_in_menu = :rankInMenu
                                                                 WHERE id = :id");
 
@@ -652,7 +652,7 @@ class PageController extends AbstractController {
     
     private function pageDatabase($type, $urlLocale, $id, $form) {
         if ($type == "insert") {
-            $query = $this->utility->getConnection()->prepare("INSERT INTO page_title (
+            $query = $this->helper->getConnection()->prepare("INSERT INTO page_title (
                                                                     page_title.$urlLocale
                                                                 )
                                                                 VALUES (
@@ -688,7 +688,7 @@ class PageController extends AbstractController {
             $alias = str_replace("_draft", "", $form->get("alias")->getData());
             $alias = $pageRow['draft'] > 0 ? "{$alias}_[draft]" : $alias;
             
-            $query = $this->utility->getConnection()->prepare("UPDATE page, page_title, page_argument, page_menu_name
+            $query = $this->helper->getConnection()->prepare("UPDATE page, page_title, page_argument, page_menu_name
                                                                 SET page.alias = :alias,
                                                                     page_title.$language = :title,
                                                                     page_argument.$language = :argument,
@@ -712,7 +712,7 @@ class PageController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM page WHERE id > :idExclude AND id = :id;
+            $query = $this->helper->getConnection()->prepare("DELETE FROM page WHERE id > :idExclude AND id = :id;
                                                                 DELETE FROM page_title WHERE id > :idExclude AND id = :id;
                                                                 DELETE FROM page_argument WHERE id > :idExclude AND id = :id;
                                                                 DELETE FROM page_menu_name WHERE id > :idExclude AND id = :id;
@@ -724,7 +724,7 @@ class PageController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteAll") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM page WHERE id > :idExclude;
+            $query = $this->helper->getConnection()->prepare("DELETE FROM page WHERE id > :idExclude;
                                                                 DELETE FROM page_title WHERE id > :idExclude;
                                                                 DELETE FROM page_argument WHERE id > :idExclude;
                                                                 DELETE FROM page_menu_name WHERE id > :idExclude;
@@ -746,7 +746,7 @@ class PageController extends AbstractController {
                 }
             }
             
-            $query = $this->utility->getConnection()->prepare("INSERT INTO page (
+            $query = $this->helper->getConnection()->prepare("INSERT INTO page (
                                                                     alias,
                                                                     parent,
                                                                     controller_action,
@@ -830,7 +830,7 @@ class PageController extends AbstractController {
             $menuName = substr($menuName, 0, -1);
             $code = substr($code, 0, -1);
             
-            $query = $this->utility->getConnection()->prepare("INSERT INTO page_title (
+            $query = $this->helper->getConnection()->prepare("INSERT INTO page_title (
                                                                     {$title}
                                                                 )
                                                                 SELECT
@@ -868,7 +868,7 @@ class PageController extends AbstractController {
             $alias = str_replace("_[draft]", "", $pageRow['alias']);
             
             if ($pageRow['draft'] > 0) {
-                $query = $this->utility->getConnection()->prepare("DELETE FROM page WHERE id > :idExclude AND id = :id;
+                $query = $this->helper->getConnection()->prepare("DELETE FROM page WHERE id > :idExclude AND id = :id;
                                                                     DELETE FROM page_title WHERE id > :idExclude AND id = :id;
                                                                     DELETE FROM page_argument WHERE id > :idExclude AND id = :id;
                                                                     DELETE FROM page_menu_name WHERE id > :idExclude AND id = :id;");
@@ -878,7 +878,7 @@ class PageController extends AbstractController {
 
                 $query->execute();
                 
-                $query = $this->utility->getConnection()->prepare("UPDATE page, page_title, page_argument, page_menu_name
+                $query = $this->helper->getConnection()->prepare("UPDATE page, page_title, page_argument, page_menu_name
                                                                     SET page.id = :newId,
                                                                         page.alias = :alias,
                                                                         page.draft = :draft,
@@ -896,7 +896,7 @@ class PageController extends AbstractController {
                 $query->bindValue(":id", $id);
             }
             else {
-                $query = $this->utility->getConnection()->prepare("UPDATE page
+                $query = $this->helper->getConnection()->prepare("UPDATE page
                                                                     SET alias = :alias,
                                                                         draft = :draft
                                                                     WHERE id = :id");

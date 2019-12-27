@@ -1,4 +1,4 @@
-/* global utility, loader, flashBag */
+/* global helper, loader, flashBag */
 
 var ajax = new Ajax();
 
@@ -62,7 +62,7 @@ function Ajax() {
     };
     
     self.reply = function(xhr, tagError) {
-        utility.linkPreventDefault();
+        helper.linkPreventDefault();
         
         var reply = "";
         

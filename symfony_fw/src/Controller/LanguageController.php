@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 
 use App\Form\LanguageFormType;
@@ -22,7 +22,7 @@ class LanguageController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     
@@ -46,11 +46,11 @@ class LanguageController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -68,10 +68,10 @@ class LanguageController extends AbstractController {
                 if ($request->get("urlCurrentPageId") == 0)
                     $rootName = "/control_panel/";
                 
-                $this->response['values']['url'] = "{$this->utility->getUrlRoot()}$rootName{$this->urlLocale}/{$this->urlCurrentPageId}/{$this->urlExtra}";
+                $this->response['values']['url'] = "{$this->helper->getUrlRoot()}$rootName{$this->urlLocale}/{$this->urlCurrentPageId}/{$this->urlExtra}";
             }
             else
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("languageController_1");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("languageController_1");
             
             return $this->ajax->response(Array(
                 'urlLocale' => $this->urlLocale,
@@ -104,11 +104,11 @@ class LanguageController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -136,7 +136,7 @@ class LanguageController extends AbstractController {
                 $this->response['values']['pageMenuName'] = $pageRow['menu_name'];
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("languageController_2");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("languageController_2");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             

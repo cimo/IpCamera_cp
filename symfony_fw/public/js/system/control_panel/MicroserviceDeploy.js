@@ -1,4 +1,4 @@
-/* global utility, ajax, popupEasy, materialDesign */
+/* global helper, ajax, popupEasy, materialDesign */
 
 var controlPanelMicroserviceDeploy = new ControlPanelMicroserviceDeploy();
 
@@ -75,7 +75,7 @@ function ControlPanelMicroserviceDeploy() {
     };
     
     self.changeView = function() {
-        if (utility.checkWidthType() === "mobile") {
+        if (helper.checkWidthType() === "mobile") {
             if (selectSended === true) {
                 selectId = $("#cp_microservice_deploy_select_mobile").find("select option:selected").val();
 
@@ -215,7 +215,7 @@ function ControlPanelMicroserviceDeploy() {
                 true,
                 $(this).prop("action"),
                 $(this).prop("method"),
-                utility.serializeJson($(this)),
+                helper.serializeJson($(this)),
                 "json",
                 false,
                 true,

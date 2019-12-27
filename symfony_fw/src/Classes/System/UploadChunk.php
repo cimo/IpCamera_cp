@@ -5,7 +5,7 @@ class UploadChunk {
     // Vars
     private $response;
     
-    private $utility;
+    private $helper;
     
     private $settings;
     
@@ -21,10 +21,10 @@ class UploadChunk {
     }
     
     // Functions public
-    public function __construct($utility) {
+    public function __construct($helper) {
         $this->response = Array();
         
-        $this->utility = $utility;
+        $this->helper = $helper;
         
         $this->settings = Array();
         
@@ -46,11 +46,11 @@ class UploadChunk {
                 unlink("{$this->settings['path']}/$fileName");
                 
                 $this->response['status'] = "stop";
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("classUploadChunk_1");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("classUploadChunk_1");
             }
             else {
                 $this->response['status'] = "error";
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("classUploadChunk_2");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("classUploadChunk_2");
             }
         }
         else {
@@ -59,7 +59,7 @@ class UploadChunk {
                 
                 if (file_exists("{$this->settings['path']}/$fileName") == true) {
                     $this->response['status'] = "error";
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("classUploadChunk_3");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("classUploadChunk_3");
                 }
                 else {
                     touch("{$this->settings['path']}/$fileName");
@@ -86,7 +86,7 @@ class UploadChunk {
                             unlink("{$this->settings['path']}/$fileName");
                         
                         $this->response['status'] = "error";
-                        $this->response['messages']['error'] = $this->utility->getTranslator()->trans("classUploadChunk_4");
+                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("classUploadChunk_4");
                     }
                     else if (isset($this->settings['mimeType']) == true && in_array($mimeType, $this->settings['mimeType']) == false) {
                         $check = false;
@@ -95,7 +95,7 @@ class UploadChunk {
                             unlink("{$this->settings['path']}/$fileName");
                         
                         $this->response['status'] = "error";
-                        $this->response['messages']['error'] = $this->utility->getTranslator()->trans("classUploadChunk_5");
+                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("classUploadChunk_5");
                     }
                     else if (isset($this->settings['maxSize']) == true && $this->maxSize > $this->settings['maxSize']) {
                         $check = false;
@@ -104,7 +104,7 @@ class UploadChunk {
                             unlink("{$this->settings['path']}/$fileName");
                         
                         $this->response['status'] = "error";
-                        $this->response['messages']['error'] = $this->utility->getTranslator()->trans("classUploadChunk_6");
+                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("classUploadChunk_6");
                     }
                     else if (isset($this->settings['imageSize']) == true) {
                         $imageSize = getimagesize($tmpName);
@@ -116,7 +116,7 @@ class UploadChunk {
                                 unlink("{$this->settings['path']}/$fileName");
                             
                             $this->response['status'] = "error";
-                            $this->response['messages']['error'] = $this->utility->getTranslator()->trans("classUploadChunk_7");
+                            $this->response['messages']['error'] = $this->helper->getTranslator()->trans("classUploadChunk_7");
                         }
                     }
                     
@@ -134,7 +134,7 @@ class UploadChunk {
                         unlink("{$this->settings['path']}/$fileName");
                     
                     $this->response['status'] = "error";
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("classUploadChunk_8");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("classUploadChunk_8");
                 }
             }
             else if ($action == "complete") {
@@ -153,11 +153,11 @@ class UploadChunk {
                     $this->response['status'] = "complete";
                     $this->response['fileName'] = $fileName;
                     $this->response['fileExtension'] = $extension;
-                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("classUploadChunk_9");
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("classUploadChunk_9");
                 }
                 else {
                     $this->response['status'] = "error";
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("classUploadChunk_10");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("classUploadChunk_10");
                 }
             }
         }

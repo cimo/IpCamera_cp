@@ -1,4 +1,4 @@
-/* global utility, ajax, popupEasy, materialDesign */
+/* global helper, ajax, popupEasy, materialDesign */
 
 var controlPanelMicroserviceCron = new ControlPanelMicroserviceCron();
 
@@ -40,7 +40,7 @@ function ControlPanelMicroserviceCron() {
     };
     
     self.changeView = function() {
-        if (utility.checkWidthType() === "mobile") {
+        if (helper.checkWidthType() === "mobile") {
             if (selectSended === true) {
                 selectId = $("#cp_microservice_cron_select_mobile").find("select option:selected").val();
 
@@ -187,7 +187,7 @@ function ControlPanelMicroserviceCron() {
                 true,
                 $(this).prop("action"),
                 $(this).prop("method"),
-                utility.serializeJson($(this)),
+                helper.serializeJson($(this)),
                 "json",
                 false,
                 true,

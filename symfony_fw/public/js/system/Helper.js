@@ -1,8 +1,8 @@
 /* global materialDesign, mdc */
 
-var utility = new Utility();
+var helper = new Helper();
 
-function Utility() {
+function Helper() {
     // Vars
     var self = this;
     
@@ -493,10 +493,10 @@ function Utility() {
                 });
             }
             else {
-                $("body").html("<h1 style=\"margin: 10px; text-align: center;\">"
+                $("body").find(".mdc-layout-grid.main").html("<h1 style=\"position: absolute; top: 20%; left: 0; right: 0; text-align: center;\">"
                     + window.text.index_11 +
                 "</h1>\n\
-                <script>\n\
+                <script nonce=\"" + window.session.xssProtectionValue + "\">\n\
                     $(window).on(\"focus\", \"\", function() {\n\
                         alert(window.text.index_11);\n\
                         window.close();\n\

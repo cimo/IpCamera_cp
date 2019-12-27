@@ -256,14 +256,14 @@ date.time: H:i:s
 # Error
 "error_1": "Error: "
 
-# Utility
-"classUtility_1": "Old password doesn't match!"
-"classUtility_2": "New password and New confirm password doesn't match!"
-"classUtility_3": "Password and Confirm password doesn't match!"
-"classUtility_4": "This page"
-"classUtility_5": "This module"
-"classUtility_6": "Session time is over, please login again."
-"classUtility_7": "User profile data changed, please login again."
+# Helper
+"classHelper_1": "Old password doesn't match!"
+"classHelper_2": "New password and New confirm password doesn't match!"
+"classHelper_3": "Password and Confirm password doesn't match!"
+"classHelper_4": "This page"
+"classHelper_5": "This module"
+"classHelper_6": "Session time is over, please login again."
+"classHelper_7": "User profile data changed, please login again."
 
 # Control panel
 "controlPanel_1": "Create"

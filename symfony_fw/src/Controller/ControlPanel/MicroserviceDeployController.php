@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 use App\Classes\System\TableAndPagination;
 
@@ -25,7 +25,7 @@ class MicroserviceDeployController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     private $tableAndPagination;
@@ -50,11 +50,11 @@ class MicroserviceDeployController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -63,7 +63,7 @@ class MicroserviceDeployController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $microserviceDeployRows = $this->query->selectAllMicroserviceDeployDatabase();
 
@@ -80,7 +80,7 @@ class MicroserviceDeployController extends AbstractController {
                 $this->response['values']['renderHtml'] = $this->createRenderHtml($microserviceDeployRow);
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceDeployController_1");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_1");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -116,11 +116,11 @@ class MicroserviceDeployController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -129,7 +129,7 @@ class MicroserviceDeployController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $microserviceDeployEntity = new MicroserviceDeploy();
         
@@ -151,10 +151,10 @@ class MicroserviceDeployController extends AbstractController {
                 
                 $this->microserviceDeployDatabase("update", $microserviceDeployEntity->getId(), $form->get("sshPassword")->getData(), $form->get("keyPrivatePassword")->getData(), $form->get("gitCloneUrlPassword")->getData());
 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceDeployController_2");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceDeployController_2");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceDeployController_3");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_3");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -190,12 +190,12 @@ class MicroserviceDeployController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -204,7 +204,7 @@ class MicroserviceDeployController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $this->session->set("microserviceDeployProfileId", 0);
         
@@ -258,11 +258,11 @@ class MicroserviceDeployController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -271,7 +271,7 @@ class MicroserviceDeployController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -298,7 +298,7 @@ class MicroserviceDeployController extends AbstractController {
                     ));
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceDeployController_4");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_4");
             }
         }
         
@@ -325,11 +325,11 @@ class MicroserviceDeployController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -338,7 +338,7 @@ class MicroserviceDeployController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $microserviceDeployEntity = $this->entityManager->getRepository("App\Entity\MicroserviceDeploy")->find($this->session->get("microserviceDeployProfileId"));
         $sshPasswordOld = $microserviceDeployEntity->getSshPassword();
@@ -392,10 +392,10 @@ class MicroserviceDeployController extends AbstractController {
                 
                 $this->microserviceDeployDatabase("update", $microserviceDeployEntity->getId(), $sshPassword, $keyPrivatePassword, $gitCloneUrlPassword);
 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceDeployController_5");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceDeployController_5");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceDeployController_6");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_6");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -430,11 +430,11 @@ class MicroserviceDeployController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -443,7 +443,7 @@ class MicroserviceDeployController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -453,18 +453,18 @@ class MicroserviceDeployController extends AbstractController {
                     $sshConnection = $this->sshConnection($microserviceDeployRow, $request);
                     
                     if ($sshConnection == false)
-                        $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceDeployController_18");
+                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_18");
                     else {
                         $this->response['values']['sshConnection'] = $sshConnection;
                         
                         if ($sshConnection != "")
-                            $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceDeployController_7");
+                            $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceDeployController_7");
                         else
-                            $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceDeployController_8");
+                            $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_8");
                     }
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceDeployController_9");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_9");
             }
         }
         
@@ -491,11 +491,11 @@ class MicroserviceDeployController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -504,7 +504,7 @@ class MicroserviceDeployController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -516,17 +516,17 @@ class MicroserviceDeployController extends AbstractController {
                     if ($microserviceDeployDatabase == true) {
                         $this->response['values']['id'] = $id;
 
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceDeployController_10");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceDeployController_10");
                     }
                 }
                 else if ($request->get("event") == "deleteAll") {
                     $microserviceDeployDatabase = $this->microserviceDeployDatabase("deleteAll");
 
                     if ($microserviceDeployDatabase == true)
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceDeployController_11");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceDeployController_11");
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceDeployController_12");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_12");
 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -553,7 +553,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_1")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_1")}
                     <span class=\"mdc-list-item__secondary-text\">{$element['name']}</span>
                 </span>
             </li>
@@ -561,7 +561,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_2")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_2")}
                     <span class=\"mdc-list-item__secondary-text\">{$element['description']}</span>
                 </span>
             </li>
@@ -569,7 +569,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_3")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_3")}
                     <span class=\"mdc-list-item__secondary-text\">{$element['system_user']}</span>
                 </span>
             </li>
@@ -577,7 +577,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_4")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_4")}
                     <span class=\"mdc-list-item__secondary-text\">{$element['ssh_username']}</span>
                 </span>
             </li>
@@ -585,7 +585,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_5")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_5")}
                     <span class=\"mdc-list-item__secondary-text\">";
                         $renderHtml .= $element['ssh_password'] == null ? "" : "******";
                     $renderHtml .= "</span>
@@ -595,7 +595,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_6")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_6")}
                     <span class=\"mdc-list-item__secondary-text\">{$element['key_public']}</span>
                 </span>
             </li>
@@ -603,7 +603,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_8")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_8")}
                     <span class=\"mdc-list-item__secondary-text\">{$element['key_private']}</span>
                 </span>
             </li>
@@ -611,7 +611,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_10")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_10")}
                     <span class=\"mdc-list-item__secondary-text\">";
                         $renderHtml .= $element['key_private_password'] == null ? "" : "******";
                     $renderHtml .= "</span>
@@ -621,7 +621,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_11")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_11")}
                     <span class=\"mdc-list-item__secondary-text\">{$element['ip']}</span>
                 </span>
             </li>
@@ -629,7 +629,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_12")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_12")}
                     <span class=\"mdc-list-item__secondary-text\">{$element['git_user_email']}</span>
                 </span>
             </li>
@@ -637,7 +637,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_13")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_13")}
                     <span class=\"mdc-list-item__secondary-text\">{$element['git_user_name']}</span>
                 </span>
             </li>
@@ -645,7 +645,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_14")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_14")}
                     <span class=\"mdc-list-item__secondary-text\">{$element['git_clone_url']}</span>
                 </span>
             </li>
@@ -653,7 +653,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_15")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_15")}
                     <span class=\"mdc-list-item__secondary-text\">{$element['git_clone_url_username']}</span>
                 </span>
             </li>
@@ -661,7 +661,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_16")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_16")}
                     <span class=\"mdc-list-item__secondary-text\">";
                         $renderHtml .= $element['git_clone_url_password'] == null ? "" : "******";
                     $renderHtml .= "</span>
@@ -671,7 +671,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_17")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_17")}
                     <span class=\"mdc-list-item__secondary-text\">{$element['git_clone_path']}</span>
                 </span>
             </li>
@@ -679,7 +679,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_18")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_18")}
                     <span class=\"mdc-list-item__secondary-text\">{$element['user_git_script']}</span>
                 </span>
             </li>
@@ -687,7 +687,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_19")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_19")}
                     <span class=\"mdc-list-item__secondary-text\">{$element['user_web_script']}</span>
                 </span>
             </li>
@@ -695,7 +695,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_20")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_20")}
                     <span class=\"mdc-list-item__secondary-text\">{$element['root_web_path']}</span>
                 </span>
             </li>
@@ -703,7 +703,7 @@ class MicroserviceDeployController extends AbstractController {
             <li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
-                    {$this->utility->getTranslator()->trans("microserviceDeployFormType_21")}
+                    {$this->helper->getTranslator()->trans("microserviceDeployFormType_21")}
                     <span class=\"mdc-list-item__secondary-text\">{$command}</span>
                 </span>
             </li>
@@ -714,7 +714,7 @@ class MicroserviceDeployController extends AbstractController {
                     <div style=\"margin-top: 6px;\" class=\"mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon mdc-text-field--dense\">
                         <i class=\"material-icons mdc-text-field__icon\">textsms</i>
                         <input class=\"mdc-text-field__input\" type=\"text\" name=\"branchName\" value=\"\" required=\"required\" autocomplete=\"off\" aria-label=\"label\"/>
-                        <label for=\"form_microservice_deploy_name\" class=\"mdc-floating-label\">{$this->utility->getTranslator()->trans("microserviceDeployFormType_26")}</label>
+                        <label for=\"form_microservice_deploy_name\" class=\"mdc-floating-label\">{$this->helper->getTranslator()->trans("microserviceDeployFormType_26")}</label>
                         <div class=\"mdc-notched-outline\">
                             <svg>
                                 <path class=\"mdc-notched-outline__path\"/>
@@ -726,9 +726,9 @@ class MicroserviceDeployController extends AbstractController {
                 </span>
             </li>
         </ul>
-        <button class=\"mdc-button mdc-button--dense mdc-button--raised git_execute\" data-action=\"clone\" type=\"submit\">{$this->utility->getTranslator()->trans("microserviceDeployController_13")}</button>
-        <button class=\"mdc-button mdc-button--dense mdc-button--raised git_execute\" data-action=\"pull\" type=\"submit\">{$this->utility->getTranslator()->trans("microserviceDeployController_14")}</button>
-        <button class=\"mdc-button mdc-button--dense mdc-button--raised git_execute\" data-action=\"reset\" type=\"submit\">{$this->utility->getTranslator()->trans("microserviceDeployController_15")}</button>";
+        <button class=\"mdc-button mdc-button--dense mdc-button--raised git_execute\" data-action=\"clone\" type=\"submit\">{$this->helper->getTranslator()->trans("microserviceDeployController_13")}</button>
+        <button class=\"mdc-button mdc-button--dense mdc-button--raised git_execute\" data-action=\"pull\" type=\"submit\">{$this->helper->getTranslator()->trans("microserviceDeployController_14")}</button>
+        <button class=\"mdc-button mdc-button--dense mdc-button--raised git_execute\" data-action=\"reset\" type=\"submit\">{$this->helper->getTranslator()->trans("microserviceDeployController_15")}</button>";
         
         return $renderHtml;
     }
@@ -760,9 +760,9 @@ class MicroserviceDeployController extends AbstractController {
                 </td>
                 <td>";
                     if ($value['active'] == 0)
-                        $listHtml .= $this->utility->getTranslator()->trans("microserviceDeployController_16");
+                        $listHtml .= $this->helper->getTranslator()->trans("microserviceDeployController_16");
                     else
-                        $listHtml .= $this->utility->getTranslator()->trans("microserviceDeployController_17");
+                        $listHtml .= $this->helper->getTranslator()->trans("microserviceDeployController_17");
                 $listHtml .= "</td>
                 <td class=\"horizontal_center\">
                     <button class=\"mdc-fab mdc-fab--mini cp_module_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
@@ -775,7 +775,7 @@ class MicroserviceDeployController extends AbstractController {
     
     private function microserviceDeployDatabase($type, $id = 0, $sshPassword = "", $keyPrivatePassword = "", $gitCloneUrlPassword = "") {
         if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM microservice_deploy
+            $query = $this->helper->getConnection()->prepare("DELETE FROM microservice_deploy
                                                                 WHERE id = :id");
             
             $query->bindValue(":id", $id);
@@ -783,7 +783,7 @@ class MicroserviceDeployController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteAll") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM microservice_deploy");
+            $query = $this->helper->getConnection()->prepare("DELETE FROM microservice_deploy");
 
             return $query->execute();
         }
@@ -792,7 +792,7 @@ class MicroserviceDeployController extends AbstractController {
             $settingRow = $this->query->selectSettingDatabase();
             
             if ($type == "select") {
-                $query = $this->utility->getConnection()->prepare("SELECT AES_DECRYPT(:sshPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS ssh_password,
+                $query = $this->helper->getConnection()->prepare("SELECT AES_DECRYPT(:sshPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS ssh_password,
                                                                         AES_DECRYPT(:keyPrivatePassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS key_private_password,
                                                                         AES_DECRYPT(:gitCloneUrlPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS git_clone_url_password
                                                                         FROM microservice_deploy
@@ -810,7 +810,7 @@ class MicroserviceDeployController extends AbstractController {
             }
             else if ($type == "update") {
                 if ($sshPassword != "") {
-                    $query = $this->utility->getConnection()->prepare("UPDATE IGNORE microservice_deploy
+                    $query = $this->helper->getConnection()->prepare("UPDATE IGNORE microservice_deploy
                                                                         SET ssh_password = AES_ENCRYPT(:sshPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
                                                                         WHERE id = :id");
 
@@ -821,7 +821,7 @@ class MicroserviceDeployController extends AbstractController {
                 }
 
                 if ($keyPrivatePassword != "") {
-                    $query = $this->utility->getConnection()->prepare("UPDATE IGNORE microservice_deploy
+                    $query = $this->helper->getConnection()->prepare("UPDATE IGNORE microservice_deploy
                                                                         SET key_private_password = AES_ENCRYPT(:keyPrivatePassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
                                                                         WHERE id = :id");
 
@@ -832,7 +832,7 @@ class MicroserviceDeployController extends AbstractController {
                 }
                 
                 if ($gitCloneUrlPassword != "") {
-                    $query = $this->utility->getConnection()->prepare("UPDATE IGNORE microservice_deploy
+                    $query = $this->helper->getConnection()->prepare("UPDATE IGNORE microservice_deploy
                                                                         SET git_clone_url_password = AES_ENCRYPT(:gitCloneUrlPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
                                                                         WHERE id = :id");
 
@@ -852,8 +852,8 @@ class MicroserviceDeployController extends AbstractController {
     private function fileUpload($form, $entity) {
         $row = $this->query->selectMicroserviceDeployDatabase($this->session->get("microserviceDeployProfileId"));
         
-        $pathKeyPublic = $this->utility->getPathSrc() . "/files/microservice/deploy";
-        $pathKeyPrivate = $this->utility->getPathSrc() . "/files/microservice/deploy";
+        $pathKeyPublic = $this->helper->getPathSrc() . "/files/microservice/deploy";
+        $pathKeyPrivate = $this->helper->getPathSrc() . "/files/microservice/deploy";
 
         $keyPublic = $entity->getKeyPublic();
         $keyPrivate = $entity->getKeyPrivate();
@@ -908,8 +908,8 @@ class MicroserviceDeployController extends AbstractController {
         $result = "";
         
         if ($request->get("action") == "clone" || $request->get("action") == "pull" || $request->get("action") == "reset") {
-            $pathKeyPublic = $this->utility->getPathSrc() . "/files/microservice/deploy/{$row['key_public']}";
-            $pathKeyPrivate = $this->utility->getPathSrc() . "/files/microservice/deploy/{$row['key_private']}";
+            $pathKeyPublic = $this->helper->getPathSrc() . "/files/microservice/deploy/{$row['key_public']}";
+            $pathKeyPrivate = $this->helper->getPathSrc() . "/files/microservice/deploy/{$row['key_private']}";
             
             $connection = @ssh2_connect($row['ip'], 22);
             

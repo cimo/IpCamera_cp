@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 use App\Classes\System\TableAndPagination;
 
@@ -25,7 +25,7 @@ class PageCommentController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     private $tableAndPagination;
@@ -50,12 +50,12 @@ class PageCommentController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -85,7 +85,7 @@ class PageCommentController extends AbstractController {
                 ));
             }
             else
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("pageCommentController_1");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("pageCommentController_1");
 
             return Array(
                 'urlLocale' => $this->urlLocale,
@@ -113,11 +113,11 @@ class PageCommentController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -143,7 +143,7 @@ class PageCommentController extends AbstractController {
                     
                     $typeExplode = explode("_", $form->get("type")->getData());
                     
-                    $argument = $this->utility->escapeScript($form->get("argument")->getData());
+                    $argument = $this->helper->escapeScript($form->get("argument")->getData());
                     $pageCommentEntity->setArgument($argument);
                     
                     if ($typeExplode[0] == "new") {
@@ -155,10 +155,10 @@ class PageCommentController extends AbstractController {
                             $this->entityManager->persist($pageCommentEntity);
                             $this->entityManager->flush();
 
-                            $this->response['messages']['success'] = $this->utility->getTranslator()->trans("pageCommentController_2");
+                            $this->response['messages']['success'] = $this->helper->getTranslator()->trans("pageCommentController_2");
                         }
                         else
-                            $this->response['messages']['success'] = $this->utility->getTranslator()->trans("pageCommentController_3");
+                            $this->response['messages']['success'] = $this->helper->getTranslator()->trans("pageCommentController_3");
                     }
                     else if ($typeExplode[0] == "reply") {
                         $pageCommentRow = $this->query->selectPageCommentDatabase("single", $typeExplode[1]);
@@ -172,21 +172,21 @@ class PageCommentController extends AbstractController {
                             $this->entityManager->persist($pageCommentEntity);
                             $this->entityManager->flush();
 
-                            $this->response['messages']['success'] = $this->utility->getTranslator()->trans("pageCommentController_4");
+                            $this->response['messages']['success'] = $this->helper->getTranslator()->trans("pageCommentController_4");
                         }
                     }
                     else if ($typeExplode[0] == "edit") {
                         $this->pageCommentDatabase($typeExplode[1], $argument);
 
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("pageCommentController_5");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("pageCommentController_5");
                     }
                     else {
-                        $this->response['messages']['error'] = $this->utility->getTranslator()->trans("pageCommentController_6");
+                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("pageCommentController_6");
                         $this->response['errors'] = $this->ajax->errors($form);
                     }
                 }
                 else {
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("pageCommentController_6");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("pageCommentController_6");
                     $this->response['errors'] = $this->ajax->errors($form);
                 }
 
@@ -227,28 +227,28 @@ class PageCommentController extends AbstractController {
             $userRow = $this->query->selectUserDatabase($value['username']);
             
             $listHtml .= "<li class=\"mdc-list-item\" data-comment=\"{$value['id']}\">";
-                if ($userRow['image'] != null && file_exists("{$this->utility->getPathPublic()}/files/user/{$value['username']}/{$userRow['image']}") == true)
-                    $listHtml .= "<img class=\"mdc-list-item__graphic\" src=\"{$this->utility->getUrlRoot()}/files/user/{$value['username']}/{$userRow['image']}\" aria-hidden=\"true\" alt=\"{$userRow['image']}\"/>";
+                if ($userRow['image'] != null && file_exists("{$this->helper->getPathPublic()}/files/user/{$value['username']}/{$userRow['image']}") == true)
+                    $listHtml .= "<img class=\"mdc-list-item__graphic\" src=\"{$this->helper->getUrlRoot()}/files/user/{$value['username']}/{$userRow['image']}\" aria-hidden=\"true\" alt=\"{$userRow['image']}\"/>";
                 else
-                    $listHtml .= "<img class=\"mdc-list-item__graphic\" src=\"{$this->utility->getUrlRoot()}/images/templates/{$setting['template']}/no_avatar.jpg\" aria-hidden=\"true\" alt=\"no_avatar.jpg\"/>";
+                    $listHtml .= "<img class=\"mdc-list-item__graphic\" src=\"{$this->helper->getUrlRoot()}/images/templates/{$setting['template']}/no_avatar.jpg\" aria-hidden=\"true\" alt=\"no_avatar.jpg\"/>";
                 
                 $detail = "";
                 
                 if (strpos($value['date_create'], "0000") === false && strpos($value['date_modify'], "0000") !== false) {
-                    $dateFormat = $this->utility->dateFormat($value['date_create']);
+                    $dateFormat = $this->helper->dateFormat($value['date_create']);
                     
-                    $detail = $this->utility->getTranslator()->trans("pageCommentController_7") . "{$dateFormat[0]} [{$dateFormat[1]}]";
+                    $detail = $this->helper->getTranslator()->trans("pageCommentController_7") . "{$dateFormat[0]} [{$dateFormat[1]}]";
                 }
                 else {
-                    $dateFormat = $this->utility->dateFormat($value['date_modify']);
+                    $dateFormat = $this->helper->dateFormat($value['date_modify']);
                     
-                    $detail = $this->utility->getTranslator()->trans("pageCommentController_8") . "{$dateFormat[0]} [{$dateFormat[1]}]";
+                    $detail = $this->helper->getTranslator()->trans("pageCommentController_8") . "{$dateFormat[0]} [{$dateFormat[1]}]";
                 }
                 
-                $quoteAvatar = "<img class=\"quote_avatar\" src=\"{$this->utility->getUrlRoot()}/images/templates/{$setting['template']}/no_avatar.jpg\" alt=\"no_avatar.jpg\"/>";
+                $quoteAvatar = "<img class=\"quote_avatar\" src=\"{$this->helper->getUrlRoot()}/images/templates/{$setting['template']}/no_avatar.jpg\" alt=\"no_avatar.jpg\"/>";
                 
-                if ($userRow['image'] != null && file_exists("{$this->utility->getPathPublic()}/files/user/{$row['username']}/{$userRow['image']}") == true)
-                    $quoteAvatar = "<img class=\"quote_avatar\" src=\"{$this->utility->getUrlRoot()}/files/user/{$row['username']}/{$userRow['image']}\" alt=\"{$userRow['image']}\"/>";
+                if ($userRow['image'] != null && file_exists("{$this->helper->getPathPublic()}/files/user/{$row['username']}/{$userRow['image']}") == true)
+                    $quoteAvatar = "<img class=\"quote_avatar\" src=\"{$this->helper->getUrlRoot()}/files/user/{$row['username']}/{$userRow['image']}\" alt=\"{$userRow['image']}\"/>";
                 
                 $listHtml .= "<span class=\"mdc-list-item__text\">
                     <p class=\"detail\">$detail</p>";
@@ -286,7 +286,7 @@ class PageCommentController extends AbstractController {
     }
     
     private function pageCommentDatabase($id, $argument) {
-        $query = $this->utility->getConnection()->prepare("UPDATE page_comment
+        $query = $this->helper->getConnection()->prepare("UPDATE page_comment
                                                             SET argument = :argument,
                                                                 date_modify = :dateModify
                                                             WHERE id = :id

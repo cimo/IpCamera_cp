@@ -8,7 +8,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 use App\Classes\System\TableAndPagination;
 
@@ -26,7 +26,7 @@ class IpCameraController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     private $tableAndPagination;
@@ -49,12 +49,12 @@ class IpCameraController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -63,7 +63,7 @@ class IpCameraController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
         
         if ($checkUserRole == true) {
             $ipCameraRows = $this->selectAllIpCameraDatabase();
@@ -72,7 +72,7 @@ class IpCameraController extends AbstractController {
             
             foreach($ipCameraRows as $key => $value) {
                 if ($value['user_id'] != null) {
-                    $arrayFindValueExplode = $this->utility->arrayExplodeFindValue($value['user_id'], $this->getUser()->getId(), false);
+                    $arrayFindValueExplode = $this->helper->arrayExplodeFindValue($value['user_id'], $this->getUser()->getId(), false);
                     
                     if ($arrayFindValueExplode == true)
                         $devices[] = $ipCameraRows[$key];
@@ -113,11 +113,11 @@ class IpCameraController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -126,7 +126,7 @@ class IpCameraController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
         
         $ipCameraEntity = new IpCamera();
         
@@ -137,7 +137,7 @@ class IpCameraController extends AbstractController {
         ));
         $form->handleRequest($request);
         
-        $this->response['values']['userSelectHtml'] = $this->utility->createUserSelectHtml("form_ipCamera_userId_select", "ipCameraController_1", true);
+        $this->response['values']['userSelectHtml'] = $this->helper->createUserSelectHtml("form_ipCamera_userId_select", "ipCameraController_1", true);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
@@ -146,12 +146,12 @@ class IpCameraController extends AbstractController {
                 
                 $this->ipCameraDatabase("update", $ipCameraEntity->getId(), $form->get("password")->getData());
                 
-                mkdir("{$this->utility->getPathSrc()}/files/ipCamera/{$ipCameraEntity->getId()}");
+                mkdir("{$this->helper->getPathSrc()}/files/ipCamera/{$ipCameraEntity->getId()}");
                 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_2");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("ipCameraController_2");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("ipCameraController_3");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("ipCameraController_3");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -187,12 +187,12 @@ class IpCameraController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -201,7 +201,7 @@ class IpCameraController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
         
         $this->session->set("ipCameraProfileId", 0);
         
@@ -255,11 +255,11 @@ class IpCameraController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -268,7 +268,7 @@ class IpCameraController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -285,7 +285,7 @@ class IpCameraController extends AbstractController {
                     $form->handleRequest($request);
 
                     $this->response['values']['id'] = $this->session->get("ipCameraProfileId");
-                    $this->response['values']['userSelectHtml'] = $this->utility->createUserSelectHtml("form_ipCamera_userId_select", "ipCameraController_1", true);
+                    $this->response['values']['userSelectHtml'] = $this->helper->createUserSelectHtml("form_ipCamera_userId_select", "ipCameraController_1", true);
                     
                     $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/ipCamera_profile.html.twig", Array(
                         'urlLocale' => $this->urlLocale,
@@ -296,7 +296,7 @@ class IpCameraController extends AbstractController {
                     ));
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("ipCameraController_4");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("ipCameraController_4");
             }
         }
         
@@ -323,11 +323,11 @@ class IpCameraController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -336,7 +336,7 @@ class IpCameraController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
         
         $ipCameraEntity = $this->entityManager->getRepository("App\Entity\IpCamera")->find($this->session->get("ipCameraProfileId"));
         $passwordOld = $ipCameraEntity->getPassword();
@@ -371,7 +371,7 @@ class IpCameraController extends AbstractController {
                 if ($ipCameraEntity->getDetectionActive() == true && $this->checkProcess($detectionPidOld) == false) {
                     $input = "-i \"{$ipCameraEntity->getHostVideo()}&user={$ipCameraEntity->getUsername()}&pwd={$ipCameraPasswordRow['password']}\"";
                     //$command = "-threads 0 -crf 23 -r 25 -pix_fmt yuvj420p -vf \"select=gt(scene\,{$ipCameraEntity->getDetectionSensitivity()})\" -c:v libx264 -an";
-                    $pathResult = "{$this->utility->getPathSrc()}/files/ipCamera/{$ipCameraEntity->getId()}/" . date("Y_m_d-H_i_s") . ".avi";
+                    $pathResult = "{$this->helper->getPathSrc()}/files/ipCamera/{$ipCameraEntity->getId()}/" . date("Y_m_d-H_i_s") . ".avi";
                     $command = "-threads 0 -vf \"select=gt(scene\,{$ipCameraEntity->getDetectionSensitivity()})\" -an";
                     
                     $detectionPid = trim(shell_exec("ffmpeg -y $input $command \"{$pathResult}\" >/dev/null 2>&1 & echo $!"));
@@ -384,10 +384,10 @@ class IpCameraController extends AbstractController {
                 
                 $this->ipCameraDatabase("update", $ipCameraEntity->getId(), $password, $detectionPid);
                 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_5");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("ipCameraController_5");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("ipCameraController_6");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("ipCameraController_6");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -423,11 +423,11 @@ class IpCameraController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -436,7 +436,7 @@ class IpCameraController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -454,7 +454,7 @@ class IpCameraController extends AbstractController {
 
                                 $this->response['values']['id'] = $id;
 
-                                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_7");
+                                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("ipCameraController_7");
                             }
                         }
                     }
@@ -467,13 +467,13 @@ class IpCameraController extends AbstractController {
                             if ($ipCameraDatabase == true) {
                                 $this->deleteLogic("device", $value['id']);
                                 
-                                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_8");
+                                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("ipCameraController_8");
                             }
                         }
                     }
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("ipCameraController_9");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("ipCameraController_9");
 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -507,12 +507,12 @@ class IpCameraController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -521,7 +521,7 @@ class IpCameraController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
         
         $elements = $this->elementFilter();
         
@@ -565,12 +565,12 @@ class IpCameraController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -579,19 +579,19 @@ class IpCameraController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 $elements = $this->elementFilter();
                 
                 foreach($elements[1] as $key => $value) {
-                    $downloadPath = "{$this->utility->getPathSrc()}/files/ipCamera/{$key}/{$request->get("fileName")}";
+                    $downloadPath = "{$this->helper->getPathSrc()}/files/ipCamera/{$key}/{$request->get("fileName")}";
                     
                     if (file_exists($downloadPath) == true) {
                         $downloadMime = mime_content_type($downloadPath);
                         
-                        $this->utility->download($downloadPath, $downloadMime);
+                        $this->helper->download($downloadPath, $downloadMime);
                     }
                 }
             }
@@ -615,12 +615,12 @@ class IpCameraController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -629,20 +629,20 @@ class IpCameraController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_IPCAMERA"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 $elements = $this->elementFilter();
                 
                 if ($request->get("event") == "delete") {
-                    $findKey = $this->utility->arrayFindKeyWithValue($elements[0], "name", $request->get("deviceName"));
+                    $findKey = $this->helper->arrayFindKeyWithValue($elements[0], "name", $request->get("deviceName"));
                     
                     $this->deleteLogic("file", $elements[0][$findKey]['id'], $request->get("fileName"));
                     
                     $this->response['values']['id'] = $request->get("id");
                     
-                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_10");
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("ipCameraController_10");
                 }
                 else if ($request->get("event") == "deleteAll") {
                     foreach($elements[1] as $key => $value) {
@@ -651,10 +651,10 @@ class IpCameraController extends AbstractController {
                         }
                     }
                     
-                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("ipCameraController_11");
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("ipCameraController_11");
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("ipCameraController_12");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("ipCameraController_12");
 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -705,9 +705,9 @@ class IpCameraController extends AbstractController {
                 </td>
                 <td>";
                     if ($value['active'] == 0)
-                        $listHtml .= $this->utility->getTranslator()->trans("ipCameraController_13");
+                        $listHtml .= $this->helper->getTranslator()->trans("ipCameraController_13");
                     else
-                        $listHtml .= $this->utility->getTranslator()->trans("ipCameraController_14");
+                        $listHtml .= $this->helper->getTranslator()->trans("ipCameraController_14");
                 $listHtml .= "</td>
                 <td class=\"horizontal_center\">
                     <button class=\"mdc-fab mdc-fab--mini cp_ipCamera_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
@@ -725,7 +725,7 @@ class IpCameraController extends AbstractController {
             $id = $key + 1;
             
             foreach ($value as $keySub => $valueSub) {
-                $fileSize = filesize("{$this->utility->getPathSrc()}/files/ipCamera/{$devices[$key]['id']}/{$valueSub}");
+                $fileSize = filesize("{$this->helper->getPathSrc()}/files/ipCamera/{$devices[$key]['id']}/{$valueSub}");
                 
                 $listHtml .= "<tr>
                     <td class=\"id_column\">
@@ -737,7 +737,7 @@ class IpCameraController extends AbstractController {
                     <td>
                         <span class=\"cp_ipCamera_file_download cursor_custom\">
                             <i class=\"material-icons\">arrow_drop_down_circle</i>
-                            <p>" . $this->utility->unitFormat($fileSize) . "</p>
+                            <p>" . $this->helper->unitFormat($fileSize) . "</p>
                         </span>
                     </td>
                     <td class=\"fileName_column\">
@@ -759,7 +759,7 @@ class IpCameraController extends AbstractController {
         if ($type == "select") {
             $settingRow = $this->query->selectSettingDatabase();
             
-            $query = $this->utility->getConnection()->prepare("SELECT AES_DECRYPT(:password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS password
+            $query = $this->helper->getConnection()->prepare("SELECT AES_DECRYPT(:password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS password
                                                                     FROM ipCamera_device
                                                                 WHERE id = :id
                                                                 ORDER by name ASC");
@@ -775,7 +775,7 @@ class IpCameraController extends AbstractController {
             if ($password != "") {
                 $settingRow = $this->query->selectSettingDatabase();
                 
-                $query = $this->utility->getConnection()->prepare("UPDATE IGNORE ipCamera_device
+                $query = $this->helper->getConnection()->prepare("UPDATE IGNORE ipCamera_device
                                                                         SET password = AES_ENCRYPT(:password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
                                                                     WHERE id = :id");
                 
@@ -785,7 +785,7 @@ class IpCameraController extends AbstractController {
                 $query->execute();
             }
             
-            $query = $this->utility->getConnection()->prepare("UPDATE ipCamera_device
+            $query = $this->helper->getConnection()->prepare("UPDATE ipCamera_device
                                                                     SET detection_active = :detectionActive,
                                                                         detection_pid = :detectionPid
                                                                 WHERE id = :id");
@@ -797,7 +797,7 @@ class IpCameraController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM ipCamera_device
+            $query = $this->helper->getConnection()->prepare("DELETE FROM ipCamera_device
                                                                 WHERE id = :id");
             
             $query->bindValue(":id", $id);
@@ -809,7 +809,7 @@ class IpCameraController extends AbstractController {
     }
     
     private function selectAllIpCameraDatabase() {
-        $query = $this->utility->getConnection()->prepare("SELECT * FROM ipCamera_device
+        $query = $this->helper->getConnection()->prepare("SELECT * FROM ipCamera_device
                                                             ORDER by name ASC");
         
         $query->execute();
@@ -820,7 +820,7 @@ class IpCameraController extends AbstractController {
     private function elementFilter() {
         $ipCameraRows = $this->selectAllIpCameraDatabase();
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         $devices = Array();
         
@@ -829,7 +829,7 @@ class IpCameraController extends AbstractController {
                 if ($checkUserRole == true)
                     $devices[] = $ipCameraRows[$key];
                 else {
-                    $arrayFindValueExplode = $this->utility->arrayExplodeFindValue($value['user_id'], $this->getUser()->getId(), false);
+                    $arrayFindValueExplode = $this->helper->arrayExplodeFindValue($value['user_id'], $this->getUser()->getId(), false);
                     
                     if ($arrayFindValueExplode == true)
                         $devices[] = $ipCameraRows[$key];
@@ -841,7 +841,7 @@ class IpCameraController extends AbstractController {
         
         if (count($devices) > 0) {    
             foreach($devices as $key => $value) {
-                $filePath = "{$this->utility->getPathSrc()}/files/ipCamera/{$value['id']}";
+                $filePath = "{$this->helper->getPathSrc()}/files/ipCamera/{$value['id']}";
                 
                 $scanDirElements = preg_grep("/^([^.])/", scandir($filePath));
                 
@@ -869,14 +869,14 @@ class IpCameraController extends AbstractController {
     private function deleteLogic($type, $id = 0, $name = "") {
         if ($type == "device") {
             if ($id > 0) {
-                $filePath = "{$this->utility->getPathSrc()}/files/ipCamera/$id";
+                $filePath = "{$this->helper->getPathSrc()}/files/ipCamera/$id";
                 
-                $this->utility->removeDirRecursive($filePath, true);
+                $this->helper->removeDirRecursive($filePath, true);
             }
         }
         else if ($type == "file") {
             if ($id > 0 && $name != "") {
-                $filePath = "{$this->utility->getPathSrc()}/files/ipCamera/$id/$name";
+                $filePath = "{$this->helper->getPathSrc()}/files/ipCamera/$id/$name";
                 
                 if (file_exists($filePath) == true)
                     unlink($filePath);

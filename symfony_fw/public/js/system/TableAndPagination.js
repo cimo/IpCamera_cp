@@ -1,4 +1,4 @@
-/* global utility, ajax */
+/* global helper, ajax */
 
 function TableAndPagination() {
     // Vars
@@ -43,10 +43,10 @@ function TableAndPagination() {
         
         status();
         
-        utility.linkPreventDefault();
+        helper.linkPreventDefault();
         
         if (selectOnlyOne === true)
-            utility.selectOnlyOneElement(idResult + " table tbody");
+            helper.selectOnlyOneElement(idResult + " table tbody");
         
         resizeColumn();
     };
@@ -255,10 +255,10 @@ function TableAndPagination() {
                 if (xhr.response.values !== undefined)
                     self.populate(xhr);
                 
-                utility.linkPreventDefault();
+                helper.linkPreventDefault();
                 
                 if (selectOnlyOne === true)
-                    utility.selectOnlyOneElement(idResult + " table tbody");
+                    helper.selectOnlyOneElement(idResult + " table tbody");
                 
                 resizeColumn();
                 

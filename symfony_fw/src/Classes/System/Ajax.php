@@ -5,17 +5,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Ajax {
     // Vars
-    private $utility;
+    private $helper;
     
     private $session;
     
     // Properties
     
     // Functions public
-    public function __construct($utility) {
-        $this->utility = $utility;
+    public function __construct($helper) {
+        $this->helper = $helper;
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
     }
     
     public function response($array) {
@@ -27,7 +27,7 @@ class Ajax {
             $errors = Array();
             
             foreach ($elements->getErrors() as $error)
-                $errors[] = $this->utility->getTranslator()->trans($error->getMessage());
+                $errors[] = $this->helper->getTranslator()->trans($error->getMessage());
             
             foreach ($elements->all() as $key => $value)
                 $errors[$key] = $this->errors($value);
@@ -35,7 +35,7 @@ class Ajax {
             return $errors;
         }
         else
-            return $this->utility->getTranslator()->trans($elements);
+            return $this->helper->getTranslator()->trans($elements);
         
         return "";
     }

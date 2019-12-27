@@ -16,7 +16,7 @@
             {{-render(controller("App\\Controller\\ControlPanel\\IpCameraController::fileAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
         {% endif %}
 
-        <script>
+        <script nonce="{{php_session.xssProtectionValue}}">
             window.addEventListener("load", function() {
                 ipCamera.init();
                 ipCamera.changeView();
@@ -33,7 +33,7 @@
                 'label_4': "{{"controlPanelPageIpCamera_5"|trans}}"
             };
         </script>
-        <script src="{{asset("js/system/control_panel/IpCamera.min.js")}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/IpCamera.min.js")}}"></script>
     {% endif %}
 {% endif %}
 

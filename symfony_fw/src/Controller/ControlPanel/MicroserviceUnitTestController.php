@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 use App\Classes\System\TableAndPagination;
 
@@ -25,7 +25,7 @@ class MicroserviceUnitTestController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     private $tableAndPagination;
@@ -50,11 +50,11 @@ class MicroserviceUnitTestController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -63,7 +63,7 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $microserviceUnitTestEntity = new MicroserviceUnitTest();
         
@@ -81,10 +81,10 @@ class MicroserviceUnitTestController extends AbstractController {
                 
                 $this->createFile($microserviceUnitTestEntity);
                 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceUnitTestController_1");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_1");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceUnitTestController_2");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_2");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -120,12 +120,12 @@ class MicroserviceUnitTestController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -134,7 +134,7 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $this->session->set("microserviceUnitTestProfileId", 0);
         
@@ -188,11 +188,11 @@ class MicroserviceUnitTestController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -201,7 +201,7 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -228,7 +228,7 @@ class MicroserviceUnitTestController extends AbstractController {
                     ));
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceUnitTestController_3");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_3");
             }
         }
         
@@ -255,11 +255,11 @@ class MicroserviceUnitTestController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -268,7 +268,7 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $microserviceUnitTestEntity = $this->entityManager->getRepository("App\Entity\MicroserviceUnitTest")->find($this->session->get("microserviceUnitTestProfileId"));
         
@@ -284,10 +284,10 @@ class MicroserviceUnitTestController extends AbstractController {
                 
                 $this->createFile($microserviceUnitTestEntity);
                 
-                $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceUnitTestController_4");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_4");
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceUnitTestController_5");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_5");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -323,11 +323,11 @@ class MicroserviceUnitTestController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -336,7 +336,7 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -348,24 +348,24 @@ class MicroserviceUnitTestController extends AbstractController {
                     $microserviceUnitTestDatabase = $this->microserviceUnitTestDatabase("delete", $id);
                     
                     if ($microserviceUnitTestDatabase == true) {
-                        unlink("{$this->utility->getPathPublic()}/files/microservice/unit_test/run/{$microserviceUnitTestEntity->getName()}.html");
+                        unlink("{$this->helper->getPathPublic()}/files/microservice/unit_test/run/{$microserviceUnitTestEntity->getName()}.html");
                         
                         $this->response['values']['id'] = $id;
                         
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceUnitTestController_6");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_6");
                     }
                 }
                 else if ($request->get("event") == "deleteAll") {
                     $microserviceUnitTestDatabase = $this->microserviceUnitTestDatabase("deleteAll");
 
                     if ($microserviceUnitTestDatabase == true) {
-                        $this->utility->removeDirRecursive("{$this->utility->getPathPublic()}/files/microservice/unit_test/run", false);
+                        $this->helper->removeDirRecursive("{$this->helper->getPathPublic()}/files/microservice/unit_test/run", false);
                         
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("microserviceUnitTestController_7");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_7");
                     }
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("microserviceUnitTestController_8");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_8");
 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -409,9 +409,9 @@ class MicroserviceUnitTestController extends AbstractController {
                 </td>
                 <td>";
                     if ($value['active'] == 0)
-                        $listHtml .= $this->utility->getTranslator()->trans("microserviceUnitTestController_9");
+                        $listHtml .= $this->helper->getTranslator()->trans("microserviceUnitTestController_9");
                     else
-                        $listHtml .= $this->utility->getTranslator()->trans("microserviceUnitTestController_10");
+                        $listHtml .= $this->helper->getTranslator()->trans("microserviceUnitTestController_10");
                 $listHtml .= "</td>
                 <td class=\"horizontal_center\">
                     <button class=\"mdc-fab mdc-fab--mini cp_microservice_unit_test_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
@@ -424,7 +424,7 @@ class MicroserviceUnitTestController extends AbstractController {
     
     private function microserviceUnitTestDatabase($type, $id = null) {
         if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM microservice_unit_test
+            $query = $this->helper->getConnection()->prepare("DELETE FROM microservice_unit_test
                                                                 WHERE id = :id");
             
             $query->bindValue(":id", $id);
@@ -432,14 +432,14 @@ class MicroserviceUnitTestController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteAll") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM microservice_unit_test");
+            $query = $this->helper->getConnection()->prepare("DELETE FROM microservice_unit_test");
             
             return $query->execute();
         }
     }
     
     private function createFile($microserviceUnitTestEntity) {
-        $path = "{$this->utility->getPathPublic()}/files/microservice/unit_test/run/{$microserviceUnitTestEntity->getName()}.html";
+        $path = "{$this->helper->getPathPublic()}/files/microservice/unit_test/run/{$microserviceUnitTestEntity->getName()}.html";
         
         $html = "<!DOCTYPE html>
         <html>
@@ -459,7 +459,7 @@ class MicroserviceUnitTestController extends AbstractController {
                 <link href=\"favicon.ico\" rel=\"icon\" type=\"image/x-icon\">
                 
                 <!-- Css -->
-                <link href=\"{$this->utility->getUrlRoot()}/files/microservice/unit_test/library/qunit_2.9.2.css\" rel=\"stylesheet\"/>
+                <link href=\"{$this->helper->getUrlRoot()}/files/microservice/unit_test/library/qunit_2.9.2.css\" rel=\"stylesheet\"/>
             </head>
             <body>";
                 if ($microserviceUnitTestEntity->getActive() == true) {
@@ -468,8 +468,8 @@ class MicroserviceUnitTestController extends AbstractController {
                     $html .= "<div id=\"qunit\"></div>
                     <div id=\"qunit-fixture\"></div>
                     <div id=\"qunit_result\" style=\"display: none;\"></div>
-                    <script src=\"{$this->utility->getUrlRoot()}/files/microservice/unit_test/library/jquery_3.4.1.min.js\"></script>
-                    <script src=\"{$this->utility->getUrlRoot()}/files/microservice/unit_test/library/qunit_2.9.2.js\"></script>
+                    <script src=\"{$this->helper->getUrlRoot()}/files/microservice/unit_test/library/jquery_3.4.1.min.js\"></script>
+                    <script src=\"{$this->helper->getUrlRoot()}/files/microservice/unit_test/library/qunit_2.9.2.js\"></script>
                     <script>
                         var unitTestMessage = function(event) {
                             var data = event.data;
@@ -502,7 +502,7 @@ class MicroserviceUnitTestController extends AbstractController {
                     </script>";
                 }
                 else
-                    $html .= "<p>" . $this->utility->getTranslator()->trans("microserviceUnitTestController_11") . "</p>";
+                    $html .= "<p>" . $this->helper->getTranslator()->trans("microserviceUnitTestController_11") . "</p>";
             $html .= "</body>
         </html>";
         

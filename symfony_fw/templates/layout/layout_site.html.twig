@@ -19,9 +19,8 @@
 
         <!-- Meta -->
         <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=1">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <!--<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=1">
         
         {% if app.request.attributes.get("_route") != "control_panel" %}
             <meta name="description" content="{{pageRow['meta_description']}}"/>
@@ -89,13 +88,14 @@
         {{-include("@templateRoot/include/flashBag.html.twig")-}}
         {{-include("@templateRoot/include/popup_easy.html.twig")-}}
 
-        <script>
+        <script nonce="{{php_session.xssProtectionValue}}">
             var session = {
                 'token': "{{csrf_token("intention")}}",
                 'name': "{{php_session.name}}",
                 'userInform': "{{php_session.userInform}}",
                 'languageTextCode': "{{php_session.languageTextCode}}",
-                'currentPageId': "{{php_session.currentPageId}}"
+                'currentPageId': "{{php_session.currentPageId}}",
+                'xssProtectionValue': "{{php_session.xssProtectionValue}}"
             };
             
             var url = {
@@ -146,37 +146,37 @@
             };
         </script>
         
-        <script src="{{asset("js/library/jquery_3.4.1.min.js")}}"></script>
-        <script src="{{asset("js/library/jquery-ui_1.12.1.min.js")}}"></script>
-        <script src="{{asset("js/library/jquery-mobile_1.5.0.min.js")}}"></script>
-        <script src="{{asset("js/library/material-components-web_custom.min.js")}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/library/jquery_3.4.1.min.js")}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/library/jquery-ui_1.12.1.min.js")}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/library/jquery-mobile_1.5.0.min.js")}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/library/material-components-web_custom.min.js")}}"></script>
         
         {% block scriptContainer %}{% endblock %}
         
-        <script src="{{asset("js/system/Utility" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/MaterialDesign" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/WidgetSearch" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/WidgetDatePicker" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/Ajax" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/Loader" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/FlashBag" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/PopupEasy" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/Search" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/TableAndPagination" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/Captcha" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/UploadChunk" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/Language" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/Wysiwyg" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/Chaato" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/PageComment" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/Authentication" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/Registration" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/RecoverPassword" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/MenuUser" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Helper" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/MaterialDesign" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/WidgetSearch" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/WidgetDatePicker" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Ajax" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Loader" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/FlashBag" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/PopupEasy" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Search" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/TableAndPagination" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Captcha" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/UploadChunk" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Language" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Wysiwyg" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Chaato" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/PageComment" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Authentication" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Registration" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/RecoverPassword" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/MenuUser" ~ javascriptMinify)}}"></script>
         
         {{-include("@templateRoot/layout/layout_site_custom_bottom.html.twig")-}}
         
-        <script src="{{asset("js/system/Index" ~ javascriptMinify)}}"></script>
-        <script src="{{asset("js/system/Index_custom" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Index" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Index_custom" ~ javascriptMinify)}}"></script>
     </body>
 </html>

@@ -8,7 +8,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 use App\Classes\System\TableAndPagination;
 
@@ -26,7 +26,7 @@ class UserController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     private $tableAndPagination;
@@ -51,11 +51,11 @@ class UserController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator, $passwordEncoder);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator, $passwordEncoder);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -64,7 +64,7 @@ class UserController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         $userEntity = new User();
         
@@ -75,27 +75,27 @@ class UserController extends AbstractController {
         ));
         $form->handleRequest($request);
         
-        $this->response['values']['userRoleSelectHtml'] = $this->utility->createUserRoleSelectHtml("form_user_roleUserId_select", "userController_1", true);
+        $this->response['values']['userRoleSelectHtml'] = $this->helper->createUserRoleSelectHtml("form_user_roleUserId_select", "userController_1", true);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                $messagePassword = $this->utility->assignUserPassword("withoutOld", $userEntity, $form);
+                $messagePassword = $this->helper->assignUserPassword("withoutOld", $userEntity, $form);
 
                 if ($messagePassword == "ok") {
-                    $this->utility->assignUserParameter($userEntity);
+                    $this->helper->assignUserParameter($userEntity);
 
-                    mkdir("{$this->utility->getPathPublic()}/files/user/{$form->get("username")->getData()}");
+                    mkdir("{$this->helper->getPathPublic()}/files/user/{$form->get("username")->getData()}");
                     
                     $this->entityManager->persist($userEntity);
                     $this->entityManager->flush();
 
-                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("userController_2");
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("userController_2");
                 }
                 else
                     $this->response['messages']['error'] = $messagePassword;
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("userController_3");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("userController_3");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -131,12 +131,12 @@ class UserController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
-        $this->tableAndPagination = new TableAndPagination($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        $this->tableAndPagination = new TableAndPagination($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -145,7 +145,7 @@ class UserController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         $this->session->set("userProfileId", 0);
         
@@ -199,11 +199,11 @@ class UserController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -212,7 +212,7 @@ class UserController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -228,7 +228,7 @@ class UserController extends AbstractController {
                     ));
                     $form->handleRequest($request);
 
-                    $this->response['values']['userRoleSelectHtml'] = $this->utility->createUserRoleSelectHtml("form_user_roleUserId_select", "userController_1", true);
+                    $this->response['values']['userRoleSelectHtml'] = $this->helper->createUserRoleSelectHtml("form_user_roleUserId_select", "userController_1", true);
                     $this->response['values']['id'] = $this->session->get("userProfileId");
                     $this->response['values']['attemptLogin'] = $userEntity->getAttemptLogin();
                     $this->response['values']['credit'] = $userEntity->getCredit();
@@ -242,7 +242,7 @@ class UserController extends AbstractController {
                     ));
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("userController_4");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("userController_4");
             }
         }
         
@@ -269,11 +269,11 @@ class UserController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator, $passwordEncoder);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator, $passwordEncoder);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -282,7 +282,7 @@ class UserController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         $userEntity = $this->entityManager->getRepository("App\Entity\User")->find($this->session->get("userProfileId"));
         
@@ -293,13 +293,13 @@ class UserController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                $messagePassword = $this->utility->assignUserPassword("withoutOld", $userEntity, $form);
+                $messagePassword = $this->helper->assignUserPassword("withoutOld", $userEntity, $form);
 
                 if ($messagePassword == "ok") {
                     $usernameOld = $userEntity->getUsername();
                     
-                    if (file_exists("{$this->utility->getPathPublic()}/files/user/$usernameOld") == true)
-                        rename("{$this->utility->getPathPublic()}/files/user/$usernameOld", "{$this->utility->getPathPublic()}/files/user/{$form->get("username")->getData()}");
+                    if (file_exists("{$this->helper->getPathPublic()}/files/user/$usernameOld") == true)
+                        rename("{$this->helper->getPathPublic()}/files/user/$usernameOld", "{$this->helper->getPathPublic()}/files/user/{$form->get("username")->getData()}");
                     
                     if ($form->get("active")->getData() == true)
                         $userEntity->setHelpCode("");
@@ -309,13 +309,13 @@ class UserController extends AbstractController {
                     $this->entityManager->persist($userEntity);
                     $this->entityManager->flush();
 
-                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("userController_5");
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("userController_5");
                 }
                 else
                     $this->response['messages']['error'] = $messagePassword;
             }
             else {
-                $this->response['messages']['error'] = $this->utility->getTranslator()->trans("userController_6");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("userController_6");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -351,11 +351,11 @@ class UserController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -364,7 +364,7 @@ class UserController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -376,10 +376,10 @@ class UserController extends AbstractController {
                     $this->entityManager->persist($userEntity);
                     $this->entityManager->flush();
 
-                    $this->response['messages']['success'] = $this->utility->getTranslator()->trans("userController_7");
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("userController_7");
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("userController_8");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("userController_8");
             }
         }
         
@@ -406,11 +406,11 @@ class UserController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -419,7 +419,7 @@ class UserController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $checkUserRole = $this->utility->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
@@ -428,30 +428,30 @@ class UserController extends AbstractController {
 
                     $userEntity = $this->entityManager->getRepository("App\Entity\User")->find($id);
 
-                    $this->utility->removeDirRecursive("{$this->utility->getPathPublic()}/files/user/{$userEntity->getUsername()}", true);
+                    $this->helper->removeDirRecursive("{$this->helper->getPathPublic()}/files/user/{$userEntity->getUsername()}", true);
 
                     $userDatabase = $this->userDatabase("delete", $userEntity->getId());
 
                     if ($userDatabase == true) {
                         $this->response['values']['id'] = $id;
 
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("userController_9");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("userController_9");
                     }
                 }
                 else if ($request->get("event") == "deleteAll") {
                     $userRows = $this->query->selectAllUserDatabase(1);
 
                     for ($a = 0; $a < count($userRows); $a ++) {
-                        $this->utility->removeDirRecursive("{$this->utility->getPathPublic()}/files/user/{$userRows[$a]['username']}", true);
+                        $this->helper->removeDirRecursive("{$this->helper->getPathPublic()}/files/user/{$userRows[$a]['username']}", true);
                     }
 
                     $userDatabase = $this->userDatabase("deleteAll", null);
 
                     if ($userDatabase == true)
-                        $this->response['messages']['success'] = $this->utility->getTranslator()->trans("userController_10");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("userController_10");
                 }
                 else
-                    $this->response['messages']['error'] = $this->utility->getTranslator()->trans("userController_11");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("userController_11");
 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -506,9 +506,9 @@ class UserController extends AbstractController {
                 </td>
                 <td>";
                     if ($value['active'] == 0)
-                        $listHtml .= $this->utility->getTranslator()->trans("userController_12");
+                        $listHtml .= $this->helper->getTranslator()->trans("userController_12");
                     else
-                        $listHtml .= $this->utility->getTranslator()->trans("userController_13");
+                        $listHtml .= $this->helper->getTranslator()->trans("userController_13");
                 $listHtml .= "</td>
                 <td>
                     <button class=\"mdc-fab mdc-fab--mini cp_user_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
@@ -521,7 +521,7 @@ class UserController extends AbstractController {
     
     private function userDatabase($type, $id) {
         if ($type == "delete") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM user
+            $query = $this->helper->getConnection()->prepare("DELETE FROM user
                                                                 WHERE id > :idExclude
                                                                 AND id = :id");
             
@@ -531,7 +531,7 @@ class UserController extends AbstractController {
             $query->execute();
             
             // payment
-            $query = $this->utility->getConnection()->prepare("DELETE FROM payment
+            $query = $this->helper->getConnection()->prepare("DELETE FROM payment
                                                                 WHERE user_id > :idExclude
                                                                 AND user_id = :id");
             
@@ -541,7 +541,7 @@ class UserController extends AbstractController {
             return $query->execute();
         }
         else if ($type == "deleteAll") {
-            $query = $this->utility->getConnection()->prepare("DELETE FROM user
+            $query = $this->helper->getConnection()->prepare("DELETE FROM user
                                                                 WHERE id > :idExclude");
 
             $query->bindValue(":idExclude", 1);
@@ -549,7 +549,7 @@ class UserController extends AbstractController {
             $query->execute();
             
             // payment
-            $query = $this->utility->getConnection()->prepare("DELETE FROM payment
+            $query = $this->helper->getConnection()->prepare("DELETE FROM payment
                                                                 WHERE user_id > :idExclude");
             
             $query->bindValue(":idExclude", 1);

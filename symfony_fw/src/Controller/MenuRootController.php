@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use App\Classes\System\Utility;
+use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 
 class MenuRootController extends AbstractController {
@@ -19,7 +19,7 @@ class MenuRootController extends AbstractController {
     
     private $response;
     
-    private $utility;
+    private $helper;
     private $query;
     private $ajax;
     
@@ -36,11 +36,11 @@ class MenuRootController extends AbstractController {
         
         $this->response = Array();
         
-        $this->utility = new Utility($this->container, $this->entityManager, $translator);
-        $this->query = $this->utility->getQuery();
-        $this->ajax = new Ajax($this->utility);
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
         
-        $this->session = $this->utility->getSession();
+        $this->session = $this->helper->getSession();
         
         // Logic
         $sessionLanguageTextCode = $this->session->get("languageTextCode");
@@ -51,7 +51,7 @@ class MenuRootController extends AbstractController {
         
         $pageRows = $this->query->selectAllPageDatabase($this->urlLocale);
         
-        $this->response['values']['pageList'] = $this->utility->createPageList($pageRows, false);
+        $this->response['values']['pageList'] = $this->helper->createPageList($pageRows, false);
         
         return Array(
             'urlLocale' => $this->urlLocale,
