@@ -700,7 +700,7 @@ class MicroserviceDeployController extends AbstractController {
                 </span>
             </li>
             <li role=\"separator\" class=\"mdc-list-divider\"></li>
-            <li class=\"mdc-list-item\">
+            <li class=\"mdc-list-item list_command\">
                 <span class=\"mdc-list-item__graphic material-icons\">info</span>
                 <span class=\"mdc-list-item__text\">
                     {$this->helper->getTranslator()->trans("microserviceDeployFormType_21")}

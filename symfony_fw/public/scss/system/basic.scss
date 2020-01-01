@@ -858,6 +858,10 @@ pre {
 
 #cp_microservice_deploy_render_result {
     margin-top: 10px;
+    
+    .list_command {
+        height: auto;
+    }
 }
 #cp_microservice_deploy_ssh_connection_result {
     margin-top: 20px;
