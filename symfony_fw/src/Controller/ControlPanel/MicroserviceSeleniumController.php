@@ -283,14 +283,14 @@ class MicroserviceSeleniumController extends AbstractController {
                         
                         $browserExecuted = "Chrome";
                         
-                        shell_exec("sudo {$path}/server_start.sh {$settingRow['server_user']} {$screen} {$path} {$_SERVER['SERVER_ADDR']} 4444 >/dev/null 2>&1 & echo $!");
+                        shell_exec("sudo bash {$path}/server_start.sh {$settingRow['server_user']} {$screen} {$path} {$_SERVER['SERVER_ADDR']} 4444 >/dev/null 2>&1 & echo $!");
                     }
                     else if ($request->get("event") == "firefox") {
                         $browser = "browserName=firefox moz:firefoxOptions.args=[--headless,--nogpu,--window-size={$screen}]";
                         
                         $browserExecuted = "Firefox";
                         
-                        shell_exec("sudo {$path}/server_start.sh root {$screen} {$path} {$_SERVER['SERVER_ADDR']} 4444 >/dev/null 2>&1 & echo $!");
+                        shell_exec("sudo bash {$path}/server_start.sh root {$screen} {$path} {$_SERVER['SERVER_ADDR']} 4444 >/dev/null 2>&1 & echo $!");
                     }
                     
                     sleep(3);
@@ -310,7 +310,7 @@ class MicroserviceSeleniumController extends AbstractController {
                         $pid = intval($value);
                         
                         if ($pid != 0)
-                            shell_exec("sudo {$path}/server_stop.sh {$pid}");
+                            shell_exec("sudo bash {$path}/server_stop.sh {$pid}");
                     }
                     
                     $xvfbList = shell_exec("ps aux | pgrep -f xvfb 2>&1 & echo $!");
@@ -320,7 +320,7 @@ class MicroserviceSeleniumController extends AbstractController {
                         $pid = intval($value);
                         
                         if ($pid != 0)
-                            shell_exec("sudo {$path}/server_stop.sh {$pid}");
+                            shell_exec("sudo bash {$path}/server_stop.sh {$pid}");
                     }
                     
                     if (is_file($pathResult) == true)

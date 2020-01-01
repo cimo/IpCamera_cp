@@ -236,7 +236,7 @@ pre {
             .mdc-text-field, .mdc-select {
                 @include user_select_none();
                 
-                width: 50%;
+                width: 100%;
             }
             .mdc-select {
                 margin-bottom: 10px;
