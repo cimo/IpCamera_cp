@@ -20,4 +20,4 @@ WORK IN PROGRESS...
 |:---|
 | Uebusaito - https://github.com/cimo/Uebusaito/ |
 
-<b>By CIMO - https://www.reinventsoftware.org</b>
+<b>By CIMO - https://reinventsoftware.org</b>
