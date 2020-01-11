@@ -399,7 +399,7 @@ function Helper() {
                 if (input[0].files[0] !== undefined)
                     name = input[0].files[0].name;
                 
-                button.parent().find("label").text(name);
+                button.parent().find(".material_upload_label").text(name);
             });
         });
     };
