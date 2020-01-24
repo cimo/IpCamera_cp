@@ -48,9 +48,11 @@ Temporary Items
 
 # cimo
 nbproject
-/symfony_fw/config/packages/framework.yaml
 /symfony_fw/public/.sass-cache
 /symfony_fw/src/Config.php
+/symfony_fw/var/sessions/*
+!/symfony_fw/var/sessions/.gitkeep
+/symfony_fw/config/packages/framework.yaml
 /symfony_fw/composer.lock
 
 /symfony_fw/src/files/ipCamera/*

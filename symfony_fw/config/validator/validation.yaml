@@ -6,7 +6,7 @@ App\Form\Model\PasswordModel:
             - Regex:
                 groups: [profile_password]
                 htmlPattern: false
-                pattern: /^.{8,30}$/
+                pattern: /^.{8,50}$/
                 message: entity.user.password
         new:
             - NotBlank:
@@ -14,7 +14,7 @@ App\Form\Model\PasswordModel:
             - Regex:
                 groups: [profile_password]
                 htmlPattern: false
-                pattern: /^.{8,30}$/
+                pattern: /^.{8,50}$/
                 message: entity.user.password
         newConfirm:
             - NotBlank:
@@ -22,7 +22,7 @@ App\Form\Model\PasswordModel:
             - Regex:
                 groups: [profile_password]
                 htmlPattern: false
-                pattern: /^.{8,30}$/
+                pattern: /^.{8,50}$/
                 message: entity.user.password
 
 App\Form\Model\RecoverPasswordModel:
@@ -43,7 +43,7 @@ App\Form\Model\ForgotPasswordModel:
             - Regex:
                 groups: [forgot_password]
                 htmlPattern: false
-                pattern: /^.{8,30}$/
+                pattern: /^.{8,50}$/
                 message: entity.user.password
         passwordConfirm:
             - NotBlank:
@@ -51,7 +51,7 @@ App\Form\Model\ForgotPasswordModel:
             - Regex:
                 groups: [forgot_password]
                 htmlPattern: false
-                pattern: /^.{8,30}$/
+                pattern: /^.{8,50}$/
                 message: entity.user.password
 
 App\Form\Model\SearchModel:
@@ -407,7 +407,7 @@ App\Entity\User:
             - Regex:
                 groups: [registration, profile_password, user_create, user_profile]
                 htmlPattern: false
-                pattern: /^.{8,30}$/
+                pattern: /^.{8,50}$/
                 message: entity.user.password
         passwordConfirm:
             - NotBlank:
@@ -415,7 +415,7 @@ App\Entity\User:
             - Regex:
                 groups: [registration, profile_password, user_create, user_profile]
                 htmlPattern: false
-                pattern: /^.{8,30}$/
+                pattern: /^.{8,50}$/
                 message: entity.user.password
         active:
             - NotBlank:
@@ -767,7 +767,7 @@ App\Entity\MicroserviceDeploy:
             - Regex:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
                 htmlPattern: false
-                pattern: /^.{1,30}$/
+                pattern: /^.{1,50}$/
         keyPublic:
             - File:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
@@ -792,7 +792,7 @@ App\Entity\MicroserviceDeploy:
             - Regex:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
                 htmlPattern: false
-                pattern: /^.{1,30}$/
+                pattern: /^.{1,50}$/
         ip:
             - NotBlank:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
@@ -832,7 +832,7 @@ App\Entity\MicroserviceDeploy:
             - Regex:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
                 htmlPattern: false
-                pattern: /^.{1,30}$/
+                pattern: /^.{1,50}$/
         gitClonePath:
             - NotBlank:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
