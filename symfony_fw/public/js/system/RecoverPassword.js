@@ -10,6 +10,9 @@ function RecoverPassword() {
     
     // Functions public
     self.init = function() {
+    };
+    
+    self.action = function() {
         $("#form_recover_password").on("submit", "", function(event) {
             event.preventDefault();
             

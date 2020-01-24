@@ -6,7 +6,10 @@ function Loader() {
     
     // Properties
     
-    // Functions public    
+    // Functions public
+    self.init = function() {
+    };
+    
     self.show = function() {
         $(".loader_back").show();
         $(".loader").show();

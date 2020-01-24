@@ -57,18 +57,18 @@ function Chaato() {
     self.init = function() {
         jsonResult = {};
         
-        canvas = $(".graph_container").find(".canvas")[0];
-        canvasWidth = canvas.width;
-        canvasHeight = canvas.height;
-        context = canvas.getContext("2d");
+        canvas = null;
+        canvasWidth = 0;
+        canvasHeight = 0;
+        context = null;
         
         labelSpace = 0;
         
         itemMax = 0;
         itemMaxKey = -1;
         itemSpace = 0;
-        itemPrevious = new Array();
-        listItems = new Array();
+        itemPrevious = [];
+        listItems = [];
         
         circleRange = 2;
         
@@ -80,16 +80,21 @@ function Chaato() {
         mousePosition = {};
         
         padding = 30;
-        translate = new Array(95, 20);
-        scale = new Array(0.91, 0.88);
+        translate = [95, 20];
+        scale = [0.91, 0.88];
     };
     
     self.create = function(json) {
         jsonResult = json;
+        
+        canvas = $(".graph_container").find(".canvas")[0];
+        canvasWidth = canvas.width;
+        canvasHeight = canvas.height;
+        context = canvas.getContext("2d");
 
         labelSpace = Math.floor(canvasWidth / jsonResult.label.items.length);
 
-        var tmpItemMax = new Array();
+        var tmpItemMax = [];
 
         $.each(jsonResult.elements, function(key, value) {
             tmpItemMax[key] = Math.max.apply(null, jsonResult.elements[key].items);

@@ -10,6 +10,9 @@ function ControlPanelMicroserviceApi() {
     
     // Functions public
     self.init = function() {
+    };
+    
+    self.action = function() {
         $("#form_cp_microservice_api_create").on("submit", "", function(event) {
             event.preventDefault();
             

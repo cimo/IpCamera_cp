@@ -17,6 +17,8 @@ function UploadChunk() {
     var file;
     var fileName;
     var byteChunk;
+    var sizeStart;
+    var sizeEnd;
     var isStop;
     
     var callbackComplete;

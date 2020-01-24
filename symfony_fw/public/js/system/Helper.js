@@ -104,6 +104,40 @@ function Helper() {
         return split;
     };
     
+    self.urlParameterValue = function(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+        
+        var parameters = regex.exec(window.location.search);
+        
+        var result = parameters === null ? "" : decodeURIComponent(parameters[1].replace(/\+/g, " "));
+        
+        return result;
+    };
+    
+    self.urlParameterRemove = function(url, target) {
+        var result = url.split("?")[0];
+        var parameter;
+        var parameters = [];
+        var query = (url.indexOf("?") !== -1) ? url.split("?")[1] : "";
+        
+        if (query !== "") {
+            parameters = query.split("&");
+            
+            for (var i = parameters.length - 1; i >= 0; i -= 1) {
+                parameter = parameters[i].split("=")[0];
+                
+                if (target === parameter)
+                    parameters.splice(i, 1);
+            }
+            
+            result = result + "?" + parameters.join("&");
+        }
+        
+        return result;
+    };
+    
     self.removeElementAndResetIndex = function(element, index) {
         element.length = Object.keys(element).length;
         element.splice = [].splice;
@@ -399,7 +433,7 @@ function Helper() {
                 if (input[0].files[0] !== undefined)
                     name = input[0].files[0].name;
                 
-                button.parent().find("label").text(name);
+                button.parent().find(".material_upload_label").text(name);
             });
         });
     };
@@ -438,7 +472,7 @@ function Helper() {
             result = "0 Bytes";
         else {
             var reference = 1024;
-            var sizes = new Array("Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB");
+            var sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 
             var index = Math.floor(Math.log(value) / Math.log(reference));
 

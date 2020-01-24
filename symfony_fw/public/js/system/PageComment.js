@@ -10,6 +10,9 @@ function PageComment() {
     
     // Functions public
     self.init = function() {
+    };
+    
+    self.action = function() {
         var tableAndPagination = new TableAndPagination();
         tableAndPagination.init();
         tableAndPagination.create(window.url.pageCommentRender, "#pageComment_result", false);

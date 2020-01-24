@@ -8,7 +8,7 @@ function WidgetSearch() {
     
     var widgetSearchButtonOpen;
     var widgetSearchButtonClose;
-    var widgetSearchInput;
+    var widgetSearchButtonInput;
     var topAppBarSectionStart;
     
     // Properties
@@ -17,7 +17,7 @@ function WidgetSearch() {
     self.init = function() {
         widgetSearchButtonOpen = null;
         widgetSearchButtonClose = null;
-        widgetSearchInput = null;
+        widgetSearchButtonInput = null;
         topAppBarSectionStart = null;
     };
     

@@ -9,6 +9,9 @@ function Ajax() {
     // Properties
     
     // Functions public
+    self.init = function() {
+    };
+    
     self.send = function(loaderEnabled, url, method, data, dataType, cache, processData, contentType, callbackBefore, callbackSuccess, callbackError, callbackComplete) {
         if (loaderEnabled === true)
             loader.show();

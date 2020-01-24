@@ -1,4 +1,4 @@
-/* global ajax, popupEasy, controlPanelPage, wysiwyg */
+/* global ajax, popupEasy, wysiwyg, controlPanelPage */
 
 var language = new Language();
 
@@ -10,6 +10,9 @@ function Language() {
     
     // Functions public
     self.init = function() {
+    };
+    
+    self.action = function() {
         $(document).on("click", "#language_text_container .mdc-list-item", function(event) {
             ajax.send(
                 true,

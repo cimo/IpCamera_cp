@@ -6,10 +6,10 @@ function ControlPanelPage() {
     // Vars
     var self = this;
     
-    var selectSended = false;
-    var selectId = -1;
+    var selectSended;
+    var selectId;
     
-    var profileFocus = false;
+    var profileFocus;
     
     // Properties
     self.getProfileFocus = function() {
@@ -24,13 +24,19 @@ function ControlPanelPage() {
     
     // Functions public
     self.init = function() {
+        selectSended = false;
+        selectId = -1;
+        
+        profileFocus = false;
+    };
+    
+    self.action = function() {
         selectDesktop();
         
         selectMobile();
         
         rankInMenu();
         
-        wysiwyg.init();
         wysiwyg.create("#form_page_argument", $("#form_cp_page_create").find("input[type='submit']"));
         
         fieldsVisibility();
@@ -254,7 +260,6 @@ function ControlPanelPage() {
 
             language.page();
             
-            wysiwyg.init();
             wysiwyg.create("#form_page_argument", $("#form_cp_page_profile").find("input[type='submit']"));
             
             fieldsVisibility();

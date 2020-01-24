@@ -90,6 +90,8 @@
                     <script nonce="{{php_session.xssProtectionValue}}">
                         window.addEventListener("load", function() {
                             controlPanelPayment.init();
+                            
+                            controlPanelPayment.action();
                             controlPanelPayment.changeView();
                         }, false);
                         
@@ -121,6 +123,8 @@
                     <script nonce="{{php_session.xssProtectionValue}}">
                         window.addEventListener("load", function() {
                             controlPanelPage.init();
+                            
+                            controlPanelPage.action();
                             controlPanelPage.changeView();
                         }, false);
                         
@@ -154,6 +158,8 @@
                     <script nonce="{{php_session.xssProtectionValue}}">
                         window.addEventListener("load", function() {
                             controlPanelUser.init();
+                            
+                            controlPanelUser.action();
                             controlPanelUser.changeView();
                         }, false);
                         
@@ -185,6 +191,8 @@
                     <script nonce="{{php_session.xssProtectionValue}}">
                         window.addEventListener("load", function() {
                             controlPanelModule.init();
+                            
+                            controlPanelModule.action();
                             controlPanelModule.changeView();
                         }, false);
                         
@@ -216,6 +224,8 @@
                     <script nonce="{{php_session.xssProtectionValue}}">
                         window.addEventListener("load", function() {
                             controlPanelRoleUser.init();
+                            
+                            controlPanelRoleUser.action();
                             controlPanelRoleUser.changeView();
                         }, false);
                         
@@ -239,6 +249,8 @@
                     <script nonce="{{php_session.xssProtectionValue}}">
                         window.addEventListener("load", function() {
                             controlPanelSetting.init();
+                            
+                            controlPanelSetting.action();
                         }, false);
                         
                         var textSetting = {
@@ -259,6 +271,8 @@
                     <script nonce="{{php_session.xssProtectionValue}}">
                         window.addEventListener("load", function() {
                             controlPanelSettingSlackIw.init();
+                            
+                            controlPanelSettingSlackIw.action();
                         }, false);
                         
                         var textSettingSlackIw = {
@@ -276,6 +290,8 @@
                     <script nonce="{{php_session.xssProtectionValue}}">
                         window.addEventListener("load", function() {
                             controlPanelSettingLinePush.init();
+                            
+                            controlPanelSettingLinePush.action();
                         }, false);
                         
                         var textSettingLinePush = {
@@ -303,6 +319,8 @@
                     <script nonce="{{php_session.xssProtectionValue}}">
                         window.addEventListener("load", function() {
                             controlPanelMicroserviceDeploy.init();
+                            
+                            controlPanelMicroserviceDeploy.action();
                             controlPanelMicroserviceDeploy.changeView();
                         }, false);
                         
@@ -337,6 +355,9 @@
                         window.addEventListener("load", function() {
                             controlPanelMicroserviceApi.init();
                             controlPanelApiBasic.init();
+                            
+                            controlPanelMicroserviceApi.action();
+                            controlPanelApiBasic.action();
                         }, false);
                         
                         var textApiBasic = {
@@ -378,6 +399,8 @@
                     <script nonce="{{php_session.xssProtectionValue}}">
                         window.addEventListener("load", function() {
                             controlPanelMicroserviceUnitTest.init();
+                            
+                            controlPanelMicroserviceUnitTest.action();
                             controlPanelMicroserviceUnitTest.changeView();
                         }, false);
                         
@@ -440,6 +463,8 @@
                     <script nonce="{{php_session.xssProtectionValue}}">
                         window.addEventListener("load", function() {
                             controlPanelMicroserviceSelenium.init();
+                            
+                            controlPanelMicroserviceSelenium.action();
                         }, false);
                         
                         window.addEventListener("resize", function() {
@@ -481,6 +506,8 @@
                     <script nonce="{{php_session.xssProtectionValue}}">
                         window.addEventListener("load", function() {
                             controlPanelMicroserviceCron.init();
+                            
+                            controlPanelMicroserviceCron.action();
                             controlPanelMicroserviceCron.changeView();
                         }, false);
                         

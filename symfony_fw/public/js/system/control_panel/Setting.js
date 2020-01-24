@@ -10,6 +10,9 @@ function ControlPanelSetting() {
     
     // Functions public
     self.init = function() {
+    };
+    
+    self.action = function() {
         languageManage();
         
         helper.wordTag("#setting_roleUserId", "#form_setting_roleUserId");

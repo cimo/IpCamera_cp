@@ -19,6 +19,8 @@
         <script nonce="{{php_session.xssProtectionValue}}">
             window.addEventListener("load", function() {
                 ipCamera.init();
+                
+                ipCamera.action();
                 ipCamera.changeView();
             }, false);
 

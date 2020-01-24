@@ -33,8 +33,11 @@
 <script nonce="{{php_session.xssProtectionValue}}">
     window.addEventListener("load", function() {
         myPageProfile.init();
-        
         myPagePayment.init();
+        
+        myPageProfile.action();
+        
+        myPagePayment.action();
         myPagePayment.changeView();
     }, false);
     

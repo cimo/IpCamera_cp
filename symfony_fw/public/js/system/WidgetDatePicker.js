@@ -67,14 +67,14 @@ function WidgetDatePicker() {
         monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
         monthLabels = {
-            'en': new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"),
-            'jp': new Array("一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"),
-            'it': new Array("Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre")
+            'en': ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+            'jp': ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            'it': ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"]
         };
         dayLabels = {
-            'en': new Array("S", "M", "T", "W", "T", "F", "S"),
-            'jp': new Array("日", "月", "火", "水", "木", "金", "土"),
-            'it': new Array("D", "L", "M", "M", "G", "V", "S")
+            'en': ["S", "M", "T", "W", "T", "F", "S"],
+            'jp': ["日", "月", "火", "水", "木", "金", "土"],
+            'it': ["D", "L", "M", "M", "G", "V", "S"]
         };
 
         monthLength = 0;

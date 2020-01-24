@@ -6,13 +6,18 @@ function ControlPanelUser() {
     // Vars
     var self = this;
     
-    var selectSended = false;
-    var selectId = -1;
+    var selectSended;
+    var selectId;
     
     // Properties
     
     // Functions public
     self.init = function() {
+        selectSended = false;
+        selectId = -1;
+    };
+    
+    self.action = function() {
         selectDesktop();
         
         selectMobile();

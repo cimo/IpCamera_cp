@@ -25,7 +25,7 @@ function Wysiwyg() {
         iframeBody = null;
         iframeContent = null;
         
-        history = new Array();
+        history = [];
         historyPosition = -1;
         historyLimit = 300;
         historyRestore = false;
@@ -47,7 +47,7 @@ function Wysiwyg() {
     };
     
     self.historyClear = function() {
-        history = new Array();
+        history = [];
     };
     
     self.save = function() {

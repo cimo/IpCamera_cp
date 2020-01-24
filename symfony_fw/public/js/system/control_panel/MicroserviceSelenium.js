@@ -6,18 +6,22 @@ function ControlPanelMicroserviceSelenium() {
     // Vars
     var self = this;
     
-    var selectSended = false;
-    var selectId = -1;
+    var selectSended;
+    var selectId;
     
     // Properties
     
     // Functions public
     self.init = function() {
+        selectSended = false;
+        selectId = -1;
+    };
+    
+    self.action = function() {
         selectDesktop();
         
         selectMobile();
         
-        uploadChunk.init();
         uploadChunk.setUrlRequest(window.url.cpMicroserviceSeleniumUpload + "?token=" + window.session.token + "&event=upload");
         uploadChunk.setTagContainer("#upload_chunk_microserviceSelenium_test_container");
         uploadChunk.setTagProgressBar("#upload_chunk_microserviceSelenium_test_container .upload_chunk .mdc-linear-progress");

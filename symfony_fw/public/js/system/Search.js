@@ -10,6 +10,9 @@ function Search() {
     
     // Functions public
     self.init = function() {
+    };
+    
+    self.action = function() {
         var tableAndPagination = new TableAndPagination();
         tableAndPagination.init();
         tableAndPagination.create(window.url.searchRender, "#search_result", false);

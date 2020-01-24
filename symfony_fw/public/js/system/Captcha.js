@@ -10,6 +10,9 @@ function Captcha() {
     
     // Functions public
     self.init = function() {
+    };
+    
+    self.action = function() {
         self.image();
         
         $(".captcha").find("img").on("click", "", function(event) {

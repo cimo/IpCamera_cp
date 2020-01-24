@@ -27,7 +27,7 @@ function MaterialDesign() {
         
         snackbarMdc = null;
         
-        mdcTextFields = new Array();
+        mdcTextFields = [];
         
         //window.mdc.autoInit();
     };
@@ -122,7 +122,7 @@ function MaterialDesign() {
     };
     
     self.textField = function() {
-        mdcTextFields = new Array();
+        mdcTextFields = [];
         
         $.each($(".mdc-text-field"), function(key, value) {
             mdcTextFields.push(new mdc.textField.MDCTextField.attachTo(value));

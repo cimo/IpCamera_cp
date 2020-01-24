@@ -135,6 +135,7 @@
             <i class="material-icons mdc-button__icon">cloud_upload</i>
             {{ translation_domain is same as(false) ? label : label|trans({}, translation_domain) }}
         </button>
+        <p class="material_upload_label"></p>
         <input type="{{ type }}" {{ block('widget_attributes') }}/>
     </div>
 {%- endblock file_widget -%}

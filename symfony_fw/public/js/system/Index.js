@@ -1,18 +1,44 @@
-/* global helper, materialDesign, widgetSearch, widgetDatePicker, flashBag, search, captcha, language, authentication, registration, recoverPassword, pageComment, menuUser */
-
-helper.init();
-helper.bodyProgress();
+/* global ajax, authentication, captcha, chaato, flashBag, helper, language, loader, materialDesign, menuUser, pageComment, popupEasy, recoverPassword, registration, search,
+    uploadChunk, widgetDatePicker, widgetSearch, wysiwyg */
 
 $(document).ready(function() {
+    ajax.init();
+    authentication.init();
+    captcha.init();
+    chaato.init();
+    flashBag.init();
+    helper.init();
+    language.init();
+    loader.init();
+    materialDesign.init();
+    menuUser.init();
+    pageComment.init();
+    popupEasy.init();
+    recoverPassword.init();
+    registration.init();
+    search.init();
+    uploadChunk.init();
+    widgetDatePicker.init();
+    widgetSearch.init();
+    wysiwyg.init();
+    
     helper.checkMobile(true);
     helper.linkPreventDefault();
     helper.accordion("button");
     helper.menuRoot();
     helper.uploadFakeClick();
     helper.blockMultiTab(true);
+    helper.bodyProgress();
     
-    // Material design
-    materialDesign.init();
+    authentication.action();
+    captcha.action();
+    language.action();
+    menuUser.action();
+    pageComment.action();
+    recoverPassword.action();
+    registration.action();
+    search.action();
+    
     materialDesign.button();
     materialDesign.fabButton();
     materialDesign.iconButton();
@@ -32,12 +58,9 @@ $(document).ready(function() {
     materialDesign.tabBar();
     materialDesign.fix();
     
-    // Widget
-    widgetSearch.init();
     widgetSearch.create();
     widgetSearch.changeView();
     
-    widgetDatePicker.init();
     widgetDatePicker.setLanguage("en");
     //widgetDatePicker.setCurrentYear(1984);
     //widgetDatePicker.setCurrentMonth(4);
@@ -45,23 +68,8 @@ $(document).ready(function() {
     widgetDatePicker.setInputFill(".widget_datePicker_input");
     widgetDatePicker.create();
     
-    flashBag.init();
     flashBag.setElement(materialDesign.getSnackbarMdc());
     flashBag.sessionActivity();
-    
-    search.init();
-    
-    captcha.init();
-    
-    language.init();
-    
-    authentication.init();
-    registration.init();
-    recoverPassword.init();
-    
-    pageComment.init();
-    
-    menuUser.init();
     
     $(window).resize(function() {
         materialDesign.refresh();

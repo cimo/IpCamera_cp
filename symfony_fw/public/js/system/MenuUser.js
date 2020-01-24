@@ -8,6 +8,9 @@ function MenuUser() {
     
     // Functions public
     self.init = function() {
+    };
+    
+    self.action = function() {
         $("#menu_user").find(".control_panel").on("click", "", function() {
             window.location.href = window.url.controlPanel;
         });

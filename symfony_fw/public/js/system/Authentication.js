@@ -10,6 +10,9 @@ function Authentication() {
     
     // Functions public
     self.init = function() {
+    };
+    
+    self.action = function() {
         $("#form_authentication").on("submit", "", function(event) {
             event.preventDefault();
             

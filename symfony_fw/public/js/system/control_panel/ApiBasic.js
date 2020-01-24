@@ -10,6 +10,9 @@ function ControlPanelApiBasic() {
     
     // Functions public
     self.init = function() {
+    };
+    
+    self.action = function() {
         $(document).on("submit", "#form_cp_apiBasic_select", function(event) {
             event.preventDefault();
 
@@ -68,7 +71,6 @@ function ControlPanelApiBasic() {
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
             $("#cp_api_select_result").html(xhr.response.render);
             
-            uploadChunk.init();
             uploadChunk.setUrlRequest(window.url.cpApiBasicCsv + "?token=" + window.session.token + "&event=csv");
             uploadChunk.setTagContainer("#upload_chunk_apiBasic_csv_container");
             uploadChunk.setTagProgressBar("#upload_chunk_apiBasic_csv_container .upload_chunk .mdc-linear-progress");
@@ -138,12 +140,11 @@ function ControlPanelApiBasic() {
                                 $("#button_apiBasic_show_graph").click();
                             });
                             
-                            chaato.init();
                             chaato.setBackgroundType("grid"); // grid - lineX - lineY
                             chaato.setAnimationSpeed(0.50);
                             chaato.setPadding(30);
-                            chaato.setTranslate(new Array(95, 20));
-                            chaato.setScale(new Array(0.91, 0.88));
+                            chaato.setTranslate([95, 20]);
+                            chaato.setScale([0.91, 0.88]);
                             chaato.create(xhr.response.values.json);
                         }
                     },

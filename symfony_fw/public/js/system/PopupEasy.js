@@ -11,6 +11,10 @@ function PopupEasy() {
     // Properties
     
     // Functions public
+    self.init = function() {
+        dialogMdc = null;
+    };
+    
     self.create = function(title, message, callbackOk, callbackCancel) {
         $(".mdc-dialog").find(".mdc-dialog__header__title").html(title);
         $(".mdc-dialog").find(".mdc-dialog__body").html(message);

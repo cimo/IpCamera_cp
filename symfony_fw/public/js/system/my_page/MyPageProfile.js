@@ -10,6 +10,9 @@ function MyPageProfile() {
     
     // Functions public
     self.init = function() {
+    };
+    
+    self.action = function() {
         $("#form_myPage_profile").on("submit", "", function(event) {
             event.preventDefault();
             

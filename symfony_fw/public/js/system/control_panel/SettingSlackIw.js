@@ -10,6 +10,9 @@ function ControlPanelSettingSlackIw() {
     
     // Functions public
     self.init = function() {
+    };
+    
+    self.action = function() {
         $("#form_cp_setting_slack_iw_render").on("submit", "", function(event) {
             event.preventDefault();
             
