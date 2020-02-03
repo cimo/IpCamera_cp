@@ -1,10 +1,12 @@
+"use strict";
+
 /* global ajax */
 
-var controlPanelMicroserviceApi = new ControlPanelMicroserviceApi();
+const controlPanelMicroserviceApi = new ControlPanelMicroserviceApi();
 
 function ControlPanelMicroserviceApi() {
     // Vars
-    var self = this;
+    let self = this;
     
     // Properties
     

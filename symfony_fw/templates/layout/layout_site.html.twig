@@ -89,7 +89,9 @@
         {{-include("@templateRoot/include/popup_easy.html.twig")-}}
 
         <script nonce="{{php_session.xssProtectionValue}}">
-            var session = {
+            "use strict";
+            
+            window.session = {
                 'token': "{{csrf_token("intention")}}",
                 'name': "{{php_session.name}}",
                 'userInform': "{{php_session.userInform}}",
@@ -98,7 +100,7 @@
                 'xssProtectionValue': "{{php_session.xssProtectionValue}}"
             };
             
-            var url = {
+            window.url = {
                 'root': "{{response.url.root}}",
                 'rootRender': "{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
                 'languageText': "{{path("language_text", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
@@ -120,16 +122,16 @@
                 'pageCommentSave': "{{path("pageComment_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
                 'controlPanel': "{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': ""})}}"
             };
-
-            var setting = {
+            
+            window.setting = {
                 'widthMobile': 839,
                 'widthDesktop': 840,
                 'template': "{{settingRow['template']}}",
                 'language': "{{settingRow['language']}}",
                 'websiteActive': "{{settingRow['website_active']}}"
             };
-
-            var text = {
+            
+            window.text = {
                 'index_5': "{{"index_5"|trans}}",
                 'index_6': "{{"index_6"|trans}}",
                 'index_7': "{{"index_7"|trans}}",
@@ -138,8 +140,8 @@
                 'index_10': "{{"index_10"|trans}}",
                 'index_11': "{{"index_11"|trans}}"
             };
-
-            var textWidgetDatePicker = {
+            
+            window.textWidgetDatePicker = {
                 'label_1': "{{"widgetDatePicker_1"|trans}}",
                 'label_2': "{{"widgetDatePicker_2"|trans}}",
                 'label_3': "{{"widgetDatePicker_3"|trans}}"

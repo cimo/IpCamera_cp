@@ -1,10 +1,12 @@
+"use strict";
+
 /* global ajax, helper, popupEasy, materialDesign */
 
-var controlPanelSetting = new ControlPanelSetting();
+const controlPanelSetting = new ControlPanelSetting();
 
 function ControlPanelSetting() {
     // Vars
-    var self = this;
+    let self = this;
     
     // Properties
     
@@ -24,11 +26,11 @@ function ControlPanelSetting() {
         $("#form_cp_setting_save").on("submit", "", function(event) {
             event.preventDefault();
             
-            var propNameLanguageManageCode = $("#form_setting_languageManageCode").prop("name");
+            let propNameLanguageManageCode = $("#form_setting_languageManageCode").prop("name");
             $("#form_setting_languageManageCode").removeAttr("name");
-            var propNameLanguageManageDate = $("#form_setting_languageManageDate").prop("name");
+            let propNameLanguageManageDate = $("#form_setting_languageManageDate").prop("name");
             $("#form_setting_languageManageDate").removeAttr("name");
-            var propNameLanguageManageActive = $("#form_setting_languageManageActive").prop("name");
+            let propNameLanguageManageActive = $("#form_setting_languageManageActive").prop("name");
             $("#form_setting_languageManageActive").removeAttr("name");
             
             $("#setting_language_manage_delete").removeClass("button_icon_inline");
@@ -59,9 +61,9 @@ function ControlPanelSetting() {
     
     // Function private
     function languageManage() {
-        var index = $("#form_setting_language").prop("selectedIndex");
-        var code = $("#form_setting_language").val();
-        var eventAjax = "";
+        let index = $("#form_setting_language").prop("selectedIndex");
+        let code = $("#form_setting_language").val();
+        let eventAjax = "";
         
         if (code === window.setting.language)
             $("#setting_language_manage_delete").hide();
@@ -85,8 +87,8 @@ function ControlPanelSetting() {
             
             $("#setting_language_manage_container").show();
             
-            var textSplit = $("#form_setting_language").find(":selected").text().split("|");
-            var activeLabel = textSplit[2].trim() === window.textSetting.label_3 ? 1 : 0;
+            let textSplit = $("#form_setting_language").find(":selected").text().split("|");
+            let activeLabel = textSplit[2].trim() === window.textSetting.label_3 ? 1 : 0;
             
             $("#form_setting_languageManageCode").prop("disabled", true);
             $("#form_setting_languageManageCode").val(code);
@@ -113,11 +115,11 @@ function ControlPanelSetting() {
         });
         
         $("#setting_language_manage_confirm").on("click", "", function() {
-            var code = $("#form_setting_languageManageCode").val();
-            var date = $("#form_setting_languageManageDate").val();
-            var active = $("#form_setting_languageManageActive").val();
+            let code = $("#form_setting_languageManageCode").val();
+            let date = $("#form_setting_languageManageDate").val();
+            let active = $("#form_setting_languageManageActive").val();
             
-            var currentCode = $("#language_text_container").find(".mdc-list-item[aria-disabled='true'] img").prop("class");
+            let currentCode = $("#language_text_container").find(".mdc-list-item[aria-disabled='true'] img").prop("class");
             
             if (code === currentCode) {
                 popupEasy.create(
@@ -217,13 +219,13 @@ function ControlPanelSetting() {
                         }
                     }
                     else {
-                        var activeLabel = active === "1" ? window.textSetting.label_3 : window.textSetting.label_4;
+                        let activeLabel = active === "1" ? window.textSetting.label_3 : window.textSetting.label_4;
 
                         $("#form_setting_language").find("option:contains(" + code + ")").text(code + " | " + date + " | " + activeLabel);
 
-                        var element = null;
+                        let element = null;
 
-                        var elements = $("#language_text_container").find(".mdc-menu__items.mdc-list .mdc-list-item");
+                        let elements = $("#language_text_container").find(".mdc-menu__items.mdc-list .mdc-list-item");
 
                         $.each(elements, function(key, value) {
                             if ($(value).find("img").hasClass(code) === true) {

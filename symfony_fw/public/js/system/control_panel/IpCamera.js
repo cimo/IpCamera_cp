@@ -1,13 +1,15 @@
+"use strict";
+
 /* global helper, ajax, popupEasy, materialDesign */
 
-var ipCamera = new ipCamera();
+const ipCamera = new ipCamera();
 
 function ipCamera() {
     // Vars
-    var self = this;
+    let self = this;
     
-    var selectSended;
-    var selectId;
+    let selectSended;
+    let selectId;
     
     // Properties
     
@@ -59,7 +61,7 @@ function ipCamera() {
             if (selectId >= 0) {
                 $("#cp_ipCamera_select_result_desktop").find(".checkbox_column input[type='checkbox']").prop("checked", false);
                 
-                var id = $("#cp_ipCamera_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
+                let id = $("#cp_ipCamera_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
                 
                 $.each(id, function(key, value) {
                     if ($.trim($(value).text()) === String(selectId))
@@ -92,7 +94,7 @@ function ipCamera() {
     
     // Function private
     function selectDesktop() {
-        var tableAndPagination = new TableAndPagination();
+        const tableAndPagination = new TableAndPagination();
         tableAndPagination.init();
         tableAndPagination.setButtonsStatus("show");
         tableAndPagination.create(window.url.cpIpCameraSelect, "#cp_ipCamera_select_result_desktop", true);
@@ -159,13 +161,13 @@ function ipCamera() {
         });
         
         $(document).on("click", "#cp_ipCamera_select_result_desktop .cp_ipCamera_delete", function() {
-            var id = $.trim($(this).parents("tr").find(".id_column").text());
+            let id = $.trim($(this).parents("tr").find(".id_column").text());
             
             deleteElement(id);
         });
         
         $(document).on("click", "#cp_ipCamera_select_button_desktop", function(event) {
-            var id = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
+            let id = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
             
             ajax.send(
                 true,
@@ -313,7 +315,7 @@ function ipCamera() {
     }
     
     function file() {
-        var tableAndPagination = new TableAndPagination();
+        const tableAndPagination = new TableAndPagination();
         tableAndPagination.init();
         tableAndPagination.setButtonsStatus("show");
         tableAndPagination.create(window.url.cpIpCameraFile, "#cp_ipCamera_file_result", true);
@@ -378,9 +380,9 @@ function ipCamera() {
         });
         
         $(document).on("click", "#cp_ipCamera_file_result .cp_ipCamera_file_delete", function() {
-            var id = $.trim($(this).parents("tr").find(".id_column").text());
-            var deviceName = $.trim($(this).parents("tr").find(".deviceName_column").text());
-            var fileName = $.trim($(this).parents("tr").find(".fileName_column").text());
+            let id = $.trim($(this).parents("tr").find(".id_column").text());
+            let deviceName = $.trim($(this).parents("tr").find(".deviceName_column").text());
+            let fileName = $.trim($(this).parents("tr").find(".fileName_column").text());
             
             popupEasy.create(
                 window.text.index_5,
@@ -422,11 +424,11 @@ function ipCamera() {
         });
         
         $(document).on("click", "#cp_ipCamera_file_result .cp_ipCamera_file_download", function() {
-            var deviceName = $.trim($(this).parents("tr").find(".deviceName_column").text());
-            var fileName = $.trim($(this).parents("tr").find(".fileName_column").text());
+            let deviceName = $.trim($(this).parents("tr").find(".deviceName_column").text());
+            let fileName = $.trim($(this).parents("tr").find(".fileName_column").text());
             
             $(document).ready(function(){
-                var html = "<form id=\"cp_ipCamera_file_download\" action=\"" + window.url.cpIpCameraFileDownload + "\" method=\"post\">\n\
+                let html = "<form id=\"cp_ipCamera_file_download\" action=\"" + window.url.cpIpCameraFileDownload + "\" method=\"post\">\n\
                     <input type=\"hidden\" name=\"deviceName\" value=\"" + deviceName + "\">\n\
                     <input type=\"hidden\" name=\"fileName\" value=\"" + fileName + "\">\n\
                     <input type=\"hidden\" name=\"token\" value=\"" + window.session.token + "\">\n\

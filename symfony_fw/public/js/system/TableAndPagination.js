@@ -1,20 +1,22 @@
+"use strict";
+
 /* global helper, ajax */
 
 function TableAndPagination() {
     // Vars
-    var self = this;
+    let self = this;
     
-    var urlRequest;
-    var idResult;
-    var selectOnlyOne;
+    let urlRequest;
+    let idResult;
+    let selectOnlyOne;
     
-    var current;
-    var total;
+    let current;
+    let total;
     
-    var clickedEvent;
-    var sortOrderBy;
+    let clickedEvent;
+    let sortOrderBy;
     
-    var buttonsStatus;
+    let buttonsStatus;
     
     // Properties
     self.setButtonsStatus = function(value) {
@@ -52,8 +54,8 @@ function TableAndPagination() {
     };
     
     self.search = function() {
-        var parentField = idResult + " .tableAndPagination .mdc-text-field__input";
-        var parentButton = idResult + " .tableAndPagination .mdc-text-field .material-icons";
+        let parentField = idResult + " .tableAndPagination .mdc-text-field__input";
+        let parentButton = idResult + " .tableAndPagination .mdc-text-field .material-icons";
         
         $(parentField).on("keyup", "", function(event) {
             if (clickedEvent === true)
@@ -81,8 +83,8 @@ function TableAndPagination() {
     };
     
     self.pagination = function() {
-        var parentPrevious = idResult + " .tableAndPagination .previous";
-        var parentNext = idResult + " .tableAndPagination .next";
+        let parentPrevious = idResult + " .tableAndPagination .previous";
+        let parentNext = idResult + " .tableAndPagination .next";
         
         $(parentPrevious).on("click", "", function() {
             if (clickedEvent === true)
@@ -113,9 +115,9 @@ function TableAndPagination() {
     
     self.sort = function() {
         $(idResult).on("click", "table thead tr th", function(event) {
-            var bodyRows = $(idResult).find("table tbody tr");
+            let bodyRows = $(idResult).find("table tbody tr");
             
-            var currentIndex = $(event.target).is("i") === false ? $(event.target).index() : $(event.target).parent().index();
+            let currentIndex = $(event.target).is("i") === false ? $(event.target).index() : $(event.target).parent().index();
             
             $(this).parent().find("i").hide();
             
@@ -133,9 +135,9 @@ function TableAndPagination() {
             }
             
             bodyRows.sort(function(a, b) {
-                var result = 0;
-                var first = $.trim($(a).children("td").eq(currentIndex).text().toLowerCase());
-                var second = $.trim($(b).children("td").eq(currentIndex).text().toLowerCase());
+                let result = 0;
+                let first = $.trim($(a).children("td").eq(currentIndex).text().toLowerCase());
+                let second = $.trim($(b).children("td").eq(currentIndex).text().toLowerCase());
                 
                 if (first !== "" && second !== "") {
                     if (sortOrderBy === true) {
@@ -189,12 +191,12 @@ function TableAndPagination() {
     
     // Functions private
     function status() {
-        var textHtml = $.trim($(idResult).find(".tableAndPagination .text").text());
+        let textHtml = $.trim($(idResult).find(".tableAndPagination .text").text());
         
         if (textHtml !== undefined || textHtml !== "") {
-            var textSplit = textHtml.split("/");
-            var valueA = parseInt($.trim(textSplit[0]));
-            var valueB = parseInt($.trim(textSplit[1]));
+            let textSplit = textHtml.split("/");
+            let valueA = parseInt($.trim(textSplit[0]));
+            let valueB = parseInt($.trim(textSplit[1]));
             
             if (valueA > valueB && $(idResult).find("table tbody tr").length === 0)
                 $(idResult).find(".tableAndPagination .previous").click();
@@ -208,8 +210,8 @@ function TableAndPagination() {
         $(".tableAndPagination .previous .mdc-button").prop("disabled", true);
         $(".tableAndPagination .next .mdc-button").prop("disabled", true);
         
-        var buttonPrevious = $(idResult).find(".tableAndPagination .previous .mdc-button");
-        var buttonNext = $(idResult).find(".tableAndPagination .next .mdc-button");
+        let buttonPrevious = $(idResult).find(".tableAndPagination .previous .mdc-button");
+        let buttonNext = $(idResult).find(".tableAndPagination .next .mdc-button");
         
         if (buttonPrevious.length > 0 && buttonNext.length > 0) {
             if (total > 1 && current > 0)
@@ -228,7 +230,7 @@ function TableAndPagination() {
     }
     
     function send() {
-        var data = {
+        let data = {
             'event': "tableAndPagination",
             'searchWritten': $(idResult).find(".tableAndPagination .mdc-text-field__input").val(),
             'paginationCurrent': current,

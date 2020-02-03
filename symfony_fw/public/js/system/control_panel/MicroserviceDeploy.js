@@ -1,13 +1,15 @@
+"use strict";
+
 /* global helper, ajax, popupEasy, materialDesign */
 
-var controlPanelMicroserviceDeploy = new ControlPanelMicroserviceDeploy();
+const controlPanelMicroserviceDeploy = new ControlPanelMicroserviceDeploy();
 
 function ControlPanelMicroserviceDeploy() {
     // Vars
-    var self = this;
+    let self = this;
     
-    var selectSended;
-    var selectId;
+    let selectSended;
+    let selectId;
     
     // Properties
     
@@ -90,7 +92,7 @@ function ControlPanelMicroserviceDeploy() {
             if (selectId >= 0) {
                 $("#cp_microservice_deploy_select_result_desktop").find(".checkbox_column input[type='checkbox']").prop("checked", false);
 
-                var id = $("#cp_microservice_deploy_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
+                let id = $("#cp_microservice_deploy_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
 
                 $.each(id, function(key, value) {
                     if ($.trim($(value).text()) === String(selectId))
@@ -112,7 +114,7 @@ function ControlPanelMicroserviceDeploy() {
     
     // Function private
     function selectDesktop() {
-        var tableAndPagination = new TableAndPagination();
+        const tableAndPagination = new TableAndPagination();
         tableAndPagination.init();
         tableAndPagination.setButtonsStatus("show");
         tableAndPagination.create(window.url.cpMicroserviceDeploySelect, "#cp_microservice_deploy_select_result_desktop", true);
@@ -179,13 +181,13 @@ function ControlPanelMicroserviceDeploy() {
         });
         
         $(document).on("click", "#cp_microservice_deploy_select_result_desktop .cp_module_delete", function() {
-            var id = $.trim($(this).parents("tr").find(".id_column").text());
+            let id = $.trim($(this).parents("tr").find(".id_column").text());
             
             deleteElement(id);
         });
         
         $(document).on("click", "#cp_microservice_deploy_select_button_desktop", function(event) {
-            var id = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
+            let id = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
 
             ajax.send(
                 true,
@@ -324,9 +326,9 @@ function ControlPanelMicroserviceDeploy() {
     
     function execute() {
         $(".git_execute").on("click", "", function() {
-            var id = $("#form_microservice_deploy_select_id").val();
-            var action = $(this).attr("data-action");
-            var branchName = $("#cp_microservice_deploy_render_result").find("input[name='branchName']");
+            let id = $("#form_microservice_deploy_select_id").val();
+            let action = $(this).attr("data-action");
+            let branchName = $("#cp_microservice_deploy_render_result").find("input[name='branchName']");
             
             popupEasy.create(
                 window.text.index_5,

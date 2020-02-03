@@ -1,13 +1,15 @@
+"use strict";
+
 /* global helper, ajax, uploadChunk, popupEasy, materialDesign */
 
-var controlPanelMicroserviceSelenium = new ControlPanelMicroserviceSelenium();
+const controlPanelMicroserviceSelenium = new ControlPanelMicroserviceSelenium();
 
 function ControlPanelMicroserviceSelenium() {
     // Vars
-    var self = this;
+    let self = this;
     
-    var selectSended;
-    var selectId;
+    let selectSended;
+    let selectId;
     
     // Properties
     
@@ -41,7 +43,7 @@ function ControlPanelMicroserviceSelenium() {
             if (selectId >= 0) {
                 $("#cp_microservice_selenium_select_result_table").find(".checkbox_column input[type='checkbox']").prop("checked", false);
                 
-                var id = $("#cp_microservice_selenium_select_result_table").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
+                let id = $("#cp_microservice_selenium_select_result_table").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
                 
                 $.each(id, function(key, value) {
                     if ($.trim($(value).text()) === String(selectId))
@@ -63,7 +65,7 @@ function ControlPanelMicroserviceSelenium() {
     
     // Function private
     function selectDesktop() {
-        var tableAndPagination = new TableAndPagination();
+        const tableAndPagination = new TableAndPagination();
         tableAndPagination.init();
         tableAndPagination.setButtonsStatus("show");
         tableAndPagination.create(window.url.cpMicroserviceSeleniumSelect, "#cp_microservice_selenium_select_result_table", true);
@@ -132,15 +134,15 @@ function ControlPanelMicroserviceSelenium() {
         });
         
         $(document).on("click", "#cp_microservice_selenium_select_result_table .cp_microservice_selenium_delete", function() {
-            var id = $.trim($(this).parents("tr").find(".id_column").text());
-            var name = $.trim($(this).parents("tr").find(".name_column").text());
+            let id = $.trim($(this).parents("tr").find(".id_column").text());
+            let name = $.trim($(this).parents("tr").find(".name_column").text());
             
             deleteElement(id, name);
         });
         
         $(document).on("click", "#cp_microservice_selenium_select_button_desktop", function(event) {
-            var id = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
-            var name = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".name_column").text());
+            let id = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
+            let name = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".name_column").text());
             
             ajax.send(
                 true,
@@ -176,7 +178,7 @@ function ControlPanelMicroserviceSelenium() {
         $(document).on("submit", "#form_cp_microservice_selenium_select_mobile", function(event) {
             event.preventDefault();
             
-            var name = $("#form_microservice_selenium_select_id").find("option:selected").text();
+            let name = $("#form_microservice_selenium_select_id").find("option:selected").text();
 
             $("#form_microservice_selenium_select_name").val(name);
             
@@ -215,10 +217,10 @@ function ControlPanelMicroserviceSelenium() {
             
             materialDesign.refresh();
             
-            var name = xhr.response.values.name;
+            let name = xhr.response.values.name;
             
             $(".selenium_icon").on("click", "", function(event) {
-                var browser = $(event.target).attr("alt").split(".").slice(0, -1).join(".");
+                let browser = $(event.target).attr("alt").split(".").slice(0, -1).join(".");
                 
                 ajax.send(
                     true,

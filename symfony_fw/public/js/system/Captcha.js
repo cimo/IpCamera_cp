@@ -1,10 +1,12 @@
+"use strict";
+
 /* global ajax */
 
-var captcha = new Captcha();
+const captcha = new Captcha();
 
 function Captcha() {
     // Vars
-    var self = this;
+    let self = this;
     
     // Properties
     

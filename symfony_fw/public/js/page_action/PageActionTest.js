@@ -1,3 +1,7 @@
+"use strict";
+
+/* global */
+
 function deferred(method) {
     if (window.$ !== undefined)
         method();

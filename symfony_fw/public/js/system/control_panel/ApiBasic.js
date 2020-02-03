@@ -1,10 +1,12 @@
+"use strict";
+
 /* global helper, ajax, uploadChunk, materialDesign, popupEasy, chaato, widgetDatePicker */
 
-var controlPanelApiBasic = new ControlPanelApiBasic();
+const controlPanelApiBasic = new ControlPanelApiBasic();
 
 function ControlPanelApiBasic() {
     // Vars
-    var self = this;
+    let self = this;
     
     // Properties
     
@@ -39,8 +41,8 @@ function ControlPanelApiBasic() {
         $("#form_cp_apiBasic_create").on("submit", "", function(event) {
             event.preventDefault();
             
-            var optionCount = $("#form_apiBasic_select_id").find("option").length;
-            var name = $(this).find("input[name='form_apiBasic[name]']").val();
+            let optionCount = $("#form_apiBasic_select_id").find("option").length;
+            let name = $(this).find("input[name='form_apiBasic[name]']").val();
             
             ajax.send(
                 true,
@@ -157,16 +159,16 @@ function ControlPanelApiBasic() {
                 $(".download_detail_container").toggle("slow");
                 
                 $("#button_apiBasic_download_detail").off("click").on("click", "", function(event) {
-                    var event = $(this).attr("data-event");
-                    var dateStart = $("input[name='download_date_start']").val();
-                    var dateEnd = $("input[name='download_date_end']").val();
+                    let dataEvent = $(this).attr("data-event");
+                    let dateStart = $("input[name='download_date_start']").val();
+                    let dateEnd = $("input[name='download_date_end']").val();
                     
                     ajax.send(
                         true,
                         window.url.cpApiBasicDownloadDetail,
                         "post",
                         {
-                            'event': event,
+                            'event': dataEvent,
                             'dateStart': dateStart,
                             'dateEnd': dateEnd,
                             'token': window.session.token
@@ -180,7 +182,7 @@ function ControlPanelApiBasic() {
                             ajax.reply(xhr, "");
                             
                             if (xhr.response.values !== undefined) {
-                                var xhrRequest = new XMLHttpRequest();
+                                let xhrRequest = new XMLHttpRequest();
                                 xhrRequest.onreadystatechange = function() {
                                     if (this.readyState === 4) {
                                         window.location = xhr.response.values.url;
@@ -221,8 +223,8 @@ function ControlPanelApiBasic() {
             $("#form_cp_apiBasic_profile").on("submit", "", function(event) {
                 event.preventDefault();
                 
-                var selectValue = $("#form_apiBasic_select_id").val();
-                var name = $(this).find("input[name='form_apiBasic[name]']").val();
+                let selectValue = $("#form_apiBasic_select_id").val();
+                let name = $(this).find("input[name='form_apiBasic[name]']").val();
 
                 ajax.send(
                     true,

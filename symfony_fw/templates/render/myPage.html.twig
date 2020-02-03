@@ -31,6 +31,8 @@
 {% endif %}
 
 <script nonce="{{php_session.xssProtectionValue}}">
+    "use strict";
+    
     window.addEventListener("load", function() {
         myPageProfile.init();
         myPagePayment.init();
@@ -45,7 +47,7 @@
         myPagePayment.changeView();
     }, false);
     
-    var textPayment = {
+    window.textPayment = {
         'label_1': "{{"myPage_4"|trans}}",
         'label_2': "{{"myPage_5"|trans}}"
     };

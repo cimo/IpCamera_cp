@@ -1,10 +1,12 @@
+"use strict";
+
 /* global helper, loader, flashBag */
 
-var ajax = new Ajax();
+const ajax = new Ajax();
 
 function Ajax() {
     // Vars
-    var self = this;
+    let self = this;
     
     // Properties
     
@@ -67,7 +69,7 @@ function Ajax() {
     self.reply = function(xhr, tagError) {
         helper.linkPreventDefault();
         
-        var reply = "";
+        let reply = "";
         
         if ($(tagError).length > 0) {
             $(tagError).find("*[required='required']").parent().removeClass("mdc-text-field--invalid mdc-text-field--focused");
@@ -90,11 +92,11 @@ function Ajax() {
             }
 
             if (xhr.response.errors !== undefined && typeof(xhr.response.errors) !== "string") {
-                var errors = xhr.response.errors;
+                let errors = xhr.response.errors;
 
                 $.each(errors, function(key, value) {
                     if (typeof(value[0]) === "string" && $.isEmptyObject(value) === false && key !== "_token" && key !== "token") {
-                        var input = null;
+                        let input = null;
 
                         if ($(tagError).length > 0)
                             input = $(tagError).find("*[name*='["+ key + "]']")[0];

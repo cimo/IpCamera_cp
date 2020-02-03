@@ -471,21 +471,23 @@ class MicroserviceUnitTestController extends AbstractController {
                     <script src=\"{$this->helper->getUrlRoot()}/files/microservice/unit_test/library/jquery_3.4.1.min.js\"></script>
                     <script src=\"{$this->helper->getUrlRoot()}/files/microservice/unit_test/library/qunit_2.9.2.js\"></script>
                     <script>
-                        var unitTestMessage = function(event) {
-                            var data = event.data;
-                            var origin = event.origin;
-                            var source = event.source;
+                        \"use strict\";
+                        
+                        let unitTestMessage = function(event) {
+                            let data = event.data;
+                            let origin = event.origin;
+                            let source = event.source;
                             
-                            var originFilter = \"{$originReplace}\";
+                            let originFilter = \"{$originReplace}\";
                             
-                            var originFilterSplit = originFilter.split(\",\");
+                            let originFilterSplit = originFilter.split(\",\");
                             
-                            var result = $(\"#qunit_result\");
+                            let result = $(\"#qunit_result\");
                             
                             if (originFilterSplit.includes(origin) === true) {
-                                var json = JSON.parse(data);
+                                let json = JSON.parse(data);
                                 
-                                var page = $(json.page).not(\"#unitTest_script\").remove();
+                                let page = $(json.page).not(\"#unitTest_script\").remove();
                                 page = $(page).find(\"iframe\").remove().end();
                                 
                                 result.html(page);

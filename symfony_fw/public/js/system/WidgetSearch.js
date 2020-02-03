@@ -1,15 +1,17 @@
+"use strict";
+
 /* global helper */
 
-var widgetSearch = new WidgetSearch();
+const widgetSearch = new WidgetSearch();
 
 function WidgetSearch() {
     // Vars
-    var self = this;
+    let self = this;
     
-    var widgetSearchButtonOpen;
-    var widgetSearchButtonClose;
-    var widgetSearchButtonInput;
-    var topAppBarSectionStart;
+    let widgetSearchButtonOpen;
+    let widgetSearchButtonClose;
+    let widgetSearchButtonInput;
+    let topAppBarSectionStart;
     
     // Properties
     
@@ -28,7 +30,7 @@ function WidgetSearch() {
         topAppBarSectionStart = $(".mdc-top-app-bar__section--align-start");
 
         $(widgetSearchButtonOpen).on("click", "", function(event) {
-            var target = event.target;
+            let target = event.target;
 
             if ($(target).hasClass("animate") === false) {
                 $(target).addClass("animate");
@@ -41,7 +43,7 @@ function WidgetSearch() {
         });
 
         $(widgetSearchButtonClose).on("click", "", function(event) {
-            var target = event.target;
+            let target = event.target;
 
             if ($(widgetSearchButtonOpen).hasClass("animate") === true) {
                 $(target).hide();

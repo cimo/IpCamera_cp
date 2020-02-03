@@ -1,10 +1,12 @@
+"use strict";
+
 /* global ajax, popupEasy, wysiwyg, controlPanelPage */
 
-var language = new Language();
+const language = new Language();
 
 function Language() {
     // Vars
-    var self = this;
+    let self = this;
     
     // Properties
     
@@ -97,12 +99,12 @@ function Language() {
     function formPageFlagSubmit(event) {
         controlPanelPage.setProfileFocus(false);
         
-        var target = $(event.target).parent().hasClass("mdc-chip") === true ? $(event.target).parent() : $(event.target);
+        let target = $(event.target).parent().hasClass("mdc-chip") === true ? $(event.target).parent() : $(event.target);
         
         $("#language_page_container").children().removeClass("mdc-chip--selected");
         target.addClass("mdc-chip--selected");
         
-        var altSplit = target.find("img").prop("alt").split(".");
+        let altSplit = target.find("img").prop("alt").split(".");
 
         $("#form_language_page").find("input[name='form_language[codePage]']").val(altSplit[0]);
         $("#form_language_page").submit();

@@ -1,27 +1,29 @@
+"use strict";
+
 /* global helper, ajax, loader, flashBag, materialDesign */
 
-var uploadChunk = new UploadChunk();
+const uploadChunk = new UploadChunk();
 
 function UploadChunk() {
     // Vars
-    var self = this;
+    let self = this;
     
-    var urlRequest;
-    var tagContainer;
-    var tagProgressBar;
-    var tagImageRefresh;
-    var lockUrl;
+    let urlRequest;
+    let tagContainer;
+    let tagProgressBar;
+    let tagImageRefresh;
+    let lockUrl;
     
-    var inputLabel;
+    let inputLabel;
     
-    var file;
-    var fileName;
-    var byteChunk;
-    var sizeStart;
-    var sizeEnd;
-    var isStop;
+    let file;
+    let fileName;
+    let byteChunk;
+    let sizeStart;
+    let sizeEnd;
+    let isStop;
     
-    var callbackComplete;
+    let callbackComplete;
     
     // Properties
     self.setUrlRequest = function(value) {
@@ -101,15 +103,15 @@ function UploadChunk() {
         $(tagContainer).find(".controls .button_start").prop("disabled", false);
         $(tagContainer).find(".controls .button_stop").prop("disabled", true);
         
-        var formData = new FormData();
+        let formData = new FormData();
         
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) {
-                var jsonParse = JSON.parse(xhr.response);
+                let jsonParse = JSON.parse(xhr.response);
                 
-                var response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
+                let response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
                 
                 if (response.messages.error !== undefined) {
                     resetValue();
@@ -137,17 +139,17 @@ function UploadChunk() {
         if (file === null)
             return;
         
-        var formData = new FormData();
+        let formData = new FormData();
         
         formData.append("file", chunkSize);
         
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) {
-                var jsonParse = JSON.parse(xhr.response);
+                let jsonParse = JSON.parse(xhr.response);
                 
-                var response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
+                let response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
                 
                 if (response.messages.error !== undefined) {
                     resetValue();
@@ -175,15 +177,15 @@ function UploadChunk() {
         
         materialDesign.linearProgress(tagProgressBar, sizeStart, file.size);
         
-        var formData = new FormData();
+        let formData = new FormData();
         
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) {
-                var jsonParse = JSON.parse(xhr.response);
+                let jsonParse = JSON.parse(xhr.response);
                 
-                var response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
+                let response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
                 
                 if (response.messages.error !== undefined) {
                     resetValue();
@@ -221,15 +223,15 @@ function UploadChunk() {
         $(tagContainer).find(".controls .button_start").attr("disabled", false);
         $(tagContainer).find(".controls .button_stop").attr("disabled", true);
         
-        var formData = new FormData();
+        let formData = new FormData();
         
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) {
-                var jsonParse = JSON.parse(xhr.response);
+                let jsonParse = JSON.parse(xhr.response);
                 
-                var response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
+                let response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
                 
                 if (response.messages.error !== undefined) {
                     resetValue();
@@ -253,7 +255,7 @@ function UploadChunk() {
         if (file === null)
             return;
         
-        var chunkSize = file.slice(sizeStart, sizeEnd);
+        let chunkSize = file.slice(sizeStart, sizeEnd);
         
         send(chunkSize);
         

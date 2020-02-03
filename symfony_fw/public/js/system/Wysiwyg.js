@@ -1,20 +1,22 @@
+"use strict";
+
 /* global helper, materialDesign, popupEasy */
 
-var wysiwyg = new Wysiwyg();
+const wysiwyg = new Wysiwyg();
 
 function Wysiwyg() {
     // Vars
-    var self = this;
+    let self = this;
     
-    var containerTag;
+    let containerTag;
     
-    var iframeBody;
-    var iframeContent;
+    let iframeBody;
+    let iframeContent;
     
-    var history;
-    var historyPosition;
-    var historyLimit;
-    var historyRestore;
+    let history;
+    let historyPosition;
+    let historyLimit;
+    let historyRestore;
     
     // Properties
     
@@ -135,7 +137,7 @@ function Wysiwyg() {
         }
         else if (type === "source") {
             if ($(iframeBody).length > 0) {
-                var html = $.trim($(iframeBody).html());
+                let html = $.trim($(iframeBody).html());
                 
                 $(containerTag).val(html);
                 
@@ -143,7 +145,7 @@ function Wysiwyg() {
             }
         }
         else if (type === "editor") {
-            var source = $(".wysiwyg").find(".source");
+            let source = $(".wysiwyg").find(".source");
             
             if (source.length > 0)
                 $(iframeBody).html(source.text());
@@ -154,9 +156,9 @@ function Wysiwyg() {
         $(".wysiwyg").find(".toolbar .mdc-fab").off("click").on("click", "", function(event) {
             event.preventDefault();
             
-            var target = $(event.target).parent().hasClass("mdc-fab") === true ? $(event.target).parent() : $(event.target);
+            let target = $(event.target).parent().hasClass("mdc-fab") === true ? $(event.target).parent() : $(event.target);
             
-            var command = target.find("span").data("command");
+            let command = target.find("span").data("command");
             
             if (command === "source")
                 source();
@@ -169,7 +171,7 @@ function Wysiwyg() {
         $(".wysiwyg").find(".mdc-select .mdc-select__native-control").off("change").on("change", "", function(event) {
             event.preventDefault();
             
-            var command = $(event.target).data("command");
+            let command = $(event.target).data("command");
             
             if (command === "formatBlock" || command === "fontSize")
                 executeCommand(command, $(event.target).val());
@@ -177,7 +179,7 @@ function Wysiwyg() {
     }
     
     function source() {
-        var show = $(".wysiwyg").find(".source").css("display") === "none" ? true : false;
+        let show = $(".wysiwyg").find(".source").css("display") === "none" ? true : false;
 
         if (show === true) {
             fillField("source");
@@ -215,7 +217,7 @@ function Wysiwyg() {
                     <p class=\"mdc-text-field-helper-text\" aria-hidden=\"true\"></p>\n\
                 </div>",
                 function() {
-                    var value = $("#wysiwyg_popup").find(".mdc-text-field__input").val();
+                    let value = $("#wysiwyg_popup").find(".mdc-text-field__input").val();
                     
                     iframeContent.execCommand(command, false, value);
                     
@@ -235,7 +237,7 @@ function Wysiwyg() {
                     <p class=\"mdc-text-field-helper-text\" aria-hidden=\"true\"></p>\n\
                 </div>",
                 function() {
-                    var value = $("#wysiwyg_popup").find(".mdc-text-field__input").val();
+                    let value = $("#wysiwyg_popup").find(".mdc-text-field__input").val();
                     
                     iframeContent.execCommand(command, false, value);
                     
@@ -261,10 +263,10 @@ function Wysiwyg() {
                     <p class=\"mdc-text-field-helper-text\" aria-hidden=\"true\"></p>\n\
                 </div>",
                 function() {
-                    var label = $("#wysiwyg_popup").find(".mdc-text-field__input.label").val();
-                    var link = $("#wysiwyg_popup").find(".mdc-text-field__input.link").val();
+                    let label = $("#wysiwyg_popup").find(".mdc-text-field__input.label").val();
+                    let link = $("#wysiwyg_popup").find(".mdc-text-field__input.link").val();
                     
-                    var html = "";
+                    let html = "";
                     
                     if (link === "")
                         html = "<button class=\"mdc-button mdc-button--dense mdc-button--raised\" type=\"button\" contenteditable=\"false\" style=\"display: block;\">" + label + "</button>";
@@ -295,13 +297,13 @@ function Wysiwyg() {
                     <p class=\"mdc-text-field-helper-text\" aria-hidden=\"true\"></p>\n\
                 </div>",
                 function() {
-                    var rowNumber = $("#wysiwyg_popup").find(".row_number").val();
-                    var columnNumber = $("#wysiwyg_popup").find(".column_number").val();
+                    let rowNumber = $("#wysiwyg_popup").find(".row_number").val();
+                    let columnNumber = $("#wysiwyg_popup").find(".column_number").val();
                     
-                    var html = "<div class=\"mdc-layout-grid\" contenteditable=\"false\">";
-                        for (var a = 0; a < rowNumber; a ++) {
+                    let html = "<div class=\"mdc-layout-grid\" contenteditable=\"false\">";
+                        for (let a = 0; a < rowNumber; a ++) {
                             html += "<div class=\"mdc-layout-grid__inner\" contenteditable=\"false\">";
-                                for (var b = 0; b < columnNumber; b ++) {
+                                for (let b = 0; b < columnNumber; b ++) {
                                     html += "<div class=\"mdc-layout-grid__cell mdc-layout-grid__cell--span-2\" contenteditable=\"false\">&nbsp;</div>";
                                 }
                             html += "</div>";
@@ -323,7 +325,7 @@ function Wysiwyg() {
     
     function historyUndo() {
         if (historyPosition >= 0) {
-            var element = history[-- historyPosition];
+            let element = history[-- historyPosition];
             
             if (historyPosition < 0) {
                 historyPosition = 0;
@@ -339,7 +341,7 @@ function Wysiwyg() {
     
     function historyRedo() {
         if (historyPosition < (history.length - 1)) {
-            var element = history[++ historyPosition];
+            let element = history[++ historyPosition];
             
             $(iframeBody).html(element);
             
@@ -352,7 +354,7 @@ function Wysiwyg() {
         
         removeDoubleSpace();
         
-        var html = $(iframeBody).html();
+        let html = $(iframeBody).html();
         
         if (html !== history[historyPosition]) {
             if (historyPosition < (history.length - 1))
@@ -375,7 +377,7 @@ function Wysiwyg() {
         $(iframeBody).on("click", "", function(event) {
             historyRestore = false;
             
-            var element = findElementAtCaretPosition();
+            let element = findElementAtCaretPosition();
             
             if ($(element).hasClass("mdc-layout-grid__cell") === false && $(element).parents(".mdc-layout-grid__cell").length === 0)
                 $(iframeBody).find(".mdc-layout-grid__cell").prop("contenteditable", false);
@@ -384,7 +386,7 @@ function Wysiwyg() {
         $(iframeBody).on("dblclick", "", function(event) {
             historyRestore = false;
             
-            var element = findElementAtCaretPosition();
+            let element = findElementAtCaretPosition();
             
             if ($(element).parents(".mdc-layout-grid__cell").length > 0)
                 element = $(element).parents(".mdc-layout-grid__cell")[0];
@@ -417,16 +419,16 @@ function Wysiwyg() {
         });
         
         $(iframeBody).contextmenu(function(event) {
-            var type = "";
-            var target = null;
-            var content = "";
+            let type = "";
+            let target = null;
+            let content = "";
             
             if ($(event.target).hasClass("mdc-button") === true) {
                 type = "button";
                 target = $(event.target);
                 
                 if ($(event.target).is("button") === true) {
-                    var label = $(event.target).text();
+                    let label = $(event.target).text();
                     
                     content = "<div class=\"mdc-text-field mdc-text-field__basic mdc-text-field--dense\" style=\"width: 100%;\">\n\
                         <input class=\"mdc-text-field__input label\" type=\"text\" value=\"" + label + "\" autocomplete=\"off\" aria-label=\"label\"/>\n\
@@ -436,8 +438,8 @@ function Wysiwyg() {
                     <p class=\"mdc-text-field-helper-text\" aria-hidden=\"true\"></p>";
                 }
                 else if ($(event.target).is("a") === true) {
-                    var label = $(event.target).text();
-                    var link = $(event.target).prop("href") === undefined ? "" : $(event.target).prop("href");
+                    let label = $(event.target).text();
+                    let link = $(event.target).prop("href") === undefined ? "" : $(event.target).prop("href");
                     
                     content = "<div class=\"mdc-text-field mdc-text-field__basic mdc-text-field--dense\" style=\"width: 100%;\">\n\
                         <input class=\"mdc-text-field__input label\" type=\"text\" value=\"" + label + "\" autocomplete=\"off\" aria-label=\"label\"/>\n\
@@ -486,8 +488,8 @@ function Wysiwyg() {
             "<div id=\"wysiwyg_popup\">" + content + "</div>",
             function() {
                 if (type === "button") {
-                    var label = $("#wysiwyg_popup").find(".mdc-text-field__input.label").val();
-                    var link = $("#wysiwyg_popup").find(".mdc-text-field__input.link").val();
+                    let label = $("#wysiwyg_popup").find(".mdc-text-field__input.label").val();
+                    let link = $("#wysiwyg_popup").find(".mdc-text-field__input.link").val();
                     
                     target.text(label);
                     target.prop("href", link);
@@ -499,10 +501,10 @@ function Wysiwyg() {
         
         if (type === "table") {
             $("#row_add").off("click").on("click", "", function() {
-                var columnNumber = target.parent().find(".mdc-layout-grid__cell").length;
+                let columnNumber = target.parent().find(".mdc-layout-grid__cell").length;
                 
-                var html = "<div class=\"mdc-layout-grid__inner\" contenteditable=\"false\">";
-                    for (var a = 0; a < columnNumber; a ++) {
+                let html = "<div class=\"mdc-layout-grid__inner\" contenteditable=\"false\">";
+                    for (let a = 0; a < columnNumber; a ++) {
                         html += "<div class=\"mdc-layout-grid__cell mdc-layout-grid__cell--span-2\" contenteditable=\"false\">&nbsp;</div>";
                     }
                 html += "</div>";
@@ -522,9 +524,9 @@ function Wysiwyg() {
             });
             
             $("#column_add").off("click").on("click", "", function() {
-                var columnIndex = target.index();
+                let columnIndex = target.index();
                 
-                var html = "<div class=\"mdc-layout-grid__cell mdc-layout-grid__cell--span-2\" contenteditable=\"false\">&nbsp;</div>";
+                let html = "<div class=\"mdc-layout-grid__cell mdc-layout-grid__cell--span-2\" contenteditable=\"false\">&nbsp;</div>";
                 
                 $.each(target.parents(".mdc-layout-grid").find(".mdc-layout-grid__inner"), function(key, value) {
                     $(value).find(".mdc-layout-grid__cell").eq(columnIndex).after(html);
@@ -535,7 +537,7 @@ function Wysiwyg() {
                 historySave();
             });
             $("#column_remove").off("click").on("click", "", function() {
-                var columnIndex = target.index();
+                let columnIndex = target.index();
                 
                 $.each(target.parents(".mdc-layout-grid").find(".mdc-layout-grid__inner"), function(key, value) {
                     if ($(value).find(".mdc-layout-grid__cell").length === 1) {
@@ -555,9 +557,9 @@ function Wysiwyg() {
     }
     
     function findElementAtCaretPosition() {
-        var iframeDocument = window.frames[0].document;
-        var selection = null;
-        var containerNode = null;
+        let iframeDocument = window.frames[0].document;
+        let selection = null;
+        let containerNode = null;
         
         if (iframeDocument.getSelection) {
             selection = iframeDocument.getSelection();
@@ -577,18 +579,18 @@ function Wysiwyg() {
     }
     
     function addHtmlAtCaretPosition(html) {
-        var iframeDocument = window.frames[0].document;
-        var range = null;
+        let iframeDocument = window.frames[0].document;
+        let range = null;
         
         if (iframeDocument.getSelection) {
             selection = iframeDocument.getSelection();
             
             if (selection.getRangeAt && selection.rangeCount) {
-                var htmlElement = window.frames[0].document.createElement("div");
+                let htmlElement = window.frames[0].document.createElement("div");
                 htmlElement.innerHTML = html;
                 
-                var fragment = window.frames[0].document.createDocumentFragment();
-                var lastNode = null;
+                let fragment = window.frames[0].document.createDocumentFragment();
+                let lastNode = null;
                 
                 while ((node = htmlElement.firstChild)) {
                     lastNode = fragment.appendChild(node);
@@ -620,7 +622,7 @@ function Wysiwyg() {
     }
     
     function spaceAfterElement() {
-        var elements = $(iframeContent).find(".mdc-button, .mdc-layout-grid");
+        let elements = $(iframeContent).find(".mdc-button, .mdc-layout-grid");
         
         $.each(elements, function(key, value) {
             if ($(value).prev("br").length === 0)
@@ -632,7 +634,7 @@ function Wysiwyg() {
     }
     
     function removeDoubleSpace() {
-        var elements = $(iframeContent).find("br");
+        let elements = $(iframeContent).find("br");
         
         $.each(elements, function(key, value) {
             if ($(value).prev("br").length === 1)

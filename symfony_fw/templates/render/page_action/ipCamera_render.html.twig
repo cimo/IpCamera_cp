@@ -22,6 +22,8 @@
     </div>
     <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/IpCamera" ~ javascriptMinify)}}"></script>
     <script nonce="{{php_session.xssProtectionValue}}">
+        "use strict";
+        
         function deferred(method) {
             if (window.$ !== undefined)
                 method();

@@ -1,12 +1,14 @@
+"use strict";
+
 /* global materialDesign */
 
-var popupEasy = new PopupEasy();
+const popupEasy = new PopupEasy();
 
 function PopupEasy() {
     // Vars
-    var self = this;
+    let self = this;
     
-    var dialogMdc;
+    let dialogMdc;
     
     // Properties
     
@@ -23,8 +25,8 @@ function PopupEasy() {
         
         materialDesign.refresh();
         
-        var clickOk = null;
-        var clickCancel = null;
+        let clickOk = null;
+        let clickCancel = null;
         
         if (callbackOk !== undefined) {
             clickOk = function() {

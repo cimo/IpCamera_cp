@@ -20,7 +20,9 @@
     </form>
 </div>
 <script nonce="{{php_session.xssProtectionValue}}">
-    var textLanguagePage = {
+    "use strict";
+    
+    window.textLanguagePage = {
         'label_1': "{{"languagePage_1"|trans}}"
     };
 </script>

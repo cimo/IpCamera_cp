@@ -1,3 +1,5 @@
+"use strict";
+
 /* global ajax, authentication, captcha, chaato, flashBag, helper, language, loader, materialDesign, menuUser, pageComment, popupEasy, recoverPassword, registration, search,
     uploadChunk, widgetDatePicker, widgetSearch, wysiwyg */
 

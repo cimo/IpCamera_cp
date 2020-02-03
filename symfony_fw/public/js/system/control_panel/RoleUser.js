@@ -1,13 +1,15 @@
+"use strict";
+
 /* global helper, ajax, popupEasy, materialDesign */
 
-var controlPanelRoleUser = new ControlPanelRoleUser();
+const controlPanelRoleUser = new ControlPanelRoleUser();
 
 function ControlPanelRoleUser() {
     // Vars
-    var self = this;
+    let self = this;
     
-    var selectSended;
-    var selectId;
+    let selectSended;
+    let selectId;
     
     // Properties
     
@@ -59,7 +61,7 @@ function ControlPanelRoleUser() {
             if (selectId >= 0) {
                 $("#cp_roleUser_select_result_desktop").find(".checkbox_column input[type='checkbox']").prop("checked", false);
 
-                var id = $("#cp_roleUser_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
+                let id = $("#cp_roleUser_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
 
                 $.each(id, function(key, value) {
                     if ($.trim($(value).text()) === String(selectId))
@@ -81,7 +83,7 @@ function ControlPanelRoleUser() {
     
     // Function private
     function selectDesktop() {
-        var tableAndPagination = new TableAndPagination();
+        const tableAndPagination = new TableAndPagination();
         tableAndPagination.init();
         tableAndPagination.setButtonsStatus("show");
         tableAndPagination.create(window.url.cpRoleUserSelect, "#cp_roleUser_select_result_desktop", true);
@@ -135,7 +137,7 @@ function ControlPanelRoleUser() {
                             ajax.reply(xhr, "");
 
                             $.each($("#cp_roleUser_select_result_desktop").find("table .id_column"), function(key, value) {
-                                var id = $.trim($(value).parents("tr").find(".id_column").text());
+                                let id = $.trim($(value).parents("tr").find(".id_column").text());
                                 
                                 if (id > 4)
                                     $(value).parents("tr").remove();
@@ -151,13 +153,13 @@ function ControlPanelRoleUser() {
         });
         
         $(document).on("click", "#cp_roleUser_select_result_desktop .cp_roleUser_delete", function() {
-            var id = $.trim($(this).parents("tr").find(".id_column").text());
+            let id = $.trim($(this).parents("tr").find(".id_column").text());
             
             deleteElement(id);
         });
         
         $(document).on("click", "#cp_roleUser_select_button_desktop", function(event) {
-            var id = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
+            let id = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
 
             ajax.send(
                 true,

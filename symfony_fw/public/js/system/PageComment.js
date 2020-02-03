@@ -1,10 +1,12 @@
+"use strict";
+
 /* global helper, ajax */
 
-var pageComment = new PageComment();
+const pageComment = new PageComment();
 
 function PageComment() {
     // Vars
-    var self = this;
+    let self = this;
     
     // Properties
     
@@ -13,7 +15,7 @@ function PageComment() {
     };
     
     self.action = function() {
-        var tableAndPagination = new TableAndPagination();
+        const tableAndPagination = new TableAndPagination();
         tableAndPagination.init();
         tableAndPagination.create(window.url.pageCommentRender, "#pageComment_result", false);
         tableAndPagination.search();
@@ -56,7 +58,7 @@ function PageComment() {
         $(document).on("click", "#pageComment_result .button_reply", function(event) {
             $("#form_pageComment").find(".button_reset").show();
             
-            var id = $(event.target).parent().attr("data-comment");
+            let id = $(event.target).parent().attr("data-comment");
             
             $("#form_pageComment_type").val("reply_" + id);
             
@@ -66,8 +68,8 @@ function PageComment() {
         $(document).on("click", "#pageComment_result .button_edit", function(event) {
             $("#form_pageComment").find(".button_reset").show();
             
-            var id = $(event.target).parent().attr("data-comment");
-            var argument = $(event.target).parent().find(".argument").text().trim();
+            let id = $(event.target).parent().attr("data-comment");
+            let argument = $(event.target).parent().find(".argument").text().trim();
             
             $("#form_pageComment_type").val("edit_" + id);
             

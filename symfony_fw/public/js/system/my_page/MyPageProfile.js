@@ -1,10 +1,12 @@
+"use strict";
+
 /* global helper, ajax */
 
-var myPageProfile = new MyPageProfile();
+const myPageProfile = new MyPageProfile();
 
 function MyPageProfile() {
     // Vars
-    var self = this;
+    let self = this;
     
     // Properties
     
@@ -72,7 +74,7 @@ function MyPageProfile() {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                     
                     if (xhr.response.errors === undefined) {
-                        var credit = $("#form_myPage_profile_credit").find("input[name='credit']").val();
+                        let credit = $("#form_myPage_profile_credit").find("input[name='credit']").val();
                         $("#form_myPage_profile_credit_paypal").find("input[name='quantity']").val(credit);
                         
                         $("#form_myPage_profile_credit_paypal").submit();

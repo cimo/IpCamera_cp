@@ -1,10 +1,12 @@
+"use strict";
+
 /* global ajax */
 
-var search = new Search();
+const search = new Search();
 
 function Search() {
     // Vars
-    var self = this;
+    let self = this;
     
     // Properties
     
@@ -13,7 +15,7 @@ function Search() {
     };
     
     self.action = function() {
-        var tableAndPagination = new TableAndPagination();
+        const tableAndPagination = new TableAndPagination();
         tableAndPagination.init();
         tableAndPagination.create(window.url.searchRender, "#search_result", false);
         tableAndPagination.search();

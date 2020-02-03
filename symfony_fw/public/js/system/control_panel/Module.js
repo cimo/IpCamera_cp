@@ -1,13 +1,15 @@
+"use strict";
+
 /* global helper, ajax, popupEasy, materialDesign */
 
-var controlPanelModule = new ControlPanelModule();
+const controlPanelModule = new ControlPanelModule();
 
 function ControlPanelModule() {
     // Vars
-    var self = this;
+    let self = this;
     
-    var selectSended;
-    var selectId;
+    let selectSended;
+    let selectId;
     
     // Properties
     
@@ -57,7 +59,7 @@ function ControlPanelModule() {
             if (selectId >= 0) {
                 $("#cp_module_select_result_desktop").find(".checkbox_column input[type='checkbox']").prop("checked", false);
 
-                var id = $("#cp_module_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
+                let id = $("#cp_module_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
 
                 $.each(id, function(key, value) {
                     if ($.trim($(value).text()) === String(selectId))
@@ -81,7 +83,7 @@ function ControlPanelModule() {
     
     // Function private
     function selectDesktop() {
-        var tableAndPagination = new TableAndPagination();
+        const tableAndPagination = new TableAndPagination();
         tableAndPagination.init();
         tableAndPagination.setButtonsStatus("show");
         tableAndPagination.create(window.url.cpModuleSelect, "#cp_module_select_result_desktop", true);
@@ -135,7 +137,7 @@ function ControlPanelModule() {
                             ajax.reply(xhr, "");
 
                             $.each($("#cp_module_select_result_desktop").find("table .id_column"), function(key, value) {
-                                var id = $.trim($(value).parents("tr").find(".id_column").text());
+                                let id = $.trim($(value).parents("tr").find(".id_column").text());
                                 
                                 if (id > 2)
                                     $(value).parents("tr").remove();
@@ -151,13 +153,13 @@ function ControlPanelModule() {
         });
         
         $(document).on("click", "#cp_module_select_result_desktop .cp_module_delete", function() {
-            var id = $.trim($(this).parents("tr").find(".id_column").text());
+            let id = $.trim($(this).parents("tr").find(".id_column").text());
             
             deleteElement(id);
         });
         
         $(document).on("click", "#cp_module_select_button_desktop", function(event) {
-            var id = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
+            let id = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
 
             ajax.send(
                 true,

@@ -1,8 +1,12 @@
-var menuUser = new MenuUser();
+"use strict";
+
+/* global */
+
+const menuUser = new MenuUser();
 
 function MenuUser() {
     // Vars
-    var self = this;
+    let self = this;
     
     // Properties
     

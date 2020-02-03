@@ -1,34 +1,36 @@
+"use strict";
+
 /* global helper, mdc */
 
-var widgetDatePicker = new WidgetDatePicker();
+const widgetDatePicker = new WidgetDatePicker();
 
 function WidgetDatePicker() {
     // Vars
-    var self = this;
+    let self = this;
 
-    var language;
-    var currentYear;
-    var currentMonth;
-    var currentDay;
+    let language;
+    let currentYear;
+    let currentMonth;
+    let currentDay;
     
-    var yearMin;
-    var yearMax;
+    let yearMin;
+    let yearMax;
 
-    var monthDays;
+    let monthDays;
     
-    var monthLabels;
-    var dayLabels;
+    let monthLabels;
+    let dayLabels;
     
-    var monthLength;
-    var weekCurrentDay;
-    var weekDayShift;
-    var dayFirstPosition;
+    let monthLength;
+    let weekCurrentDay;
+    let weekDayShift;
+    let dayFirstPosition;
     
-    var result;
+    let result;
     
-    var inputFillTag;
+    let inputFillTag;
     
-    var currentInput;
+    let currentInput;
     
     // Properties
     self.setLanguage = function(value) {
@@ -90,7 +92,7 @@ function WidgetDatePicker() {
     };
     
     self.create = function() {
-        var date = new Date();
+        let date = new Date();
         
         if (currentYear === -1)
             currentYear = date.getFullYear();
@@ -105,7 +107,7 @@ function WidgetDatePicker() {
         calculateWeekDayShift();
         calculateDayPosition();
         
-        var content = "<div class=\"widget_datePicker_back\"></div>\n\
+        let content = "<div class=\"widget_datePicker_back\"></div>\n\
             <div class=\"mdc-elevation--z8 widget_datePicker unselect\">";
             
             content += createHeaderHtml(true);
@@ -159,8 +161,8 @@ function WidgetDatePicker() {
             $(".widget_datePicker").find(".calendar").hide();
             $(".widget_datePicker").find(".listYears").show();
             
-            var container = $(".widget_datePicker").find(".listYears");
-            var target = $(".widget_datePicker").find(".listYears .mdc-list-item--activated");
+            let container = $(".widget_datePicker").find(".listYears");
+            let target = $(".widget_datePicker").find(".listYears .mdc-list-item--activated");
             
             container.animate({
                 scrollTop: target.offset().top - container.offset().top + container.scrollTop()
@@ -212,7 +214,7 @@ function WidgetDatePicker() {
         });
         
         $(".widget_datePicker").find(".day li span").off("click").on("click", "", function() {
-            var text = $.trim($(this).text());
+            let text = $.trim($(this).text());
             
             if (text !== "") {
                 $(this).parents(".day").find("li span").removeClass("mdc-theme--primary-bg mdc-theme--on-primary");
@@ -220,7 +222,7 @@ function WidgetDatePicker() {
                 
                 currentDay = parseInt(text);
                 
-                var html = createHeaderHtml(false);
+                let html = createHeaderHtml(false);
                 
                 $(".widget_datePicker").find(".header .text").html(html);
             }
@@ -261,7 +263,7 @@ function WidgetDatePicker() {
     }
     
     function calculateWeekDayShift() {
-        var value = 0;
+        let value = 0;
         
         if (language === "it")
             value = 1;
@@ -279,7 +281,7 @@ function WidgetDatePicker() {
     }
     
     function createHeaderHtml(type) {
-        var html = "";
+        let html = "";
         
         if (type === true) {
             html = "<div class=\"mdc-theme--primary-bg mdc-theme--on-primary header\">\n\
@@ -298,12 +300,12 @@ function WidgetDatePicker() {
         yearMin = 1900;
         yearMax = new Date().getFullYear();
         
-        var html = "<div class=\"listYears\"><div class=\"mdc-list mdc-list--two-line mdc-list--avatar-list\">\n\
+        let html = "<div class=\"listYears\"><div class=\"mdc-list mdc-list--two-line mdc-list--avatar-list\">\n\
             <ul>";
-                var count = 0;
+                let count = 0;
                 
-                for (var a = yearMin; a <= yearMax; a ++) {
-                    var selected = "mdc-list-item--activated";
+                for (let a = yearMin; a <= yearMax; a ++) {
+                    let selected = "mdc-list-item--activated";
 
                     if (a === currentYear)
                         html += "<li class=\"mdc-list-item " + selected + "\" role=\"option\" value=\"" + a + "\" tabindex=\"" + count + "\">" + a + "</li>";
@@ -319,7 +321,7 @@ function WidgetDatePicker() {
     }
 
     function createMonthHtml() {
-        var html = "<div class=\"month\">\n\
+        let html = "<div class=\"month\">\n\
             <div class=\"left\"><i class=\"material-icons mdc-ripple-surface\">keyboard_arrow_left</i></div>\n\
             <div class=\"mdc-typography--body2 label\">" + monthLabels[language][currentMonth] + "</div>\n\
             <div class=\"right\"><i class=\"material-icons mdc-ripple-surface\">keyboard_arrow_right</i></div>\n\
@@ -329,9 +331,9 @@ function WidgetDatePicker() {
     }
 
     function createWeekHtml() {
-        var html = "<div class=\"mdc-typography--body2 week\"><ul>";
+        let html = "<div class=\"mdc-typography--body2 week\"><ul>";
         
-        for (var a = 0; a <= 6; a ++) {
+        for (let a = 0; a <= 6; a ++) {
             html += "<li>" + dayLabels[language][(a + weekDayShift + 7) % 7] + "</li>";
         }
         
@@ -341,14 +343,14 @@ function WidgetDatePicker() {
     }
     
     function createDayHtml() {
-        var html = "<div class=\"mdc-typography--body2 day\">";
+        let html = "<div class=\"mdc-typography--body2 day\">";
         
-        var day = 1;
+        let day = 1;
         
-        for (var a = 0; a < 9; a ++) {
+        for (let a = 0; a < 9; a ++) {
             html += "<ul>";
             
-            for (var b = 0; b <= 6; b ++) {
+            for (let b = 0; b <= 6; b ++) {
                 if (day === currentDay) {
                     if (a > 0 || b + weekDayShift >= dayFirstPosition)
                         html += "<li><span class=\"mdc-theme--primary-bg mdc-theme--on-primary\">";
@@ -381,7 +383,7 @@ function WidgetDatePicker() {
     }
     
     function createButtonHtml() {
-        return html = "<div class=\"button\">\n\
+        return "<div class=\"button\">\n\
             <button class=\"mdc-button mdc-button--dense mdc-button--raised button_today\" type=\"button\">" + window.textWidgetDatePicker.label_1 + "</button>\n\
             <button class=\"mdc-button mdc-button--dense mdc-button--raised button_clear\" type=\"button\">" + window.textWidgetDatePicker.label_2 + "</button>\n\
             <button class=\"mdc-button mdc-button--dense mdc-button--raised button_confirm\" type=\"button\">" + window.textWidgetDatePicker.label_3 + "</button>\n\
@@ -389,7 +391,7 @@ function WidgetDatePicker() {
     }
     
     function fillInput(type) {
-        var currentMontTmp = currentMonth + 1;
+        let currentMontTmp = currentMonth + 1;
         
         result = currentYear + "-" + helper.padZero(currentMontTmp) + "-" + currentDay;
         

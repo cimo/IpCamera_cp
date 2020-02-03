@@ -1,10 +1,12 @@
+"use strict";
+
 /* global ajax */
 
-var registration = new Registration();
+const registration = new Registration();
 
 function Registration() {
     // Vars
-    var self = this;
+    let self = this;
     
     // Properties
     

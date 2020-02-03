@@ -36,7 +36,9 @@
     </div>
 </div>
 <script nonce="{{php_session.xssProtectionValue}}">
-    var textUploadChunk = {
+    "use strict";
+    
+    window.textUploadChunk = {
         'label_1': "{{"upload_chunk_4"|trans}}",
         'label_2': "{{"upload_chunk_5"|trans}}"
     };

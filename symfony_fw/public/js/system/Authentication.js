@@ -1,10 +1,12 @@
+"use strict";
+
 /* global ajax, captcha */
 
-var authentication = new Authentication();
+const authentication = new Authentication();
 
 function Authentication() {
     // Vars
-    var self = this;
+    let self = this;
     
     // Properties
     

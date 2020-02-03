@@ -104,7 +104,9 @@
     <div class="source" contenteditable="true"></div>
 </div>
 <script nonce="{{php_session.xssProtectionValue}}">
-    var textWysiwyg = {
+    "use strict";
+    
+    window.textWysiwyg = {
         'label_1': "{{"wysiwyg_1"|trans}}",
         'label_2': "{{"wysiwyg_2"|trans}}",
         'label_3': "{{"wysiwyg_3"|trans}}",

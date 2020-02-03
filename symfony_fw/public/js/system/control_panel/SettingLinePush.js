@@ -1,10 +1,12 @@
+"use strict";
+
 /* global ajax, popupEasy, materialDesign, tableAndPagination */
 
-var controlPanelSettingLinePush = new ControlPanelSettingLinePush();
+const controlPanelSettingLinePush = new ControlPanelSettingLinePush();
 
 function ControlPanelSettingLinePush() {
     // Vars
-    var self = this;
+    let self = this;
     
     // Properties
     
@@ -13,7 +15,7 @@ function ControlPanelSettingLinePush() {
     };
     
     self.action = function() {
-        var tableAndPagination = new TableAndPagination();
+        const tableAndPagination = new TableAndPagination();
         tableAndPagination.init();
         tableAndPagination.create(window.url.cpSettingLinePushRender, "#cp_setting_line_push_user_result", false);
         tableAndPagination.search();
@@ -82,7 +84,7 @@ function ControlPanelSettingLinePush() {
             if ($(event.target).hasClass("delete") === true)
                 return;
             
-            var id = $.trim($(this).find(".mdc-chip__text").attr("data-id"));
+            let id = $.trim($(this).find(".mdc-chip__text").attr("data-id"));
             
             ajax.send(
                 true,
@@ -125,7 +127,7 @@ function ControlPanelSettingLinePush() {
             if ($(event.target).hasClass("edit") === true)
                 return;
             
-            var id = $.trim($(this).parent().find(".mdc-chip__text").attr("data-id"));
+            let id = $.trim($(this).parent().find(".mdc-chip__text").attr("data-id"));
             
             popupEasy.create(
                 window.text.index_5,

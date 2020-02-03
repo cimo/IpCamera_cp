@@ -1,36 +1,40 @@
-var chaato = new Chaato();
+"use strict";
+
+/* global */
+
+const chaato = new Chaato();
 
 function Chaato() {
     // Vars
-    var self = this;
+    let self = this;
     
-    var jsonResult;
+    let jsonResult;
     
-    var canvas;
-    var canvasWidth;
-    var canvasHeight;
-    var context;
+    let canvas;
+    let canvasWidth;
+    let canvasHeight;
+    let context;
     
-    var labelSpace;
+    let labelSpace;
     
-    var itemMax;
-    var itemMaxKey;
-    var itemSpace;
-    var itemPrevious;
-    var listItems;
+    let itemMax;
+    let itemMaxKey;
+    let itemSpace;
+    let itemPrevious;
+    let listItems;
     
-    var circleRange;
+    let circleRange;
     
-    var mousePosition;
+    let mousePosition;
     
-    var backgroundType;
+    let backgroundType;
     
-    var animationCount;
-    var animationSpeed;
+    let animationCount;
+    let animationSpeed;
     
-    var padding;
-    var translate;
-    var scale;
+    let padding;
+    let translate;
+    let scale;
     
     // Properties
     self.setBackgroundType = function(value) {
@@ -94,7 +98,7 @@ function Chaato() {
 
         labelSpace = Math.floor(canvasWidth / jsonResult.label.items.length);
 
-        var tmpItemMax = [];
+        let tmpItemMax = [];
 
         $.each(jsonResult.elements, function(key, value) {
             tmpItemMax[key] = Math.max.apply(null, jsonResult.elements[key].items);
@@ -152,7 +156,7 @@ function Chaato() {
     }
     
     function background() {
-        var labelItems = jsonResult.label.items;
+        let labelItems = jsonResult.label.items;
         
         // Days
         $.each(labelItems, function(key, value) {
@@ -175,16 +179,16 @@ function Chaato() {
         });
         
         // Items
-        var itemsLength = jsonResult.elements[itemMaxKey].items.length;
+        let itemsLength = jsonResult.elements[itemMaxKey].items.length;
         
-        var step = Math.ceil(itemMax / labelItems.length);
+        let step = Math.ceil(itemMax / labelItems.length);
         
         if (step < 2)
             step = 1;
         else if (step === 2)
             step = 3;
         
-        for (var a = 0; a <= (itemMax + step); a += step) {
+        for (let a = 0; a <= (itemMax + step); a += step) {
             context.beginPath();
 
             context.font = "20px Arial";
@@ -225,8 +229,8 @@ function Chaato() {
             context.lineCap = "round";
             context.lineJoin = "round";
 
-            var x = (key * labelSpace);
-            var y = canvasHeight - ((value * itemSpace) / (itemMax / jsonResult.elements[itemMaxKey].items.length));
+            let x = (key * labelSpace);
+            let y = canvasHeight - ((value * itemSpace) / (itemMax / jsonResult.elements[itemMaxKey].items.length));
             
             context.moveTo(x, y);
             context.lineTo(itemPrevious[0], itemPrevious[1]);
@@ -247,12 +251,12 @@ function Chaato() {
     }
     
     function dataLineAnimation(index, color, items, itemPrevious, animationCount) {
-        var x = (animationCount * labelSpace);
-        var y = canvasHeight - (items[animationCount] * itemSpace / (itemMax / jsonResult.elements[itemMaxKey].items.length));
+        let x = (animationCount * labelSpace);
+        let y = canvasHeight - (items[animationCount] * itemSpace / (itemMax / jsonResult.elements[itemMaxKey].items.length));
         
-        var amount = 0;
+        let amount = 0;
 
-        var interval = setInterval(function() {
+        let interval = setInterval(function() {
             amount += animationSpeed;
 
             if (amount > 1)
@@ -265,8 +269,8 @@ function Chaato() {
             context.lineCap = "round";
             context.lineJoin = "round";
 
-            var lerpX = itemPrevious[0] + (x - itemPrevious[0]) * amount;
-            var lerpY = itemPrevious[1] + (y - itemPrevious[1]) * amount;
+            let lerpX = itemPrevious[0] + (x - itemPrevious[0]) * amount;
+            let lerpY = itemPrevious[1] + (y - itemPrevious[1]) * amount;
 
             context.moveTo(itemPrevious[0], itemPrevious[1]);
             context.lineTo(lerpX, lerpY);
@@ -296,11 +300,11 @@ function Chaato() {
     }
     
     function findMousePosition(type, event) {
-        var x = 0;
-        var y = 0;
+        let x = 0;
+        let y = 0;
         
         if (type === "canvas") {
-            var canvasBox = canvas.getBoundingClientRect();
+            let canvasBox = canvas.getBoundingClientRect();
             
             mouseX = event.clientX - canvasBox.left;
             mouseY = event.clientY - canvasBox.top;
@@ -325,12 +329,12 @@ function Chaato() {
         
         $.each(listItems, function(key, value) {
             $.each(value, function(keySub, valueSub) {
-                var pointX = (mousePosition.x - (translate[0] + circleRange)) / scale[0];
-                var pointY = (mousePosition.y - (translate[1] + circleRange)) / scale[1];
+                let pointX = (mousePosition.x - (translate[0] + circleRange)) / scale[0];
+                let pointY = (mousePosition.y - (translate[1] + circleRange)) / scale[1];
 
-                var differenceX = Math.pow(valueSub[0] - pointX, 2);
-                var differenceY = Math.pow(valueSub[1] - pointY, 2);
-                var distance = Math.floor(Math.sqrt(differenceX + differenceY));
+                let differenceX = Math.pow(valueSub[0] - pointX, 2);
+                let differenceY = Math.pow(valueSub[1] - pointY, 2);
+                let distance = Math.floor(Math.sqrt(differenceX + differenceY));
                 
                 if (distance <= 10) {
                     $(".graph_container").find(".info p span").eq(0).text(jsonResult.label.name);
@@ -346,10 +350,10 @@ function Chaato() {
         if (elements.length === 0)
             return -1;
 
-        var max = elements[0];
-        var maxIndex = 0;
+        let max = elements[0];
+        let maxIndex = 0;
 
-        for (var a = 1; a < elements.length; a ++) {
+        for (let a = 1; a < elements.length; a ++) {
             if (elements[a] > max) {
                 maxIndex = a;
                 max = elements[a];

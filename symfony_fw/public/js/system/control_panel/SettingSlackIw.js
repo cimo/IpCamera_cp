@@ -1,10 +1,12 @@
+"use strict";
+
 /* global ajax, popupEasy, materialDesign */
 
-var controlPanelSettingSlackIw = new ControlPanelSettingSlackIw();
+const controlPanelSettingSlackIw = new ControlPanelSettingSlackIw();
 
 function ControlPanelSettingSlackIw() {
     // Vars
-    var self = this;
+    let self = this;
     
     // Properties
     
@@ -69,7 +71,7 @@ function ControlPanelSettingSlackIw() {
             if ($(event.target).hasClass("delete") === true)
                 return;
             
-            var id = $.trim($(this).find(".mdc-chip__text").attr("data-id"));
+            let id = $.trim($(this).find(".mdc-chip__text").attr("data-id"));
             
             ajax.send(
                 true,
@@ -108,7 +110,7 @@ function ControlPanelSettingSlackIw() {
             if ($(event.target).hasClass("edit") === true)
                 return;
             
-            var id = $.trim($(this).parent().find(".mdc-chip__text").attr("data-id"));
+            let id = $.trim($(this).parent().find(".mdc-chip__text").attr("data-id"));
             
             popupEasy.create(
                 window.text.index_5,

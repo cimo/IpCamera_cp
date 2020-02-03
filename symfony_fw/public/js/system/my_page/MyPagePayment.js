@@ -1,13 +1,15 @@
+"use strict";
+
 /* global helper, ajax, popupEasy, materialDesign */
 
-var myPagePayment = new MyPagePayment();
+const myPagePayment = new MyPagePayment();
 
 function MyPagePayment() {
     // Vars
-    var self = this;
+    let self = this;
     
-    var selectSended;
-    var selectId;
+    let selectSended;
+    let selectId;
     
     // Properties
     
@@ -34,7 +36,7 @@ function MyPagePayment() {
             if (selectId >= 0) {
                 $("#myPage_payment_select_result_desktop").find(".checkbox_column input[type='checkbox']").prop("checked", false);
 
-                var id = $("#myPage_payment_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
+                let id = $("#myPage_payment_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
 
                 $.each(id, function(key, value) {
                     if ($.trim($(value).text()) === String(selectId))
@@ -56,7 +58,7 @@ function MyPagePayment() {
     
     // Function private
     function selectDesktop() {
-        var tableAndPagination = new TableAndPagination();
+        const tableAndPagination = new TableAndPagination();
         tableAndPagination.init();
         tableAndPagination.setButtonsStatus("show");
         tableAndPagination.create(window.url.myPagePaymentSelect, "#myPage_payment_select_result_desktop", true);
@@ -123,13 +125,13 @@ function MyPagePayment() {
         });
         
         $(document).on("click", "#myPage_payment_select_result_desktop .myPage_payment_delete", function() {
-            var id = $.trim($(this).parents("tr").find(".id_column").text());
+            let id = $.trim($(this).parents("tr").find(".id_column").text());
             
             deleteElement(id);
         });
         
         $(document).on("click", "#myPage_payment_select_button_desktop", function(event) {
-            var id = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
+            let id = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
 
             ajax.send(
                 true,

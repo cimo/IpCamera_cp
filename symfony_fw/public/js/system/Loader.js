@@ -1,8 +1,12 @@
-var loader = new Loader();
+"use strict";
+
+/* global */
+
+const loader = new Loader();
 
 function Loader() {
     // Vars
-    var self = this;
+    let self = this;
     
     // Properties
     

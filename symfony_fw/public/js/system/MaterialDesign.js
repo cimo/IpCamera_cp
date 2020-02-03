@@ -1,16 +1,18 @@
+"use strict";
+
 /* global helper, mdc */
 
-var materialDesign = new MaterialDesign();
+const materialDesign = new MaterialDesign();
 
 function MaterialDesign() {
     // Vars
-    var self = this;
+    let self = this;
     
-    var dialogMdc;
+    let dialogMdc;
     
-    var snackbarMdc;
+    let snackbarMdc;
     
-    var mdcTextFields;
+    let mdcTextFields;
     
     // Properties
     self.getDialogMdc = function() {
@@ -81,7 +83,7 @@ function MaterialDesign() {
     
     self.drawer = function() {
         if ($(".mdc-drawer--temporary").length > 0) {
-            var drawerMdc = new mdc.drawer.MDCTemporaryDrawer.attachTo($(".mdc-drawer--temporary")[0]);
+            let drawerMdc = new mdc.drawer.MDCTemporaryDrawer.attachTo($(".mdc-drawer--temporary")[0]);
 
             $(".menu_root_mobile").on("click", "", function(event) {
                 drawerMdc.open = true;
@@ -103,7 +105,7 @@ function MaterialDesign() {
     
     self.select = function() {
         $.each($(".mdc-select"), function(key, value) {
-            var selectMdc = new mdc.select.MDCSelect.attachTo(value);
+            let selectMdc = new mdc.select.MDCSelect.attachTo(value);
 
             /*$(value).on("change", "", function() {
                 console.log("Select - Item with index " + selectMdc.selectedIndex + " and value " + selectMdc.value);
@@ -113,7 +115,7 @@ function MaterialDesign() {
     
     self.slider = function() {
         $.each($(".mdc-slider"), function(key, value) {
-            var sliderMdc = new mdc.slider.MDCSlider.attachTo(value);
+            let sliderMdc = new mdc.slider.MDCSlider.attachTo(value);
 
             /*$(value).on("MDCSlider:change", "", function() {
                 console.log("Slider - Value: " + sliderMdc.value);
@@ -129,7 +131,7 @@ function MaterialDesign() {
             mdcTextFields[key].layout();
             
             if ($(value).find(".mdc-text-field__input").attr('placeholder') === "******") {
-                var color = getComputedStyle(document.documentElement).getPropertyValue("--mdc-theme-on-primary");
+                let color = getComputedStyle(document.documentElement).getPropertyValue("--mdc-theme-on-primary");
                 
                 $(value).find(".mdc-floating-label").addClass("mdc-floating-label--float-above");
                 $(value).find(".mdc-floating-label").css("background-color", color);
@@ -154,9 +156,9 @@ function MaterialDesign() {
     
     self.linearProgress = function(tag, start, end, buffer) {
         if ($(tag).length > 0) {
-            var linearProgressMdc = new mdc.linearProgress.MDCLinearProgress.attachTo($(tag)[0]);
+            let linearProgressMdc = new mdc.linearProgress.MDCLinearProgress.attachTo($(tag)[0]);
             
-            var progress = 0;
+            let progress = 0;
             
             if (start !== undefined && end !== undefined && end !== 0) {
                 progress = start / end;
@@ -179,7 +181,7 @@ function MaterialDesign() {
     
     self.menu = function() {
         $.each($(".mdc-menu"), function(key, value) {
-            var menuMdc = new mdc.menu.MDCMenu.attachTo(value);
+            let menuMdc = new mdc.menu.MDCMenu.attachTo(value);
             
             menuMdc.quickOpen = false;
             menuMdc.setAnchorCorner(1 | 4 | 8); //BOTTOM: 1, CENTER: 2, RIGHT: 4, FLIP_RTL: 8
@@ -200,7 +202,7 @@ function MaterialDesign() {
         });
         
         /*$(".show_snackbar").on("click", "", function(event) {
-            var snackbarDataObj = {
+            let snackbarDataObj = {
                 message: "Text",
                 actionText: "Close",
                 actionHandler: function() {}
@@ -213,7 +215,7 @@ function MaterialDesign() {
     self.tabBar = function() {
         if ($(".mdc-tab-bar").length > 0) {
             $.each($(".mdc-tab-bar").not(".mdc-tab-bar-scroller__scroll-frame__tabs"), function(key, value) {
-                var tabBarMdc = new mdc.tabs.MDCTabBar.attachTo(value);
+                let tabBarMdc = new mdc.tabs.MDCTabBar.attachTo(value);
 
                 mdcTabBarCustom("tabBar", tabBarMdc);
             });
@@ -221,7 +223,7 @@ function MaterialDesign() {
         
         if ($(".mdc-tab-bar-scroller").length > 0) {
             $.each($(".mdc-tab-bar-scroller"), function(key, value) {
-                var tabBarScrollerMdc = new mdc.tabs.MDCTabBarScroller.attachTo(value);
+                let tabBarScrollerMdc = new mdc.tabs.MDCTabBarScroller.attachTo(value);
 
                 mdcTabBarCustom("tabBarScroller", tabBarScrollerMdc);
             });
@@ -254,11 +256,11 @@ function MaterialDesign() {
     
     // Functions private
     function mdcTabBarCustom(type, mdc) {
-        var parameters = helper.urlParameters(window.session.languageTextCode);
+        let parameters = helper.urlParameters(window.session.languageTextCode);
 
         $(".mdc-tab-bar").find(".mdc-tab").removeClass("mdc-tab--active");
 
-        var isActive = false;
+        let isActive = false;
 
         $.each($(".mdc-tab-bar").find(".mdc-tab"), function(key, value) {
             if ($(value).prop("href").indexOf(parameters[2]) !== -1) {
@@ -267,13 +269,13 @@ function MaterialDesign() {
                 if (type === "tabBar")
                     mdc.activeTabIndex = key;
                 else if (type === "tabBarScroller") {
-                    var element = $(value).parent().find(".mdc-tab-bar__indicator");
+                    let element = $(value).parent().find(".mdc-tab-bar__indicator");
 
                     helper.mutationObserver(['attributes'], element[0], function() {
                         if (isActive === true)
                             return false;
 
-                        var transformSplit = element.css("transform").split(",");
+                        let transformSplit = element.css("transform").split(",");
 
                         element.css("transform", transformSplit[0] + ", " + transformSplit[1] + ", " + transformSplit[2] + ", " + transformSplit[3] + ", " + $(value).position().left + ", " + transformSplit[5]);
 
@@ -288,7 +290,7 @@ function MaterialDesign() {
     
     function mdcTopAppBarCustom() {
         if ($(".mdc-top-app-bar").length > 0) {
-            var scrollLimit = 30;
+            let scrollLimit = 30;
 
             if (helper.checkWidthType() === "desktop") {
                 $(".mdc-top-app-bar").addClass("mdc-top-app-bar--prominent");
@@ -327,7 +329,7 @@ function MaterialDesign() {
             $(".mdc-drawer").removeClass("mdc-drawer--open");
         }
         
-        var parameters = helper.urlParameters(window.session.languageTextCode);
+        let parameters = helper.urlParameters(window.session.languageTextCode);
         
         $(".mdc-drawer").find(".mdc-list-item").removeClass("mdc-list-item--activated");
         

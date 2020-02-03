@@ -1,12 +1,14 @@
+"use strict";
+
 /* global materialDesign, mdc */
 
-var helper = new Helper();
+const helper = new Helper();
 
 function Helper() {
     // Vars
-    var self = this;
+    let self = this;
     
-    var touchMove;
+    let touchMove;
     
     // Properties
     self.getTouchMove = function() {
@@ -25,7 +27,7 @@ function Helper() {
     };
     
     self.mutationObserver = function(type, element, callback) {
-        var observer = new MutationObserver(function(mutations) {
+        let observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 if ($.inArray(mutation.type, type) !== -1)
                     callback();
@@ -36,9 +38,9 @@ function Helper() {
     };
     
     self.checkMobile = function(fix) {
-        var isMobile = false;
+        let isMobile = false;
         
-        var navigatorUserAgent = navigator.userAgent.toLowerCase();
+        let navigatorUserAgent = navigator.userAgent.toLowerCase();
         
         if (/(android|ipad|iphone|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(navigatorUserAgent)
             || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigatorUserAgent.substr(0, 4))) {
@@ -53,9 +55,9 @@ function Helper() {
     };
     
     self.checkWidthType = function(maxWidthOverride) {
-        var widthType = "";
+        let widthType = "";
         
-        var widthTmp = maxWidthOverride === undefined ? window.setting.widthMobile : maxWidthOverride;
+        let widthTmp = maxWidthOverride === undefined ? window.setting.widthMobile : maxWidthOverride;
         
         if (window.matchMedia("(max-width: " + widthTmp + "px)").matches === true)
             widthType = "mobile";
@@ -66,7 +68,7 @@ function Helper() {
     };
     
     self.postIframe = function(action, method, elements) {
-        var iframeTag = "iframe_commands_" + (new Date()).getTime();
+        let iframeTag = "iframe_commands_" + (new Date()).getTime();
         
         $("<iframe>", {
             'id': iframeTag,
@@ -74,7 +76,7 @@ function Helper() {
             'style': "display: none;"
         }).appendTo("body");
         
-        var formTag = "form_commands_" + + (new Date()).getTime();
+        let formTag = "form_commands_" + + (new Date()).getTime();
         
         $("<form>", {
             'id': formTag,
@@ -95,10 +97,10 @@ function Helper() {
     };
     
     self.urlParameters = function(language) {
-        var href = window.location.href;
+        let href = window.location.href;
         
-        var pageStart = href.indexOf("/" + language + "/");
-        var split = href.substring(pageStart, href.length).split("/");
+        let pageStart = href.indexOf("/" + language + "/");
+        let split = href.substring(pageStart, href.length).split("/");
         split.shift();
         
         return split;
@@ -107,23 +109,23 @@ function Helper() {
     self.urlParameterValue = function(name) {
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
         
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+        let regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
         
-        var parameters = regex.exec(window.location.search);
+        let parameters = regex.exec(window.location.search);
         
         return parameters === null ? "" : decodeURIComponent(parameters[1].replace(/\+/g, " "));
     };
     
     self.urlParameterRemove = function(url, target) {
-        var result = url.split("?")[0];
-        var parameter;
-        var parameters = [];
-        var query = (url.indexOf("?") !== -1) ? url.split("?")[1] : "";
+        let result = url.split("?")[0];
+        let parameter;
+        let parameters = [];
+        let query = (url.indexOf("?") !== -1) ? url.split("?")[1] : "";
         
         if (query !== "") {
             parameters = query.split("&");
             
-            for (var a = parameters.length - 1; a >= 0; a -= 1) {
+            for (let a = parameters.length - 1; a >= 0; a -= 1) {
                 parameter = parameters[a].split("=")[0];
                 
                 if (target === parameter)
@@ -149,7 +151,7 @@ function Helper() {
     };
     
     self.objectToArray = function(items) {
-        var array = $.map(items, function(elements) {
+        let array = $.map(items, function(elements) {
             return elements;
         });
         
@@ -160,14 +162,14 @@ function Helper() {
         if ($(id).length === 0)
             return false;
 	
-	var viewport = {
+	let viewport = {
             'top' : $(window).scrollTop(),
             'left' : $(window).scrollLeft()
 	};
 	viewport.right = viewport.left + $(window).width();
 	viewport.bottom = viewport.top + $(window).height();
 	
-	var bounds = $(id).offset();
+	let bounds = $(id).offset();
         bounds.right = bounds.left + $(id).outerWidth();
         bounds.bottom = bounds.top + $(id).outerHeight();
 
@@ -202,7 +204,7 @@ function Helper() {
                 $(tagParent).find(".sort_list").sortable("destroy");
 
             $(".sort_result").off("click").on("click", ".mdc-chip", function(event) {
-                var target = $(event.target).parent().hasClass("mdc-chip") === true ? $(event.target).parent() : $(event.target);
+                let target = $(event.target).parent().hasClass("mdc-chip") === true ? $(event.target).parent() : $(event.target);
 
                 if (target.hasClass("mdc-chip") === true) {
                     if (target.hasClass("mdc-chip--selected") === true) {
@@ -218,7 +220,7 @@ function Helper() {
             });
 
             $(tagParent).find(".sort_control").find(".mdc-button").off("click").on("click", "", function(event) {
-                var element = $(tagParent).find(".sort_list .mdc-chip--selected");
+                let element = $(tagParent).find(".sort_list .mdc-chip--selected");
 
                 if ($(event.target).find("i").hasClass("button_up") === true)
                     element.parent().insertBefore(element.parent().prev());
@@ -232,10 +234,10 @@ function Helper() {
     
     self.wordTag = function(tagParent, tagInput) {
         if ($(tagInput).val() !== undefined) {
-            var inputValueSplit = $(tagInput).val().split(",");
+            let inputValueSplit = $(tagInput).val().split(",");
             inputValueSplit.pop();
             
-            var html = "";
+            let html = "";
             
             $.each(inputValueSplit, function(key, value) {
                 html += "<div class=\"mdc-chip\">\n\
@@ -262,7 +264,7 @@ function Helper() {
             });
             
             $(".wordTag_result").off("click").on("click", ".material-icons", function(event) {
-                var removeItem = $(event.target).next().attr("data-id");
+                let removeItem = $(event.target).next().attr("data-id");
 
                 inputValueSplit = $.grep(inputValueSplit, function(value) {
                     return value !== removeItem;
@@ -276,7 +278,7 @@ function Helper() {
     };
     
     self.accordion = function(type) {
-        var tag = "";
+        let tag = "";
         
         if (type === "button")
             tag = ".button_accordion";
@@ -284,8 +286,8 @@ function Helper() {
             tag = ".icon_accordion";
         
         $(".accordion_container").find(tag).off("click").on("click", "", function() {
-            var element = $(this);
-            var accordion = $(this).next();
+            let element = $(this);
+            let accordion = $(this).next();
             
             $(".accordion_container").find(".accordion").not(accordion).prev().text(window.text.index_9);
             
@@ -331,7 +333,7 @@ function Helper() {
     };
     
     self.fileNameFromSrc = function(attribute, extension) {
-        var value = attribute.replace(/\\/g, "/");
+        let value = attribute.replace(/\\/g, "/");
         value = value.substring(value.lastIndexOf("/") + 1);
         
         return extension ? value.replace(/[?#].+$/, "") : value.split(".")[0];
@@ -347,9 +349,9 @@ function Helper() {
     
     self.imageRefresh = function(tag, length) {
         if (tag !== "") {
-            var src = $(tag).prop("src");
+            let src = $(tag).prop("src");
             
-            var srcSplit = src.split("?");
+            let srcSplit = src.split("?");
 
             if (srcSplit.length > length)
                 src = srcSplit[0] + "?" + srcSplit[1];
@@ -378,7 +380,7 @@ function Helper() {
         });
         
         if (window.location.href.indexOf("control_panel") === -1) {
-            var parameters = self.urlParameters(window.session.languageTextCode);
+            let parameters = self.urlParameters(window.session.languageTextCode);
             
             $(".menu_root_container").find(".target").removeClass("current");
             
@@ -398,15 +400,15 @@ function Helper() {
     };
     
     self.bodyProgress = function() {
-        var linearProgressMdc = new mdc.linearProgress.MDCLinearProgress.attachTo($("#body_progress").find(".mdc-linear-progress")[0]);
+        let linearProgressMdc = new mdc.linearProgress.MDCLinearProgress.attachTo($("#body_progress").find(".mdc-linear-progress")[0]);
         
-        var performanceTiming = window.performance.timing;
-        var estimatedTime = performanceTiming.loadEventEnd - performanceTiming.navigationStart;
-        var time = parseInt((estimatedTime / 1000) % 60) * 100;
-        var stepTime = Math.abs(Math.floor(time / 100));
-        var current = 0;
+        let performanceTiming = window.performance.timing;
+        let estimatedTime = performanceTiming.loadEventEnd - performanceTiming.navigationStart;
+        let time = parseInt((estimatedTime / 1000) % 60) * 100;
+        let stepTime = Math.abs(Math.floor(time / 100));
+        let current = 0;
         
-        var interval = setInterval(function() {
+        let interval = setInterval(function() {
             current += 0.1;
             
             linearProgressMdc.progress = current;
@@ -421,9 +423,9 @@ function Helper() {
     
     self.uploadFakeClick = function() {
         $(document).on("click", ".material_upload button", function() {
-            var button = $(this);
-            var input = button.parent().find("input");
-            var name = "";
+            let button = $(this);
+            let input = button.parent().find("input");
+            let name = "";
             
             input.click();
             
@@ -437,19 +439,19 @@ function Helper() {
     };
     
     self.serializeJson = function(object) {
-        var elements = {};
+        let elements = {};
         
-        var serializeArray = object.serializeArray();
+        let serializeArray = object.serializeArray();
         
-        var jsonString = JSON.stringify(serializeArray);
-        var json = JSON.parse(jsonString);
+        let jsonString = JSON.stringify(serializeArray);
+        let json = JSON.parse(jsonString);
         
-        var name = "";
+        let name = "";
         
         $.each(json, function(key, value) {
             $.each(value, function(keySub, valueSub) {
                 if (keySub === "name") {
-                    var newName = valueSub.substring(valueSub.lastIndexOf("[") + 1, valueSub.lastIndexOf("]"));
+                    let newName = valueSub.substring(valueSub.lastIndexOf("[") + 1, valueSub.lastIndexOf("]"));
                     
                     newName = newName.replace("_token", "token");
                     
@@ -464,15 +466,15 @@ function Helper() {
     };
     
     self.unitFormat = function(value) {
-        var result = "";
+        let result = "";
         
         if (value === 0)
             result = "0 Bytes";
         else {
-            var reference = 1024;
-            var sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+            let reference = 1024;
+            let sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 
-            var index = Math.floor(Math.log(value) / Math.log(reference));
+            let index = Math.floor(Math.log(value) / Math.log(reference));
 
             result = parseFloat((value / Math.pow(reference, index)).toFixed(2)) + " " + sizes[index];
         }
@@ -485,23 +487,23 @@ function Helper() {
     };
     
     self.replaceUrlParameter = function(name, value) {
-        var ulr = window.location.search;
-        var regex = new RegExp("([?;&])" + name + "[^&;]*[;&]?");
-        var query = ulr.replace(regex, "$1").replace(/&$/, "");
+        let ulr = window.location.search;
+        let regex = new RegExp("([?;&])" + name + "[^&;]*[;&]?");
+        let query = ulr.replace(regex, "$1").replace(/&$/, "");
         
-        var result = (query.length > 2 ? query + "&" : "?") + (value ? name + "=" + value : "");
+        let result = (query.length > 2 ? query + "&" : "?") + (value ? name + "=" + value : "");
         
         window.history.replaceState("", "", window.location.pathname + result);
     };
     
     self.createCookie = function(name, values, expire, secure) {
-        var secureValue = secure === true ? "Secure;" : "";
+        let secureValue = secure === true ? "Secure;" : "";
         
         document.cookie = name + "=" + JSON.stringify(values) + ";expires=" + expire + ";path=/;domain=." + window.location.host.toString() + ";" + secureValue;
     };
     
     self.readCookie = function(name) {
-        var result = document.cookie.match(new RegExp(name + "=([^;]+)"));
+        let result = document.cookie.match(new RegExp(name + "=([^;]+)"));
         
         result && (result = JSON.parse(result[1]));
         
@@ -515,7 +517,7 @@ function Helper() {
     
     self.blockMultiTab = function(active) {
         if (active === true) {
-            var cookieValues = self.readCookie(window.session.name + "_blockMultiTab");
+            let cookieValues = self.readCookie(window.session.name + "_blockMultiTab");
             
             if (cookieValues === null) {
                 self.createCookie(window.session.name + "_blockMultiTab", 1, "Fri, 31 Dec 9999 23:59:59 GMT", true);
@@ -529,6 +531,7 @@ function Helper() {
                     + window.text.index_11 +
                 "</h1>\n\
                 <script nonce=\"" + window.session.xssProtectionValue + "\">\n\
+                    \"use strict\";\n\
                     $(window).on(\"focus\", \"\", function() {\n\
                         alert(window.text.index_11);\n\
                         window.close();\n\
@@ -542,7 +545,7 @@ function Helper() {
     
     // Functions private
     function populateSortableInput(tagParent, tagInput) {
-        var idList = "";
+        let idList = "";
 
         $.each($(tagParent).find(".sort_elemet_data"), function(key, value) {
             idList += $(value).attr("data-id") + ",";
@@ -552,7 +555,7 @@ function Helper() {
     }
     
     function swipeFix() {
-        var defaults = {
+        let defaults = {
             min: {
                 'x': 20,
                 'y': 20
@@ -567,10 +570,10 @@ function Helper() {
             options = $.extend({}, defaults, options);
 
             return this.each(function() {
-                var element = $(this);
-                var startX;
-                var startY;
-                var isMoving = false;
+                let element = $(this);
+                let startX;
+                let startY;
+                let isMoving = false;
 
                 touchMove = false;
 
@@ -582,11 +585,11 @@ function Helper() {
 
                 function onTouchMove(event) {
                     if (isMoving && event.touches !== undefined) {
-                        var x = isTouch ? event.touches[0].pageX : event.pageX;
-                        var y = isTouch ? event.touches[0].pageY : event.pageY;
+                        let x = isTouch ? event.touches[0].pageX : event.pageX;
+                        let y = isTouch ? event.touches[0].pageY : event.pageY;
 
-                        var offsetX = startX - x;
-                        var offsetY = startY - y;
+                        let offsetX = startX - x;
+                        let offsetY = startY - y;
 
                         if (Math.abs(offsetX) >= (options.min.x || options.min)) {
                             touchMove = true;

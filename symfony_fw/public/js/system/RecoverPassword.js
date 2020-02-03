@@ -1,10 +1,12 @@
+"use strict";
+
 /* global ajax */
 
-var recoverPassword = new RecoverPassword();
+const recoverPassword = new RecoverPassword();
 
 function RecoverPassword() {
     // Vars
-    var self = this;
+    let self = this;
     
     // Properties
     

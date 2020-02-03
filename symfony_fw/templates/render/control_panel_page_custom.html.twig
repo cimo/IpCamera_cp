@@ -17,6 +17,8 @@
         {% endif %}
 
         <script nonce="{{php_session.xssProtectionValue}}">
+            "use strict";
+            
             window.addEventListener("load", function() {
                 ipCamera.init();
                 
@@ -28,7 +30,7 @@
                 ipCamera.changeView();
             }, false);
 
-            var textIpCamera = {
+            window.textIpCamera = {
                 'label_1': "{{"controlPanelPageIpCamera_2"|trans}}",
                 'label_2': "{{"controlPanelPageIpCamera_3"|trans}}",
                 'label_3': "{{"controlPanelPageIpCamera_4"|trans}}",

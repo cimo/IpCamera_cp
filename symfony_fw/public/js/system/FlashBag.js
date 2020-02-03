@@ -1,12 +1,14 @@
+"use strict";
+
 /* global loader, helper */
 
-var flashBag = new FlashBag();
+const flashBag = new FlashBag();
 
 function FlashBag() {
     // Vars
-    var self = this;
+    let self = this;
     
-    var element;
+    let element;
     
     // Properties
     self.setElement = function(value) {
@@ -19,7 +21,7 @@ function FlashBag() {
     };
     
     self.show = function(message) {
-        var snackbarDataObj = {
+        let snackbarDataObj = {
             message: message,
             actionText: window.text.index_7,
             actionHandler: function() {}
