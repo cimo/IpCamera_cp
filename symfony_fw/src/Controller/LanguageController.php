@@ -117,6 +117,8 @@ class LanguageController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
+        $settingRow = $this->helper->getSettingRow();
+        
         $form = $this->createForm(LanguageFormType::class, null, Array(
             'validation_groups' => Array('language_code')
         ));
@@ -124,6 +126,10 @@ class LanguageController extends AbstractController {
         
         $this->response['values']['languageRows'] = $this->query->selectAllLanguageDatabase();
         $this->response['values']['settingRow'] = $this->query->selectSettingDatabase();
+        
+        foreach ($this->response['values']['languageRows'] as $key => $value) {
+            $this->response['fileExists'][] = file_exists("{$this->helper->getPathPublic()}/images/templates/{$settingRow['template']}/lang/{$value['code']}.png");
+        }
         
         if ($request->isMethod("POST") == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {

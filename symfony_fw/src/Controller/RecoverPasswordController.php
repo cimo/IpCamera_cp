@@ -62,7 +62,7 @@ class RecoverPasswordController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $settingRow = $this->query->selectSettingDatabase();
+        $settingRow = $this->helper->getSettingRow();
         
         if ($settingRow['recover_password'] == true) {
             $userRow = $this->query->selectUserWithHelpCodeDatabase($this->urlExtra);

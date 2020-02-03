@@ -65,7 +65,7 @@ class MyPagePaymentController extends AbstractController {
         
         $checkUserRole = $this->helper->checkUserRole(Array("ROLE_USER"), $this->getUser());
         
-        $settingRow = $this->query->selectSettingDatabase();
+        $settingRow = $this->helper->getSettingRow();
         
         if ($settingRow['payment'] == true) {
             $this->session->set("paymentProfileId", 0);
@@ -138,7 +138,7 @@ class MyPagePaymentController extends AbstractController {
         
         $checkUserRole = $this->helper->checkUserRole(Array("ROLE_USER"), $this->getUser());
         
-        $settingRow = $this->query->selectSettingDatabase();
+        $settingRow = $this->helper->getSettingRow();
         
         if ($settingRow['payment'] == true) {
             if ($request->isMethod("POST") == true && $checkUserRole == true) {
@@ -205,7 +205,7 @@ class MyPagePaymentController extends AbstractController {
         
         $checkUserRole = $this->helper->checkUserRole(Array("ROLE_USER"), $this->getUser());
         
-        $settingRow = $this->query->selectSettingDatabase();
+        $settingRow = $this->helper->getSettingRow();
         
         if ($settingRow['payment'] == true) {
             if ($request->isMethod("POST") == true && $checkUserRole == true) {

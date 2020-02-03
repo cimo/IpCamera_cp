@@ -262,8 +262,8 @@ date.time: H:i:s
 "classHelper_3": "Password and Confirm password doesn't match!"
 "classHelper_4": "This page"
 "classHelper_5": "This module"
-"classHelper_6": "Session time is over, please login again."
-"classHelper_7": "User profile data changed, please login again."
+"classHelper_6": "User profile data changed, please login again."
+"classHelper_7": "Session time is over, please login again."
 
 # Control panel
 "controlPanel_1": "Create"

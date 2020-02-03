@@ -24,6 +24,8 @@ class RequestListener {
     
     private $session;
     
+    private $settingRow;
+    
     // Properties
     
     // Functions public
@@ -37,6 +39,8 @@ class RequestListener {
         $this->query = $this->helper->getQuery();
         
         $this->session = $this->helper->getSession();
+        
+        $this->settingRow = $this->helper->getSettingRow();
     }
     
     public function onKernelRequest(GetResponseEvent $event) {
@@ -47,19 +51,17 @@ class RequestListener {
         
         $request = $event->getRequest();
         
-        $settingRow = $this->query->selectSettingDatabase();
+        $this->helper->createCookie($this->session->getName(), null, time() + (10 * 365 * 24 * 60 * 60), $this->settingRow['https'], true);
         
-        $this->helper->configureCookie($this->session->getName(), time() + (10 * 365 * 24 * 60 * 60), $settingRow['https'], true);
+        $checkLanguage = $this->helper->checkLanguage($request, $this->router);
+        $newRequest = $checkLanguage[0];
         
-        $checkLanguage = $this->helper->checkLanguage($request, $this->router, $settingRow);
-        $request = $checkLanguage[0];
-        
-        $checkSessionOverTime = $this->helper->checkSessionOverTime($request, $this->router);
+        $checkSessionOverTime = $this->helper->checkSessionOverTime($newRequest, $this->router);
         
         $urlCurrentPageId = 2;
         
-        if ($request->get("urlCurrentPageId") != null && $request->get("urlCurrentPageId") > 0)
-             $urlCurrentPageId = $request->get("urlCurrentPageId");
+        if ($newRequest->get("urlCurrentPageId") != null && $newRequest->get("urlCurrentPageId") > 0)
+             $urlCurrentPageId = $newRequest->get("urlCurrentPageId");
         
         $phpSession = Array(
             'name' => $this->session->getName(),
@@ -71,28 +73,28 @@ class RequestListener {
         
         $this->container->get("twig")->addGlobal("php_session", $phpSession);
         $this->container->get("twig")->addGlobal("websiteName", $this->helper->getWebsiteName());
-        $this->container->get("twig")->addGlobal("settingRow", $settingRow);
-        $this->container->get("twig")->addGlobal("pageRow", $this->query->selectPageDatabase($request->getLocale(), $urlCurrentPageId));
+        $this->container->get("twig")->addGlobal("settingRow", $this->settingRow);
+        $this->container->get("twig")->addGlobal("pageRow", $this->query->selectPageDatabase($newRequest->getLocale(), $urlCurrentPageId));
         
         if ($checkSessionOverTime != false)
             $event->setResponse(new RedirectResponse($checkSessionOverTime));
         else if ($checkLanguage[1] != false)
             $event->setResponse(new RedirectResponse($checkLanguage[1]));
         
-        if ($settingRow['https'] == true) {
-            if ($request->isSecure() == false) {
-                $request->server->set("HTTPS", true);
-                $request->server->set("SERVER_PORT", 443);
+        if ($this->settingRow['https'] == true) {
+            if ($newRequest->isSecure() == false) {
+                $newRequest->server->set("HTTPS", true);
+                $newRequest->server->set("SERVER_PORT", 443);
                 
-                $event->setResponse(new RedirectResponse($request->getUri()));
+                $event->setResponse(new RedirectResponse($newRequest->getUri()));
             }
         }
         else {
-            if ($request->isSecure() == true) {
-                $request->server->set("HTTPS", false);
-                $request->server->set("SERVER_PORT", 80);
+            if ($newRequest->isSecure() == true) {
+                $newRequest->server->set("HTTPS", false);
+                $newRequest->server->set("SERVER_PORT", 80);
                 
-                $event->setResponse(new RedirectResponse($request->getUri()));
+                $event->setResponse(new RedirectResponse($newRequest->getUri()));
             }
         }
     }

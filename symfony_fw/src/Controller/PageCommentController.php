@@ -64,7 +64,7 @@ class PageCommentController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $settingRow = $this->query->selectSettingDatabase();
+        $settingRow = $this->helper->getSettingRow();
         
         if ($settingRow['pageComment'] == true) {
             $pageCommentRows = $this->query->selectAllPageCommentDatabase($this->urlCurrentPageId);
@@ -126,7 +126,7 @@ class PageCommentController extends AbstractController {
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
-        $settingRow = $this->query->selectSettingDatabase();
+        $settingRow = $this->helper->getSettingRow();
         $pageRow = $this->query->selectPageDatabase($this->urlLocale, $this->urlCurrentPageId, true);
         
         if ($settingRow['pageComment'] == true && $settingRow['pageComment_active'] == true && $pageRow['comment'] == true) {

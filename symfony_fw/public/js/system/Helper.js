@@ -111,9 +111,7 @@ function Helper() {
         
         var parameters = regex.exec(window.location.search);
         
-        var result = parameters === null ? "" : decodeURIComponent(parameters[1].replace(/\+/g, " "));
-        
-        return result;
+        return parameters === null ? "" : decodeURIComponent(parameters[1].replace(/\+/g, " "));
     };
     
     self.urlParameterRemove = function(url, target) {
@@ -125,14 +123,14 @@ function Helper() {
         if (query !== "") {
             parameters = query.split("&");
             
-            for (var i = parameters.length - 1; i >= 0; i -= 1) {
-                parameter = parameters[i].split("=")[0];
+            for (var a = parameters.length - 1; a >= 0; a -= 1) {
+                parameter = parameters[a].split("=")[0];
                 
                 if (target === parameter)
-                    parameters.splice(i, 1);
+                    parameters.splice(a, 1);
             }
             
-            result = result + "?" + parameters.join("&");
+            result += "?" + parameters.join("&");
         }
         
         return result;
@@ -512,7 +510,7 @@ function Helper() {
     
     self.removeCookie = function(name) {
         if (self.readCookie(name) !== null)
-            self.createCookie(name, "", "Thu, 01-Jan-1970 00:00:01 GMT", true);
+            self.createCookie(name, null, "Thu, 01-Jan-1970 00:00:01 GMT", true);
     };
     
     self.blockMultiTab = function(active) {

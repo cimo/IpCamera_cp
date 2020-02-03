@@ -9,3 +9,4 @@ twig:
         pathRoot: '%kernel.project_dir%'
         pathSrc: '%kernel.project_dir%/src'
         pathPublic: '%kernel.project_dir%/public'
+    exception_controller: null

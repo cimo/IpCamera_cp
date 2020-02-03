@@ -173,7 +173,7 @@ class MicroserviceApiController extends AbstractController {
         
         $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
-        $settingRow = $this->query->selectSettingDatabase();
+        $settingRow = $this->helper->getSettingRow();
         
         $urlExtraExplode = explode("_", $this->urlExtra);
         
@@ -195,6 +195,9 @@ class MicroserviceApiController extends AbstractController {
         ));
         $form->handleRequest($request);
         
+        $this->response['fileExists'] = file_exists("{$this->helper->getPathSrc()}/Controller/Microservice/Api/{$microserviceApiEntity->getName()}/{$microserviceApiEntity->getControllerName()}Controller.php");
+        $this->response['logo'] = $logo;
+        
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
                 $this->fileUpload($form, $microserviceApiEntity);
@@ -213,8 +216,7 @@ class MicroserviceApiController extends AbstractController {
                 'urlLocale' => $this->urlLocale,
                 'urlCurrentPageId' => $this->urlCurrentPageId,
                 'urlExtra' => $this->urlExtra,
-                'response' => $this->response,
-                'logo' => $logo
+                'response' => $this->response
             ));
         }
         
@@ -223,8 +225,7 @@ class MicroserviceApiController extends AbstractController {
             'urlCurrentPageId' => $this->urlCurrentPageId,
             'urlExtra' => $this->urlExtra,
             'response' => $this->response,
-            'form' => $form->createView(),
-            'logo' => $logo
+            'form' => $form->createView()
         );
     }
     

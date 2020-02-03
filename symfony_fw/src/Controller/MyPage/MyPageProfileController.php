@@ -92,7 +92,7 @@ class MyPageProfileController extends AbstractController {
         
         $checkUserRole = $this->helper->checkUserRole(Array("ROLE_USER"), $this->getUser());
         
-        $settingRow = $this->query->selectSettingDatabase();
+        $settingRow = $this->helper->getSettingRow();
         
         $usernameOld = $this->getUser()->getUsername();
         
@@ -127,14 +127,13 @@ class MyPageProfileController extends AbstractController {
                 $this->entityManager->flush();
 
                 if ($form->has("username") == true && $form->get("username")->getData() != $usernameOld) {
-                    //$this->helper->getTokenStorage()->setToken(null);
-                    $this->session->invalidate();
-                    
                     $message = $this->helper->getTranslator()->trans("myPageProfileController_1");
                     
                     $this->session->set("userInform", $message);
                     
                     $this->response['messages']['info'] = $message;
+                    
+                    return $this->helper->forceLogout($this->router);
                 }
                 else
                     $this->response['messages']['success'] = $this->helper->getTranslator()->trans("myPageProfileController_2");
@@ -263,7 +262,7 @@ class MyPageProfileController extends AbstractController {
         
         $checkUserRole = $this->helper->checkUserRole(Array("ROLE_USER"), $this->getUser());
         
-        $settingRow = $this->query->selectSettingDatabase();
+        $settingRow = $this->helper->getSettingRow();
         
         if ($settingRow['credit'] == true) {
             $form = $this->createForm(CreditFormType::class, null, Array(

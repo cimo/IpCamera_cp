@@ -24,6 +24,8 @@ class Helper {
     private $config;
     private $query;
     
+    private $settingRow;
+    
     private $protocol;
     
     private $pathRoot;
@@ -62,12 +64,18 @@ class Helper {
         return $this->passwordEncoder;
     }
     
+    // ---
+    
     public function getSessionMaxIdleTime() {
         return $this->sessionMaxIdleTime;
     }
     
     public function getQuery() {
         return $this->query;
+    }
+    
+    public function getSettingRow() {
+        return $this->settingRow;
     }
     
     public function getProtocol() {
@@ -119,6 +127,8 @@ class Helper {
         $this->config = new Config();
         $this->query = new Query($this->connection);
         
+        $this->settingRow = $this->query->selectSettingDatabase();
+        
         $this->protocol = $this->config->getProtocol();
         
         $this->pathRoot = $_SERVER['DOCUMENT_ROOT'] . $this->config->getPathRoot();
@@ -133,14 +143,6 @@ class Helper {
         $this->websiteName = $this->config->getName();
         
         $this->arrayColumnFix();
-    }
-    
-    public function xssProtection() {
-        $nonceCsp = base64_encode(random_bytes(20));
-        
-        $this->session->set("xssProtectionTag", "Content-Security-Policy");
-        $this->session->set("xssProtectionRule", "script-src 'strict-dynamic' 'nonce-{$nonceCsp}' 'unsafe-inline' http: https:; object-src 'none'; base-uri 'none';");
-        $this->session->set("xssProtectionValue", $nonceCsp);
     }
     
     public function createUserSelectHtml($selectId, $label, $isRequired = false) {
@@ -367,14 +369,14 @@ class Helper {
         }
     }
     
-    public function checkAttemptLogin($type, $userValue, $settingRow) {
+    public function checkAttemptLogin($type, $userValue) {
         $row = $this->query->selectUserDatabase($userValue);
         
         $dateTimeCurrentLogin = new \DateTime($row['date_current_login']);
         $dateTimeCurrent = new \DateTime();
         
         $interval = intval($dateTimeCurrentLogin->diff($dateTimeCurrent)->format("%i"));
-        $total = $settingRow['login_attempt_time'] - $interval;
+        $total = $this->settingRow['login_attempt_time'] - $interval;
         
         if ($total < 0)
             $total = 0;
@@ -384,7 +386,7 @@ class Helper {
         
         $result = Array("", "");
         
-        if (isset($row['id']) == true && $settingRow['login_attempt_time'] > 0) {
+        if (isset($row['id']) == true && $this->settingRow['login_attempt_time'] > 0) {
             $count = $row['attempt_login'] + 1;
             
             $query = $this->connection->prepare("UPDATE user
@@ -395,7 +397,7 @@ class Helper {
                                                     WHERE id = :id");
             
             if ($type == "success") {
-                if ($count > $settingRow['login_attempt_count'] && $total > 0) {
+                if ($count > $this->settingRow['login_attempt_count'] && $total > 0) {
                     $result[0] = "lock";
                     $result[1] = $total;
                     
@@ -412,12 +414,12 @@ class Helper {
                 }
             }
             else if ($type == "failure") {
-                if ($count > $settingRow['login_attempt_count'] && $total > 0) {
+                if ($count > $this->settingRow['login_attempt_count'] && $total > 0) {
                     $result[0] = "lock";
                     $result[1] = $total;
                 }
                 else {
-                    if ($count > $settingRow['login_attempt_count'])
+                    if ($count > $this->settingRow['login_attempt_count'])
                         $count = 1;
                     
                     $query->bindValue(":dateCurrentLogin", $dateCurrent);
@@ -560,13 +562,29 @@ class Helper {
     
     // ---
     
-    public function configureCookie($name, $lifeTime, $secure, $httpOnly) {
+    public function xssProtection() {
+        $nonceCsp = base64_encode(random_bytes(20));
+        
+        $this->session->set("xssProtectionTag", "Content-Security-Policy");
+        $this->session->set("xssProtectionRule", "script-src 'strict-dynamic' 'nonce-{$nonceCsp}' 'unsafe-inline' http: https:; object-src 'none'; base-uri 'none';");
+        $this->session->set("xssProtectionValue", $nonceCsp);
+    }
+    
+    public function createCookie($name, $value, $expire, $secure, $httpOnly) {
         $currentCookieParams = session_get_cookie_params();
         
-        $value = isset($_COOKIE[$name]) == true ? $_COOKIE[$name] : $this->session->getId();
+        if ($value == null)
+            $value = isset($_COOKIE[$name]) == true ? $_COOKIE[$name] : $this->session->getId();
         
-        if (isset($_COOKIE[$name]) == true)
-            setcookie($name, $value, $lifeTime, $currentCookieParams['path'], $currentCookieParams['domain'], $secure, $httpOnly);
+        setcookie($name, $value, $expire, $currentCookieParams['path'], $currentCookieParams['domain'], $secure, $httpOnly);
+    }
+    
+    public function removeCookie($name) {
+        if (isset($_COOKIE[$name]) == true) {
+            $currentCookieParams = session_get_cookie_params();
+            
+            setcookie($name, null, time() - 3600, $currentCookieParams['path'], $currentCookieParams['domain'], false, false);
+        }
     }
     
     public function sessionUnset() {
@@ -764,7 +782,7 @@ class Helper {
         $result = Array();
         
         foreach ($elements as $key => $value) {
-            $result[$key] = preg_grep("~$like~i", $value);
+            $result[$key] = preg_grep("~{$like}~i", $value);
             
             if (count($result[$key]) == 0)
                 unset($result[$key]);
@@ -882,11 +900,11 @@ class Helper {
         return $result;
     }
     
-    public function checkLanguage($request, $router, $settingRow) {
+    public function checkLanguage($request, $router) {
         $url = false;
         
         if ($this->session->get("languageTextCode") == null)
-            $this->session->set("languageTextCode", $settingRow['language']);
+            $this->session->set("languageTextCode", $this->settingRow['language']);
         
         if ($request->get("languageTextCode") != null)
             $this->session->set("languageTextCode", $request->get("languageTextCode"));
@@ -899,8 +917,8 @@ class Helper {
         $languageRow = $this->query->selectLanguageDatabase($request->getLocale()); 
         
         if ($languageRow['active'] == false) {
-            $request->setLocale($settingRow['language']);
-            $request->setDefaultLocale($settingRow['language']);
+            $request->setLocale($this->settingRow['language']);
+            $request->setDefaultLocale($this->settingRow['language']);
 
             $url = $router->generate(
                 "root_render",
@@ -919,24 +937,13 @@ class Helper {
     }
     
     public function checkSessionOverTime($request, $router) {
-        $timeElapsed = 0;
-        $userOverTime = false;
-        $userOverRole = false;
-        
-        if ($this->session->get("userTimestamp") != null)
-            $timeElapsed = time() - $this->session->get("userTimestamp");
-        
-        if ($this->session->get("userOverCount") == null)
-            $this->session->set("userOverCount", 0);
-        
-        if (($this->tokenStorage->getToken() != null && $this->authorizationChecker->isGranted("IS_AUTHENTICATED_FULLY") == true && $timeElapsed >= $this->sessionMaxIdleTime && isset($_COOKIE[$this->session->getName() . '_REMEMBERME']) == false) ||
-                (isset($_COOKIE[$this->session->getName() . '_logged']) == true && $this->session->get("userTimestamp") == null)) {
-            $userOverTime = true;
+        if (isset($_SESSION['currentUser']) == true) {
+            $timeElapsed = time() - intval($this->session->get("userOvertime"));
+            $userOverRole = false;
             
-            $this->session->set("userInform", $this->translator->trans("classHelper_6"));
-        }
-        
-        if ($this->tokenStorage->getToken() != null && $this->authorizationChecker->isGranted("IS_AUTHENTICATED_FULLY") == true) {
+            if ($this->session->get("userOvertime") == null)
+                $timeElapsed = 0;
+            
             $currentUser = $this->tokenStorage->getToken()->getUser();
             
             if (is_string($currentUser) == false) {
@@ -949,61 +956,54 @@ class Helper {
                 if (count($arrayDiff) > 0) {
                     $userOverRole = true;
                     
-                    $this->session->set("userInform", $this->translator->trans("classHelper_7"));
+                    $this->session->set("userInform", $this->translator->trans("classHelper_6"));
                 }
             }
-        }
-        
-        if ($userOverTime == true || $userOverRole == true) {
-            setcookie($this->session->getName() . "_logged", 0, time() - 3600, "/", $_SERVER['SERVER_NAME'], true, false);
             
-            if ($request->isXmlHttpRequest() == true) {
-                echo json_encode(Array(
-                    'userInform' => $this->session->get("userInform")
-                ));
+            if ($timeElapsed >= $this->sessionMaxIdleTime || $userOverRole == true) {
+                $this->session->set("userInform", $this->translator->trans("classHelper_7"));
                 
-                $this->session->set("userTimestamp", time());
-                
-                $this->session->set("userOverCount", 0);
-                
-                exit;
+                if ($request->isXmlHttpRequest() == true) {
+                    echo json_encode(Array(
+                        'userInform' => $this->session->get("userInform")
+                    ));
+                    
+                    exit;
+                }
+                else {
+                    $this->session->remove("userOvertime");
+                    
+                    return $this->forceLogout($router);
+                }
             }
-            else {
-                $userInform = $this->session->get("userInform");
-                $language = $this->session->get("languageTextCode");
-                
-                $this->session->invalidate();
-                
-                $this->session->set("userInform", $userInform);
-                $this->session->set("languageTextCode", $language);
-                
-                $this->session->set("userTimestamp", time());
-                
-                $this->session->set("userOverCount", 0);
-                
-                return $router->generate(
-                    "root_render",
-                    Array(
-                        '_locale' => $this->session->get("languageTextCode"),
-                        'urlCurrentPageId' => 2,
-                        'urlExtra' => ""
-                    )
-                );
-            }
-        }
-        
-        if ($this->session->get("userOverCount") >= 2) {
-            $this->session->set("userOverCount", 0);
             
-            $this->session->set("userInform", "");
+            $this->session->set("userOvertime", time());
         }
-        
-        $userOverCount = $this->session->get("userOverCount") + 1;
-        $this->session->set("userOverCount", $userOverCount);
-        
-        $this->session->set("userTimestamp", time());
+        else {
+            if ($this->session->get("forceLogout") == 2) {
+                $this->session->set("userInform", "");
+                
+                $this->session->remove("forceLogout");
+            }
+            
+            if ($this->session->get("userInform") != "")
+                $this->session->set("forceLogout", 2);
+        }
         
         return false;
+    }
+    
+    public function forceLogout($router) {
+        $this->session->set("forceLogout", 1);
+        
+        return $router->generate(
+            "authentication_exit_check",
+            Array(
+                '_locale' => $this->session->get("languageTextCode"),
+                'urlCurrentPageId' => 2,
+                'urlExtra' => ""
+            )
+        );
     }
     
     public function checkHost($host) {

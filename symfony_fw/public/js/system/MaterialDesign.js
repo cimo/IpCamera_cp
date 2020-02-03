@@ -358,7 +358,7 @@ function MaterialDesign() {
                     else if ($(valueSub).prop("href").indexOf(parameters[1]) !== -1 && parseInt(parameters[1]) > 5) {
                         $(valueSub).addClass("mdc-list-item--activated");
                         
-                        $(valueSub).parentsUntil($(".menu_root_container"), ".children_container" ).show();
+                        $(valueSub).parentsUntil($(".menu_root_container"), ".children_container").show();
 
                         return false;
                     }

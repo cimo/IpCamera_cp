@@ -1,6 +1,6 @@
 {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
 
-{% if response.values.microserviceApiEntity.name is defined and file_exists(pathSrc ~ "/Controller/Microservice/Api/" ~ response.values.microserviceApiEntity.name ~ "/" ~ response.values.microserviceApiEntity.controllerName ~ "Controller.php") == true %}
+{% if response.values.microserviceApiEntity.name is defined and response.fileExists == true %}
     <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_api"})}}">
         {% trans %}microserviceApiProfile_1{% endtrans %}
     </a>
@@ -10,7 +10,7 @@
         <p>{% trans %}microserviceApiProfile_3{% endtrans %}</p>
         <form id="form_cp_microservice_api_profile" action="{{path("cp_microservice_api_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
             <div class="upload_container">
-                <img class="avatar" src="{{logo}}" alt="Logo"/>
+                <img class="avatar" src="{{response.logo}}" alt="Logo"/>
                 <div class="input">
                     {{form_row(form.image)}}
                     {{form_row(form.removeImage)}}

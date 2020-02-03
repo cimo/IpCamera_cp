@@ -54,7 +54,7 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
         
         $this->session = $this->helper->getSession();
         
-        $this->settingRow = $this->query->selectSettingDatabase();
+        $this->settingRow = $this->helper->getSettingRow();
     }
     
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
@@ -64,16 +64,15 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
             $user = $token->getUser();
             
             $checkCaptcha = $this->captcha->check($this->settingRow['captcha'], $request->get("captcha"));
-            $checkAttemptLogin = $this->helper->checkAttemptLogin("success", $user->getId(), $this->settingRow, $user);
+            $checkAttemptLogin = $this->helper->checkAttemptLogin("success", $user->getId());
             $arrayExplodeFindValue = $this->helper->arrayExplodeFindValue($this->settingRow['role_user_id'], $user->getRoleUserId());
             
-            if ($checkCaptcha == true && (($this->settingRow['website_active'] == true && $checkAttemptLogin[0] == true) || ($this->settingRow['website_active'] == false && $checkAttemptLogin[0] == true && $arrayExplodeFindValue == true))) {
-                setcookie($this->session->getName() . "_logged", 1, time() + (10 * 365 * 24 * 60 * 60), "/", $_SERVER['SERVER_NAME'], true, false);
+            if ($checkCaptcha == true && $checkAttemptLogin[0] == true && $arrayExplodeFindValue == true) {
+                $this->session->set("currentUser", $user);
                 
                 $this->response['values']['url'] = $referer;
             }
             else {
-                //$this->helper->getTokenStorage()->setToken(null);
                 $this->session->invalidate();
                 
                 if ($checkCaptcha == false) {
@@ -113,7 +112,7 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
                 $message = $this->helper->getTranslator()->trans("authenticationListener_3");
             else {
                 $checkCaptcha = $this->captcha->check($this->settingRow['captcha'], $request->get("captcha"));
-                $checkAttemptLogin = $this->helper->checkAttemptLogin("failure", $username, $this->settingRow);
+                $checkAttemptLogin = $this->helper->checkAttemptLogin("failure", $username);
 
                 if ($checkCaptcha == true && $checkAttemptLogin[0] == true)
                     $message = $this->helper->getTranslator()->trans("authenticationListener_4");
@@ -151,15 +150,11 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
     }
     
     public function onLogoutSuccess(Request $request) {
-        setcookie($this->session->getName() . "_logged", 0, time() - 3600, "/", $_SERVER['SERVER_NAME'], true, false);
-        
         $referer = $request->headers->get("referer");
         
         $url = $referer;
         
-        if (strpos($request, "control_panel") !== false) {
-            $this->helper->checkLanguage($request, $this->router, $this->settingRow);
-            
+        if (strpos($request, "control_panel") !== false || $url == null) {
             $url = $this->router->generate(
                 "root_render",
                 Array(

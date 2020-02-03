@@ -789,7 +789,7 @@ class MicroserviceDeployController extends AbstractController {
         }
         
         if ($id > 0) {
-            $settingRow = $this->query->selectSettingDatabase();
+            $settingRow = $this->helper->getSettingRow();
             
             if ($type == "select") {
                 $query = $this->helper->getConnection()->prepare("SELECT AES_DECRYPT(:sshPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS ssh_password,

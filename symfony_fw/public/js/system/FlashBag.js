@@ -1,4 +1,4 @@
-/* global loader */
+/* global loader, helper */
 
 var flashBag = new FlashBag();
 

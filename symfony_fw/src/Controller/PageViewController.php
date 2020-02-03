@@ -140,7 +140,7 @@ class PageViewController extends AbstractController {
                 }
             }
             else {
-                $settingRow = $this->query->selectSettingDatabase();
+                $settingRow = $this->helper->getSettingRow();
                 
                 if ($pageRow['id'] == 3 && $settingRow['registration'] == false) {
                     $this->response['values']['controllerAction'] = null;

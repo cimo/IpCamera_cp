@@ -455,7 +455,7 @@ class RoleUserController extends AbstractController {
     private function deleteFromTable($type, $id = null) {
         $pageRows = $this->query->selectAllPageDatabase($this->urlLocale, null, true);
         $userRows = $this->query->selectAllUserDatabase(1);
-        $settingRow = $this->query->selectSettingDatabase();
+        $settingRow = $this->helper->getSettingRow();
         
         if ($type == "delete") {
             foreach ($pageRows as $key => $value) {

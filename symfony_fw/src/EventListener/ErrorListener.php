@@ -46,10 +46,6 @@ class ErrorListener {
             $request = $event->getRequest();
             
             if ($request->get("_route") == null) {
-                $settingRow = $this->query->selectSettingDatabase();
-                
-                $this->helper->checkLanguage($request, $this->router, $settingRow);
-                
                 $url = $this->router->generate(
                     "root_render",
                     Array(

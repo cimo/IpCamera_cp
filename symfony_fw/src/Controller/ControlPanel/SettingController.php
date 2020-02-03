@@ -5,7 +5,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use App\Classes\System\Helper;
@@ -87,14 +86,13 @@ class SettingController extends AbstractController {
                 $this->entityManager->flush();
                     
                 if ($form->get("https")->getData() != $https) {
-                    //$this->helper->getTokenStorage()->setToken(null);
-                    $this->session->invalidate();
-                    
                     $message = $this->helper->getTranslator()->trans("settingController_2");
                     
                     $this->session->set("userInform", $message);
                     
                     $this->response['messages']['info'] = $message;
+                    
+                    return $this->helper->forceLogout($this->router);
                 }
                 else
                     $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingController_3");
@@ -153,7 +151,7 @@ class SettingController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                $settingRow = $this->query->selectSettingDatabase();
+                $settingRow = $this->helper->getSettingRow();
                 
                 if ($request->get("event") == "createLanguage" || $request->get("event") == "modifyLanguage") {
                     $code = $request->get("code");

@@ -25,6 +25,8 @@ class PayPalIpnListener {
     
     private $session;
     
+    private $settingRow;
+    
     // Properties
     
     // Functions public
@@ -38,15 +40,15 @@ class PayPalIpnListener {
         $this->query = $this->helper->getQuery();
         
         $this->session = $this->helper->getSession();
+        
+        $this->settingRow = $this->helper->getSettingRow();
     }
     
     public function onKernelResponse(FilterResponseEvent $event) {
         $request = $event->getRequest();
         
         if (strpos($request->getUri(), "myPage_profile_credit_payPal") !== false) {
-            $settingRow = $this->query->selectSettingDatabase();
-            
-            $payPal = new PayPal(true, false, $settingRow['payPal_sandbox']);
+            $payPal = new PayPal(true, false, $this->settingRow['payPal_sandbox']);
             
             if ($payPal->ipn() == true) {
                 $payPalElements = $payPal->getElements();

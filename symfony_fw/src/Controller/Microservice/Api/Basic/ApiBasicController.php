@@ -933,7 +933,7 @@ class ApiBasicController extends AbstractController {
     // Functions private
     private function apiBasicDatabase($type, $id, $databasePassword) {
         if ($id > 0 && $databasePassword != "") {
-            $settingRow = $this->query->selectSettingDatabase();
+            $settingRow = $this->helper->getSettingRow();
             
             if ($type == "update") {
                 $query = $this->helper->getConnection()->prepare("UPDATE IGNORE microservice_apiBasic

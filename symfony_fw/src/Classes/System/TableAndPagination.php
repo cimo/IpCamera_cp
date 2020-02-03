@@ -48,16 +48,16 @@ class TableAndPagination {
         return false;
     }
     
-    private function search($index, $value) {
+    private function search($label, $value) {
         if ($value == -1)
-            $this->session->set($index, 0);
+            $this->session->set($label, 0);
         else
-            $this->session->set($index, $value);
+            $this->session->set($label, $value);
 	
-        $sessionIndex = $this->session->get($index);
+        $result = $this->session->get($label) === 0 ? "" : $this->session->get($label);
         
         return Array(
-            'value' => $sessionIndex == 0 ? "" : $sessionIndex
+            'value' => $result
         );
     }
     

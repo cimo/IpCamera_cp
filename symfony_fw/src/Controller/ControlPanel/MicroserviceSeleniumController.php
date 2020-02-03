@@ -263,7 +263,7 @@ class MicroserviceSeleniumController extends AbstractController {
         
         $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
         
-        $settingRow = $this->query->selectSettingDatabase();
+        $settingRow = $this->helper->getSettingRow();
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
