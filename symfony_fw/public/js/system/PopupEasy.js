@@ -6,7 +6,7 @@ const popupEasy = new PopupEasy();
 
 function PopupEasy() {
     // Vars
-    let self = this;
+    const self = this;
     
     let dialogMdc;
     

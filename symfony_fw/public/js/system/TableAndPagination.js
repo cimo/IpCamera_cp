@@ -4,7 +4,7 @@
 
 function TableAndPagination() {
     // Vars
-    let self = this;
+    const self = this;
     
     let urlRequest;
     let idResult;

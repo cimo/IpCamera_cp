@@ -6,7 +6,7 @@ const ipCamera = new ipCamera();
 
 function ipCamera() {
     // Vars
-    let self = this;
+    const self = this;
     
     let selectSended;
     let selectId;

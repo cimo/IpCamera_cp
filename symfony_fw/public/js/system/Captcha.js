@@ -6,7 +6,7 @@ const captcha = new Captcha();
 
 function Captcha() {
     // Vars
-    let self = this;
+    const self = this;
     
     // Properties
     

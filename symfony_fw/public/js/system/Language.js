@@ -6,7 +6,7 @@ const language = new Language();
 
 function Language() {
     // Vars
-    let self = this;
+    const self = this;
     
     // Properties
     

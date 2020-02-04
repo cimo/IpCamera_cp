@@ -6,7 +6,7 @@ const myPageProfile = new MyPageProfile();
 
 function MyPageProfile() {
     // Vars
-    let self = this;
+    const self = this;
     
     // Properties
     

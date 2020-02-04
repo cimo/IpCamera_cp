@@ -6,7 +6,7 @@ const registration = new Registration();
 
 function Registration() {
     // Vars
-    let self = this;
+    const self = this;
     
     // Properties
     

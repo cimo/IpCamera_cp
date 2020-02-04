@@ -6,7 +6,7 @@ const recoverPassword = new RecoverPassword();
 
 function RecoverPassword() {
     // Vars
-    let self = this;
+    const self = this;
     
     // Properties
     

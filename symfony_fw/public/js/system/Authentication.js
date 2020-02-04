@@ -6,7 +6,7 @@ const authentication = new Authentication();
 
 function Authentication() {
     // Vars
-    let self = this;
+    const self = this;
     
     // Properties
     

@@ -6,7 +6,7 @@ const flashBag = new FlashBag();
 
 function FlashBag() {
     // Vars
-    let self = this;
+    const self = this;
     
     let element;
     

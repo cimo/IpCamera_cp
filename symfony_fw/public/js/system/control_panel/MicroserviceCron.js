@@ -6,7 +6,7 @@ const controlPanelMicroserviceCron = new ControlPanelMicroserviceCron();
 
 function ControlPanelMicroserviceCron() {
     // Vars
-    let self = this;
+    const self = this;
     
     let selectSended;
     let selectId;

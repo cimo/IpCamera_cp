@@ -6,7 +6,7 @@ const controlPanelMicroserviceSelenium = new ControlPanelMicroserviceSelenium();
 
 function ControlPanelMicroserviceSelenium() {
     // Vars
-    let self = this;
+    const self = this;
     
     let selectSended;
     let selectId;

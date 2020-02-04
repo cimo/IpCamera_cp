@@ -6,7 +6,7 @@ const controlPanelSettingLinePush = new ControlPanelSettingLinePush();
 
 function ControlPanelSettingLinePush() {
     // Vars
-    let self = this;
+    const self = this;
     
     // Properties
     

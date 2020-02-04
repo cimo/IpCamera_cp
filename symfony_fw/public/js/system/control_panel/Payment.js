@@ -6,7 +6,7 @@ const controlPanelPayment = new ControlPanelPayment();
 
 function ControlPanelPayment() {
     // Vars
-    let self = this;
+    const self = this;
     
     let selectSended;
     let selectId;

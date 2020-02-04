@@ -6,7 +6,7 @@ const menuUser = new MenuUser();
 
 function MenuUser() {
     // Vars
-    let self = this;
+    const self = this;
     
     // Properties
     

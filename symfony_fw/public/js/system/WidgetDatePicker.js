@@ -6,7 +6,7 @@ const widgetDatePicker = new WidgetDatePicker();
 
 function WidgetDatePicker() {
     // Vars
-    let self = this;
+    const self = this;
 
     let language;
     let currentYear;
@@ -383,11 +383,13 @@ function WidgetDatePicker() {
     }
     
     function createButtonHtml() {
-        return "<div class=\"button\">\n\
+        let html = "<div class=\"button\">\n\
             <button class=\"mdc-button mdc-button--dense mdc-button--raised button_today\" type=\"button\">" + window.textWidgetDatePicker.label_1 + "</button>\n\
             <button class=\"mdc-button mdc-button--dense mdc-button--raised button_clear\" type=\"button\">" + window.textWidgetDatePicker.label_2 + "</button>\n\
             <button class=\"mdc-button mdc-button--dense mdc-button--raised button_confirm\" type=\"button\">" + window.textWidgetDatePicker.label_3 + "</button>\n\
         </div>";
+        
+        return html;
     }
     
     function fillInput(type) {

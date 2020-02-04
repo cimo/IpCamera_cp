@@ -6,7 +6,7 @@ const loader = new Loader();
 
 function Loader() {
     // Vars
-    let self = this;
+    const self = this;
     
     // Properties
     

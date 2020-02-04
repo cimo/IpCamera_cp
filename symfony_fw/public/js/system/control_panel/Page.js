@@ -6,7 +6,7 @@ const controlPanelPage = new ControlPanelPage();
 
 function ControlPanelPage() {
     // Vars
-    let self = this;
+    const self = this;
     
     let selectSended;
     let selectId;

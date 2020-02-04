@@ -6,7 +6,7 @@ const controlPanelUser = new ControlPanelUser();
 
 function ControlPanelUser() {
     // Vars
-    let self = this;
+    const self = this;
     
     let selectSended;
     let selectId;

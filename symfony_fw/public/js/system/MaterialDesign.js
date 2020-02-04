@@ -6,7 +6,7 @@ const materialDesign = new MaterialDesign();
 
 function MaterialDesign() {
     // Vars
-    let self = this;
+    const self = this;
     
     let dialogMdc;
     

@@ -6,7 +6,7 @@ const myPagePayment = new MyPagePayment();
 
 function MyPagePayment() {
     // Vars
-    let self = this;
+    const self = this;
     
     let selectSended;
     let selectId;

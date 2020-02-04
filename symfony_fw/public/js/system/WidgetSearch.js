@@ -6,7 +6,7 @@ const widgetSearch = new WidgetSearch();
 
 function WidgetSearch() {
     // Vars
-    let self = this;
+    const self = this;
     
     let widgetSearchButtonOpen;
     let widgetSearchButtonClose;

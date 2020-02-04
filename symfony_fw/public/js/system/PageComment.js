@@ -6,7 +6,7 @@ const pageComment = new PageComment();
 
 function PageComment() {
     // Vars
-    let self = this;
+    const self = this;
     
     // Properties
     

@@ -6,7 +6,7 @@ const uploadChunk = new UploadChunk();
 
 function UploadChunk() {
     // Vars
-    let self = this;
+    const self = this;
     
     let urlRequest;
     let tagContainer;

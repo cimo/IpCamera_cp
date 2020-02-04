@@ -6,7 +6,7 @@ const chaato = new Chaato();
 
 function Chaato() {
     // Vars
-    let self = this;
+    const self = this;
     
     let jsonResult;
     

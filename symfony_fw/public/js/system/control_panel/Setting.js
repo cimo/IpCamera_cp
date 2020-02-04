@@ -6,7 +6,7 @@ const controlPanelSetting = new ControlPanelSetting();
 
 function ControlPanelSetting() {
     // Vars
-    let self = this;
+    const self = this;
     
     // Properties
     

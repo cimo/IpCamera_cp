@@ -6,7 +6,7 @@ const controlPanelApiBasic = new ControlPanelApiBasic();
 
 function ControlPanelApiBasic() {
     // Vars
-    let self = this;
+    const self = this;
     
     // Properties
     

@@ -6,7 +6,7 @@ const ajax = new Ajax();
 
 function Ajax() {
     // Vars
-    let self = this;
+    const self = this;
     
     // Properties
     

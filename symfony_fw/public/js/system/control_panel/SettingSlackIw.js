@@ -6,7 +6,7 @@ const controlPanelSettingSlackIw = new ControlPanelSettingSlackIw();
 
 function ControlPanelSettingSlackIw() {
     // Vars
-    let self = this;
+    const self = this;
     
     // Properties
     

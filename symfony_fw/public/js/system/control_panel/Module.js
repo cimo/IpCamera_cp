@@ -6,7 +6,7 @@ const controlPanelModule = new ControlPanelModule();
 
 function ControlPanelModule() {
     // Vars
-    let self = this;
+    const self = this;
     
     let selectSended;
     let selectId;

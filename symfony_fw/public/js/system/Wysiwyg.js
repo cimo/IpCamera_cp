@@ -6,7 +6,7 @@ const wysiwyg = new Wysiwyg();
 
 function Wysiwyg() {
     // Vars
-    let self = this;
+    const self = this;
     
     let containerTag;
     

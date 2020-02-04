@@ -6,7 +6,7 @@ const controlPanelMicroserviceApi = new ControlPanelMicroserviceApi();
 
 function ControlPanelMicroserviceApi() {
     // Vars
-    let self = this;
+    const self = this;
     
     // Properties
     

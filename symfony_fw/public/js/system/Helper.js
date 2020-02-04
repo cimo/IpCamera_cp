@@ -6,7 +6,7 @@ const helper = new Helper();
 
 function Helper() {
     // Vars
-    let self = this;
+    const self = this;
     
     let touchMove;
     

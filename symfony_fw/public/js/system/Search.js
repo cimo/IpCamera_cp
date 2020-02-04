@@ -6,7 +6,7 @@ const search = new Search();
 
 function Search() {
     // Vars
-    let self = this;
+    const self = this;
     
     // Properties
     

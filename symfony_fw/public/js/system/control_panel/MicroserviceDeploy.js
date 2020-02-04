@@ -6,7 +6,7 @@ const controlPanelMicroserviceDeploy = new ControlPanelMicroserviceDeploy();
 
 function ControlPanelMicroserviceDeploy() {
     // Vars
-    let self = this;
+    const self = this;
     
     let selectSended;
     let selectId;

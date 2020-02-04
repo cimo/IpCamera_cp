@@ -6,7 +6,7 @@ const controlPanelMicroserviceUnitTest = new ControlPanelMicroserviceUnitTest();
 
 function ControlPanelMicroserviceUnitTest() {
     // Vars
-    let self = this;
+    const self = this;
     
     let selectSended;
     let selectId;
