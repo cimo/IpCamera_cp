@@ -2,10 +2,10 @@
 
 /* global */
 
-$(document).ready(function() {
+$(document).ready(() => {
     //...
     
-    $(window).resize(function() {
+    $(window).resize(() => {
         //...
     });
 });

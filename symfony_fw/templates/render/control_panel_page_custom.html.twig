@@ -15,18 +15,23 @@
         {% elseif urlExtra == "cp_ipCamera_file" %}
             {{-render(controller("App\\Controller\\ControlPanel\\IpCameraController::fileAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
         {% endif %}
-
+        
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/IpCamera" ~ javascriptMinify)}}"></script>
         <script nonce="{{php_session.xssProtectionValue}}">
             "use strict";
             
-            window.addEventListener("load", function() {
-                ipCamera.init();
-                
+            const ipCamera = new IpCamera();
+            
+            window.addEventListener("load", (event) => {
                 ipCamera.action();
                 ipCamera.changeView();
             }, false);
 
-            window.addEventListener("resize", function() {
+            window.addEventListener("resize", (event) => {
+                ipCamera.changeView();
+            }, false);
+            
+            window.addEventListener("orientationchange", (event) => {
                 ipCamera.changeView();
             }, false);
 
@@ -37,7 +42,6 @@
                 'label_4': "{{"controlPanelPageIpCamera_5"|trans}}"
             };
         </script>
-        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/IpCamera.min.js")}}"></script>
     {% endif %}
 {% endif %}
 

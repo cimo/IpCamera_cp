@@ -1,9 +1,3 @@
-{% if (settingRow['javascript_minify'] == 1) %}
-    {% set javascriptMinify = ".min.js" %}
-{% else %}
-    {% set javascriptMinify = ".js" %}
-{% endif %}
-
 <p>{% trans %}myPage_1{% endtrans %}</p>
 <nav class="mdc-tab-bar mdc-tab-bar--icons-with-text">
     <a class="mdc-tab mdc-tab--with-icon-and-text" href="{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': 1, 'urlExtra': "mp_profile"})}}">
@@ -33,17 +27,21 @@
 <script nonce="{{php_session.xssProtectionValue}}">
     "use strict";
     
-    window.addEventListener("load", function() {
-        myPageProfile.init();
-        myPagePayment.init();
-        
+    const myPageProfile = new MyPageProfile();
+    const myPagePayment = new MyPagePayment();
+    
+    window.addEventListener("load", (event) => {
         myPageProfile.action();
         
         myPagePayment.action();
         myPagePayment.changeView();
     }, false);
     
-    window.addEventListener("resize", function() {
+    window.addEventListener("resize", (event) => {
+        myPagePayment.changeView();
+    }, false);
+    
+    window.addEventListener("orientationchange", (event) => {
         myPagePayment.changeView();
     }, false);
     

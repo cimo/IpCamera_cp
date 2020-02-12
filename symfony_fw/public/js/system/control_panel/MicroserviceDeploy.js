@@ -2,42 +2,34 @@
 
 /* global helper, ajax, popupEasy, materialDesign */
 
-const controlPanelMicroserviceDeploy = new ControlPanelMicroserviceDeploy();
-
-function ControlPanelMicroserviceDeploy() {
-    // Vars
-    const self = this;
-    
-    let selectSended;
-    let selectId;
-    
+class ControlPanelMicroserviceDeploy {
     // Properties
     
     // Functions public
-    self.init = function() {
-        selectSended = false;
-        selectId = -1;
-    };
+    constructor() {
+        this.selectSended = false;
+        this.selectId = -1;
+    }
     
-    self.action = function() {
-        selectDesktop();
+    action = () => {
+        this.selectDesktop();
         
-        selectMobile();
+        this.selectMobile();
         
-        $("#form_cp_microservice_deploy_render").on("submit", "", function(event) {
+        $("#form_cp_microservice_deploy_render").on("submit", "", (event) => {
             event.preventDefault();
             
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                $(this).serialize(),
+                $(event.target).prop("action"),
+                $(event.target).prop("method"),
+                $(event.target).serialize(),
                 "json",
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
+                (xhr) => {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                     
                     if (xhr.response.values !== undefined) {
@@ -46,7 +38,7 @@ function ControlPanelMicroserviceDeploy() {
                         
                         materialDesign.refresh();
                         
-                        execute();
+                        this.execute();
                     }
                 },
                 null,
@@ -54,20 +46,20 @@ function ControlPanelMicroserviceDeploy() {
             );
         });
         
-        $("#form_cp_microservice_deploy_create").on("submit", "", function(event) {
+        $("#form_cp_microservice_deploy_create").on("submit", "", (event) => {
             event.preventDefault();
             
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
+                $(event.target).prop("action"),
+                $(event.target).prop("method"),
                 new FormData(this),
                 "json",
                 false,
                 false,
                 false,
                 null,
-                function(xhr) {
+                (xhr) => {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                 },
                 null,
@@ -75,54 +67,53 @@ function ControlPanelMicroserviceDeploy() {
             );
         });
         
-        $("#form_microservice_deploy_select_id").on("change", "", function() {
+        $("#form_microservice_deploy_select_id").on("change", "", (event) => {
             $("#cp_microservice_deploy_render_result").html("");
             $("#cp_microservice_deploy_ssh_connection_result").html("");
         });
-    };
+    }
     
-    self.changeView = function() {
+    changeView = () => {
         if (helper.checkWidthType() === "mobile") {
-            if (selectSended === true) {
-                selectId = $("#cp_microservice_deploy_select_mobile").find("select option:selected").val();
+            if (this.selectSended === true) {
+                this.selectId = $("#cp_microservice_deploy_select_mobile").find("select option:selected").val();
 
-                selectSended = false;
+                this.selectSended = false;
             }
 
-            if (selectId >= 0) {
+            if (this.selectId >= 0) {
                 $("#cp_microservice_deploy_select_result_desktop").find(".checkbox_column input[type='checkbox']").prop("checked", false);
 
                 let id = $("#cp_microservice_deploy_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
 
-                $.each(id, function(key, value) {
-                    if ($.trim($(value).text()) === String(selectId))
+                $.each(id, (key, value) => {
+                    if ($.trim($(value).text()) === String(this.selectId))
                         $(value).parents("tr").find(".checkbox_column input").prop("checked", true);
                 });
             }
         }
         else {
-            if (selectSended === true) {
-                selectId = $.trim($("#cp_microservice_deploy_select_result_desktop").find(".checkbox_column input[type='checkbox']:checked").parents("tr").find(".id_column").text());
+            if (this.selectSended === true) {
+                this.selectId = $.trim($("#cp_microservice_deploy_select_result_desktop").find(".checkbox_column input[type='checkbox']:checked").parents("tr").find(".id_column").text());
 
-                selectSended = false;
+                this.selectSended = false;
             }
 
-            if (selectId >= 0)
-                $("#cp_microservice_deploy_select_mobile").find("select option[value='" + selectId + "']").prop("selected", true);
+            if (this.selectId >= 0)
+                $("#cp_microservice_deploy_select_mobile").find(`select option[value="${this.selectId}"]`).prop("selected", true);
         }
-    };
+    }
     
     // Function private
-    function selectDesktop() {
+    selectDesktop = () => {
         const tableAndPagination = new TableAndPagination();
-        tableAndPagination.init();
-        tableAndPagination.setButtonsStatus("show");
+        tableAndPagination.setButtonsStatus = "show";
         tableAndPagination.create(window.url.cpMicroserviceDeploySelect, "#cp_microservice_deploy_select_result_desktop", true);
         tableAndPagination.search();
         tableAndPagination.pagination();
         tableAndPagination.sort();
         
-        $(document).on("click", "#cp_microservice_deploy_select_result_desktop .refresh", function() {
+        $(document).on("click", "#cp_microservice_deploy_select_result_desktop .refresh", (event) => {
             ajax.send(
                 true,
                 window.url.cpMicroserviceDeploySelect,
@@ -136,7 +127,7 @@ function ControlPanelMicroserviceDeploy() {
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
+                (xhr) => {
                     ajax.reply(xhr, "");
                     
                     tableAndPagination.populate(xhr);
@@ -146,11 +137,11 @@ function ControlPanelMicroserviceDeploy() {
             );
         });
         
-        $(document).on("click", "#cp_microservice_deploy_select_result_desktop .delete_all", function() {
+        $(document).on("click", "#cp_microservice_deploy_select_result_desktop .delete_all", (event) => {
             popupEasy.create(
                 window.text.index_5,
                 window.textMicroserviceDeploy.label_2,
-                function() {
+                () => {
                     ajax.send(
                         true,
                         window.url.cpMicroserviceDeployDelete,
@@ -164,10 +155,10 @@ function ControlPanelMicroserviceDeploy() {
                         true,
                         "application/x-www-form-urlencoded; charset=UTF-8",
                         null,
-                        function(xhr) {
+                        (xhr) => {
                             ajax.reply(xhr, "");
 
-                            $.each($("#cp_microservice_deploy_select_result_desktop").find("table .id_column"), function(key, value) {
+                            $.each($("#cp_microservice_deploy_select_result_desktop").find("table .id_column"), (key, value) => {
                                 $(value).parents("tr").remove();
                             });
                             
@@ -180,14 +171,14 @@ function ControlPanelMicroserviceDeploy() {
             );
         });
         
-        $(document).on("click", "#cp_microservice_deploy_select_result_desktop .cp_module_delete", function() {
-            let id = $.trim($(this).parents("tr").find(".id_column").text());
+        $(document).on("click", "#cp_microservice_deploy_select_result_desktop .cp_module_delete", (event) => {
+            let id = $.trim($(event.currentTarget).parents("tr").find(".id_column").text());
             
-            deleteElement(id);
+            this.deleteElement(id);
         });
         
-        $(document).on("click", "#cp_microservice_deploy_select_button_desktop", function(event) {
-            let id = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
+        $(document).on("click", "#cp_microservice_deploy_select_button_desktop", (event) => {
+            let id = $.trim($(event.currentTarget).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
 
             ajax.send(
                 true,
@@ -202,11 +193,11 @@ function ControlPanelMicroserviceDeploy() {
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
-                function() {
+                () => {
                     $("#cp_microservice_deploy_select_result").html("");
                 },
-                function(xhr) {
-                    profile(xhr, "#" + event.currentTarget.id);
+                (xhr) => {
+                    this.profile(xhr, "#" + event.currentTarget.id);
                 },
                 null,
                 null
@@ -214,24 +205,24 @@ function ControlPanelMicroserviceDeploy() {
         });
     }
     
-    function selectMobile() {
-        $(document).on("submit", "#form_cp_microservice_deploy_select_mobile", function(event) {
+    selectMobile = () => {
+        $(document).on("submit", "#form_cp_microservice_deploy_select_mobile", (event) => {
             event.preventDefault();
 
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                helper.serializeJson($(this)),
+                $(event.currentTarget).prop("action"),
+                $(event.currentTarget).prop("method"),
+                helper.serializeJson($(event.currentTarget)),
                 "json",
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
-                function() {
+                () => {
                     $("#cp_microservice_deploy_select_result").html("");
                 },
-                function(xhr) {
-                    profile(xhr, "#" + event.currentTarget.id);
+                (xhr) => {
+                    this.profile(xhr, "#" + event.currentTarget.id);
                 },
                 null,
                 null
@@ -239,30 +230,30 @@ function ControlPanelMicroserviceDeploy() {
         });
     }
     
-    function profile(xhr, tag) {
+    profile = (xhr, tag) => {
         ajax.reply(xhr, tag);
         
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
-            selectSended = true;
+            this.selectSended = true;
             
             $("#cp_microservice_deploy_select_result").html(xhr.response.render);
             
             materialDesign.refresh();
             
-            $("#form_cp_microservice_deploy_profile").on("submit", "", function(event) {
+            $("#form_cp_microservice_deploy_profile").on("submit", "", (event) => {
                 event.preventDefault();
                 
                 ajax.send(
                     true,
-                    $(this).prop("action"),
-                    $(this).prop("method"),
-                    new FormData(this),
+                    $(event.target).prop("action"),
+                    $(event.target).prop("method"),
+                    new FormData(event.target),
                     "json",
                     false,
                     false,
                     false,
                     null,
-                    function(xhr) {
+                    (xhr) => {
                         ajax.reply(xhr, "#" + event.currentTarget.id);
                         
                         if (xhr.response.messages.success !== undefined) {
@@ -276,17 +267,17 @@ function ControlPanelMicroserviceDeploy() {
                 );
             });
             
-            $("#cp_microservice_deploy_delete").on("click", "", function() {
-               deleteElement(null);
+            $("#cp_microservice_deploy_delete").on("click", "", (event) => {
+               this.deleteElement(null);
             });
         }
     }
     
-    function deleteElement(id) {
+    deleteElement = (id) => {
         popupEasy.create(
             window.text.index_5,
             window.textMicroserviceDeploy.label_1,
-            function() {
+            () => {
                 ajax.send(
                     true,
                     window.url.cpMicroserviceDeployDelete,
@@ -301,16 +292,16 @@ function ControlPanelMicroserviceDeploy() {
                     true,
                     "application/x-www-form-urlencoded; charset=UTF-8",
                     null,
-                    function(xhr) {
+                    (xhr) => {
                         ajax.reply(xhr, "");
                         
                         if (xhr.response.messages.success !== undefined) {
-                            $.each($("#cp_microservice_deploy_select_result_desktop").find("table .id_column"), function(key, value) {
+                            $.each($("#cp_microservice_deploy_select_result_desktop").find("table .id_column"), (key, value) => {
                                 if (xhr.response.values.id === $.trim($(value).text()))
                                     $(value).parents("tr").remove();
                             });
                             
-                            $("#form_microservice_deploy_select_id").find("option[value='" + xhr.response.values.id + "']").remove();
+                            $("#form_microservice_deploy_select_id").find(`option[value="${xhr.response.values.id}"]`).remove();
                             
                             $("#cp_microservice_deploy_select_result").html("");
                             
@@ -324,16 +315,16 @@ function ControlPanelMicroserviceDeploy() {
         );
     }
     
-    function execute() {
-        $(".git_execute").on("click", "", function() {
+    execute = () => {
+        $(".git_execute").on("click", "", (event) => {
             let id = $("#form_microservice_deploy_select_id").val();
-            let action = $(this).attr("data-action");
+            let action = $(event.target).attr("data-action");
             let branchName = $("#cp_microservice_deploy_render_result").find("input[name='branchName']");
             
             popupEasy.create(
                 window.text.index_5,
                 window.textMicroserviceDeploy.label_3,
-                function() {
+                () => {
                     ajax.send(
                         true,
                         window.url.cpMicroserviceDeployExecute,
@@ -349,7 +340,7 @@ function ControlPanelMicroserviceDeploy() {
                         false,
                         true,
                         "application/x-www-form-urlencoded; charset=UTF-8",
-                        function() {
+                        () => {
                             if (action !== "pull") {
                                 branchName.val("");
                                 branchName.focus();
@@ -357,7 +348,7 @@ function ControlPanelMicroserviceDeploy() {
                             
                             $("#cp_microservice_deploy_ssh_connection_result").html("");
                         },
-                        function(xhr) {
+                        (xhr) => {
                             ajax.reply(xhr, "");
                             
                             if (xhr.response.values !== undefined)

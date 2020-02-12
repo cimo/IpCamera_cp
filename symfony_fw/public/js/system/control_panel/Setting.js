@@ -2,28 +2,23 @@
 
 /* global ajax, helper, popupEasy, materialDesign */
 
-const controlPanelSetting = new ControlPanelSetting();
-
-function ControlPanelSetting() {
-    // Vars
-    const self = this;
-    
+class ControlPanelSetting {
     // Properties
     
     // Functions public
-    self.init = function() {
-    };
+    constructor() {
+    }
     
-    self.action = function() {
-        languageManage();
+    action = () => {
+        this.languageManage();
         
         helper.wordTag("#setting_roleUserId", "#form_setting_roleUserId");
         
-        $("#form_setting_payPalCurrencyCode").on("keyup", "", function() {
-            $(this).val($(this).val().toUpperCase());
+        $("#form_setting_payPalCurrencyCode").on("keyup", "", (event) => {
+            $(event.target).val($(event.target).val().toUpperCase());
         });
         
-        $("#form_cp_setting_save").on("submit", "", function(event) {
+        $("#form_cp_setting_save").on("submit", "", (event) => {
             event.preventDefault();
             
             let propNameLanguageManageCode = $("#form_setting_languageManageCode").prop("name");
@@ -38,15 +33,15 @@ function ControlPanelSetting() {
             
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                $(this).serialize(),
+                $(event.target).prop("action"),
+                $(event.target).prop("method"),
+                $(event.target).serialize(),
                 "json",
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
+                (xhr) => {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                     
                     $("#form_setting_languageManageCode").prop("name", propNameLanguageManageCode);
@@ -60,7 +55,7 @@ function ControlPanelSetting() {
     };
     
     // Function private
-    function languageManage() {
+    languageManage = () => {
         let index = $("#form_setting_language").prop("selectedIndex");
         let code = $("#form_setting_language").val();
         let eventAjax = "";
@@ -70,9 +65,9 @@ function ControlPanelSetting() {
         else
             $("#setting_language_manage_delete").show();
         
-        $("#form_setting_language").on("change", "", function() {
-            index = $(this).prop("selectedIndex");
-            code = $(this).val();
+        $("#form_setting_language").on("change", "", (event) => {
+            index = $(event.target).prop("selectedIndex");
+            code = $(event.target).val();
             
             if (code === window.setting.language)
                 $("#setting_language_manage_delete").hide();
@@ -82,7 +77,7 @@ function ControlPanelSetting() {
             $("#setting_language_manage_close").click();
         });
         
-        $("#setting_language_manage_modify").on("click", "", function() {
+        $("#setting_language_manage_modify").on("click", "", (event) => {
             eventAjax = "modifyLanguage";
             
             $("#setting_language_manage_container").show();
@@ -103,7 +98,7 @@ function ControlPanelSetting() {
             materialDesign.refresh();
         });
         
-        $("#setting_language_manage_create").on("click", "", function() {
+        $("#setting_language_manage_create").on("click", "", (event) => {
             eventAjax = "createLanguage";
             
             $("#setting_language_manage_container").show();
@@ -114,7 +109,7 @@ function ControlPanelSetting() {
             $("#form_setting_languageManageActive").val("");
         });
         
-        $("#setting_language_manage_confirm").on("click", "", function() {
+        $("#setting_language_manage_confirm").on("click", "", (event) => {
             let code = $("#form_setting_languageManageCode").val();
             let date = $("#form_setting_languageManageDate").val();
             let active = $("#form_setting_languageManageActive").val();
@@ -125,20 +120,20 @@ function ControlPanelSetting() {
                 popupEasy.create(
                     window.text.index_5,
                     window.textSetting.label_1,
-                    function() {
-                        confirm(eventAjax, code, date, active);
+                    () => {
+                        this.confirm(eventAjax, code, date, active);
                     }
                 );
             }
             else
-                confirm(eventAjax, code, date, active);
+                this.confirm(eventAjax, code, date, active);
         });
         
-        $("#setting_language_manage_delete").on("click", "", function() {
+        $("#setting_language_manage_delete").on("click", "", (event) => {
             popupEasy.create(
                 window.text.index_5,
                 window.textSetting.label_2,
-                function() {
+                () => {
                     ajax.send(
                         true,
                         window.url.cpSettingLanguageManage,
@@ -153,7 +148,7 @@ function ControlPanelSetting() {
                         true,
                         "application/x-www-form-urlencoded; charset=UTF-8",
                         null,
-                        function(xhr) {
+                        (xhr) => {
                             ajax.reply(xhr, "");
                             
                             if (xhr.response.messages.success !== undefined) {
@@ -170,7 +165,7 @@ function ControlPanelSetting() {
             );
         });
         
-        $("#setting_language_manage_close").on("click", "", function() {
+        $("#setting_language_manage_close").on("click", "", (event) => {
             eventAjax = "";
             
             $("#form_setting_languageManageCode").val("");
@@ -181,7 +176,7 @@ function ControlPanelSetting() {
         });
     }
     
-    function confirm(eventAjax, code, date, active) {
+    confirm = (eventAjax, code, date, active) => {
         ajax.send(
             true,
             window.url.cpSettingLanguageManage,
@@ -198,7 +193,7 @@ function ControlPanelSetting() {
             true,
             "application/x-www-form-urlencoded; charset=UTF-8",
             null,
-            function(xhr) {
+            (xhr) => {
                 ajax.reply(xhr, "");
                 
                 if ($.isEmptyObject(xhr.response) === false && xhr.response.values !== undefined)
@@ -227,7 +222,7 @@ function ControlPanelSetting() {
 
                         let elements = $("#language_text_container").find(".mdc-menu__items.mdc-list .mdc-list-item");
 
-                        $.each(elements, function(key, value) {
+                        $.each(elements, (key, value) => {
                             if ($(value).find("img").hasClass(code) === true) {
                                 element = $(value);
 

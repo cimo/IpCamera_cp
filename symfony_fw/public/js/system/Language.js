@@ -2,27 +2,22 @@
 
 /* global ajax, popupEasy, wysiwyg, controlPanelPage */
 
-const language = new Language();
-
-function Language() {
-    // Vars
-    const self = this;
-    
+class Language {
     // Properties
     
     // Functions public
-    self.init = function() {
-    };
+    constructor() {
+    }
     
-    self.action = function() {
-        $(document).on("click", "#language_text_container .mdc-list-item", function(event) {
+    action = () => {
+        $(document).on("click", "#language_text_container .mdc-list-item", (event) => {
             ajax.send(
                 true,
                 window.url.languageText,
                 "post",
                 {
                     'event': "languageText",
-                    'languageTextCode': $(event.target).find("img").prop("class"),
+                    'languageTextCode': $(event.currentTarget).find("img").prop("class"),
                     'token': window.session.token
                 },
                 "json",
@@ -30,7 +25,7 @@ function Language() {
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
+                (xhr) => {
                     ajax.reply(xhr, "");
                     
                     if ($.isEmptyObject(xhr.response) === false && xhr.response.values !== undefined)
@@ -40,25 +35,25 @@ function Language() {
                 null
             );
         });
-    };
+    }
     
-    self.page = function() {
-        selectOnPage();
+    page = () => {
+        this.selectOnPage();
         
-        $("#form_language_page").on("submit", "", function(event) {
+        $("#form_language_page").on("submit", "", (event) => {
             event.preventDefault();
             
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                $(this).serialize(),
+                $(event.target).prop("action"),
+                $(event.target).prop("method"),
+                $(event.target).serialize(),
                 "json",
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
+                (xhr) => {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                     
                     if ($.isEmptyObject(xhr.response) === false && xhr.response.values !== undefined) {
@@ -74,30 +69,30 @@ function Language() {
                 null
             );
         });
-    };
+    }
     
     // Functions private
-    function selectOnPage() {
+    selectOnPage = () => {
         $("#language_page_container").find(".flag_" + window.session.languageTextCode).parent().addClass("mdc-chip--selected");
         $("#language_page_container").find("input[name='form_language[codePage]']").val(window.session.languageTextCode);
         
-        $("#language_page_container .mdc-chip").on("click", "", function(event) {
-            if (controlPanelPage.getProfileFocus() === true) {
+        $("#language_page_container .mdc-chip").on("click", "", (event) => {
+            if (controlPanelPage.getProfileFocus === true) {
                 popupEasy.create(
                     window.text.index_1,
                     window.textLanguagePage.label_1,
-                    function() {
-                        formPageFlagSubmit(event);
+                    () => {
+                        this.formPageFlagSubmit(event);
                     }
                 );
             }
             else
-                formPageFlagSubmit(event);
+                this.formPageFlagSubmit(event);
         });
     }
     
-    function formPageFlagSubmit(event) {
-        controlPanelPage.setProfileFocus(false);
+    formPageFlagSubmit = (event) => {
+        controlPanelPage.setProfileFocus = false;
         
         let target = $(event.target).parent().hasClass("mdc-chip") === true ? $(event.target).parent() : $(event.target);
         

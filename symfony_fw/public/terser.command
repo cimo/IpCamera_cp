@@ -2,7 +2,7 @@
 
 clear
 
-echo Uglifyjs - Mac
+echo Terser - Mac
 
 source="$(dirname ${BASH_SOURCE[0]})"/js/system
 
@@ -17,7 +17,7 @@ originalFiles=$(find "$source" -name *.js)
 echo Count: $(echo ls -f "$originalFiles" | wc -l)
 
 echo "$originalFiles" | while read fileName; do
-    uglifyjs "$fileName" --compress --mangle --output "$(dirname $fileName)"/"$(basename ${fileName%%.*})".min.js
+    terser "$fileName" --compress --mangle --output "$(dirname $fileName)"/"$(basename ${fileName%%.*})".min.js
     
     echo "$(basename $fileName)"
 done

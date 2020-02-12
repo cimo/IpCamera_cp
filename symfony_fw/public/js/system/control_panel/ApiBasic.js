@@ -2,89 +2,84 @@
 
 /* global helper, ajax, uploadChunk, materialDesign, popupEasy, chaato, widgetDatePicker */
 
-const controlPanelApiBasic = new ControlPanelApiBasic();
-
-function ControlPanelApiBasic() {
-    // Vars
-    const self = this;
-    
+class ControlPanelApiBasic {
     // Properties
     
     // Functions public
-    self.init = function() {
-    };
+    constructor() {
+    }
     
-    self.action = function() {
-        $(document).on("submit", "#form_cp_apiBasic_select", function(event) {
+    action = () => {
+        $(document).on("submit", "#form_cp_apiBasic_select", (event) => {
             event.preventDefault();
 
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                helper.serializeJson($(this)),
+                $(event.currentTarget).prop("action"),
+                $(event.currentTarget).prop("method"),
+                helper.serializeJson($(event.currentTarget)),
                 "json",
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
-                function() {
+                () => {
                     $("#cp_api_select_result").html("");
                 },
-                function(xhr) {
-                    profile(xhr, "#" + event.currentTarget.id);
+                (xhr) => {
+                    this.profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
             );
         });
         
-        $("#form_cp_apiBasic_create").on("submit", "", function(event) {
+        $("#form_cp_apiBasic_create").on("submit", "", (event) => {
             event.preventDefault();
             
             let optionCount = $("#form_apiBasic_select_id").find("option").length;
-            let name = $(this).find("input[name='form_apiBasic[name]']").val();
+            let name = $(event.target).find("input[name='form_apiBasic[name]']").val();
             
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                $(this).serialize(),
+                $(event.target).prop("action"),
+                $(event.target).prop("method"),
+                $(event.target).serialize(),
                 "json",
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
+                (xhr) => {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                     
                     if (xhr.response.messages.success !== undefined)
-                        $("#form_apiBasic_select_id").append("<option value=\"" + optionCount + "\">" + name + "</option>");
+                        $("#form_apiBasic_select_id").append(`<option value="${optionCount}">${name}</option>`);
                 },
                 null,
                 null
             );
         });
-    };
+    }
     
     // Function private
-    function profile(xhr, tag) {
+    profile = (xhr, tag) => {
         ajax.reply(xhr, tag);
         
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
             $("#cp_api_select_result").html(xhr.response.render);
             
-            uploadChunk.setUrlRequest(window.url.cpApiBasicCsv + "?token=" + window.session.token + "&event=csv");
-            uploadChunk.setTagContainer("#upload_chunk_apiBasic_csv_container");
-            uploadChunk.setTagProgressBar("#upload_chunk_apiBasic_csv_container .upload_chunk .mdc-linear-progress");
-            uploadChunk.setLockUrl(window.url.root + "/listener/lockListener.php");
+            uploadChunk.setUrlRequest = `${window.url.cpApiBasicCsv}?token=${window.session.token}&event=csv`;
+            uploadChunk.setTagContainer = "#upload_chunk_apiBasic_csv_container";
+            uploadChunk.setTagProgressBar = "#upload_chunk_apiBasic_csv_container .upload_chunk .mdc-linear-progress";
+            uploadChunk.setLockUrl = `${window.url.root}/listener/lockListener.php`;
             uploadChunk.processFile();
             
-            widgetDatePicker.setInputFill(".widget_datePicker_input");
+            widgetDatePicker.setInputFill = ".widget_datePicker_input";
             widgetDatePicker.action();
             
             materialDesign.refresh();
             
-            $("#button_apiBasic_show_log").on("click", "", function(event) {
+            $("#button_apiBasic_show_log").on("click", "", (event) => {
                 ajax.send(
                     true,
                     window.url.cpApiBasicLog,
@@ -98,7 +93,7 @@ function ControlPanelApiBasic() {
                     true,
                     "application/x-www-form-urlencoded; charset=UTF-8",
                     null,
-                    function(xhr) {
+                    (xhr) => {
                         ajax.reply(xhr, "");
 
                         if (xhr.response.values.log !== undefined) {
@@ -113,7 +108,7 @@ function ControlPanelApiBasic() {
                 );
             });
             
-            $("#button_apiBasic_show_graph").on("click", "", function(event) {
+            $("#button_apiBasic_show_graph").on("click", "", (event) => {
                 ajax.send(
                     true,
                     window.url.cpApiBasicGraph,
@@ -129,25 +124,25 @@ function ControlPanelApiBasic() {
                     true,
                     "application/x-www-form-urlencoded; charset=UTF-8",
                     null,
-                    function(xhr) {
+                    (xhr) => {
                         ajax.reply(xhr, "");
                         
                         if (xhr.response.render !== undefined) {
                             popupEasy.create(
-                                "<p>Show graph</p>" + xhr.response.values.selectPeriodYearHtml + xhr.response.values.selectPeriodMonthHtml,
+                                `<p>Show graph</p>${xhr.response.values.selectPeriodYearHtml} ${xhr.response.values.selectPeriodMonthHtml}`,
                                 xhr.response.render
                             );
                     
-                            $(".graph_period_year, .graph_period_month").on("change", "", function() {
+                            $(".graph_period_year, .graph_period_month").on("change", "", (event) => {
                                 $("#button_apiBasic_show_graph").click();
                             });
                             
-                            chaato.setBackgroundType("grid"); // grid - lineX - lineY
-                            chaato.setAnimationSpeed(0.50);
-                            chaato.setPadding(30);
-                            chaato.setTranslate([95, 20]);
-                            chaato.setScale([0.91, 0.88]);
-                            chaato.create(xhr.response.values.json);
+                            chaato.setBackgroundType = "grid"; // grid - lineX - lineY
+                            chaato.setAnimationSpeed = 0.50;
+                            chaato.setPadding = 30;
+                            chaato.setTranslate = [95, 20];
+                            chaato.setScale = [0.91, 0.88];
+                            chaato.create = xhr.response.values.json;
                         }
                     },
                     null,
@@ -155,11 +150,11 @@ function ControlPanelApiBasic() {
                 );
             });
             
-            $("#download_detail_button").on("click", "", function(event) {
+            $("#download_detail_button").on("click", "", (event) => {
                 $(".download_detail_container").toggle("slow");
                 
-                $("#button_apiBasic_download_detail").off("click").on("click", "", function(event) {
-                    let dataEvent = $(this).attr("data-event");
+                $("#button_apiBasic_download_detail").off("click").on("click", "", (event) => {
+                    let dataEvent = $(event.target).attr("data-event");
                     let dateStart = $("input[name='download_date_start']").val();
                     let dateEnd = $("input[name='download_date_end']").val();
                     
@@ -178,16 +173,18 @@ function ControlPanelApiBasic() {
                         true,
                         "application/x-www-form-urlencoded; charset=UTF-8",
                         null,
-                        function(xhr) {
+                        (xhr) => {
                             ajax.reply(xhr, "");
                             
                             if (xhr.response.values !== undefined) {
                                 let xhrRequest = new XMLHttpRequest();
-                                xhrRequest.onreadystatechange = function() {
+                                xhrRequest.onreadystatechange = () => {
                                     if (this.readyState === 4) {
                                         window.location = xhr.response.values.url;
                                         
-                                        setTimeout(function() {
+                                        let timeoutEvent = setTimeout(() => {
+                                            clearTimeout(timeoutEvent);
+                                            
                                             ajax.send(
                                                 false,
                                                 window.url.cpApiBasicDownloadDetail,
@@ -201,7 +198,7 @@ function ControlPanelApiBasic() {
                                                 true,
                                                 "application/x-www-form-urlencoded; charset=UTF-8",
                                                 null,
-                                                function(xhr) {
+                                                (xhr) => {
                                                     ajax.reply(xhr, "");
                                                 },
                                                 null,
@@ -220,27 +217,27 @@ function ControlPanelApiBasic() {
                 });
             });
             
-            $("#form_cp_apiBasic_profile").on("submit", "", function(event) {
+            $("#form_cp_apiBasic_profile").on("submit", "", (event) => {
                 event.preventDefault();
                 
                 let selectValue = $("#form_apiBasic_select_id").val();
-                let name = $(this).find("input[name='form_apiBasic[name]']").val();
+                let name = $(event.target).find("input[name='form_apiBasic[name]']").val();
 
                 ajax.send(
                     true,
-                    $(this).prop("action"),
-                    $(this).prop("method"),
-                    $(this).serialize(),
+                    $(event.target).prop("action"),
+                    $(event.target).prop("method"),
+                    $(event.target).serialize(),
                     "json",
                     false,
                     true,
                     "application/x-www-form-urlencoded; charset=UTF-8",
                     null,
-                    function(xhr) {
+                    (xhr) => {
                         ajax.reply(xhr, "#" + event.currentTarget.id);
                         
                         if (xhr.response.messages.success !== undefined) {
-                            $("#form_apiBasic_select_id").find("option[value='" + selectValue + "']").text(name);
+                            $("#form_apiBasic_select_id").find(`option[value="${selectValue}"]`).text(name);
                             
                             $("#cp_api_select_result").html("");
                         }
@@ -250,11 +247,11 @@ function ControlPanelApiBasic() {
                 );
             });
 
-            $("#cp_apiBasic_delete").on("click", "", function() {
+            $("#cp_apiBasic_delete").on("click", "", (event) => {
                popupEasy.create(
                     window.text.index_5,
                     window.textApiBasic.label_1,
-                    function() {
+                    () => {
                         ajax.send(
                             true,
                             window.url.cpApiBasicDelete,
@@ -269,11 +266,11 @@ function ControlPanelApiBasic() {
                             true,
                             "application/x-www-form-urlencoded; charset=UTF-8",
                             null,
-                            function(xhr) {
+                            (xhr) => {
                                 ajax.reply(xhr, "");
 
                                 if (xhr.response.messages.success !== undefined) {
-                                    $("#form_apiBasic_select_id").find("option[value='" + xhr.response.values.id + "']").remove();
+                                    $("#form_apiBasic_select_id").find(`option[value="${xhr.response.values.id}"]`).remove();
 
                                     $("#cp_api_select_result").html("");
                                 }

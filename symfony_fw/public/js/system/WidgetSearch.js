@@ -2,69 +2,57 @@
 
 /* global helper */
 
-const widgetSearch = new WidgetSearch();
-
-function WidgetSearch() {
-    // Vars
-    const self = this;
-    
-    let widgetSearchButtonOpen;
-    let widgetSearchButtonClose;
-    let widgetSearchButtonInput;
-    let topAppBarSectionStart;
-    
+class WidgetSearch {
     // Properties
     
     // Functions public
-    self.init = function() {
-        widgetSearchButtonOpen = null;
-        widgetSearchButtonClose = null;
-        widgetSearchButtonInput = null;
-        topAppBarSectionStart = null;
-    };
+    constructor() {
+        this.widgetSearchButtonOpen = null;
+        this.widgetSearchButtonClose = null;
+        this.widgetSearchButtonInput = null;
+        this.topAppBarSectionStart = null;
+    }
     
-    self.create = function() {
-        widgetSearchButtonOpen = $(".widget_search").find(".button_open");
-        widgetSearchButtonClose = $(".widget_search").find(".button_close");
-        widgetSearchButtonInput = $(".widget_search").find("input[name='form_search[words]']");
-        topAppBarSectionStart = $(".mdc-top-app-bar__section--align-start");
+    create = () => {
+        this.widgetSearchButtonOpen = $(".widget_search").find(".button_open");
+        this.widgetSearchButtonClose = $(".widget_search").find(".button_close");
+        this.widgetSearchButtonInput = $(".widget_search").find("input[name='form_search[words]']");
+        this.topAppBarSectionStart = $(".mdc-top-app-bar__section--align-start");
 
-        $(widgetSearchButtonOpen).on("click", "", function(event) {
-            let target = event.target;
-
-            if ($(target).hasClass("animate") === false) {
-                $(target).addClass("animate");
-                $(widgetSearchButtonClose).show();
-                $(widgetSearchButtonInput).show();
+        this.widgetSearchButtonOpen.on("click", "", (event) => {
+            if ($(event.target).hasClass("animate") === false) {
+                $(event.target).addClass("animate");
                 
-                $(topAppBarSectionStart[0]).hide();
+                this.widgetSearchButtonClose.show();
+                this.widgetSearchButtonInput.show();
+                
+                this.topAppBarSectionStart.hide();
                 $(".menu_root_container").hide();
             }
         });
 
-        $(widgetSearchButtonClose).on("click", "", function(event) {
-            let target = event.target;
-
-            if ($(widgetSearchButtonOpen).hasClass("animate") === true) {
-                $(target).hide();
-                $(widgetSearchButtonOpen).removeClass("animate");
-                widgetSearchButtonInput.val("");
-                $(widgetSearchButtonInput).hide();
+        this.widgetSearchButtonClose.on("click", "", (event) => {
+            if (this.widgetSearchButtonOpen.hasClass("animate") === true) {
+                $(event.target).hide();
                 
-                $(topAppBarSectionStart[0]).css("display", "inline-flex");
+                this.widgetSearchButtonOpen.removeClass("animate");
+                this.widgetSearchButtonInput.val("");
+                this.widgetSearchButtonInput.hide();
+                
+                this.topAppBarSectionStart.css("display", "inline-flex");
                 $(".menu_root_container").show();
             }
         });
-    };
+    }
     
-    self.changeView = function() {
+    changeView = () => {
         if (helper.checkWidthType() === "desktop")
-            $(topAppBarSectionStart[0]).css("display", "inline-flex");
+            this.topAppBarSectionStart.css("display", "inline-flex");
         else {
-            if ($(widgetSearchButtonOpen).hasClass("animate") === true)
-                $(topAppBarSectionStart[0]).hide();
+            if (this.widgetSearchButtonOpen.hasClass("animate") === true)
+                this.topAppBarSectionStart.hide();
         }
-    };
+    }
 
     // Functions private
 }

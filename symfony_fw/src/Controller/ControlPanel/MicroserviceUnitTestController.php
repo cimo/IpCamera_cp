@@ -473,7 +473,9 @@ class MicroserviceUnitTestController extends AbstractController {
                     <script>
                         \"use strict\";
                         
-                        let unitTestMessage = function(event) {
+                        let unitTestExecute = (event) => {
+                            let result = $(\"#qunit_result\");
+                            
                             let data = event.data;
                             let origin = event.origin;
                             let source = event.source;
@@ -481,8 +483,6 @@ class MicroserviceUnitTestController extends AbstractController {
                             let originFilter = \"{$originReplace}\";
                             
                             let originFilterSplit = originFilter.split(\",\");
-                            
-                            let result = $(\"#qunit_result\");
                             
                             if (originFilterSplit.includes(origin) === true) {
                                 let json = JSON.parse(data);
@@ -492,7 +492,7 @@ class MicroserviceUnitTestController extends AbstractController {
                                 
                                 result.html(page);
                                 
-                                QUnit.test(\"{$microserviceUnitTestEntity->getName()}\", function(assert) {
+                                QUnit.test(\"{$microserviceUnitTestEntity->getName()}\", (assert) => {
                                     {$microserviceUnitTestEntity->getCode()}
                                 });
                             }
@@ -500,7 +500,9 @@ class MicroserviceUnitTestController extends AbstractController {
                                 result.html(\"\");
                         };
                         
-                        window.addEventListener(\"message\", unitTestMessage, false);
+                        window.addEventListener(\"message\", (event) => {
+                            unitTestExecute(event);
+                        }, false);
                     </script>";
                 }
                 else

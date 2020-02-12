@@ -2,145 +2,130 @@
 
 /* global helper, ajax */
 
-function TableAndPagination() {
-    // Vars
-    const self = this;
-    
-    let urlRequest;
-    let idResult;
-    let selectOnlyOne;
-    
-    let current;
-    let total;
-    
-    let clickedEvent;
-    let sortOrderBy;
-    
-    let buttonsStatus;
-    
+class TableAndPagination {
     // Properties
-    self.setButtonsStatus = function(value) {
-        buttonsStatus = value;
-    };
+    set setButtonsStatus(value) {
+        this.buttonsStatus = value;
+    }
     
     // Functions public
-    self.init = function() {
-        urlRequest = "";
-        idResult = "";
-        selectOnlyOne = "";
+    constructor() {
+        this.urlRequest = "";
+        this.idResult = "";
+        this.selectOnlyOne = "";
 
-        current = 0;
-        total = 0;
+        this.current = 0;
+        this.total = 0;
 
-        clickedEvent = false;
-        sortOrderBy = false;
+        this.clickedEvent = false;
+        this.sortOrderBy = false;
 
-        buttonsStatus = "";
-    };
+        this.buttonsStatus = "";
+    }
     
-    self.create = function(url, id, singleSelect) {
-        urlRequest = url;
-        idResult = id;
-        selectOnlyOne = singleSelect;
+    create = (url, id, singleSelect) => {
+        this.urlRequest = url;
+        this.idResult = id;
+        this.selectOnlyOne = singleSelect;
         
-        status();
+        this.status();
         
         helper.linkPreventDefault();
         
-        if (selectOnlyOne === true)
-            helper.selectOnlyOneElement(idResult + " table tbody");
+        if (this.selectOnlyOne === true)
+            helper.selectOnlyOneElement(this.idResult + " table tbody");
         
-        resizeColumn();
-    };
+        this.resizeColumn();
+    }
     
-    self.search = function() {
-        let parentField = idResult + " .tableAndPagination .mdc-text-field__input";
-        let parentButton = idResult + " .tableAndPagination .mdc-text-field .material-icons";
+    search = () => {
+        let parentField = this.idResult + " .tableAndPagination .mdc-text-field__input";
+        let parentButton = this.idResult + " .tableAndPagination .mdc-text-field .material-icons";
         
-        $(parentField).on("keyup", "", function(event) {
-            if (clickedEvent === true)
+        $(parentField).on("keyup", "", (event) => {
+            if (this.clickedEvent === true)
                 return;
             
             if (event.which === 13) {
-                current = 0;
+                this.current = 0;
                 
-                send();
+                this.send();
                 
-                clickedEvent = true;
+                this.clickedEvent = true;
             }
         });
         
-        $(parentButton).on("click", "", function() {
-            if (clickedEvent === true)
+        $(parentButton).on("click", "", (event) => {
+            if (this.clickedEvent === true)
                 return;
             
-            current = 0;
+            this.current = 0;
             
-            send();
+            this.send();
             
-            clickedEvent = true;
+            this.clickedEvent = true;
         });
-    };
+    }
     
-    self.pagination = function() {
-        let parentPrevious = idResult + " .tableAndPagination .previous";
-        let parentNext = idResult + " .tableAndPagination .next";
+    pagination = () => {
+        let parentPrevious = this.idResult + " .tableAndPagination .previous";
+        let parentNext = this.idResult + " .tableAndPagination .next";
         
-        $(parentPrevious).on("click", "", function() {
-            if (clickedEvent === true)
+        $(parentPrevious).on("click", "", (event) => {
+            if (this.clickedEvent === true)
                 return;
             
-            if (total > 1 && current > 0) {
-                current --;
+            if (this.total > 1 && this.current > 0) {
+                this.current --;
                 
-                send();
+                this.send();
                 
-                clickedEvent = true;
+                this.clickedEvent = true;
             }
         });
         
-        $(parentNext).on("click", "", function() {
-            if (clickedEvent === true)
+        $(parentNext).on("click", "", (event) => {
+            if (this.clickedEvent === true)
                 return;
             
-            if (total > 1 && current < (total - 1)) {
-                current ++;
+            if (this.total > 1 && this.current < (this.total - 1)) {
+                this.current ++;
                 
-                send();
+                this.send();
                 
-                clickedEvent = true;
+                this.clickedEvent = true;
             }
         });
-    };
+    }
     
-    self.sort = function() {
-        $(idResult).on("click", "table thead tr th", function(event) {
-            let bodyRows = $(idResult).find("table tbody tr");
+    sort = () => {
+        $(this.idResult).on("click", "table thead tr th", (event) => {
+            let bodyRows = $(this.idResult).find("table tbody tr");
             
-            let currentIndex = $(event.target).is("i") === false ? $(event.target).index() : $(event.target).parent().index();
+            let currentIndex = $(event.currentTarget).is("i") === false ? $(event.currentTarget).index() : $(event.currentTarget).parent().index();
             
-            $(this).parent().find("i").hide();
+            $(event.currentTarget).parent().find("i").hide();
             
-            if (sortOrderBy === false) {
-                $(this).find("i").eq(0).show();
-                $(this).find("i").eq(1).hide();
+            if (this.sortOrderBy === false) {
+                $(event.currentTarget).find("i").eq(0).show();
+                $(event.currentTarget).find("i").eq(1).hide();
                 
-                sortOrderBy = true;
+                this.sortOrderBy = true;
             }
             else {
-                $(this).find("i").eq(0).hide();
-                $(this).find("i").eq(1).show();
+                $(event.currentTarget).find("i").eq(0).hide();
+                $(event.currentTarget).find("i").eq(1).show();
                 
-                sortOrderBy = false;
+                this.sortOrderBy = false;
             }
             
-            bodyRows.sort(function(a, b) {
+            bodyRows.sort((a, b) => {
                 let result = 0;
                 let first = $.trim($(a).children("td").eq(currentIndex).text().toLowerCase());
                 let second = $.trim($(b).children("td").eq(currentIndex).text().toLowerCase());
                 
                 if (first !== "" && second !== "") {
-                    if (sortOrderBy === true) {
+                    if (this.sortOrderBy === true) {
                         if ($.isNumeric(first) === false)
                             result = first.localeCompare(second);
                         else
@@ -158,124 +143,124 @@ function TableAndPagination() {
             });
             
             if (bodyRows.length > 1) {
-                $.each(bodyRows, function(key, value) {
-                    $(idResult).find("table tbody").append(value);
+                $.each(bodyRows, (key, value) => {
+                    $(this.idResult).find("table tbody").append(value);
                 });
             }
         });
-    };
+    }
     
-    self.populate = function(xhr) {
-        $(idResult).find(".tableAndPagination .mdc-text-field__input").val("");
-        $(idResult).find("table tbody").css("visibility", "visible");
+    populate = (xhr) => {
+        $(this.idResult).find(".tableAndPagination .mdc-text-field__input").val("");
+        $(this.idResult).find("table tbody").css("visibility", "visible");
         
         if (xhr.response.values !== undefined) {
-            $(idResult).find(".tableAndPagination .mdc-text-field__input").val(xhr.response.values.search.value);
-            $(idResult).find(".tableAndPagination .text").html(xhr.response.values.pagination.text);
+            $(this.idResult).find(".tableAndPagination .mdc-text-field__input").val(xhr.response.values.search.value);
+            $(this.idResult).find(".tableAndPagination .text").html(xhr.response.values.pagination.text);
             
             if (xhr.response.values.count !== undefined) {
-                $(idResult).find(".tableAndPagination .count").show();
-                $(idResult).find(".tableAndPagination .count span").html(xhr.response.values.count);
+                $(this.idResult).find(".tableAndPagination .count").show();
+                $(this.idResult).find(".tableAndPagination .count span").html(xhr.response.values.count);
             }
             
-            if ($(idResult).find("table tbody").length > 0)
-                $(idResult).find("table tbody").html(xhr.response.values.listHtml);
+            if ($(this.idResult).find("table tbody").length > 0)
+                $(this.idResult).find("table tbody").html(xhr.response.values.listHtml);
             else
-                $(idResult).find(".list_result").html(xhr.response.values.listHtml);
+                $(this.idResult).find(".list_result").html(xhr.response.values.listHtml);
 
-            status();
+            this.status();
             
-            resizeColumn();
+            this.resizeColumn();
         }
-    };
+    }
     
     // Functions private
-    function status() {
-        let textHtml = $.trim($(idResult).find(".tableAndPagination .text").text());
+    status = () => {
+        let textHtml = $.trim($(this.idResult).find(".tableAndPagination .text").text());
         
         if (textHtml !== undefined || textHtml !== "") {
             let textSplit = textHtml.split("/");
             let valueA = parseInt($.trim(textSplit[0]));
             let valueB = parseInt($.trim(textSplit[1]));
             
-            if (valueA > valueB && $(idResult).find("table tbody tr").length === 0)
-                $(idResult).find(".tableAndPagination .previous").click();
+            if (valueA > valueB && $(this.idResult).find("table tbody tr").length === 0)
+                $(this.idResult).find(".tableAndPagination .previous").click();
             
-            if (current < 0)
-                current = 0;
+            if (this.current < 0)
+                this.current = 0;
             
-            total = valueB;
+            this.total = valueB;
         }
         
         $(".tableAndPagination .previous .mdc-button").prop("disabled", true);
         $(".tableAndPagination .next .mdc-button").prop("disabled", true);
         
-        let buttonPrevious = $(idResult).find(".tableAndPagination .previous .mdc-button");
-        let buttonNext = $(idResult).find(".tableAndPagination .next .mdc-button");
+        let buttonPrevious = $(this.idResult).find(".tableAndPagination .previous .mdc-button");
+        let buttonNext = $(this.idResult).find(".tableAndPagination .next .mdc-button");
         
         if (buttonPrevious.length > 0 && buttonNext.length > 0) {
-            if (total > 1 && current > 0)
+            if (this.total > 1 && this.current > 0)
                 buttonPrevious.removeAttr("disabled");
 
-            if (total > 1 && current < (total - 1))
+            if (this.total > 1 && this.current < (this.total - 1))
                 buttonNext.removeAttr("disabled");
 
-            $.each($(idResult).find("table thead tr th"), function(key, value) {
+            $.each($(this.idResult).find("table thead tr th"), (key, value) => {
                 $(value).find("i").hide();
             });
 
-            if (buttonsStatus === "show")
-                $(idResult).find(".tableAndPagination .button_container").show();
+            if (this.buttonsStatus === "show")
+                $(this.idResult).find(".tableAndPagination .button_container").show();
         }
     }
     
-    function send() {
+    send = () => {
         let data = {
             'event': "tableAndPagination",
-            'searchWritten': $(idResult).find(".tableAndPagination .mdc-text-field__input").val(),
-            'paginationCurrent': current,
+            'searchWritten': $(this.idResult).find(".tableAndPagination .mdc-text-field__input").val(),
+            'paginationCurrent': this.current,
             'token': window.session.token
         };
         
         ajax.send(
             false,
-            urlRequest,
+            this.urlRequest,
             "post",
             data,
             "json",
             false,
             true,
             "application/x-www-form-urlencoded; charset=UTF-8",
-            function() {
-                $(idResult).find(".update_loading").css("display", "inline-block");
+            () => {
+                $(this.idResult).find(".update_loading").css("display", "inline-block");
                 
-                $(idResult).find("table tbody").css("visibility", "hidden");
+                $(this.idResult).find("table tbody").css("visibility", "hidden");
             },
-            function(xhr) {
+            (xhr) => {
                 ajax.reply(xhr, "");
                 
                 if (xhr.response.values !== undefined)
-                    self.populate(xhr);
+                    this.populate(xhr);
                 
                 helper.linkPreventDefault();
                 
-                if (selectOnlyOne === true)
-                    helper.selectOnlyOneElement(idResult + " table tbody");
+                if (this.selectOnlyOne === true)
+                    helper.selectOnlyOneElement(this.idResult + " table tbody");
                 
-                resizeColumn();
+                this.resizeColumn();
                 
-                clickedEvent = false;
+                this.clickedEvent = false;
                 
-                $(idResult).find(".update_loading").css("display", "none");
+                $(this.idResult).find(".update_loading").css("display", "none");
             },
             null,
             null
         );
     }
     
-    function resizeColumn() {
-        $(function() {
-            $(idResult).find("table tbody tr td").resizable({
+    resizeColumn = () => {
+        $(() => {
+            $(this.idResult).find("table tbody tr td").resizable({
                 handles: "e"
             });
         });

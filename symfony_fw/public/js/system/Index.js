@@ -1,28 +1,47 @@
 "use strict";
 
-/* global ajax, authentication, captcha, chaato, flashBag, helper, language, loader, materialDesign, menuUser, pageComment, popupEasy, recoverPassword, registration, search,
-    uploadChunk, widgetDatePicker, widgetSearch, wysiwyg */
+/* global */
 
-$(document).ready(function() {
-    ajax.init();
-    authentication.init();
-    captcha.init();
-    chaato.init();
-    flashBag.init();
-    helper.init();
-    language.init();
-    loader.init();
-    materialDesign.init();
-    menuUser.init();
-    pageComment.init();
-    popupEasy.init();
-    recoverPassword.init();
-    registration.init();
-    search.init();
-    uploadChunk.init();
-    widgetDatePicker.init();
-    widgetSearch.init();
-    wysiwyg.init();
+let ajax = null;
+let authentication = null;
+let captcha = null;
+let chaato = null;
+let flashBag = null;
+let helper = null;
+let language = null;
+let loader = null;
+let materialDesign = null;
+let menuUser = null;
+let pageComment = null;
+let popupEasy = null;
+let recoverPassword = null;
+let registration = null;
+let search = null;
+let uploadChunk = null;
+let widgetDatePicker = null;
+let widgetSearch = null;
+let wysiwyg = null;
+
+$(document).ready(() => {
+    ajax = new Ajax();
+    authentication = new Authentication();
+    captcha = new Captcha();
+    chaato = new Chaato();
+    flashBag = new FlashBag();
+    helper = new Helper();
+    language = new Language();
+    loader = new Loader();
+    materialDesign = new MaterialDesign();
+    menuUser = new MenuUser();
+    pageComment = new PageComment();
+    popupEasy = new PopupEasy();
+    recoverPassword = new RecoverPassword();
+    registration = new Registration();
+    search = new Search();
+    uploadChunk = new UploadChunk();
+    widgetDatePicker = new WidgetDatePicker();
+    widgetSearch = new WidgetSearch();
+    wysiwyg = new Wysiwyg();
     
     helper.checkMobile(true);
     helper.linkPreventDefault();
@@ -31,15 +50,6 @@ $(document).ready(function() {
     helper.uploadFakeClick();
     helper.blockMultiTab(true);
     helper.bodyProgress();
-    
-    authentication.action();
-    captcha.action();
-    language.action();
-    menuUser.action();
-    pageComment.action();
-    recoverPassword.action();
-    registration.action();
-    search.action();
     
     materialDesign.button();
     materialDesign.fabButton();
@@ -60,20 +70,36 @@ $(document).ready(function() {
     materialDesign.tabBar();
     materialDesign.fix();
     
+    flashBag.setElement = materialDesign.getSnackbarMdc;
+    flashBag.sessionActivity();
+    
+    authentication.action();
+    captcha.action();
+    language.action();
+    menuUser.action();
+    pageComment.action();
+    recoverPassword.action();
+    registration.action();
+    search.action();
+    
+    widgetDatePicker.setLanguage = "en";
+    //widgetDatePicker.setCurrentYear = 1984;
+    //widgetDatePicker.setCurrentMonth = 4;
+    //widgetDatePicker.setCurrentDay = 11;
+    widgetDatePicker.setInputFill = ".widget_datePicker_input";
+    widgetDatePicker.create();
+    
     widgetSearch.create();
     widgetSearch.changeView();
     
-    widgetDatePicker.setLanguage("en");
-    //widgetDatePicker.setCurrentYear(1984);
-    //widgetDatePicker.setCurrentMonth(4);
-    //widgetDatePicker.setCurrentDay(11);
-    widgetDatePicker.setInputFill(".widget_datePicker_input");
-    widgetDatePicker.create();
+    $(window).on("resize", "", (event) => {
+        materialDesign.refresh();
+        materialDesign.fix();
+        
+        widgetSearch.changeView();
+    });
     
-    flashBag.setElement(materialDesign.getSnackbarMdc());
-    flashBag.sessionActivity();
-    
-    $(window).resize(function() {
+    $(window).on("orientationchange", "", (event) => {
         materialDesign.refresh();
         materialDesign.fix();
         

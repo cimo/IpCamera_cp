@@ -2,40 +2,34 @@
 
 /* global ajax */
 
-const search = new Search();
-
-function Search() {
-    // Vars
-    const self = this;
-    
+class Search {
     // Properties
     
     // Functions public
-    self.init = function() {
-    };
+    constructor() {
+    }
     
-    self.action = function() {
+    action = () => {
         const tableAndPagination = new TableAndPagination();
-        tableAndPagination.init();
         tableAndPagination.create(window.url.searchRender, "#search_result", false);
         tableAndPagination.search();
         tableAndPagination.pagination();
         
-        $(".widget_search").on("submit", "", function(event) {
+        $(".widget_search").on("submit", "", (event) => {
             event.preventDefault();
             
             if ($(".widget_search").find(".button_open").hasClass("animate") === true && $(".widget_search").find("input").val() !== "") {
                 ajax.send(
                     true,
-                    $(this).prop("action"),
-                    $(this).prop("method"),
-                    $(this).serialize(),
+                    $(event.target).prop("action"),
+                    $(event.target).prop("method"),
+                    $(event.target).serialize(),
                     "json",
                     false,
                     true,
                     "application/x-www-form-urlencoded; charset=UTF-8",
                     null,
-                    function(xhr) {
+                    (xhr) => {
                         ajax.reply(xhr, "#" + event.currentTarget.id);
                         
                         if ($.isEmptyObject(xhr.response) === false && xhr.response.values !== undefined)
@@ -47,11 +41,11 @@ function Search() {
             }
         });
         
-        $(".widget_search").find(".button_open").on("click", "", function(event) {
+        $(".widget_search").find(".button_open").on("click", "", (event) => {
             if ($(event.target).hasClass("animate") === true && $(".widget_search").find("input").val() !== "")
-                $(this).parents(".widget_search").submit();
+                $(event.target).parents(".widget_search").submit();
         });
-    };
+    }
     
     // Functions private
 }

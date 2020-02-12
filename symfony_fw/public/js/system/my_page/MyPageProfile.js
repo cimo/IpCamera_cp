@@ -2,78 +2,73 @@
 
 /* global helper, ajax */
 
-const myPageProfile = new MyPageProfile();
-
-function MyPageProfile() {
-    // Vars
-    const self = this;
-    
+class MyPageProfile {
     // Properties
     
     // Functions public
-    self.init = function() {
-    };
+    constructor() {
+    }
     
-    self.action = function() {
-        $("#form_myPage_profile").on("submit", "", function(event) {
+    action = () => {
+        $("#form_myPage_profile").on("submit", "", (event) => {
             event.preventDefault();
             
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                new FormData(this),
+                $(event.target).prop("action"),
+                $(event.target).prop("method"),
+                new FormData(event.target),
                 "json",
                 false,
                 false,
                 false,
                 null,
-                function(xhr) {
-                    ajax.reply(xhr, "#" + event.currentTarget.id);
+                (xhr) => {
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
             );
         });
 
-        $("#form_myPage_profile_password").on("submit", "", function(event) {
+        $("#form_myPage_profile_password").on("submit", "", (event) => {
             event.preventDefault();
             
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                $(this).serialize(),
+                $(event.target).prop("action"),
+                $(event.target).prop("method"),
+                $(event.target).serialize(),
                 "json",
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
-                    ajax.reply(xhr, "#" + event.currentTarget.id);
+                (xhr) => {
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
             );
         });
         
-        $("#form_myPage_profile_credit").on("submit", "", function(event) {
+        $("#form_myPage_profile_credit").on("submit", "", (event) => {
             event.preventDefault();
             
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                $(this).serialize(),
+                $(event.target).prop("action"),
+                $(event.target).prop("method"),
+                $(event.target).serialize(),
                 "json",
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
-                    ajax.reply(xhr, "#" + event.currentTarget.id);
+                (xhr) => {
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
                     
-                    if (xhr.response.errors === undefined) {
+                    if (xhr.response.messages.success !== undefined) {
                         let credit = $("#form_myPage_profile_credit").find("input[name='credit']").val();
                         $("#form_myPage_profile_credit_paypal").find("input[name='quantity']").val(credit);
                         
@@ -84,7 +79,7 @@ function MyPageProfile() {
                 null
             );
         });
-    };
+    }
     
     // Function private
 }

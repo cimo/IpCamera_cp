@@ -1,4 +1,5 @@
 <div>
     <p>Page action test</p>
 </div>
-<script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/page_action/PageActionTest.js")}}"></script>
+
+<script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/PageActionTest" ~ javascriptMinify)}}"></script>

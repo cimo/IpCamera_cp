@@ -2,27 +2,22 @@
 
 /* global ajax */
 
-const captcha = new Captcha();
-
-function Captcha() {
-    // Vars
-    const self = this;
-    
+class Captcha {
     // Properties
     
     // Functions public
-    self.init = function() {
-    };
+    constructor() {
+    }
     
-    self.action = function() {
-        self.image();
+    action = () => {
+        this.image();
         
-        $(".captcha").find("img").on("click", "", function(event) {
-            self.image();
+        $(".captcha").find("img").on("click", "", (event) => {
+            this.image();
         });
-    };
+    }
     
-    self.image = function() {
+    image = () => {
         ajax.send(
             false,
             window.url.rootRender,
@@ -35,16 +30,16 @@ function Captcha() {
             true,
             "application/x-www-form-urlencoded; charset=UTF-8",
             null,
-            function(xhr) {
+            (xhr) => {
                 ajax.reply(xhr, "");
 
                 if (xhr.response.captchaImage !== undefined)
-                    $(".captcha").find("img").prop("src", "data:image/png;base64," + xhr.response.captchaImage);
+                    $(".captcha").find("img").prop("src", `data:image/png;base64,${xhr.response.captchaImage}`);
             },
             null,
             null
         );
-    };
+    }
     
     // Functions private
 }

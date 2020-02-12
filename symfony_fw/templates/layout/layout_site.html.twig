@@ -6,12 +6,6 @@
     {% set templateColumnCenter = "12" %}
 {% endif %}
 
-{% if (settingRow['javascript_minify'] == 1) %}
-    {% set javascriptMinify = ".min.js" %}
-{% else %}
-    {% set javascriptMinify = ".js" %}
-{% endif %}
-
 <!DOCTYPE html>
 <html lang="{{app.request.getLocale()}}">
     <head>
@@ -153,8 +147,6 @@
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/library/jquery-mobile_1.5.0.min.js")}}"></script>
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/library/material-components-web_custom.min.js")}}"></script>
         
-        {% block scriptContainer %}{% endblock %}
-        
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Helper" ~ javascriptMinify)}}"></script>
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/MaterialDesign" ~ javascriptMinify)}}"></script>
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/WidgetSearch" ~ javascriptMinify)}}"></script>
@@ -175,6 +167,8 @@
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Registration" ~ javascriptMinify)}}"></script>
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/RecoverPassword" ~ javascriptMinify)}}"></script>
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/MenuUser" ~ javascriptMinify)}}"></script>
+        
+        {% block scriptContainer %}{% endblock %}
         
         {{-include("@templateRoot/layout/layout_site_custom_bottom.html.twig")-}}
         

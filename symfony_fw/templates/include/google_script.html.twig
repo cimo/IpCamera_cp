@@ -3,10 +3,10 @@
 <script nonce="{{php_session.xssProtectionValue}}">
     "use strict";
     
-    window.addEventListener("load", function() {
+    window.addEventListener("load", (event) => {
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag("js", new Date());
         gtag("config", "UA-1234");
-    });
+    }, false);
 </script>

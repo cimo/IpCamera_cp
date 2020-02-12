@@ -34,7 +34,7 @@
     {{form_row(form.active)}}
     
     <p class="attemptLogin_reset_text">{% trans %}userProfile_2{% endtrans %} <span class="attemptLogin_reset_result">{{response.values.attemptLogin}}</span></p>
-    <button id="attemptLogin_reset" class="mdc-button mdc-button--dense mdc-button--raised" type="button">Attempt login reset</button>
+    <button id="attemptLogin_reset" class="mdc-button mdc-button--dense mdc-button--raised" type="button">{% trans %}userProfile_3{% endtrans %}</button>
     
     {{form_row(form.credit, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "monetization_on"})}}
 

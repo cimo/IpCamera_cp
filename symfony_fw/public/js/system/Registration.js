@@ -2,40 +2,35 @@
 
 /* global ajax */
 
-const registration = new Registration();
-
-function Registration() {
-    // Vars
-    const self = this;
-    
+class Registration {
     // Properties
     
     // Functions public
-    self.init = function() {
-    };
+    constructor() {
+    }
     
-    self.action = function() {
-        $("#form_user_registration").on("submit", "", function(event) {
+    action = () => {
+        $("#form_user_registration").on("submit", "", (event) => {
             event.preventDefault();
             
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                $(this).serialize(),
+                $(event.target).prop("action"),
+                $(event.target).prop("method"),
+                $(event.target).serialize(),
                 "json",
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
+                (xhr) => {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                 },
                 null,
                 null
             );
         });
-    };
+    }
     
     // Function private
 }

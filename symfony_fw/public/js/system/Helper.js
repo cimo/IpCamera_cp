@@ -2,42 +2,35 @@
 
 /* global materialDesign, mdc */
 
-const helper = new Helper();
-
-function Helper() {
-    // Vars
-    const self = this;
-    
-    let touchMove;
-    
+class Helper {
     // Properties
-    self.getTouchMove = function() {
-        return touchMove;
-    };
+    get getTouchMove() {
+        return this.touchMove;
+    }
     
     // Functions public
-    self.init = function() {
-        touchMove = false;
-    };
+    constructor() {
+        this.touchMove = false;
+    }
     
-    self.linkPreventDefault = function() {
-        $("a[href^='#']").on("click", "", function(event) {
+    linkPreventDefault = () => {
+        $("a[href^='#']").on("click", "", (event) => {
             event.preventDefault();
         });
-    };
+    }
     
-    self.mutationObserver = function(type, element, callback) {
-        let observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
+    mutationObserver = (type, element, callback) => {
+        let observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
                 if ($.inArray(mutation.type, type) !== -1)
                     callback();
             });
         });
         
         observer.observe(element, {'attributes': true, 'childList': true, 'subtree': true, 'characterData': true});
-    };
+    }
     
-    self.checkMobile = function(fix) {
+    checkMobile = (fix) => {
         let isMobile = false;
         
         let navigatorUserAgent = navigator.userAgent.toLowerCase();
@@ -48,13 +41,13 @@ function Helper() {
             isMobile = true;
             
             if (fix === true)
-                swipeFix();
+                this.swipeFix();
         }
 
         return isMobile;
-    };
+    }
     
-    self.checkWidthType = function(maxWidthOverride) {
+    checkWidthType = (maxWidthOverride) => {
         let widthType = "";
         
         let widthTmp = maxWidthOverride === undefined ? window.setting.widthMobile : maxWidthOverride;
@@ -65,9 +58,9 @@ function Helper() {
             widthType = "desktop";
         
         return widthType;
-    };
+    }
     
-    self.postIframe = function(action, method, elements) {
+    postIframe = (action, method, elements) => {
         let iframeTag = "iframe_commands_" + (new Date()).getTime();
         
         $("<iframe>", {
@@ -85,7 +78,7 @@ function Helper() {
             'method': method
         }).appendTo("body");
         
-        $.each(elements, function(key, value) {
+        $.each(elements, (key, value) => {
             $("<input>", {
                 'type': "hidden",
                 'name': key,
@@ -96,7 +89,7 @@ function Helper() {
         $("#" + formTag).submit();
     };
     
-    self.urlParameters = function(language) {
+    urlParameters = (language) => {
         let href = window.location.href;
         
         let pageStart = href.indexOf("/" + language + "/");
@@ -104,9 +97,9 @@ function Helper() {
         split.shift();
         
         return split;
-    };
+    }
     
-    self.urlParameterValue = function(name) {
+    urlParameterValue = (name) => {
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
         
         let regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
@@ -114,9 +107,9 @@ function Helper() {
         let parameters = regex.exec(window.location.search);
         
         return parameters === null ? "" : decodeURIComponent(parameters[1].replace(/\+/g, " "));
-    };
+    }
     
-    self.urlParameterRemove = function(url, target) {
+    urlParameterRemove = (url, target) => {
         let result = url.split("?")[0];
         let parameter;
         let parameters = [];
@@ -136,29 +129,29 @@ function Helper() {
         }
         
         return result;
-    };
+    }
     
-    self.removeElementAndResetIndex = function(element, index) {
-        element.length = Object.keys(element).length;
-        element.splice = [].splice;
+    removeElementAndResetIndex = (elements, index) => {
+        elements.length = Object.keys(elements).length;
+        elements.splice = [].splice;
 
-        element.splice(index, 1);
+        elements.splice(index, 1);
 
-        delete element.length;
-        delete element.splice;
+        delete elements.length;
+        delete elements.splice;
         
-        return element;
-    };
+        return elements;
+    }
     
-    self.objectToArray = function(items) {
-        let array = $.map(items, function(elements) {
+    objectToArray = (items) => {
+        let array = $.map(items, (elements) => {
             return elements;
         });
         
         return array;
-    };
+    }
     
-    self.isIntoView = function(id) {
+    isIntoView = (id) => {
         if ($(id).length === 0)
             return false;
 	
@@ -174,12 +167,12 @@ function Helper() {
         bounds.bottom = bounds.top + $(id).outerHeight();
 
         return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));
-    };
+    }
     
-    self.sortableElement = function(tagParent, tagInput) {
-        populateSortableInput(tagParent, tagInput);
+    sortableElement = (tagParent, tagInput) => {
+        this.populateSortableInput(tagParent, tagInput);
         
-        if (self.checkWidthType() === "desktop") {
+        if (this.checkWidthType() === "desktop") {
             $(".sort_result").find(".mdc-chip").removeClass("mdc-chip--selected");
             $(".sort_result").off("click");
             
@@ -189,13 +182,13 @@ function Helper() {
                 'tolerance': "pointer",
                 'handle': ".material-icons",
                 'cancel': ".no_sortable",
-                'start': function(event, ui) {
+                'start': (event, ui) => {
                     ui.placeholder.height(ui.item.height());
                 },
-                'stop': function(event, ui) {
+                'stop': (event, ui) => {
                     ui.placeholder.height(0);
                     
-                    populateSortableInput(tagParent, tagInput);
+                    this.populateSortableInput(tagParent, tagInput);
                 }
             }).disableSelection();
         }
@@ -203,8 +196,8 @@ function Helper() {
             if ($(tagParent).find(".sort_list").data("ui-sortable"))
                 $(tagParent).find(".sort_list").sortable("destroy");
 
-            $(".sort_result").off("click").on("click", ".mdc-chip", function(event) {
-                let target = $(event.target).parent().hasClass("mdc-chip") === true ? $(event.target).parent() : $(event.target);
+            $(".sort_result").off("click").on("click", ".mdc-chip", (event) => {
+                let target = $(event.currentTarget).parent().hasClass("mdc-chip") === true ? $(event.currentTarget).parent() : $(event.currentTarget);
 
                 if (target.hasClass("mdc-chip") === true) {
                     if (target.hasClass("mdc-chip--selected") === true) {
@@ -219,7 +212,7 @@ function Helper() {
                 }
             });
 
-            $(tagParent).find(".sort_control").find(".mdc-button").off("click").on("click", "", function(event) {
+            $(tagParent).find(".sort_control").find(".mdc-button").off("click").on("click", "", (event) => {
                 let element = $(tagParent).find(".sort_list .mdc-chip--selected");
 
                 if ($(event.target).find("i").hasClass("button_up") === true)
@@ -227,19 +220,19 @@ function Helper() {
                 else if ($(event.target).find("i").hasClass("button_down") === true)
                     element.parent().insertAfter(element.parent().next());
 
-                populateSortableInput(tagParent, tagInput);
+                this.populateSortableInput(tagParent, tagInput);
             });
         }
-    };
+    }
     
-    self.wordTag = function(tagParent, tagInput) {
+    wordTag = (tagParent, tagInput) => {
         if ($(tagInput).val() !== undefined) {
             let inputValueSplit = $(tagInput).val().split(",");
             inputValueSplit.pop();
             
             let html = "";
             
-            $.each(inputValueSplit, function(key, value) {
+            $.each(inputValueSplit, (key, value) => {
                 html += "<div class=\"mdc-chip\">\n\
                     <i class=\"material-icons mdc-chip__icon mdc-chip__icon--leading\">delete</i>\n\
                     <div class=\"mdc-chip__text wordTag_elemet_data\" data-id=\"" + value + "\">" + $(tagInput + "_select").find("option[value=\"" + value + "\"]").text() + "</div>\n\
@@ -248,7 +241,7 @@ function Helper() {
             
             $(tagParent).find(".wordTag_result").html(html);
             
-            $(tagInput + "_select").change(function(event) {
+            $(tagInput + "_select").change((event) => {
                 if ($.inArray($(event.target).val(), inputValueSplit) === -1 && $(event.target).val() !== "") {
                     $(tagParent).find(".wordTag_result").append(
                         "<div class=\"mdc-chip\">\n\
@@ -263,21 +256,21 @@ function Helper() {
                 }
             });
             
-            $(".wordTag_result").off("click").on("click", ".material-icons", function(event) {
-                let removeItem = $(event.target).next().attr("data-id");
+            $(".wordTag_result").off("click").on("click", ".material-icons", (event) => {
+                let removeItem = $(event.currentTarget).next().attr("data-id");
 
-                inputValueSplit = $.grep(inputValueSplit, function(value) {
+                inputValueSplit = $.grep(inputValueSplit, (value) => {
                     return value !== removeItem;
                 });
 
                 $(tagInput).val(inputValueSplit.join(",") + ",");
 
-                $(event.target).parents(".mdc-chip").remove();
+                $(event.currentTarget).parents(".mdc-chip").remove();
             });
         }
-    };
+    }
     
-    self.accordion = function(type) {
+    accordion = (type) => {
         let tag = "";
         
         if (type === "button")
@@ -285,9 +278,9 @@ function Helper() {
         else if (type === "icon")
             tag = ".icon_accordion";
         
-        $(".accordion_container").find(tag).off("click").on("click", "", function() {
-            let element = $(this);
-            let accordion = $(this).next();
+        $(".accordion_container").find(tag).off("click").on("click", "", (event) => {
+            let element = $(event.target);
+            let accordion = $(event.target).next();
             
             $(".accordion_container").find(".accordion").not(accordion).prev().text(window.text.index_9);
             
@@ -320,34 +313,34 @@ function Helper() {
             
             materialDesign.refresh();
         });
-    };
+    }
     
-    self.selectOnlyOneElement = function(tag) {
-        $(tag).on("click", "", function(event) {
+    selectOnlyOneElement = (tag) => {
+        $(tag).on("click", "", (event) => {
             if ($(event.target).is("input") === true) {
-                $.each($(tag).find("input"), function(key, value) {
+                $.each($(tag).find("input"), (key, value) => {
                     $(value).not(event.target).prop("checked", false);
                 });
             }
         });
-    };
+    }
     
-    self.fileNameFromSrc = function(attribute, extension) {
+    fileNameFromSrc = (attribute, extension) => {
         let value = attribute.replace(/\\/g, "/");
         value = value.substring(value.lastIndexOf("/") + 1);
         
         return extension ? value.replace(/[?#].+$/, "") : value.split(".")[0];
-    };
+    }
     
-    self.imageError = function(elements) {
-        elements.on("error", "", function() {
-            $.each($(this), function(key, value) {
+    imageError = (elements) => {
+        elements.on("error", "", (event) => {
+            $.each($(event.target), (key, value) => {
                 $(value).prop("src", window.url.root + "/images/templates/" + window.setting.template + "/error_404.png");
             });
         });
-    };
+    }
     
-    self.imageRefresh = function(tag, length) {
+    imageRefresh = (tag, length) => {
         if (tag !== "") {
             let src = $(tag).prop("src");
             
@@ -358,33 +351,33 @@ function Helper() {
             
             $(tag).prop("src", src + "?" + new Date().getTime());
         }
-    };
+    }
     
-    self.goToAnchor = function(tag) {
+    goToAnchor = (tag) => {
         $("html, body").animate({
             scrollTop: $(tag).offset().top
         }, 1000);
-    };
+    }
     
-    self.menuRoot = function() {
-        $(".menu_root_container").find(".mdc-list-item").on("click", "", function(event) {
+    menuRoot = () => {
+        $(".menu_root_container").find(".mdc-list-item").on("click", "", (event) => {
             if ($(event.target).hasClass("parent_icon") === true)
                 event.preventDefault();
         });
         
-        $(".menu_root_container").off("click").on("click", ".parent_icon", function() {
-            if ($(this).parent().next().css("display") !== "block")
-                $(this).parent().next().show();
+        $(".menu_root_container").off("click").on("click", ".parent_icon", (event) => {
+            if ($(event.currentTarget).parent().next().css("display") !== "block")
+                $(event.currentTarget).parent().next().show();
             else
-                $(this).parent().next().hide();
+                $(event.currentTarget).parent().next().hide();
         });
         
         if (window.location.href.indexOf("control_panel") === -1) {
-            let parameters = self.urlParameters(window.session.languageTextCode);
+            let parameters = this.urlParameters(window.session.languageTextCode);
             
             $(".menu_root_container").find(".target").removeClass("current");
             
-            $.each($(".menu_root_container").find(".target"), function(key, value) {
+            $.each($(".menu_root_container").find(".target"), (key, value) => {
                 if ($(value).prop("href").indexOf(parameters[1]) !== -1) {
                     $(value).addClass("current");
 
@@ -397,9 +390,9 @@ function Helper() {
                 }
             });
         }
-    };
+    }
     
-    self.bodyProgress = function() {
+    bodyProgress = () => {
         let linearProgressMdc = new mdc.linearProgress.MDCLinearProgress.attachTo($("#body_progress").find(".mdc-linear-progress")[0]);
         
         let performanceTiming = window.performance.timing;
@@ -408,7 +401,7 @@ function Helper() {
         let stepTime = Math.abs(Math.floor(time / 100));
         let current = 0;
         
-        let interval = setInterval(function() {
+        let intervalEvent = setInterval(() => {
             current += 0.1;
             
             linearProgressMdc.progress = current;
@@ -416,29 +409,29 @@ function Helper() {
             if (current >= 2) {
                 $("#body_progress").fadeOut("slow");
                 
-                clearInterval(interval);
+                clearInterval(intervalEvent);
             }
 	}, stepTime);
-    };
+    }
     
-    self.uploadFakeClick = function() {
-        $(document).on("click", ".material_upload button", function() {
-            let button = $(this);
+    uploadFakeClick = () => {
+        $(document).on("click", ".material_upload button", (event) => {
+            let button = $(event.currentTarget);
             let input = button.parent().find("input");
             let name = "";
             
             input.click();
             
-            input.on("change", "", function() {
+            input.on("change", "", (event) => {
                 if (input[0].files[0] !== undefined)
                     name = input[0].files[0].name;
                 
                 button.parent().find(".material_upload_label").text(name);
             });
         });
-    };
+    }
     
-    self.serializeJson = function(object) {
+    serializeJson = (object) => {
         let elements = {};
         
         let serializeArray = object.serializeArray();
@@ -448,8 +441,8 @@ function Helper() {
         
         let name = "";
         
-        $.each(json, function(key, value) {
-            $.each(value, function(keySub, valueSub) {
+        $.each(json, (key, value) => {
+            $.each(value, (keySub, valueSub) => {
                 if (keySub === "name") {
                     let newName = valueSub.substring(valueSub.lastIndexOf("[") + 1, valueSub.lastIndexOf("]"));
                     
@@ -463,9 +456,9 @@ function Helper() {
         });
         
         return elements;
-    };
+    }
     
-    self.unitFormat = function(value) {
+    unitFormat = (value) => {
         let result = "";
         
         if (value === 0)
@@ -480,13 +473,13 @@ function Helper() {
         }
         
         return result;
-    };
+    }
     
-    self.padZero = function(value) {
+    padZero = (value) => {
         return (value < 10 ? "0" : "") + value;
-    };
+    }
     
-    self.replaceUrlParameter = function(name, value) {
+    replaceUrlParameter = (name, value) => {
         let ulr = window.location.search;
         let regex = new RegExp("([?;&])" + name + "[^&;]*[;&]?");
         let query = ulr.replace(regex, "$1").replace(/&$/, "");
@@ -494,67 +487,68 @@ function Helper() {
         let result = (query.length > 2 ? query + "&" : "?") + (value ? name + "=" + value : "");
         
         window.history.replaceState("", "", window.location.pathname + result);
-    };
+    }
     
-    self.createCookie = function(name, values, expire, secure) {
+    createCookie = (name, values, expire, secure) => {
         let secureValue = secure === true ? "Secure;" : "";
         
         document.cookie = name + "=" + JSON.stringify(values) + ";expires=" + expire + ";path=/;domain=." + window.location.host.toString() + ";" + secureValue;
-    };
+    }
     
-    self.readCookie = function(name) {
+    readCookie = (name) => {
         let result = document.cookie.match(new RegExp(name + "=([^;]+)"));
         
         result && (result = JSON.parse(result[1]));
         
         return result;
-    };
+    }
     
-    self.removeCookie = function(name) {
-        if (self.readCookie(name) !== null)
-            self.createCookie(name, null, "Thu, 01-Jan-1970 00:00:01 GMT", true);
-    };
+    removeCookie = (name) => {
+        if (this.readCookie(name) !== null)
+            this.createCookie(name, null, "Thu, 01-Jan-1970 00:00:01 GMT", true);
+    }
     
-    self.blockMultiTab = function(active) {
+    blockMultiTab = (active) => {
         if (active === true) {
-            let cookieValues = self.readCookie(window.session.name + "_blockMultiTab");
+            let cookieValues = this.readCookie(window.session.name + "_blockMultiTab");
             
             if (cookieValues === null) {
-                self.createCookie(window.session.name + "_blockMultiTab", 1, "Fri, 31 Dec 9999 23:59:59 GMT", true);
+                this.createCookie(window.session.name + "_blockMultiTab", 1, "Fri, 31 Dec 9999 23:59:59 GMT", true);
                 
-                $(window).on("unload", "", function(event) {
-                    self.removeCookie(window.session.name + "_blockMultiTab");
+                $(window).on("unload", "", (event) => {
+                    this.removeCookie(window.session.name + "_blockMultiTab");
                 });
             }
             else {
-                $("body").find(".mdc-layout-grid.main").html("<h1 style=\"position: absolute; top: 20%; left: 0; right: 0; text-align: center;\">"
-                    + window.text.index_11 +
-                "</h1>\n\
-                <script nonce=\"" + window.session.xssProtectionValue + "\">\n\
-                    \"use strict\";\n\
-                    $(window).on(\"focus\", \"\", function() {\n\
-                        alert(window.text.index_11);\n\
-                        window.close();\n\
-                        $(window).off(\"focus\");\n\
-                        document.cookie = window.session.name + _blockMultiTab + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';\n\
-                    });\n\
-                </script>");
+                $("body").find(".mdc-layout-grid.main").html(`
+                    <h1 style="position: absolute; top: 20%; left: 0; right: 0; text-align: center;">${window.text.index_11}</h1>
+                    <script nonce="${window.session.xssProtectionValue}">
+                        "use strict";
+                        
+                        $(window).on("focus", "", (event) => {
+                            alert("${window.text.index_11}");
+                            window.close();
+                            $(window).off("focus");
+                            document.cookie = "${window.session.name}_blockMultiTab=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+                        });
+                    </script>
+                `);
             }
         }
-    };
+    }
     
     // Functions private
-    function populateSortableInput(tagParent, tagInput) {
+    populateSortableInput = (tagParent, tagInput) => {
         let idList = "";
 
-        $.each($(tagParent).find(".sort_elemet_data"), function(key, value) {
+        $.each($(tagParent).find(".sort_elemet_data"), (key, value) => {
             idList += $(value).attr("data-id") + ",";
         });
 
         $(tagInput).val(idList);
     }
     
-    function swipeFix() {
+    swipeFix = () => {
         let defaults = {
             min: {
                 'x': 20,
@@ -566,24 +560,24 @@ function Helper() {
             'down': $.noop
         }, isTouch = "ontouchend" in document;
         
-        $.fn.swipe = function(options) {
+        $.fn.swipe = (options) => {
             options = $.extend({}, defaults, options);
 
-            return this.each(function() {
-                let element = $(this);
+            return options.each((event) => {
+                let element = $(event.target);
                 let startX;
                 let startY;
                 let isMoving = false;
 
-                touchMove = false;
+                this.touchMove = false;
 
-                function cancelTouch() {
+                cancelTouch = () => {
                     element.off("mousemove.swipe touchmove.swipe", onTouchMove);
                     startX = null;
                     isMoving = false;
-                }
+                };
 
-                function onTouchMove(event) {
+                onTouchMove = (event) => {
                     if (isMoving && event.touches !== undefined) {
                         let x = isTouch ? event.touches[0].pageX : event.pageX;
                         let y = isTouch ? event.touches[0].pageY : event.pageY;
@@ -592,7 +586,7 @@ function Helper() {
                         let offsetY = startY - y;
 
                         if (Math.abs(offsetX) >= (options.min.x || options.min)) {
-                            touchMove = true;
+                            this.touchMove = true;
 
                             cancelTouch();
 
@@ -602,7 +596,7 @@ function Helper() {
                                 options.right();
                         }
                         else if (Math.abs(offsetY) >= (options.min.y || options.min)) {
-                            touchMove = true;
+                            this.touchMove = true;
 
                             cancelTouch();
 
@@ -612,9 +606,9 @@ function Helper() {
                                 options.down();
                         }
                     }
-                }
+                };
 
-                function onTouchStart(event) {
+                onTouchStart = (event) => {
                     event.preventDefault();
 
                     if (event.touches !== undefined) {
@@ -625,16 +619,16 @@ function Helper() {
 
                         element.on("mousemove.swipe touchmove.swipe", onTouchMove);
                     }
-                }
+                };
 
-                function onTouchEnd(event) {
+                onTouchEnd = (event) => {
                     if (event.touches !== undefined)
-                        touchMove = false;
-                }
+                        this.touchMove = false;
+                };
 
                 element.on("mousedown touchstart", onTouchStart);
                 element.on("mouseup touchend", onTouchEnd);
             });
         };
-    };
+    }
 }

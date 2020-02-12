@@ -2,62 +2,49 @@
 
 /* global helper, materialDesign, popupEasy */
 
-const wysiwyg = new Wysiwyg();
-
-function Wysiwyg() {
-    // Vars
-    const self = this;
-    
-    let containerTag;
-    
-    let iframeBody;
-    let iframeContent;
-    
-    let history;
-    let historyPosition;
-    let historyLimit;
-    let historyRestore;
-    
+class Wysiwyg {
     // Properties
     
     // Functions public
-    self.init = function() {
-        containerTag = "";
+    constructor() {
+        this.containerTag = "";
         
-        iframeBody = null;
-        iframeContent = null;
+        this.iframeBody = null;
+        this.iframeContent = null;
         
-        history = [];
-        historyPosition = -1;
-        historyLimit = 300;
-        historyRestore = false;
-    };
+        this.history = [];
+        this.historyPosition = -1;
+        this.historyLimit = 300;
+        this.historyRestore = false;
+    }
     
-    self.create = function(containerTagValue, saveElement) {
-        setTimeout(function() {
-            containerTag = containerTagValue;
+    create = (containerTagValue, saveElement) => {
+        let timeoutEvent = setTimeout(() => {
+            clearTimeout(timeoutEvent);
+            
+            this.containerTag = containerTagValue;
 
-            $(containerTag).parent().css("margin", "0");
-            $(containerTag).parent().hide();
+            $(this.containerTag).parent().css("margin", "0");
+            $(this.containerTag).parent().hide();
 
-            $(saveElement).click(function() {
-                fillField("source");
+            $(saveElement).click(() => {
+                this.fillField("source");
             });
 
-            iframe();
+            this.iframe();
         }, 100);
-    };
+    }
     
-    self.historyClear = function() {
-        history = [];
-    };
+    historyClear = () => {
+        this.history = [];
+    }
     
-    self.save = function() {
-        fillField("source");
-    };
+    save = () => {
+        this.fillField("source");
+    }
     
     // Functions private
-    function iframe() {
+    iframe = () => {
         if ($(".wysiwyg").length > 0) {
             $(".wysiwyg").find(".editor").contents().find("head").append(
                 "<style>\n\
@@ -80,66 +67,66 @@ function Wysiwyg() {
             
             $($(".wysiwyg").find(".editor").contents().find("head")[0]).append($("<link/>", {
                 rel: "stylesheet",
-                href: window.url.root + "/css/library/Roboto+Mono_custom.css",
+                href: `${window.url.root}/css/library/Roboto+Mono_custom.css`,
                 type: "text/css"
             }));
             $($(".wysiwyg").find(".editor").contents().find("head")[0]).append($("<link/>", {
                 rel: "stylesheet",
-                href: window.url.root + "/css/library/Roboto_300_400_500_custom.css",
+                href: `${window.url.root}/css/library/Roboto_300_400_500_custom.css`,
                 type: "text/css"
             }));
             $($(".wysiwyg").find(".editor").contents().find("head")[0]).append($("<link/>", {
                 rel: "stylesheet",
-                href: window.url.root + "/css/library/material-icons_custom.css",
+                href: `${window.url.root}/css/library/material-icons_custom.css`,
                 type: "text/css"
             }));
             $($(".wysiwyg").find(".editor").contents().find("head")[0]).append($("<link/>", {
                 rel: "stylesheet",
-                href: window.url.root + "/css/library/material-components-web_custom.min.css",
+                href: `${window.url.root}/css/library/material-components-web_custom.min.css`,
                 type: "text/css"
             }));
             $($(".wysiwyg").find(".editor").contents().find("head")[0]).append($("<link/>", {
                 rel: "stylesheet",
-                href: window.url.root + "/css/system/" + window.setting.template + ".css",
+                href: `${window.url.root}/css/system/" + window.setting.template + ".css`,
                 type: "text/css"
             }));
             
-            iframeBody = $(".wysiwyg").find(".editor").contents().find("body")[0];
-            iframeContent = $(".wysiwyg").find(".editor").contents()[0];
+            this.iframeBody = $(".wysiwyg").find(".editor").contents().find("body")[0];
+            this.iframeContent = $(".wysiwyg").find(".editor").contents()[0];
             
-            $(iframeBody).addClass("mdc-typography");
+            $(this.iframeBody).addClass("mdc-typography");
             
-            $(iframeBody).prop("contenteditable", "true");
+            $(this.iframeBody).prop("contenteditable", "true");
             
-            $(iframeBody).off("click").on("click", "a", function(event) {
+            $(this.iframeBody).off("click").on("click", "a", (event) => {
                 event.preventDefault();
             });
             
-            iframeContent.execCommand("defaultParagraphSeparator", false, "div");
+            this.iframeContent.execCommand("defaultParagraphSeparator", false, "div");
             
-            fillField("load");
+            this.fillField("load");
             
-            toolbarEvent();
+            this.toolbarEvent();
             
-            editorEvent();
+            this.editorEvent();
         }
     }
     
-    function fillField(type) {
+    fillField = (type) => {
         if (type === "load") {
-            if ($(iframeBody).length > 0) {
-                $(iframeBody).html($(containerTag).val());
+            if ($(this.iframeBody).length > 0) {
+                $(this.iframeBody).html($(this.containerTag).val());
                 
-                $(".wysiwyg").find(".source").text($(containerTag).val());
+                $(".wysiwyg").find(".source").text($(this.containerTag).val());
                 
-                historyLoad($(containerTag).val());
+                this.historyLoad($(this.containerTag).val());
             }
         }
         else if (type === "source") {
-            if ($(iframeBody).length > 0) {
-                let html = $.trim($(iframeBody).html());
+            if ($(this.iframeBody).length > 0) {
+                let html = $.trim($(this.iframeBody).html());
                 
-                $(containerTag).val(html);
+                $(this.containerTag).val(html);
                 
                 $(".wysiwyg").find(".source").text(html);
             }
@@ -148,12 +135,12 @@ function Wysiwyg() {
             let source = $(".wysiwyg").find(".source");
             
             if (source.length > 0)
-                $(iframeBody).html(source.text());
+                $(this.iframeBody).html(source.text());
         }
     }
     
-    function toolbarEvent() {
-        $(".wysiwyg").find(".toolbar .mdc-fab").off("click").on("click", "", function(event) {
+    toolbarEvent = () => {
+        $(".wysiwyg").find(".toolbar .mdc-fab").off("click").on("click", "", (event) => {
             event.preventDefault();
             
             let target = $(event.target).parent().hasClass("mdc-fab") === true ? $(event.target).parent() : $(event.target);
@@ -161,142 +148,142 @@ function Wysiwyg() {
             let command = target.find("span").data("command");
             
             if (command === "source")
-                source();
+                this.source();
             else if (command === "foreColor" || command === "backColor")
-                executeCommand(command, target.next().val());
+                this.executeCommand(command, target.next().val());
             else
-                executeCommand(command);
+                this.executeCommand(command);
         });
         
-        $(".wysiwyg").find(".mdc-select .mdc-select__native-control").off("change").on("change", "", function(event) {
+        $(".wysiwyg").find(".mdc-select .mdc-select__native-control").off("change").on("change", "", (event) => {
             event.preventDefault();
             
             let command = $(event.target).data("command");
             
             if (command === "formatBlock" || command === "fontSize")
-                executeCommand(command, $(event.target).val());
+                this.executeCommand(command, $(event.target).val());
         });
     }
     
-    function source() {
+    source = () => {
         let show = $(".wysiwyg").find(".source").css("display") === "none" ? true : false;
 
         if (show === true) {
-            fillField("source");
+            this.fillField("source");
             
             $(".wysiwyg").find(".editor").hide();
             $(".wysiwyg").find(".source").show();
         }
         else {
-            fillField("editor");
+            this.fillField("editor");
             
             $(".wysiwyg").find(".source").hide();
             $(".wysiwyg").find(".editor").show();
         }
     }
     
-    function executeCommand(command, fieldValue) {
+    executeCommand = (command, fieldValue) => {
         if (command === "undo")
-            historyUndo();
+            this.historyUndo();
         else if (command === "redo")
-            historyRedo();
+            this.historyRedo();
         else if (command === "foreColor" || command === "backColor" || command === "unlink" || command === "formatBlock" || command === "fontSize") {
-            iframeContent.execCommand(command, false, fieldValue);
+            this.iframeContent.execCommand(command, false, fieldValue);
             
-            historySave();
+            this.historySave();
         }
         else if (command === "createLink") {
             popupEasy.create(
                 window.textWysiwyg.label_5,
-                "<div id=\"wysiwyg_popup\">\n\
-                    <div class=\"mdc-text-field mdc-text-field__basic mdc-text-field--dense\" style=\"width: 100%;\">\n\
-                        <input class=\"mdc-text-field__input\" type=\"text\" value=\"\" autocomplete=\"off\" aria-label=\"label\"/>\n\
-                        <label class=\"mdc-floating-label\">" + window.textWysiwyg.label_6 + "</label>\n\
-                        <div class=\"mdc-line-ripple\"></div>\n\
-                    </div>\n\
-                    <p class=\"mdc-text-field-helper-text\" aria-hidden=\"true\"></p>\n\
-                </div>",
-                function() {
+                `<div id="wysiwyg_popup">
+                    <div class="mdc-text-field mdc-text-field__basic mdc-text-field--dense" style="width: 100%;">
+                        <input class="mdc-text-field__input" type="text" value="" autocomplete="off" aria-label="label"/>
+                        <label class="mdc-floating-label">${window.textWysiwyg.label_6}</label>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    <p class="mdc-text-field-helper-text" aria-hidden="true"></p>
+                </div>`,
+                () => {
                     let value = $("#wysiwyg_popup").find(".mdc-text-field__input").val();
                     
-                    iframeContent.execCommand(command, false, value);
+                    this.iframeContent.execCommand(command, false, value);
                     
-                    historySave();
+                    this.historySave();
                 }
             );
         }
         else if (command === "insertImage") {
             popupEasy.create(
                 window.textWysiwyg.label_7,
-                "<div id=\"wysiwyg_popup\">\n\
-                    <div class=\"mdc-text-field mdc-text-field__basic mdc-text-field--dense\" style=\"width: 100%;\">\n\
-                        <input class=\"mdc-text-field__input\" type=\"text\" value=\"\" autocomplete=\"off\" aria-label=\"label\"/>\n\
-                        <label class=\"mdc-floating-label\">" + window.textWysiwyg.label_8 + "</label>\n\
-                        <div class=\"mdc-line-ripple\"></div>\n\
-                    </div>\n\
-                    <p class=\"mdc-text-field-helper-text\" aria-hidden=\"true\"></p>\n\
-                </div>",
-                function() {
+                `<div id="wysiwyg_popup">
+                    <div class="mdc-text-field mdc-text-field__basic mdc-text-field--dense" style="width: 100%;">
+                        <input class="mdc-text-field__input" type="text" value="" autocomplete="off" aria-label="label"/>
+                        <label class="mdc-floating-label">${window.textWysiwyg.label_8}</label>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    <p class="mdc-text-field-helper-text" aria-hidden="true"></p>
+                </div>`,
+                () => {
                     let value = $("#wysiwyg_popup").find(".mdc-text-field__input").val();
                     
-                    iframeContent.execCommand(command, false, value);
+                    this.iframeContent.execCommand(command, false, value);
                     
-                    historySave();
+                    this.historySave();
                 }
             );
         }
         else if (command === "custom_button_add") {
             popupEasy.create(
                 window.textWysiwyg.label_9,
-                "<div id=\"wysiwyg_popup\">\n\
-                    <div class=\"mdc-text-field mdc-text-field__basic mdc-text-field--dense\" style=\"width: 100%;\">\n\
-                        <input class=\"mdc-text-field__input label\" type=\"text\" value=\"\" autocomplete=\"off\" aria-label=\"label\"/>\n\
-                        <label class=\"mdc-floating-label\">" + window.textWysiwyg.label_10 + "</label>\n\
-                        <div class=\"mdc-line-ripple\"></div>\n\
-                    </div>\n\
-                    <p class=\"mdc-text-field-helper-text\" aria-hidden=\"true\"></p>\n\
-                    <div class=\"mdc-text-field mdc-text-field__basic mdc-text-field--dense\" style=\"width: 100%;\">\n\
-                        <input class=\"mdc-text-field__input link\" type=\"text\" value=\"\" autocomplete=\"off\" aria-label=\"label\"/>\n\
-                        <label class=\"mdc-floating-label\">" + window.textWysiwyg.label_11 + "</label>\n\
-                        <div class=\"mdc-line-ripple\"></div>\n\
-                    </div>\n\
-                    <p class=\"mdc-text-field-helper-text\" aria-hidden=\"true\"></p>\n\
-                </div>",
-                function() {
+                `<div id="wysiwyg_popup">
+                    <div class="mdc-text-field mdc-text-field__basic mdc-text-field--dense" style="width: 100%;">
+                        <input class="mdc-text-field__input label" type="text" value="" autocomplete="off" aria-label="label"/>
+                        <label class="mdc-floating-label">${window.textWysiwyg.label_10}</label>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    <p class="mdc-text-field-helper-text" aria-hidden="true"></p>
+                    <div class="mdc-text-field mdc-text-field__basic mdc-text-field--dense" style="width: 100%;">
+                        <input class="mdc-text-field__input link" type="text" value="" autocomplete="off" aria-label="label"/>
+                        <label class=\"mdc-floating-label\">${window.textWysiwyg.label_11}</label>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    <p class="mdc-text-field-helper-text" aria-hidden="true"></p>
+                </div>`,
+                () => {
                     let label = $("#wysiwyg_popup").find(".mdc-text-field__input.label").val();
                     let link = $("#wysiwyg_popup").find(".mdc-text-field__input.link").val();
                     
                     let html = "";
                     
                     if (link === "")
-                        html = "<button class=\"mdc-button mdc-button--dense mdc-button--raised\" type=\"button\" contenteditable=\"false\" style=\"display: block;\">" + label + "</button>";
+                        html = `<button class="mdc-button mdc-button--dense mdc-button--raised" type="button" contenteditable="false" style="display: block;">${label}</button>`;
                     else
-                        html = "<a class=\"mdc-button mdc-button--dense mdc-button--raised\" href=\"" + link + "\" type=\"button\" contenteditable=\"false\">" + label + "</a>";
+                        html = `<a class="mdc-button mdc-button--dense mdc-button--raised" href="${link}" type="button" contenteditable="false">${label}</a>`;
                     
-                    addHtmlAtCaretPosition(html);
+                    this.addHtmlAtCaretPosition(html);
                     
-                    historySave();
+                    this.historySave();
                 }
             );
         }
         else if (command === "custom_table_add") {
             popupEasy.create(
                 window.textWysiwyg.label_12,
-                "<div id=\"wysiwyg_popup\">\n\
-                    <div class=\"mdc-text-field mdc-text-field__basic mdc-text-field--dense\" style=\"width: 100%;\">\n\
-                        <input class=\"mdc-text-field__input row_number\" type=\"text\" value=\"1\" autocomplete=\"off\" aria-label=\"label\"/>\n\
-                        <label class=\"mdc-floating-label\">" + window.textWysiwyg.label_13 + "</label>\n\
-                        <div class=\"mdc-line-ripple\"></div>\n\
-                    </div>\n\
-                    <p class=\"mdc-text-field-helper-text\" aria-hidden=\"true\"></p>\n\
-                    <div class=\"mdc-text-field mdc-text-field__basic mdc-text-field--dense\" style=\"width: 100%;\">\n\
-                        <input class=\"mdc-text-field__input column_number\" type=\"text\" value=\"4\" autocomplete=\"off\" aria-label=\"label\"/>\n\
-                        <label class=\"mdc-floating-label\">" + window.textWysiwyg.label_14 + "</label>\n\
-                        <div class=\"mdc-line-ripple\"></div>\n\
-                    </div>\n\
-                    <p class=\"mdc-text-field-helper-text\" aria-hidden=\"true\"></p>\n\
-                </div>",
-                function() {
+                `<div id="wysiwyg_popup">
+                    <div class="mdc-text-field mdc-text-field__basic mdc-text-field--dense" style="width: 100%;">
+                        <input class="mdc-text-field__input row_number" type="text" value="1" autocomplete="off" aria-label="label"/>
+                        <label class="mdc-floating-label">${window.textWysiwyg.label_13}</label>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    <p class="mdc-text-field-helper-text" aria-hidden="true"></p>
+                    <div class="mdc-text-field mdc-text-field__basic mdc-text-field--dense" style="width: 100%;">
+                        <input class="mdc-text-field__input column_number" type="text" value="4" autocomplete="off" aria-label="label"/>
+                        <label class=\"mdc-floating-label\">${window.textWysiwyg.label_14}</label>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    <p class="mdc-text-field-helper-text" aria-hidden="true"></p>
+                </div>`,
+                () => {
                     let rowNumber = $("#wysiwyg_popup").find(".row_number").val();
                     let columnNumber = $("#wysiwyg_popup").find(".column_number").val();
                     
@@ -310,115 +297,115 @@ function Wysiwyg() {
                         }
                     html += "</div>";
                     
-                    addHtmlAtCaretPosition(html);
+                    this.addHtmlAtCaretPosition(html);
                     
-                    historySave();
+                    this.historySave();
                 }
             );
         }
         else {
-            iframeContent.execCommand(command, false, null);
+            this.iframeContent.execCommand(command, false, null);
             
-            historySave();
+            this.historySave();
         }
     }
     
-    function historyUndo() {
-        if (historyPosition >= 0) {
-            let element = history[-- historyPosition];
+    historyUndo = () => {
+        if (this.historyPosition >= 0) {
+            let element = this.history[-- this.historyPosition];
             
-            if (historyPosition < 0) {
-                historyPosition = 0;
+            if (this.historyPosition < 0) {
+                this.historyPosition = 0;
                 
-                element = history[historyPosition];
+                element = this.history[this.historyPosition];
             }
             
-            $(iframeBody).html(element);
+            $(this.iframeBody).html(element);
             
-            historyRestore = true;
+            this.historyRestore = true;
 	}
     }
     
-    function historyRedo() {
-        if (historyPosition < (history.length - 1)) {
-            let element = history[++ historyPosition];
+    historyRedo = () => {
+        if (this.historyPosition < (this.history.length - 1)) {
+            let element = this.history[++ this.historyPosition];
             
-            $(iframeBody).html(element);
+            $(this.iframeBody).html(element);
             
-            historyRestore = true;
+            this.historyRestore = true;
 	}
     }
     
-    function historySave() {
-        spaceAfterElement();
+    historySave = () => {
+        this.spaceAfterElement();
         
-        removeDoubleSpace();
+        this.removeDoubleSpace();
         
-        let html = $(iframeBody).html();
+        let html = $(this.iframeBody).html();
         
-        if (html !== history[historyPosition]) {
-            if (historyPosition < (history.length - 1))
-                history.splice(historyPosition + 1);
+        if (html !== this.history[this.historyPosition]) {
+            if (this.historyPosition < (this.history.length - 1))
+                this.history.splice(this.historyPosition + 1);
             
-            history.push(html);
-            historyPosition ++;
+            this.history.push(html);
+            this.historyPosition ++;
             
-            if (historyPosition > historyLimit)
-                history.shift();
+            if (this.historyPosition > this.historyLimit)
+                this.history.shift();
         }
     }
     
-    function historyLoad(content) {
-        history.push(content);
-        historyPosition = 0;
+    historyLoad = (content) => {
+        this.history.push(content);
+        this.historyPosition = 0;
     }
     
-    function editorEvent() {
-        $(iframeBody).on("click", "", function(event) {
-            historyRestore = false;
+    editorEvent = () => {
+        $(this.iframeBody).on("click", "", (event) => {
+            this.historyRestore = false;
             
-            let element = findElementAtCaretPosition();
+            let element = this.findElementAtCaretPosition();
             
             if ($(element).hasClass("mdc-layout-grid__cell") === false && $(element).parents(".mdc-layout-grid__cell").length === 0)
-                $(iframeBody).find(".mdc-layout-grid__cell").prop("contenteditable", false);
+                $(this.iframeBody).find(".mdc-layout-grid__cell").prop("contenteditable", false);
         });
         
-        $(iframeBody).on("dblclick", "", function(event) {
-            historyRestore = false;
+        $(this.iframeBody).on("dblclick", "", (event) => {
+            this.historyRestore = false;
             
-            let element = findElementAtCaretPosition();
+            let element = this.findElementAtCaretPosition();
             
             if ($(element).parents(".mdc-layout-grid__cell").length > 0)
                 element = $(element).parents(".mdc-layout-grid__cell")[0];
             
             if ($(element).hasClass("mdc-layout-grid__cell") === true) {
-                $(iframeBody).find(".mdc-layout-grid__cell").prop("contenteditable", false);
+                $(this.iframeBody).find(".mdc-layout-grid__cell").prop("contenteditable", false);
                 
                 $(element).prop("contenteditable", true);
                 $(element).focus();
             }
         });
         
-        $(iframeBody).on("keydown", "", function(event) {
+        $(this.iframeBody).on("keydown", "", (event) => {
             if ((event.ctrlKey || event.metaKey === true)) {
                 if (event.shiftKey && event.keyCode === 90) {
-                    historyRedo();
+                    this.historyRedo();
                     
                     return false;
                 }
                 else if (event.keyCode === 90) {
-                    historyUndo();
+                    this.historyUndo();
                     
                     return false;
                 } 
             }
         });
         
-        $(iframeBody).on("keyup", "", function(event) {
-            historySave();
+        $(this.iframeBody).on("keyup", "", (event) => {
+            this.historySave();
         });
         
-        $(iframeBody).contextmenu(function(event) {
+        $(this.iframeBody).contextmenu((event) => {
             let type = "";
             let target = null;
             let content = "";
@@ -430,29 +417,29 @@ function Wysiwyg() {
                 if ($(event.target).is("button") === true) {
                     let label = $(event.target).text();
                     
-                    content = "<div class=\"mdc-text-field mdc-text-field__basic mdc-text-field--dense\" style=\"width: 100%;\">\n\
-                        <input class=\"mdc-text-field__input label\" type=\"text\" value=\"" + label + "\" autocomplete=\"off\" aria-label=\"label\"/>\n\
-                        <label class=\"mdc-floating-label\">" + window.textWysiwyg.label_10 + "</label>\n\
-                        <div class=\"mdc-line-ripple\"></div>\n\
-                    </div>\n\
-                    <p class=\"mdc-text-field-helper-text\" aria-hidden=\"true\"></p>";
+                    content = `<div class="mdc-text-field mdc-text-field__basic mdc-text-field--dense" style="width: 100%;">
+                        <input class="mdc-text-field__input label" type="text" value="${label}" autocomplete="off" aria-label="label"/>
+                        <label class="mdc-floating-label">${window.textWysiwyg.label_10}</label>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    <p class="mdc-text-field-helper-text" aria-hidden="true"></p>`;
                 }
                 else if ($(event.target).is("a") === true) {
                     let label = $(event.target).text();
                     let link = $(event.target).prop("href") === undefined ? "" : $(event.target).prop("href");
                     
-                    content = "<div class=\"mdc-text-field mdc-text-field__basic mdc-text-field--dense\" style=\"width: 100%;\">\n\
-                        <input class=\"mdc-text-field__input label\" type=\"text\" value=\"" + label + "\" autocomplete=\"off\" aria-label=\"label\"/>\n\
-                        <label class=\"mdc-floating-label\">" + window.textWysiwyg.label_10 + "</label>\n\
-                        <div class=\"mdc-line-ripple\"></div>\n\
-                    </div>\n\
-                    <p class=\"mdc-text-field-helper-text\" aria-hidden=\"true\"></p>\n\
-                    <div class=\"mdc-text-field mdc-text-field__basic mdc-text-field--dense\" style=\"width: 100%;\">\n\
-                        <input class=\"mdc-text-field__input link\" type=\"text\" value=\"" + link + "\" autocomplete=\"off\" aria-label=\"label\"/>\n\
-                        <label class=\"mdc-floating-label\">" + window.textWysiwyg.label_11 + "</label>\n\
-                        <div class=\"mdc-line-ripple\"></div>\n\
-                    </div>\n\
-                    <p class=\"mdc-text-field-helper-text\" aria-hidden=\"true\"></p>";
+                    content = `<div class="mdc-text-field mdc-text-field__basic mdc-text-field--dense" style="width: 100%;">
+                        <input class="mdc-text-field__input label" type="text" value="${label}" autocomplete="off" aria-label="label"/>
+                        <label class="mdc-floating-label">{window.textWysiwyg.label_10}</label>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    <p class="mdc-text-field-helper-text" aria-hidden="true"></p>
+                    <div class="mdc-text-field mdc-text-field__basic mdc-text-field--dense" style="width: 100%;">
+                        <input class="mdc-text-field__input link" type="text" value="${link}" autocomplete="off" aria-label="label"/>
+                        <label class="mdc-floating-label">${window.textWysiwyg.label_11}</label>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                    <p class="mdc-text-field-helper-text" aria-hidden="true"></p>`;
                 }
             }
             else if ($(event.target).hasClass("mdc-layout-grid__cell") === true || $(event.target).parents(".mdc-layout-grid__cell").length > 0) {
@@ -463,30 +450,30 @@ function Wysiwyg() {
                 
                 type = "table";
                 
-                content = "<fieldset>\n\
-                    <legend>" + window.textWysiwyg.label_16 + "</legend>\n\
-                    <button id=\"row_add\" class=\"mdc-button mdc-button--dense mdc-button--raised\" type=\"button\">" + window.textWysiwyg.label_17 + "</button>\n\
-                    <button id=\"row_remove\" class=\"mdc-button mdc-button--dense mdc-button--raised\" type=\"button\">" + window.textWysiwyg.label_18 + "</button>\n\
-                </fieldset>\n\
-                <fieldset>\n\
-                    <legend>" + window.textWysiwyg.label_19 + "</legend>\n\
-                    <button id=\"column_add\" class=\"mdc-button mdc-button--dense mdc-button--raised\" type=\"button\">" + window.textWysiwyg.label_20 + "</button>\n\
-                    <button id=\"column_remove\" class=\"mdc-button mdc-button--dense mdc-button--raised\" type=\"button\">" + window.textWysiwyg.label_21 + "</button>\n\
-                </fieldset>";
+                content = `<fieldset>
+                    <legend>${window.textWysiwyg.label_16}</legend>
+                    <button id="row_add" class="mdc-button mdc-button--dense mdc-button--raised" type="button">${window.textWysiwyg.label_17}</button>
+                    <button id="row_remove" class="mdc-button mdc-button--dense mdc-button--raised" type="button">${window.textWysiwyg.label_18}</button>
+                </fieldset>
+                <fieldset>
+                    <legend>${window.textWysiwyg.label_19}</legend>
+                    <button id="column_add" class="mdc-button mdc-button--dense mdc-button--raised" type="button">${window.textWysiwyg.label_20}</button>
+                    <button id="column_remove" class="mdc-button mdc-button--dense mdc-button--raised" type="button">${window.textWysiwyg.label_21}</button>
+                </fieldset>`;
             }
             
             if (content !== "")
-                popupsetting(type, target, content);
+                this.popupsetting(type, target, content);
             
             return false;
         });
     }
     
-    function popupsetting(type, target, content) {
+    popupsetting = (type, target, content) => {
         popupEasy.create(
             window.textWysiwyg.label_15,
-            "<div id=\"wysiwyg_popup\">" + content + "</div>",
-            function() {
+            `<div id=\"wysiwyg_popup\">${content}</div>`,
+            () => {
                 if (type === "button") {
                     let label = $("#wysiwyg_popup").find(".mdc-text-field__input.label").val();
                     let link = $("#wysiwyg_popup").find(".mdc-text-field__input.link").val();
@@ -495,12 +482,12 @@ function Wysiwyg() {
                     target.prop("href", link);
                 }
                 
-                historySave();
+                this.historySave();
             }
         );
         
         if (type === "table") {
-            $("#row_add").off("click").on("click", "", function() {
+            $("#row_add").off("click").on("click", "", (event) => {
                 let columnNumber = target.parent().find(".mdc-layout-grid__cell").length;
                 
                 let html = "<div class=\"mdc-layout-grid__inner\" contenteditable=\"false\">";
@@ -513,33 +500,33 @@ function Wysiwyg() {
                 
                 popupEasy.close();
                 
-                historySave();
+                this.historySave();
             });
-            $("#row_remove").off("click").on("click", "", function() {
+            $("#row_remove").off("click").on("click", "", (event) => {
                 target.parent().remove();
                 
                 popupEasy.close();
                 
-                historySave();
+                this.historySave();
             });
             
-            $("#column_add").off("click").on("click", "", function() {
+            $("#column_add").off("click").on("click", "", (event) => {
                 let columnIndex = target.index();
                 
                 let html = "<div class=\"mdc-layout-grid__cell mdc-layout-grid__cell--span-2\" contenteditable=\"false\">&nbsp;</div>";
                 
-                $.each(target.parents(".mdc-layout-grid").find(".mdc-layout-grid__inner"), function(key, value) {
+                $.each(target.parents(".mdc-layout-grid").find(".mdc-layout-grid__inner"), (key, value) => {
                     $(value).find(".mdc-layout-grid__cell").eq(columnIndex).after(html);
                 });
                 
                 popupEasy.close();
                 
-                historySave();
+                this.historySave();
             });
-            $("#column_remove").off("click").on("click", "", function() {
+            $("#column_remove").off("click").on("click", "", (event) => {
                 let columnIndex = target.index();
                 
-                $.each(target.parents(".mdc-layout-grid").find(".mdc-layout-grid__inner"), function(key, value) {
+                $.each(target.parents(".mdc-layout-grid").find(".mdc-layout-grid__inner"), (key, value) => {
                     if ($(value).find(".mdc-layout-grid__cell").length === 1) {
                         target.parents(".mdc-layout-grid").remove();
                         
@@ -551,17 +538,17 @@ function Wysiwyg() {
                 
                 popupEasy.close();
                 
-                historySave();
+                this.historySave();
             });
         }
     }
     
-    function findElementAtCaretPosition() {
+    findElementAtCaretPosition = () => {
         let iframeDocument = window.frames[0].document;
         let selection = null;
         let containerNode = null;
         
-        if (iframeDocument.getSelection) {
+        if (iframeDocument.getSelection()) {
             selection = iframeDocument.getSelection();
             
             containerNode = selection.anchorNode;
@@ -578,14 +565,14 @@ function Wysiwyg() {
         return containerNode;
     }
     
-    function addHtmlAtCaretPosition(html) {
+    addHtmlAtCaretPosition = (html) => {
         let iframeDocument = window.frames[0].document;
         let range = null;
         
-        if (iframeDocument.getSelection) {
+        if (iframeDocument.getSelection()) {
             selection = iframeDocument.getSelection();
             
-            if (selection.getRangeAt && selection.rangeCount) {
+            if (selection.getRangeAt() && selection.rangeCount()) {
                 let htmlElement = window.frames[0].document.createElement("div");
                 htmlElement.innerHTML = html;
                 
@@ -621,10 +608,10 @@ function Wysiwyg() {
         }
     }
     
-    function spaceAfterElement() {
-        let elements = $(iframeContent).find(".mdc-button, .mdc-layout-grid");
+    spaceAfterElement = () => {
+        let elements = $(this.iframeContent).find(".mdc-button, .mdc-layout-grid");
         
-        $.each(elements, function(key, value) {
+        $.each(elements, (key, value) => {
             if ($(value).prev("br").length === 0)
                 $(value).before("<br>");
             
@@ -633,10 +620,10 @@ function Wysiwyg() {
         });
     }
     
-    function removeDoubleSpace() {
-        let elements = $(iframeContent).find("br");
+    removeDoubleSpace = () => {
+        let elements = $(this.iframeContent).find("br");
         
-        $.each(elements, function(key, value) {
+        $.each(elements, (key, value) => {
             if ($(value).prev("br").length === 1)
                 $(value).prev("br").remove();
             

@@ -2,28 +2,22 @@
 
 /* global ajax, popupEasy, materialDesign, tableAndPagination */
 
-const controlPanelSettingLinePush = new ControlPanelSettingLinePush();
-
-function ControlPanelSettingLinePush() {
-    // Vars
-    const self = this;
-    
+class ControlPanelSettingLinePush {
     // Properties
     
     // Functions public
-    self.init = function() {
-    };
+    constructor() {
+    }
     
-    self.action = function() {
+    action = () => {
         const tableAndPagination = new TableAndPagination();
-        tableAndPagination.init();
         tableAndPagination.create(window.url.cpSettingLinePushRender, "#cp_setting_line_push_user_result", false);
         tableAndPagination.search();
         tableAndPagination.pagination();
         
         $("#cp_setting_line_push_user_result").find(".tableAndPagination").hide();
         
-        $("#form_cp_setting_line_push_render").on("submit", "", function(event) {
+        $("#form_cp_setting_line_push_render").on("submit", "", (event) => {
             event.preventDefault();
             
             if ($(".tableAndPagination .mdc-text-field__input").is(":focus") === true)
@@ -31,15 +25,15 @@ function ControlPanelSettingLinePush() {
             
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                $(this).serialize(),
+                $(event.target).prop("action"),
+                $(event.target).prop("method"),
+                $(event.target).serialize(),
                 "json",
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
+                (xhr) => {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                     
                     if (xhr.response.values.wordTagListHtml !== undefined)
@@ -50,7 +44,7 @@ function ControlPanelSettingLinePush() {
             );
         });
         
-        $("#form_cp_setting_line_push_render").on("click", ".button_reset", function(event) {
+        $("#form_cp_setting_line_push_render").on("click", ".button_reset", (event) => {
             ajax.send(
                 true,
                 window.url.cpSettingLinePushReset,
@@ -64,11 +58,11 @@ function ControlPanelSettingLinePush() {
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
+                (xhr) => {
                     ajax.reply(xhr, "");
                     
                     if (xhr.response.messages.success !== undefined) {
-                        resetField();
+                        this.resetField();
                         
                         tableAndPagination.populate(xhr);
 
@@ -80,11 +74,11 @@ function ControlPanelSettingLinePush() {
             );
         });
         
-        $("#form_cp_setting_line_push_render .wordTag_container").on("click", ".edit", function(event) {
-            if ($(event.target).hasClass("delete") === true)
+        $("#form_cp_setting_line_push_render .wordTag_container").on("click", ".edit", (event) => {
+            if ($(event.currentTarget).hasClass("delete") === true)
                 return;
             
-            let id = $.trim($(this).find(".mdc-chip__text").attr("data-id"));
+            let id = $.trim($(event.currentTarget).find(".mdc-chip__text").attr("data-id"));
             
             ajax.send(
                 true,
@@ -100,7 +94,7 @@ function ControlPanelSettingLinePush() {
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
+                (xhr) => {
                     ajax.reply(xhr, "");
                     
                     if (xhr.response.values.wordTagListHtml !== undefined) {
@@ -123,16 +117,16 @@ function ControlPanelSettingLinePush() {
             );
         });
         
-        $("#form_cp_setting_line_push_render .wordTag_container").on("click", ".delete", function(event) {
-            if ($(event.target).hasClass("edit") === true)
+        $("#form_cp_setting_line_push_render .wordTag_container").on("click", ".delete", (event) => {
+            if ($(event.currentTarget).hasClass("edit") === true)
                 return;
             
-            let id = $.trim($(this).parent().find(".mdc-chip__text").attr("data-id"));
+            let id = $.trim($(event.currentTarget).parent().find(".mdc-chip__text").attr("data-id"));
             
             popupEasy.create(
                 window.text.index_5,
                 window.textSettingLinePush.label_1,
-                function() {
+                () => {
                     ajax.send(
                         true,
                         window.url.cpSettingLinePushDelete,
@@ -147,13 +141,13 @@ function ControlPanelSettingLinePush() {
                         true,
                         "application/x-www-form-urlencoded; charset=UTF-8",
                         null,
-                        function(xhr) {
+                        (xhr) => {
                             ajax.reply(xhr, "");
                             
                             if (xhr.response.values.wordTagListHtml !== undefined) {
                                 $("#form_cp_setting_line_push_render").find(".wordTag_container").html(xhr.response.values.wordTagListHtml);
                                 
-                                resetField();
+                                this.resetField();
                                 
                                 tableAndPagination.populate(xhr);
                                 
@@ -169,7 +163,7 @@ function ControlPanelSettingLinePush() {
     };
     
     // Function private
-    function resetField() {
+    resetField = () => {
         $("#form_settingLinePush_name").val("");
         $("#form_settingLinePush_name").parent().find("label").removeClass("mdc-floating-label--float-above");
 

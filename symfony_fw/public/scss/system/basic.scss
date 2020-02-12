@@ -454,6 +454,10 @@ pre {
 .microservice_deploy_group {
     .container {
         display: inline-block;
+        
+        .material_upload_label {
+            margin: 0;
+        }
     }
 }
 
@@ -685,6 +689,7 @@ pre {
 }
 
 .attemptLogin_reset_text {
+    display: inline-block;
     margin-bottom: 0;
 }
 
@@ -820,6 +825,11 @@ pre {
 #unit_test_code_row .mdc-text-field {
     width: 100%;
 }
+
+#attemptLogin_reset {
+    margin-top: -3px;
+}
+
 #form_microservice_unit_test_code {
     width: 100%;
     height: 500px;

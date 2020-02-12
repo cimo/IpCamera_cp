@@ -76,6 +76,11 @@ class RequestListener {
         $this->container->get("twig")->addGlobal("settingRow", $this->settingRow);
         $this->container->get("twig")->addGlobal("pageRow", $this->query->selectPageDatabase($newRequest->getLocale(), $urlCurrentPageId));
         
+        if ($this->settingRow['javascript_minify'] == 1)
+            $this->container->get("twig")->addGlobal("javascriptMinify", ".min.js");
+        else
+            $this->container->get("twig")->addGlobal("javascriptMinify", ".js");
+        
         if ($checkSessionOverTime != false)
             $event->setResponse(new RedirectResponse($checkSessionOverTime));
         else if ($checkLanguage[1] != false)

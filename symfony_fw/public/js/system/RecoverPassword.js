@@ -2,33 +2,28 @@
 
 /* global ajax */
 
-const recoverPassword = new RecoverPassword();
-
-function RecoverPassword() {
-    // Vars
-    const self = this;
-    
+class RecoverPassword {
     // Properties
     
     // Functions public
-    self.init = function() {
-    };
+    constructor() {
+    }
     
-    self.action = function() {
-        $("#form_recover_password").on("submit", "", function(event) {
+    action = () => {
+        $("#form_recover_password").on("submit", "", (event) => {
             event.preventDefault();
             
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                $(this).serialize(),
+                $(event.target).prop("action"),
+                $(event.target).prop("method"),
+                $(event.target).serialize(),
                 "json",
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
+                (xhr) => {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                 },
                 null,
@@ -36,27 +31,27 @@ function RecoverPassword() {
             );
         });
         
-        $("#form_forgot_password").on("submit", "", function(event) {
+        $("#form_forgot_password").on("submit", "", (event) => {
             event.preventDefault();
             
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                $(this).serialize(),
+                $(event.target).prop("action"),
+                $(event.target).prop("method"),
+                $(event.target).serialize(),
                 "json",
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
+                (xhr) => {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                 },
                 null,
                 null
             );
         });
-    };
+    }
     
     // Function private
 }

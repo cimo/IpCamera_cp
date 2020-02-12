@@ -2,34 +2,29 @@
 
 /* global ajax, captcha */
 
-const authentication = new Authentication();
-
-function Authentication() {
-    // Vars
-    const self = this;
-    
+class Authentication {
     // Properties
     
     // Functions public
-    self.init = function() {
-    };
+    constructor() {
+    }
     
-    self.action = function() {
-        $("#form_authentication").on("submit", "", function(event) {
+    action = () => {
+        $("#form_authentication").on("submit", "", (event) => {
             event.preventDefault();
             
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                $(this).serialize(),
+                $(event.target).prop("action"),
+                $(event.target).prop("method"),
+                $(event.target).serialize(),
                 "json",
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
-                    ajax.reply(xhr, "#" + event.currentTarget.id);
+                (xhr) => {
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
                     
                     if (xhr.response.messages !== undefined) {
                         if (xhr.response.values !== undefined && xhr.response.values.captchaReload === true)
@@ -42,7 +37,7 @@ function Authentication() {
                 null
             );
         });
-    };
+    }
     
     // Function private
 }

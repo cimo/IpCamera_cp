@@ -2,67 +2,57 @@
 
 /* global helper, ajax, language, popupEasy, wysiwyg, materialDesign */
 
-const controlPanelPage = new ControlPanelPage();
-
-function ControlPanelPage() {
-    // Vars
-    const self = this;
-    
-    let selectSended;
-    let selectId;
-    
-    let profileFocus;
-    
+class ControlPanelPage {
     // Properties
-    self.getProfileFocus = function() {
-        return profileFocus;
-    };
+    get getProfileFocus() {
+        return this.profileFocus;
+    }
     
     // ---
     
-    self.setProfileFocus = function(value) {
-        profileFocus = value;
-    };
+    set setProfileFocus(value) {
+        this.profileFocus = value;
+    }
     
     // Functions public
-    self.init = function() {
-        selectSended = false;
-        selectId = -1;
+    constructor() {
+        this.selectSended = false;
+        this.selectId = -1;
         
-        profileFocus = false;
-    };
+        this.profileFocus = false;
+    }
     
-    self.action = function() {
-        selectDesktop();
+    action = () => {
+        this.selectDesktop();
         
-        selectMobile();
+        this.selectMobile();
         
-        rankInMenu();
+        this.rankInMenu();
         
         wysiwyg.create("#form_page_argument", $("#form_cp_page_create").find("input[type='submit']"));
         
-        fieldsVisibility();
+        this.fieldsVisibility();
         
         helper.wordTag("#page_roleUserId", "#form_page_roleUserId");
         
-        $("#cp_page_saveDraft").on("click", "", function() {
-            saveDraft("create");
+        $("#cp_page_saveDraft").on("click", "", (event) => {
+            this.saveDraft("create");
         });
         
-        $("#form_cp_page_create").on("submit", "", function(event) {
+        $("#form_cp_page_create").on("submit", "", (event) => {
             event.preventDefault();
             
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                $(this).serialize(),
+                $(event.target).prop("action"),
+                $(event.target).prop("method"),
+                $(event.target).serialize(),
                 "json",
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
+                (xhr) => {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                     
                     if (xhr.response.values !== undefined && xhr.response.values.id !== undefined) {
@@ -75,54 +65,53 @@ function ControlPanelPage() {
                 null
             );
         });
-    };
+    }
     
-    self.changeView = function() {
-        profileFocus = false;
+    changeView = () => {
+        this.profileFocus = false;
 
         if (helper.checkWidthType() === "mobile") {
-            if (selectSended === true) {
-                selectId = $("#form_cp_page_select_mobile").find("select option:selected").val();
+            if (this.selectSended === true) {
+                this.selectId = $("#form_cp_page_select_mobile").find("select option:selected").val();
 
-                selectSended = false;
+                this.selectSended = false;
             }
 
-            if (selectId >= 0) {
+            if (this.selectId >= 0) {
                 $("#cp_page_select_result_desktop").find(".checkbox_column input[type='checkbox']").prop("checked", false);
 
                 let id = $("#cp_page_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
 
-                $.each(id, function(key, value) {
-                    if ($.trim($(value).text()) === String(selectId))
+                $.each(id, (key, value) => {
+                    if ($.trim($(value).text()) === String(this.selectId))
                         $(value).parents("tr").find(".checkbox_column input").prop("checked", true);
                 });
             }
         }
         else {
-            if (selectSended === true) {
-                selectId = $.trim($("#cp_page_select_result_desktop").find(".checkbox_column input[type='checkbox']:checked").parents("tr").find(".id_column").text());
+            if (this.selectSended === true) {
+                this.selectId = $.trim($("#cp_page_select_result_desktop").find(".checkbox_column input[type='checkbox']:checked").parents("tr").find(".id_column").text());
 
-                selectSended = false;
+                this.selectSended = false;
             }
 
-            if (selectId > 0)
-                $("#form_cp_page_select_mobile").find("select option[value='" + selectId + "']").prop("selected", true);
+            if (this.selectId > 0)
+                $("#form_cp_page_select_mobile").find("select option[value='" + this.selectId + "']").prop("selected", true);
         }
         
-        rankInMenu();
-    };
+        this.rankInMenu();
+    }
     
     // Function private
-    function selectDesktop() {
+    selectDesktop = () => {
         const tableAndPagination = new TableAndPagination();
-        tableAndPagination.init();
-        tableAndPagination.setButtonsStatus("show");
+        tableAndPagination.setButtonsStatus = "show";
         tableAndPagination.create(window.url.cpPageSelect, "#cp_page_select_result_desktop", true);
         tableAndPagination.search();
         tableAndPagination.pagination();
         tableAndPagination.sort();
         
-        $(document).on("click", "#cp_page_select_result_desktop .refresh", function() {
+        $(document).on("click", "#cp_page_select_result_desktop .refresh", (event) => {
             ajax.send(
                 true,
                 window.url.cpPageSelect,
@@ -136,7 +125,7 @@ function ControlPanelPage() {
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
+                (xhr) => {
                     ajax.reply(xhr, "");
                     
                     tableAndPagination.populate(xhr);
@@ -146,11 +135,11 @@ function ControlPanelPage() {
             );
         });
         
-        $(document).on("click", "#cp_page_select_result_desktop .delete_all", function() {
+        $(document).on("click", "#cp_page_select_result_desktop .delete_all", (event) => {
             popupEasy.create(
                 window.text.index_5,
                 window.textPage.label_2,
-                function() {
+                () => {
                     ajax.send(
                         true,
                         window.url.cpPageDelete,
@@ -164,10 +153,10 @@ function ControlPanelPage() {
                         true,
                         "application/x-www-form-urlencoded; charset=UTF-8",
                         null,
-                        function(xhr) {
+                        (xhr) => {
                             ajax.reply(xhr, "");
 
-                            $.each($("#cp_page_select_result_desktop").find("table .id_column"), function(key, value) {
+                            $.each($("#cp_page_select_result_desktop").find("table .id_column"), (key, value) => {
                                 let id = $.trim($(value).parents("tr").find(".id_column").text());
                                 
                                 if (id > 5)
@@ -183,14 +172,14 @@ function ControlPanelPage() {
             );
         });
         
-        $(document).on("click", "#cp_page_select_result_desktop .cp_page_delete", function() {
-            let id = $.trim($(this).parents("tr").find(".id_column").text());
+        $(document).on("click", "#cp_page_select_result_desktop .cp_page_delete", (event) => {
+            let id = $.trim($(event.currentTarget).parents("tr").find(".id_column").text());
             
-            deleteElement(id);
+            this.deleteElement(id);
         });
         
-        $(document).on("click", "#cp_page_select_button_desktop", function(event) {
-            let id = $.trim($(this).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
+        $(document).on("click", "#cp_page_select_button_desktop", (event) => {
+            let id = $.trim($(event.currentTarget).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
 
             ajax.send(
                 true,
@@ -205,120 +194,120 @@ function ControlPanelPage() {
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
-                function() {
+                () => {
                     $("#cp_page_select_result").html("");
                 },
-                function(xhr) {
-                    profile(xhr, "#" + event.currentTarget.id);
+                (xhr) => {
+                    this.profile(xhr, "#" + event.currentTarget.id);
                 },
                 null,
                 null
             );
         });
         
-        $(document).on("click", ".checkbox_column input[type='checkbox']", function() {
+        $(document).on("click", ".checkbox_column input[type='checkbox']", (event) => {
             $("#cp_page_select_result").html("");
         });
     }
     
-    function selectMobile() {
-        $(document).on("submit", "#form_cp_page_select_mobile", function(event) {
+    selectMobile = () => {
+        $(document).on("submit", "#form_cp_page_select_mobile", (event) => {
             event.preventDefault();
 
             ajax.send(
                 true,
-                $(this).prop("action"),
-                $(this).prop("method"),
-                helper.serializeJson($(this)),
+                $(event.currentTarget).prop("action"),
+                $(event.currentTarget).prop("method"),
+                helper.serializeJson($(event.currentTarget)),
                 "json",
                 false,
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
-                function() {
+                () => {
                     $("#cp_page_select_result").html("");
                 },
-                function(xhr) {
-                    profile(xhr, "#" + event.currentTarget.id);
+                (xhr) => {
+                    this.profile(xhr, "#" + event.currentTarget.id);
                 },
                 null,
                 null
             );
         });
         
-        $(document).on("change", "#form_page_select_id", function() {
+        $(document).on("change", "#form_page_select_id", (event) => {
             $("#cp_page_select_result").html("");
         });
     }
     
-    function profile(xhr, tag) {
+    profile = (xhr, tag) => {
         ajax.reply(xhr, tag);
         
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
-            selectSended = true;
+            this.selectSended = true;
             
             $("#cp_page_select_result").html(xhr.response.render);
             
-            rankInMenu();
+            this.rankInMenu();
 
             language.page();
             
             wysiwyg.create("#form_page_argument", $("#form_cp_page_profile").find("input[type='submit']"));
             
-            fieldsVisibility();
+            this.fieldsVisibility();
             
-            selectFieldWithDisabledElement("#form_page_parent", xhr);
+            this.selectFieldWithDisabledElement("#form_page_parent", xhr);
 
             helper.wordTag("#page_roleUserId", "#form_page_roleUserId");
             
             materialDesign.refresh();
             
-            $("#form_cp_page_profile").find(".form_row input, .form_row textarea").on("focus", "", function() {
-                profileFocus = true;
+            $("#form_cp_page_profile").find(".form_row input, .form_row textarea").on("focus", "", (event) => {
+                this.profileFocus = true;
             });
             
             // Iframe focus
             let iframeMouseOver = false;
             
-            $("#form_cp_page_profile").find(".wysiwyg").on("mouseover", "", function() {
+            $("#form_cp_page_profile").find(".wysiwyg").on("mouseover", "", (event) => {
                 iframeMouseOver = true;
             });
-            $("#form_cp_page_profile").find(".wysiwyg").on("mouseout", "", function() {
+            $("#form_cp_page_profile").find(".wysiwyg").on("mouseout", "", (event) => {
                 iframeMouseOver = false;
             });
             
-            $(window).on("blur", "", function() {
+            $(window).on("blur", "", (event) => {
                 if (iframeMouseOver === true)
-                    profileFocus = true;
+                    this.profileFocus = true;
             });
             
-            $("#cp_page_saveDraft").on("click", "", function() {
-                saveDraft("modify");
+            $("#cp_page_saveDraft").on("click", "", (event) => {
+                this.saveDraft("modify");
             });
             
-            $("#cp_page_publishDraft").on("click", "", function() {
-                publishDraft();
+            $("#cp_page_publishDraft").on("click", "", (event) => {
+                this.publishDraft();
             });
 
-            $("#form_cp_page_profile").on("submit", "", function(event) {
+            $("#form_cp_page_profile").on("submit", "", (event) => {
                 wysiwyg.save();
                 
                 event.preventDefault();
 
                 ajax.send(
                     true,
-                    $(this).prop("action"),
-                    $(this).prop("method"),
-                    $(this).serialize(),
+                    $(event.target).prop("action"),
+                    $(event.target).prop("method"),
+                    $(event.target).serialize(),
                     "json",
                     false,
                     true,
                     "application/x-www-form-urlencoded; charset=UTF-8",
                     null,
-                    function(xhr) {
+                    (xhr) => {
                         ajax.reply(xhr, "#" + event.currentTarget.id);
                         
-                        if ($.isEmptyObject(xhr.response.messages.success) === false) {
-                            profileFocus = false;
+                        if (xhr.response.messages.success !== undefined) {
+                            this.profileFocus = false;
                             
                             $("#form_page_event").val("");
                             
@@ -332,23 +321,23 @@ function ControlPanelPage() {
                 );
             });
             
-            $("#cp_page_delete").on("click", "", function() {
-               deleteElement(null);
+            $("#cp_page_delete").on("click", "", (event) => {
+               this.deleteElement(null);
             });
         }
     }
     
-    function rankInMenu() {
+    rankInMenu = () => {
         helper.sortableElement("#page_rankMenuSort", "#form_page_rankMenuSort");
         
-        $("#form_page_parent").off("change").on("change", "", function() {
+        $("#form_page_parent").off("change").on("change", "", (event) => {
             ajax.send(
                 true,
                 window.url.cpPageProfileSort,
                 "post",
                 {
                     'event': "refresh",
-                    'id': $(this).val(),
+                    'id': $(event.target).val(),
                     'token': window.session.token
                 },
                 "json",
@@ -356,7 +345,7 @@ function ControlPanelPage() {
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
-                function(xhr) {
+                (xhr) => {
                     ajax.reply(xhr, "");
                     
                     if (xhr.response.values.pageSortListHtml !== undefined) {
@@ -371,11 +360,11 @@ function ControlPanelPage() {
         });
     }
     
-    function deleteElement(id) {
+    deleteElement = (id) => {
         popupEasy.create(
             window.text.index_5,
             window.textPage.label_1,
-            function() {
+            () => {
                 ajax.send(
                     true,
                     window.url.cpPageDelete,
@@ -390,7 +379,7 @@ function ControlPanelPage() {
                     true,
                     "application/x-www-form-urlencoded; charset=UTF-8",
                     null,
-                    function(xhr) {
+                    (xhr) => {
                         ajax.reply(xhr, "");
                         
                         if (xhr.response.values.text !== undefined && xhr.response.values.button !== undefined && xhr.response.values.pageSelectHtml !== undefined) {
@@ -399,7 +388,7 @@ function ControlPanelPage() {
                                 xhr.response.values.text + xhr.response.values.button + xhr.response.values.pageSelectHtml
                             );
 
-                            $("#cp_page_delete_parent_all").on("click", "", function() {
+                            $("#cp_page_delete_parent_all").on("click", "", (event) => {
                                 ajax.send(
                                     true,
                                     window.url.cpPageDelete,
@@ -414,17 +403,17 @@ function ControlPanelPage() {
                                     true,
                                     "application/x-www-form-urlencoded; charset=UTF-8",
                                     null,
-                                    function(xhr) {
+                                    (xhr) => {
                                         ajax.reply(xhr, "");
                                         
-                                        deleteResponse(xhr);
+                                        this.deleteResponse(xhr);
                                     },
                                     null,
                                     null
                                 );
                             });
 
-                            $("#cp_page_delete_parent_new").on("change", "", function() {
+                            $("#cp_page_delete_parent_new").on("change", "", (event) => {
                                 ajax.send(
                                     true,
                                     window.url.cpPageDelete,
@@ -432,7 +421,7 @@ function ControlPanelPage() {
                                     {
                                         'event': "parentNew",
                                         'id': id,
-                                        'parentNew': $(this).find("select").val(),
+                                        'parentNew': $(event.target).find("select").val(),
                                         'token': window.session.token
                                     },
                                     "json",
@@ -440,20 +429,20 @@ function ControlPanelPage() {
                                     true,
                                     "application/x-www-form-urlencoded; charset=UTF-8",
                                     null,
-                                    function(xhr) {
+                                    (xhr) => {
                                         ajax.reply(xhr, "");
                                         
-                                        deleteResponse(xhr);
+                                        this.deleteResponse(xhr);
                                     },
                                     null,
                                     null
                                 );
                             });
 
-                            selectFieldWithDisabledElement("#cp_page_delete_parent_new", xhr);
+                            this.selectFieldWithDisabledElement("#cp_page_delete_parent_new", xhr);
                         }
                         else
-                            deleteResponse(xhr);
+                            this.deleteResponse(xhr);
                     },
                     null,
                     null
@@ -462,11 +451,11 @@ function ControlPanelPage() {
         );
     }
     
-    function saveDraft(type) {
+    saveDraft = (type) => {
         popupEasy.create(
             window.text.index_5,
             window.textPage.label_3,
-            function() {
+            () => {
                 $("#form_page_event").val("save_draft_" + type);
                 
                 if ($("#form_cp_page_create").length > 0)
@@ -479,11 +468,11 @@ function ControlPanelPage() {
         );
     }
     
-    function publishDraft() {
+    publishDraft = () => {
         popupEasy.create(
             window.text.index_5,
             window.textPage.label_4,
-            function() {
+            () => {
                 $("#form_page_event").val("publish_draft");
                 
                 $("#form_cp_page_profile").submit();
@@ -493,13 +482,13 @@ function ControlPanelPage() {
         );
     }
     
-    function selectFieldWithDisabledElement(id, xhr) {
+    selectFieldWithDisabledElement = (id, xhr) => {
         let options = $(id).find("option");
         
         let disabled = false;
         let optionLength = 0;
         
-        $.each(options, function(key, val) {
+        $.each(options, (key, val) => {
             let optionValue = parseInt(val.value);
             let optionText = val.text.substr(0, val.text.indexOf("-|") + 2);
             let pageIdElementSelected = parseInt(xhr.response.values.pageId);
@@ -515,11 +504,11 @@ function ControlPanelPage() {
             if (disabled === true)
                 $(id).find("option").eq(key).prop("disabled", true);
         });
-    };
+    }
     
-    function deleteResponse(xhr) {
+    deleteResponse = (xhr) => {
         if (xhr.response.messages.success !== undefined) {
-            $.each($("#cp_page_select_result_desktop").find("table .id_column"), function(key, value) {
+            $.each($("#cp_page_select_result_desktop").find("table .id_column"), (key, value) => {
                 if (xhr.response.values.id !== undefined && xhr.response.values.id === $.trim($(value).text()) ||
                         xhr.response.values.removedId !== undefined && $.inArray($.trim($(value).text()), xhr.response.values.removedId) !== -1)
                     $(value).parents("tr").remove();
@@ -533,25 +522,25 @@ function ControlPanelPage() {
         }
     }
     
-    function fieldsVisibility() {
-        fieldsVisibilityMenu();
+    fieldsVisibility = () => {
+        this.fieldsVisibilityMenu();
         
-        fieldsVisibilityLink();
+        this.fieldsVisibilityLink();
         
-        $("#form_page_showInMenu").on("change", "", function() {
-            fieldsVisibilityMenu();
+        $("#form_page_showInMenu").on("change", "", (event) => {
+            this.fieldsVisibilityMenu();
             
             materialDesign.refresh();
         });
         
-        $("#form_page_onlyLink").on("change", "", function() {
-            fieldsVisibilityLink();
+        $("#form_page_onlyLink").on("change", "", (event) => {
+            this.fieldsVisibilityLink();
             
             materialDesign.refresh();
         });
     }
     
-    function fieldsVisibilityMenu() {
+    fieldsVisibilityMenu = () => {
         if ($("#form_page_showInMenu").val() === "0") {
             $("#form_page_menuName").parents(".form_row ").hide();
             $("#page_rankMenuSort").hide();
@@ -562,7 +551,7 @@ function ControlPanelPage() {
         }
     }
     
-    function fieldsVisibilityLink() {
+    fieldsVisibilityLink = () => {
         if ($("#form_page_onlyLink").val() === "0")
             $("#form_page_link").parents(".form_row ").hide();
         else

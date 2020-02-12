@@ -485,6 +485,7 @@ date.time: H:i:s
 
 "userProfile_1": "User profile form"
 "userProfile_2": "Attempt login:"
+"userProfile_3": "Reset"
 
 "userDelete_1": "Warning! If you delete the user is impossible return back."
 "userDelete_2": "Delete"
@@ -773,9 +774,9 @@ date.time: H:i:s
 "microserviceDeployFormType_4": "Ssh username"
 "microserviceDeployFormType_5": "Ssh password"
 "microserviceDeployFormType_6": "Key public"
-"microserviceDeployFormType_7": "Delete key public"
+"microserviceDeployFormType_7": "Delete key"
 "microserviceDeployFormType_8": "Key private"
-"microserviceDeployFormType_9": "Delete key private"
+"microserviceDeployFormType_9": "Delete key"
 "microserviceDeployFormType_10": "Key private password"
 "microserviceDeployFormType_11": "Ip"
 "microserviceDeployFormType_12": "Git user email"

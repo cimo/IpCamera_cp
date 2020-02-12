@@ -1,44 +1,37 @@
 "use strict";
 
-/* global loader, helper */
+/* global loader */
 
-const flashBag = new FlashBag();
-
-function FlashBag() {
-    // Vars
-    const self = this;
-    
-    let element;
-    
+class FlashBag {
     // Properties
-    self.setElement = function(value) {
-        element = value;
-    };
+    set setElement(value) {
+        this.element = value;
+    }
     
     // Functions public
-    self.init = function() {
-        element = null;
-    };
+    constructor() {
+        this.element = null;
+    }
     
-    self.show = function(message) {
+    show = (message) => {
         let snackbarDataObj = {
             message: message,
             actionText: window.text.index_7,
-            actionHandler: function() {}
+            actionHandler: () => {}
         };
         
-        element.show(snackbarDataObj);
+        this.element.show(snackbarDataObj);
         
         $("#flashBag").find(".mdc-snackbar__action-button").removeAttr("aria-hidden");
-    };
+    }
     
-    self.sessionActivity = function() {
+    sessionActivity = () => {
         if ($("#flashBag").find(".content").length > 0 && window.session.userInform !== "") {
             loader.hide();
             
-            self.show(window.session.userInform);
+            this.show(window.session.userInform);
         }
-    };
+    }
     
     // Functions private
 }

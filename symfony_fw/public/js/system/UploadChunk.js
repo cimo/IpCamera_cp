@@ -2,141 +2,121 @@
 
 /* global helper, ajax, loader, flashBag, materialDesign */
 
-const uploadChunk = new UploadChunk();
-
-function UploadChunk() {
-    // Vars
-    const self = this;
-    
-    let urlRequest;
-    let tagContainer;
-    let tagProgressBar;
-    let tagImageRefresh;
-    let lockUrl;
-    
-    let inputLabel;
-    
-    let file;
-    let fileName;
-    let byteChunk;
-    let sizeStart;
-    let sizeEnd;
-    let isStop;
-    
-    let callbackComplete;
-    
+class UploadChunk {    
     // Properties
-    self.setUrlRequest = function(value) {
-        urlRequest = value;
-    };
+    set setUrlRequest(value) {
+        this.urlRequest = value;
+    }
     
-    self.setTagContainer = function(value) {
-        tagContainer = value;
-    };
+    set setTagContainer(value) {
+        this.tagContainer = value;
+    }
     
-    self.setTagProgressBar = function(value) {
-        tagProgressBar = value;
-    };
+    set setTagProgressBar(value) {
+        this.tagProgressBar = value;
+    }
     
-    self.setTagImageRefresh = function(value) {
-        tagImageRefresh = value;
-    };
+    set setTagImageRefresh(value) {
+        this.tagImageRefresh = value;
+    }
     
-    self.setLockUrl = function(value) {
-        lockUrl = value;
-    };
+    set setLockUrl(value) {
+        this.lockUrl = value;
+    }
     
     // Functions public
-    self.init = function() {
-        urlRequest = "";
-        tagContainer = "";
-        tagImageRefresh = "";
-        tagProgressBar = "";
-        lockUrl = "";
+    constructor() {
+        this.urlRequest = "";
+        this.tagContainer = "";
+        this.tagProgressBar = "";
+        this.tagImageRefresh = "";
+        this.lockUrl = "";
         
-        inputLabel = "";
+        this.inputLabel = "";
         
-        file = null;
-        fileName = "";
-        byteChunk = 1048576;
-        sizeStart = 0;
-        sizeEnd = byteChunk;
-        isStop = false;
+        this.byteChunkInit = 1048576;
         
-        callbackComplete = null;
-    };
+        this.file = null;
+        this.fileName = "";
+        this.byteChunk = this.byteChunkInit;
+        this.sizeStart = 0;
+        this.sizeEnd = this.byteChunk;
+        this.isStop = false;
+        
+        this.callbackComplete = null;
+    }
     
-    self.processFile = function(callback) {
+    processFile = (callback) => {
         if (callback !== undefined)
-            callbackComplete = callback;
+            this.callbackComplete = callback;
         
-        inputLabel = $(tagContainer).find(".material_upload label").text();
+        this.inputLabel = $(this.tagContainer).find(".material_upload label").text();
         
-        $(tagContainer).find(".upload_chunk .file").on("change", "", function() {
-            file = $(this)[0].files[0];
-            fileName = file.name;
+        $(this.tagContainer).find(".upload_chunk .file").on("change", "", (event) => {
+            this.file = $(event.target)[0].files[0];
+            this.fileName = this.file.name;
             
-            ready();
-        });
-    };
-    
-    // Functions private
-    function ready() {
-        if (file === null)
-            return;
-        
-        $(tagContainer).find(".controls").show();
-        
-        $(tagContainer).find(".controls .button_start").off("click").on("click", "", function() {
-            start();
-        });
-        
-        $(tagContainer).find(".controls .button_stop").off("click").on("click", "", function() {
-            stop();
+            this.ready();
         });
     }
     
-    function start() {
-        if (file === null)
+    // Functions private
+    ready = () => {
+        if (this.file === null)
             return;
         
-        $(tagContainer).find(".controls .button_start").prop("disabled", false);
-        $(tagContainer).find(".controls .button_stop").prop("disabled", true);
+        $(this.tagContainer).find(".controls").show();
+        
+        $(this.tagContainer).find(".controls .button_start").off("click").on("click", "", (event) => {
+            this.start();
+        });
+        
+        $(this.tagContainer).find(".controls .button_stop").off("click").on("click", "", (event) => {
+            this.stop();
+        });
+    }
+    
+    start = () => {
+        if (this.file === null)
+            return;
+        
+        $(this.tagContainer).find(".controls .button_start").prop("disabled", false);
+        $(this.tagContainer).find(".controls .button_stop").prop("disabled", true);
         
         let formData = new FormData();
         
         let xhr = new XMLHttpRequest();
         
-        xhr.onreadystatechange = function() {
+        xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
                 let jsonParse = JSON.parse(xhr.response);
                 
                 let response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
                 
                 if (response.messages.error !== undefined) {
-                    resetValue();
+                    this.resetValue();
                     
                     flashBag.show(response.messages.error);
                 }
                 else if (response.status === "start") {
-                    isStop = false;
+                    this.isStop = false;
                     
-                    $(tagContainer).find(".upload_chunk .mdc-linear-progress").show();
+                    $(this.tagContainer).find(".upload_chunk .mdc-linear-progress").show();
                     
-                    $(tagContainer).find(".controls .button_start").prop("disabled", true);
-                    $(tagContainer).find(".controls .button_stop").prop("disabled", false);
+                    $(this.tagContainer).find(".controls .button_start").prop("disabled", true);
+                    $(this.tagContainer).find(".controls .button_stop").prop("disabled", false);
                     
-                    chunk();
+                    this.chunk();
                 }
             }
         };
         
-        xhr.open("post", urlRequest + "&action=start&fileName=" + fileName);
+        xhr.open("post", this.urlRequest + "&action=start&fileName=" + fileName);
         xhr.send(formData);
     }
     
-    function send(chunkSize) {
-        if (file === null)
+    send = (chunkSize) => {
+        if (this.file === null)
             return;
         
         let formData = new FormData();
@@ -145,101 +125,101 @@ function UploadChunk() {
         
         let xhr = new XMLHttpRequest();
         
-        xhr.onreadystatechange = function() {
+        xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
                 let jsonParse = JSON.parse(xhr.response);
                 
                 let response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
                 
                 if (response.messages.error !== undefined) {
-                    resetValue();
+                    this.resetValue();
                     
                     flashBag.show(response.messages.error);
                 }
                 else if (response.status === "send") {
-                    if (isStop === false) {
-                        if (sizeStart < file.size)
-                            chunk();
+                    if (this.isStop === false) {
+                        if (this.sizeStart < this.file.size)
+                            this.chunk();
                         else
-                            complete();
+                            this.complete();
                     }
                 }
             }
         };
         
-        xhr.open("post", urlRequest + "&action=send&fileName=" + fileName);
+        xhr.open("post", this.urlRequest + "&action=send&fileName=" + fileName);
         xhr.send(formData);
     }
     
-    function complete() {
-        if (file === null)
+    complete = () => {
+        if (this.file === null)
             return;
         
-        materialDesign.linearProgress(tagProgressBar, sizeStart, file.size);
+        materialDesign.linearProgress(this.tagProgressBar, this.sizeStart, this.file.size);
         
         let formData = new FormData();
         
         let xhr = new XMLHttpRequest();
         
-        xhr.onreadystatechange = function() {
+        xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
                 let jsonParse = JSON.parse(xhr.response);
                 
                 let response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
                 
                 if (response.messages.error !== undefined) {
-                    resetValue();
+                    this.resetValue();
                     
                     flashBag.show(response.messages.error);
                 }
                 else if (response.status === "complete") {
-                    resetValue();
+                    this.resetValue();
                     
-                    if (tagImageRefresh !== "")
-                        helper.imageRefresh(tagImageRefresh, 1);
+                    if (this.tagImageRefresh !== "")
+                        helper.imageRefresh(this.tagImageRefresh, 1);
                     
-                    if (lockUrl !== "")
-                        lock(jsonParse.response.values.lockName);
+                    if (this.lockUrl !== "")
+                        this.lock(jsonParse.response.values.lockName);
                     
                     if (response.messages.success !== undefined)
                         flashBag.show(response.messages.success);
                     
-                    if (callbackComplete !== null)
-                        callbackComplete();
+                    if (this.callbackComplete !== null)
+                        this.callbackComplete();
                 }
             }
         };
         
-        xhr.open("post", urlRequest + "&action=complete&fileName=" + fileName);
+        xhr.open("post", this.urlRequest + "&action=complete&fileName=" + fileName);
         xhr.send(formData);
     }
     
-    function stop() {
-        if (file === null)
+    stop = () => {
+        if (this.file === null)
             return;
         
-        isStop = true;
+        this.isStop = true;
         
-        $(tagContainer).find(".controls .button_start").attr("disabled", false);
-        $(tagContainer).find(".controls .button_stop").attr("disabled", true);
+        $(this.tagContainer).find(".controls .button_start").attr("disabled", false);
+        $(this.tagContainer).find(".controls .button_stop").attr("disabled", true);
         
         let formData = new FormData();
         
         let xhr = new XMLHttpRequest();
         
-        xhr.onreadystatechange = function() {
+        xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
                 let jsonParse = JSON.parse(xhr.response);
                 
                 let response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
                 
                 if (response.messages.error !== undefined) {
-                    resetValue();
+                    this.resetValue();
                     
                     flashBag.show(response.messages.error);
                 }
                 else if (response.status === "stop") {
-                    resetValue();
+                    this.resetValue();
                     
                     if (response.messages.success !== undefined)
                         flashBag.show(response.messages.success);
@@ -247,32 +227,32 @@ function UploadChunk() {
             }
         };
         
-        xhr.open("post", urlRequest + "&action=stop&fileName=" + fileName);
+        xhr.open("post", this.urlRequest + "&action=stop&fileName=" + fileName);
         xhr.send(formData);
     }
     
-    function chunk() {
-        if (file === null)
+    chunk = () => {
+        if (this.file === null)
             return;
         
-        let chunkSize = file.slice(sizeStart, sizeEnd);
+        let chunkSize = this.file.slice(this.sizeStart, this.sizeEnd);
         
-        send(chunkSize);
+        this.send(chunkSize);
         
-        materialDesign.linearProgress(tagProgressBar, sizeStart, file.size);
+        materialDesign.linearProgress(this.tagProgressBar, this.sizeStart, this.file.size);
         
-        sizeStart = sizeEnd;
-        sizeEnd = sizeStart + byteChunk;
+        this.sizeStart = this.sizeEnd;
+        this.sizeEnd = this.sizeStart + this.byteChunk;
     }
     
-    function lock(lockName) {
+    lock = (lockName) => {
         $(".loader_back").show();
         
-        $(tagContainer).find(".popupWait").show();
+        $(this.tagContainer).find(".popupWait").show();
         
         ajax.send(
             false,
-            lockUrl,
+            this.lockUrl,
             "post",
             {
                 'lockName': lockName
@@ -282,53 +262,53 @@ function UploadChunk() {
             true,
             "application/x-www-form-urlencoded; charset=UTF-8",
             null,
-            function(xhr) {
+            (xhr) => {
                 ajax.reply(xhr, "");
                 
                 if (xhr.response.status !== undefined) {
-                    $(tagContainer).find(".popupWait .close").off("click").on("click", "", function() {
-                        if ($(tagContainer).find(".popupWait .close").prop("disabled") === false) {
+                    $(this.tagContainer).find(".popupWait .close").off("click").on("click", "", (event) => {
+                        if ($(this.tagContainer).find(".popupWait .close").prop("disabled") === false) {
                             $(".loader_back").hide();
                             
-                            $(tagContainer).find(".popupWait .result").html("");
-                            $(tagContainer).find(".popupWait .result").hide();
+                            $(this.tagContainer).find(".popupWait .result").html("");
+                            $(this.tagContainer).find(".popupWait .result").hide();
                             
-                            $(tagContainer).find(".popupWait .content").show();
+                            $(this.tagContainer).find(".popupWait .content").show();
                             
-                            $(tagContainer).find(".popupWait").hide();
+                            $(this.tagContainer).find(".popupWait").hide();
                         }
                     });
                     
                     if (xhr.response.values !== undefined) {
                         if (xhr.response.values.count !== null) {
-                            $(tagContainer).find(".popupWait .content .status").html(xhr.response.values.count + "/" + xhr.response.values.total);
+                            $(this.tagContainer).find(".popupWait .content .status").html(xhr.response.values.count + "/" + xhr.response.values.total);
                             
-                            materialDesign.linearProgress(tagContainer + " .popupWait .content .mdc-linear-progress", xhr.response.values.count, xhr.response.values.total);
+                            materialDesign.linearProgress(this.tagContainer + " .popupWait .content .mdc-linear-progress", xhr.response.values.count, xhr.response.values.total);
                         }
                     }
                     
                     if (xhr.response.status === "error") {
-                        $(tagContainer).find(".popupWait .close").prop("disabled", false);
+                        $(this.tagContainer).find(".popupWait .close").prop("disabled", false);
                         
-                        $(tagContainer).find(".popupWait .content .status").html("");
-                        materialDesign.linearProgress(tagContainer + " .popupWait .content .mdc-linear-progress", 0, 0);
-                        $(tagContainer).find(".popupWait .content").hide();
+                        $(this.tagContainer).find(".popupWait .content .status").html("");
+                        materialDesign.linearProgress(this.tagContainer + " .popupWait .content .mdc-linear-progress", 0, 0);
+                        $(this.tagContainer).find(".popupWait .content").hide();
                         
-                        $(tagContainer).find(".popupWait .result").show();
-                        $(tagContainer).find(".popupWait .result").html("<p>" + window.textUploadChunk.label_1 + "</p>");
+                        $(this.tagContainer).find(".popupWait .result").show();
+                        $(this.tagContainer).find(".popupWait .result").html("<p>" + window.textUploadChunk.label_1 + "</p>");
                     }
                     else if (xhr.response.status === "finish") {
-                        $(tagContainer).find(".popupWait .close").prop("disabled", false);
+                        $(this.tagContainer).find(".popupWait .close").prop("disabled", false);
                         
-                        $(tagContainer).find(".popupWait .content .status").html("");
-                        materialDesign.linearProgress(tagContainer + " .popupWait .content .mdc-linear-progress", 0, 0);
-                        $(tagContainer).find(".popupWait .content").hide();
+                        $(this.tagContainer).find(".popupWait .content .status").html("");
+                        materialDesign.linearProgress(this.tagContainer + " .popupWait .content .mdc-linear-progress", 0, 0);
+                        $(this.tagContainer).find(".popupWait .content").hide();
                         
-                        $(tagContainer).find(".popupWait .result").show();
-                        $(tagContainer).find(".popupWait .result").html("<p>" + window.textUploadChunk.label_2 + "</p>");
+                        $(this.tagContainer).find(".popupWait .result").show();
+                        $(this.tagContainer).find(".popupWait .result").html("<p>" + window.textUploadChunk.label_2 + "</p>");
                     }
                     else if (xhr.response.status === "loop")
-                        lock(xhr.response.values.lockName);
+                        this.lock(xhr.response.values.lockName);
                 }
             },
             null,
@@ -336,22 +316,22 @@ function UploadChunk() {
         );
     }
     
-    function resetValue() {
-        file = null;
-        fileName = "";
-        byteChunk = 1048576;
-        sizeStart = 0;
-        sizeEnd = byteChunk;
+    resetValue = () => {
+        this.file = null;
+        this.fileName = "";
+        this.byteChunk = this.byteChunkInit;
+        this.sizeStart = 0;
+        this.sizeEnd = this.byteChunk;
         
-        $(tagContainer).find(".upload_chunk .file").val("");
+        $(this.tagContainer).find(".upload_chunk .file").val("");
         
-        $(tagContainer).find(".upload_chunk .mdc-linear-progress").hide();
+        $(this.tagContainer).find(".upload_chunk .mdc-linear-progress").hide();
         
-        $(tagContainer).find(".controls .button_start").attr("disabled", false);
-        $(tagContainer).find(".controls .button_stop").attr("disabled", true);
+        $(this.tagContainer).find(".controls .button_start").attr("disabled", false);
+        $(this.tagContainer).find(".controls .button_stop").attr("disabled", true);
         
-        $(tagContainer).find(".controls").hide();
+        $(this.tagContainer).find(".controls").hide();
         
-        $(tagContainer).find(".material_upload label").text(inputLabel);
+        $(this.tagContainer).find(".material_upload label").text(this.inputLabel);
     }
 }

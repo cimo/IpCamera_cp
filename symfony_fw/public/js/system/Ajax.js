@@ -2,19 +2,14 @@
 
 /* global helper, loader, flashBag */
 
-const ajax = new Ajax();
-
-function Ajax() {
-    // Vars
-    const self = this;
-    
+class Ajax {
     // Properties
     
     // Functions public
-    self.init = function() {
-    };
+    constructor() {
+    }
     
-    self.send = function(loaderEnabled, url, method, data, dataType, cache, processData, contentType, callbackBefore, callbackSuccess, callbackError, callbackComplete) {
+    send = (loaderEnabled, url, method, data, dataType, cache, processData, contentType, callbackBefore, callbackSuccess, callbackError, callbackComplete) => {
         if (loaderEnabled === true)
             loader.show();
         
@@ -26,15 +21,15 @@ function Ajax() {
             'cache': cache,
             'processData': processData,
             'contentType': contentType,
-            beforeSend: function() {
+            beforeSend: () => {
                 if (callbackBefore !== null)
                     callbackBefore();
             },
-            success: function(xhr) {
+            success: (xhr) => {
                 if (xhr.userInform !== undefined && xhr.userInform !== "") {
                     window.session.userInform = xhr.userInform;
                     
-                    self.reply(xhr.userInform, "");
+                    this.reply(xhr.userInform, "");
                     
                     if (loaderEnabled === true)
                         loader.hide();
@@ -48,28 +43,28 @@ function Ajax() {
                 if (loaderEnabled === true)
                     loader.hide();
             },
-            error: function(xhr, status) {
+            error: (xhr, status) => {
                 if (loaderEnabled === true)
                     loader.hide();
                 
                 if (xhr.status === 408 || status === "timeout")
-                    self.send(loaderEnabled, url, method, data, dataType, cache, processData, contentType, callbackBefore, callbackSuccess, callbackError, callbackComplete);
+                    this.send(loaderEnabled, url, method, data, dataType, cache, processData, contentType, callbackBefore, callbackSuccess, callbackError, callbackComplete);
                 else {
                     if (callbackError !== null)
                         callbackError(xhr);
                 }
             },
-            complete: function() {
+            complete: () => {
                 if (callbackComplete !== null)
                     callbackComplete();
             }
         });
-    };
+    }
     
-    self.reply = function(xhr, tagError) {
+    reply = (xhr, tagError) => {
         helper.linkPreventDefault();
         
-        let reply = "";
+        let result = "";
         
         if ($(tagError).length > 0) {
             $(tagError).find("*[required='required']").parent().removeClass("mdc-text-field--invalid mdc-text-field--focused");
@@ -77,24 +72,24 @@ function Ajax() {
         }
         
         if ($.isEmptyObject(xhr.response) === true)
-            reply = window.text.index_8;
+            result = window.text.index_8;
         
         if (xhr.response === undefined)
-            reply = xhr;
+            result = xhr;
         else {
             if (xhr.response.messages !== undefined) {
                 if (xhr.response.messages.error !== undefined)
-                    reply = xhr.response.messages.error;
+                    result = xhr.response.messages.error;
                 else if (xhr.response.messages.info !== undefined)
-                    reply = xhr.response.messages.info;
+                    result = xhr.response.messages.info;
                 else if (xhr.response.messages.success !== undefined)
-                    reply = xhr.response.messages.success;
+                    result = xhr.response.messages.success;
             }
 
             if (xhr.response.errors !== undefined && typeof(xhr.response.errors) !== "string") {
                 let errors = xhr.response.errors;
 
-                $.each(errors, function(key, value) {
+                $.each(errors, (key, value) => {
                     if (typeof(value[0]) === "string" && $.isEmptyObject(value) === false && key !== "_token" && key !== "token") {
                         let input = null;
 
@@ -113,9 +108,9 @@ function Ajax() {
                 window.session.userInform = xhr.response.session.userInform;
         }
         
-        if (reply !== "")
-            flashBag.show(reply);
-    };
+        if (result !== "")
+            flashBag.show(result);
+    }
     
     // Functions private
 }

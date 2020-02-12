@@ -2,27 +2,22 @@
 
 /* global */
 
-const loader = new Loader();
-
-function Loader() {
-    // Vars
-    const self = this;
-    
+class Loader {
     // Properties
     
     // Functions public
-    self.init = function() {
-    };
+    constructor() {
+    }
     
-    self.show = function() {
+    show = () => {
         $(".loader_back").show();
         $(".loader").show();
-    };
+    }
     
-    self.hide = function() {
+    hide = () => {
         $(".loader").hide();
         $(".loader_back").hide();
-    };
+    }
     
     // Functions private
 }

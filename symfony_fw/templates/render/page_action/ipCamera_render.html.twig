@@ -1,10 +1,4 @@
-{% if response.values is defined %}
-    {% if (settingRow['javascript_minify'] == 1) %}
-        {% set javascriptMinify = ".min.js" %}
-    {% else %}
-        {% set javascriptMinify = ".js" %}
-    {% endif %}
-    
+{% if response.values is defined %}    
     <div class="video_container">
         {{response.values.video|raw}}
     </div>
@@ -23,24 +17,27 @@
     <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/IpCamera" ~ javascriptMinify)}}"></script>
     <script nonce="{{php_session.xssProtectionValue}}">
         "use strict";
-        
-        function deferred(method) {
+                
+        const deferred = (callback) => {
             if (window.$ !== undefined)
-                method();
-            else
-                setTimeout(function() {deferred(method);}, 50);
-        }
+                callback();
+            else {
+                let timeoutEvent = setTimeout(() => {
+                    clearTimeout(timeoutEvent);
 
-        deferred(function() {
-            $(document).ready(function() {
-                $(".video_container").parents(".page_container").find(".header").hide();
-                $(".video_container").parents(".page_container").find(".argument").hide();
-                
-                ipCamera.init();
-                
-                ipCamera.videoContainer();
-                ipCamera.commandContainer();
-            });
+                    deferred(callback);
+                }, 50);
+            }
+        };
+
+        deferred(() => {
+            $(".video_container").parents(".page_container").find(".header").hide();
+            $(".video_container").parents(".page_container").find(".argument").hide();
+            
+            const ipCamera = new IpCamera();
+            
+            ipCamera.videoContainer();
+            ipCamera.commandContainer();
         });
     </script>
 {% endif %}

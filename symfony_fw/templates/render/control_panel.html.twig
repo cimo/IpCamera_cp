@@ -2,12 +2,6 @@
 
 {% import _self as macro %}
 
-{% if (settingRow['javascript_minify'] == 1) %}
-    {% set javascriptMinify = ".min.js" %}
-{% else %}
-    {% set javascriptMinify = ".js" %}
-{% endif %}
-
 {% block headerContainer %}
     <header class="mdc-top-app-bar">
         <div class="mdc-top-app-bar__row">
@@ -87,17 +81,22 @@
 
                     {{-render(controller("App\\Controller\\ControlPanel\\PaymentController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     
+                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/Payment" ~ javascriptMinify)}}"></script>
                     <script nonce="{{php_session.xssProtectionValue}}">
                         "use strict";
                         
-                        window.addEventListener("load", function() {
-                            controlPanelPayment.init();
-                            
+                        const controlPanelPayment = new ControlPanelPayment();
+                        
+                        window.addEventListener("load", (event) => {
                             controlPanelPayment.action();
                             controlPanelPayment.changeView();
                         }, false);
                         
-                        window.addEventListener("resize", function() {
+                        window.addEventListener("resize", (event) => {
+                            controlPanelPayment.changeView();
+                        }, false);
+                        
+                        window.addEventListener("orientationchange", (event) => {
                             controlPanelPayment.changeView();
                         }, false);
                         
@@ -106,7 +105,6 @@
                             'label_2': "{{"controlPanelPayment_3"|trans}}"
                         };
                     </script>
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/Payment" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_page" or urlExtra == "cp_page_create" or urlExtra == "cp_page_select" %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
@@ -122,17 +120,22 @@
                         {{-render(controller("App\\Controller\\ControlPanel\\PageController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
                     
+                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/Page" ~ javascriptMinify)}}"></script>
                     <script nonce="{{php_session.xssProtectionValue}}">
                         "use strict";
                         
-                        window.addEventListener("load", function() {
-                            controlPanelPage.init();
-                            
+                        const controlPanelPage = new ControlPanelPage();
+                        
+                        window.addEventListener("load", (event) => {
                             controlPanelPage.action();
                             controlPanelPage.changeView();
                         }, false);
                         
-                        window.addEventListener("resize", function() {
+                        window.addEventListener("resize", (event) => {
+                            controlPanelPage.changeView();
+                        }, false);
+                        
+                        window.addEventListener("orientationchange", (event) => {
                             controlPanelPage.changeView();
                         }, false);
 
@@ -143,7 +146,6 @@
                             'label_4': "{{"controlPanelPage_5"|trans}}"
                         };
                     </script>
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/Page" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_user" or urlExtra == "cp_user_create" or urlExtra == "cp_user_select" %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
@@ -159,17 +161,22 @@
                         {{-render(controller("App\\Controller\\ControlPanel\\UserController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
                     
+                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/User" ~ javascriptMinify)}}"></script>
                     <script nonce="{{php_session.xssProtectionValue}}">
                         "use strict";
                         
-                        window.addEventListener("load", function() {
-                            controlPanelUser.init();
-                            
+                        const controlPanelUser = new ControlPanelUser();
+                        
+                        window.addEventListener("load", (event) => {
                             controlPanelUser.action();
                             controlPanelUser.changeView();
                         }, false);
                         
-                        window.addEventListener("resize", function() {
+                        window.addEventListener("resize", (event) => {
+                            controlPanelUser.changeView();
+                        }, false);
+                        
+                        window.addEventListener("orientationchange", (event) => {
                             controlPanelUser.changeView();
                         }, false);
 
@@ -178,7 +185,6 @@
                             'label_2': "{{"controlPanelUser_3"|trans}}"
                         };
                     </script>
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/User" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_module" or urlExtra == "cp_module_create" or urlExtra == "cp_module_select" %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
@@ -194,17 +200,22 @@
                         {{-render(controller("App\\Controller\\ControlPanel\\ModuleController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
                     
+                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/Module" ~ javascriptMinify)}}"></script>
                     <script nonce="{{php_session.xssProtectionValue}}">
                         "use strict";
                         
-                        window.addEventListener("load", function() {
-                            controlPanelModule.init();
-                            
+                        const controlPanelModule = new ControlPanelModule();
+                        
+                        window.addEventListener("load", (event) => {
                             controlPanelModule.action();
                             controlPanelModule.changeView();
                         }, false);
                         
-                        window.addEventListener("resize", function() {
+                        window.addEventListener("resize", (event) => {
+                            controlPanelModule.changeView();
+                        }, false);
+                        
+                        window.addEventListener("orientationchange", (event) => {
                             controlPanelModule.changeView();
                         }, false);
 
@@ -213,7 +224,6 @@
                             'label_2': "{{"controlPanelModule_3"|trans}}"
                         };
                     </script>
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/Module" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_role" or urlExtra == "cp_role_create" or urlExtra == "cp_role_select" %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
@@ -229,17 +239,22 @@
                         {{-render(controller("App\\Controller\\ControlPanel\\RoleUserController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
                     
+                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/RoleUser" ~ javascriptMinify)}}"></script>
                     <script nonce="{{php_session.xssProtectionValue}}">
                         "use strict";
                         
-                        window.addEventListener("load", function() {
-                            controlPanelRoleUser.init();
-                            
+                        const controlPanelRoleUser = new ControlPanelRoleUser();
+                        
+                        window.addEventListener("load", (event) => {
                             controlPanelRoleUser.action();
                             controlPanelRoleUser.changeView();
                         }, false);
                         
-                        window.addEventListener("resize", function() {
+                        window.addEventListener("resize", (event) => {
+                            controlPanelRoleUser.changeView();
+                        }, false);
+                        
+                        window.addEventListener("orientationchange", (event) => {
                             controlPanelRoleUser.changeView();
                         }, false);
 
@@ -248,7 +263,6 @@
                             'label_2': "{{"controlPanelRole_3"|trans}}"
                         };
                     </script>
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/RoleUser" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_setting" %}
                 {% if is_granted("ROLE_ADMIN") == true %}
@@ -256,12 +270,13 @@
 
                     {{-render(controller("App\\Controller\\ControlPanel\\SettingController::saveAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     
+                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/Setting" ~ javascriptMinify)}}"></script>
                     <script nonce="{{php_session.xssProtectionValue}}">
                         "use strict";
                         
-                        window.addEventListener("load", function() {
-                            controlPanelSetting.init();
-                            
+                        const controlPanelSetting = new ControlPanelSetting();
+                        
+                        window.addEventListener("load", (event) => {
                             controlPanelSetting.action();
                         }, false);
                         
@@ -272,7 +287,6 @@
                             'label_4': "{{"settingController_11"|trans}}"
                         };
                     </script>
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/Setting" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_setting_slack_iw" %}
                 {% if is_granted("ROLE_ADMIN") == true %}
@@ -280,12 +294,13 @@
 
                     {{-render(controller("App\\Controller\\ControlPanel\\SettingSlackIwController::renderAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     
+                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/SettingSlackIw" ~ javascriptMinify)}}"></script>
                     <script nonce="{{php_session.xssProtectionValue}}">
                         "use strict";
                         
-                        window.addEventListener("load", function() {
-                            controlPanelSettingSlackIw.init();
-                            
+                        const controlPanelSettingSlackIw = new ControlPanelSettingSlackIw();
+                        
+                        window.addEventListener("load", (event) => {
                             controlPanelSettingSlackIw.action();
                         }, false);
                         
@@ -293,7 +308,6 @@
                             'label_1': "{{"controlPanelSettingSlack_2"|trans}}"
                         };
                     </script>
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/SettingSlackIw" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_setting_line" %}
                 {% if is_granted("ROLE_ADMIN") == true %}
@@ -301,12 +315,13 @@
 
                     {{-render(controller("App\\Controller\\ControlPanel\\SettingLinePushController::renderAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     
+                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/SettingLinePush" ~ javascriptMinify)}}"></script>
                     <script nonce="{{php_session.xssProtectionValue}}">
                         "use strict";
                         
-                        window.addEventListener("load", function() {
-                            controlPanelSettingLinePush.init();
-                            
+                        const controlPanelSettingLinePush = new ControlPanelSettingLinePush();
+                        
+                        window.addEventListener("load", (event) => {
                             controlPanelSettingLinePush.action();
                         }, false);
                         
@@ -314,7 +329,6 @@
                             'label_1': "{{"controlPanelSettingLine_2"|trans}}"
                         };
                     </script>
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/SettingLinePush" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_microservice_deploy" or urlExtra == "cp_microservice_deploy_create" or "cp_microservice_deploy_select" in urlExtra %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
@@ -332,17 +346,22 @@
                         {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceDeployController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
                     
+                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceDeploy" ~ javascriptMinify)}}"></script>
                     <script nonce="{{php_session.xssProtectionValue}}">
                         "use strict";
                         
-                        window.addEventListener("load", function() {
-                            controlPanelMicroserviceDeploy.init();
-                            
+                        const controlPanelMicroserviceDeploy = new ControlPanelMicroserviceDeploy();
+                        
+                        window.addEventListener("load", (event) => {
                             controlPanelMicroserviceDeploy.action();
                             controlPanelMicroserviceDeploy.changeView();
                         }, false);
                         
-                        window.addEventListener("resize", function() {
+                        window.addEventListener("resize", (event) => {
+                            controlPanelMicroserviceDeploy.changeView();
+                        }, false);
+                        
+                        window.addEventListener("orientationchange", (event) => {
                             controlPanelMicroserviceDeploy.changeView();
                         }, false);
 
@@ -352,7 +371,6 @@
                             'label_3': "{{"controlPanelMicroserviceDeploy_4"|trans}}"
                         };
                     </script>
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceDeploy" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_microservice_api" or urlExtra == "cp_microservice_api_create" or "cp_microservice_api_profile" in urlExtra %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
@@ -369,13 +387,15 @@
                         {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceApiController::profileSaveAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
                     
+                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceApi" ~ javascriptMinify)}}"></script>
+                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/ApiBasic" ~ javascriptMinify)}}"></script>
                     <script nonce="{{php_session.xssProtectionValue}}">
                         "use strict";
                         
-                        window.addEventListener("load", function() {
-                            controlPanelMicroserviceApi.init();
-                            controlPanelApiBasic.init();
-                            
+                        const controlPanelMicroserviceApi = new ControlPanelMicroserviceApi();
+                        const controlPanelApiBasic = new ControlPanelApiBasic();
+                        
+                        window.addEventListener("load", (event) => {
                             controlPanelMicroserviceApi.action();
                             controlPanelApiBasic.action();
                         }, false);
@@ -384,8 +404,6 @@
                             'label_1': "{{"apiBasic_1"|trans}}"
                         };
                     </script>
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceApi" ~ javascriptMinify)}}"></script>
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/ApiBasic" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_microservice_unit_test" or urlExtra == "cp_microservice_unit_test_create" or "cp_microservice_unit_test_select" in urlExtra %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
@@ -400,10 +418,17 @@
                     {% set iframe = "<iframe id=\"unitTest_iframe\" src=\"[website_public_url]/files/microservice/unit_test/run/[filen_name].html\" style=\"width: 100%; height: 400px;\"></iframe>" %}
                     
                     {% set script = "<script id=\"unitTest_script\">\n"~
-                    "   window.addEventListener(\"load\", function(event) {\n"~
-                    "       let page = JSON.stringify({\"page\": document.body.innerHTML});\n"~
+                    "   const unitTestStartup = (event) => {\n"~
+                    "       let page = JSON.stringify({'page': document.body.innerHTML});\n"~
                     "       let iframe = document.querySelectorAll(\"#unitTest_iframe\")[0];\n\n"~
-                    "       iframe.contentWindow.postMessage(page, iframe.src);\n"~
+                    
+                    "       iframe.onload = () => {\n"~
+                    "           iframe.contentWindow.postMessage(page, iframe.src);\n"~
+                    "       };\n"~
+                    "   };\n\n"~
+                    
+                    "   window.addEventListener(\"DOMContentLoaded\", (event) => {\n"~
+                    "       unitTestStartup(event);\n"~
                     "   }, false);\n"~
                     "</script>" %}
                     
@@ -416,17 +441,22 @@
                         {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceUnitTestController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
                     
+                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceUnitTest" ~ javascriptMinify)}}"></script>
                     <script nonce="{{php_session.xssProtectionValue}}">
                         "use strict";
                         
-                        window.addEventListener("load", function() {
-                            controlPanelMicroserviceUnitTest.init();
-                            
+                        const controlPanelMicroserviceUnitTest = new ControlPanelMicroserviceUnitTest();
+                        
+                        window.addEventListener("load", (event) => {
                             controlPanelMicroserviceUnitTest.action();
                             controlPanelMicroserviceUnitTest.changeView();
                         }, false);
                         
-                        window.addEventListener("resize", function() {
+                        window.addEventListener("resize", (event) => {
+                            controlPanelMicroserviceUnitTest.changeView();
+                        }, false);
+                        
+                        window.addEventListener("orientationchange", (event) => {
                             controlPanelMicroserviceUnitTest.changeView();
                         }, false);
 
@@ -435,7 +465,6 @@
                             'label_2': "{{"controlPanelMicroserviceUnitTest_4"|trans}}"
                         };
                     </script>
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceUnitTest" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_microservice_selenium" %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
@@ -482,23 +511,20 @@
                     
                     {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceSeleniumController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     
+                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceSelenium" ~ javascriptMinify)}}"></script>
                     <script nonce="{{php_session.xssProtectionValue}}">
                         "use strict";
                         
-                        window.addEventListener("load", function() {
-                            controlPanelMicroserviceSelenium.init();
-                            
-                            controlPanelMicroserviceSelenium.action();
-                        }, false);
+                        const controlPanelMicroserviceSelenium = new ControlPanelMicroserviceSelenium();
                         
-                        window.addEventListener("resize", function() {
+                        window.addEventListener("load", (event) => {
+                            controlPanelMicroserviceSelenium.action();
                         }, false);
 
                         window.textMicroserviceSelenium = {
                             'label_1': "{{"controlPanelMicroserviceSelenium_4"|trans}}"
                         };
                     </script>
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceSelenium" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% elseif urlExtra == "cp_microservice_cron" or urlExtra == "cp_microservice_cron_create" or "cp_microservice_cron_select" in urlExtra %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
@@ -527,17 +553,22 @@
                         {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceCronController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
                     
+                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceCron" ~ javascriptMinify)}}"></script>
                     <script nonce="{{php_session.xssProtectionValue}}">
                         "use strict";
                         
-                        window.addEventListener("load", function() {
-                            controlPanelMicroserviceCron.init();
-                            
+                        const controlPanelMicroserviceCron = new ControlPanelMicroserviceCron();
+                        
+                        window.addEventListener("load", (event) => {
                             controlPanelMicroserviceCron.action();
                             controlPanelMicroserviceCron.changeView();
                         }, false);
                         
-                        window.addEventListener("resize", function() {
+                        window.addEventListener("resize", (event) => {
+                            controlPanelMicroserviceCron.changeView();
+                        }, false);
+                        
+                        window.addEventListener("orientationchange", (event) => {
                             controlPanelMicroserviceCron.changeView();
                         }, false);
 
@@ -546,7 +577,6 @@
                             'label_2': "{{"controlPanelMicroserviceCron_3"|trans}}"
                         };
                     </script>
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceCron" ~ javascriptMinify)}}"></script>
                 {% endif %}
             {% endif %}
             

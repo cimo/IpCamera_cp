@@ -1,6 +1,6 @@
 @echo off
 
-echo Uglifyjs - Windows
+echo Terser - Windows
 
 set source=%cd%\js\system
 
@@ -19,7 +19,7 @@ for /r %source% %%a in (%originalFiles%) do set /a count+=1
 echo Count: %count%
 
 for /r %source% %%a in (%originalFiles%) do (
-    uglifyjs %%~dpnxa --compress --mangle --output %%~dpna.min%%~xa
+    terser %%~dpnxa --compress --mangle --output %%~dpna.min%%~xa
 )
 
 cd ..
