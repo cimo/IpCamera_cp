@@ -36,7 +36,6 @@ class ControlPanelApiBasic {
         $("#form_cp_apiBasic_create").on("submit", "", (event) => {
             event.preventDefault();
             
-            let optionCount = $("#form_apiBasic_select_id").find("option").length;
             let name = $(event.target).find("input[name='form_apiBasic[name]']").val();
             
             ajax.send(
@@ -53,7 +52,7 @@ class ControlPanelApiBasic {
                     ajax.reply(xhr, "#" + event.currentTarget.id);
                     
                     if (xhr.response.messages.success !== undefined)
-                        $("#form_apiBasic_select_id").append(`<option value="${optionCount}">${name}</option>`);
+                        $("#form_apiBasic_select_id").append(`<option value="${xhr.response.values.id}">${name}</option>`);
                 },
                 null,
                 null

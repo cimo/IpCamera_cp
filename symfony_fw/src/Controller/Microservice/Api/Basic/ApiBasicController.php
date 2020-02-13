@@ -88,7 +88,9 @@ class ApiBasicController extends AbstractController {
                 
                 $logPath = "{$this->helper->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $apiBasicEntity->getName()) . ".log";
                 @file_put_contents($logPath, "Start" . PHP_EOL, FILE_APPEND);
-
+                
+                $this->response['values']['id'] = $apiBasicEntity->getId();
+                
                 $this->response['messages']['success'] = $this->helper->getTranslator()->trans("apiBasicController_1");
             }
             else {

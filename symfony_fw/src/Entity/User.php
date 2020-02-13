@@ -388,7 +388,7 @@ class User implements UserInterface, EquatableInterface, \Serializable {
     /**
      * @ORM\Column(name="roles", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT 'ROLE_USER,'")
      */
-    private $roles = [];
+    private $roles = Array();
     
     public function setRoles(array $roles) {
         $rolesImplode = implode(",", $roles);

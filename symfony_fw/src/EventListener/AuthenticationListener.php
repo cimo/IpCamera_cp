@@ -67,13 +67,13 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
             $checkAttemptLogin = $this->helper->checkAttemptLogin("success", $user->getId());
             $arrayExplodeFindValue = $this->helper->arrayExplodeFindValue($this->settingRow['role_user_id'], $user->getRoleUserId());
             
-            if ($checkCaptcha == true && $checkAttemptLogin[0] == true && $arrayExplodeFindValue == true) {
+            if ($checkCaptcha == true && $checkAttemptLogin[0] == true || ($this->settingRow['website_active'] && $arrayExplodeFindValue == true)) {
                 $this->session->set("currentUser", $user);
                 
                 $this->response['values']['url'] = $referer;
             }
             else {
-                $this->session->invalidate();
+                $this->helper->getTokenStorage()->setToken(null);
                 
                 if ($checkCaptcha == false) {
                     $message = $this->helper->getTranslator()->trans("captcha_1");
