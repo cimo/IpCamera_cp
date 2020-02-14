@@ -599,39 +599,6 @@ class Helper {
         }
     }
     
-    public function searchInFile($filePath, $word, $replace) {
-        $reading = fopen($filePath, "r");
-        $writing = fopen("{$filePath}.tmp", "w");
-        
-        $checked = false;
-        
-        while (feof($reading) == false) {
-            $line = fgets($reading);
-            
-            if (stristr($line, $word) != false) {
-                $line = $replace;
-                
-                $checked = true;
-            }
-            
-            if (feof($reading) == true && $replace == null) {
-                $line = "$word\n";
-
-                $checked = true;
-            }
-            
-            fwrite($writing, $line);
-        }
-        
-        fclose($reading);
-        fclose($writing);
-        
-        if ($checked == true) 
-            rename("{$filePath}.tmp", $filePath);
-        else
-            unlink("{$filePath}.tmp");
-    }
-    
     public function removeDirRecursive($path, $parent) {
         if (file_exists($path) == true) {
             $rdi = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS);
@@ -937,7 +904,7 @@ class Helper {
     }
     
     public function checkSessionOverTime($request, $router) {
-        if (isset($_SESSION['currentUser']) == true) {
+        if ($this->session->get("currentUser") != null) {
             $timeElapsed = time() - intval($this->session->get("userOvertime"));
             $userOverRole = false;
             
@@ -1064,6 +1031,39 @@ class Helper {
         return;
     }
     
+    public function fileSearchInside($filePath, $word, $replace) {
+        $reading = fopen($filePath, "r");
+        $writing = fopen("{$filePath}.tmp", "w");
+        
+        $checked = false;
+        
+        while (feof($reading) == false) {
+            $line = fgets($reading);
+            
+            if (stristr($line, $word) != false) {
+                $line = $replace;
+                
+                $checked = true;
+            }
+            
+            if (feof($reading) == true && $replace == null) {
+                $line = "$word\n";
+
+                $checked = true;
+            }
+            
+            fwrite($writing, $line);
+        }
+        
+        fclose($reading);
+        fclose($writing);
+        
+        if ($checked == true) 
+            rename("{$filePath}.tmp", $filePath);
+        else
+            unlink("{$filePath}.tmp");
+    }
+    
     public function fileReadTail($path, $limit = 50) {
         $fopen = fopen($path, "r");
         
@@ -1090,6 +1090,15 @@ class Helper {
             $lines[$a] = implode("", array_reverse($lines[$a]));
         
         return array_reverse($lines);
+    }
+    
+    public function writeLog($name, $message, $elements = null) {
+        $logPath = "{$this->pathSrc}/files/microservice/api/sanyo/" . str_replace(" ", "_", $name) . ".log";
+        
+        file_put_contents($logPath, date("Y-m-d H:i:s") . " - IP[{$_SERVER['REMOTE_ADDR']}]: {$message}", FILE_APPEND);
+        
+        if ($elements != null && (is_array($elements) == true || is_object($elements) == true))
+            file_put_contents($logPath, print_r($elements, true), FILE_APPEND);
     }
     
     public function loginAuthBasic($url, $username, $password) {

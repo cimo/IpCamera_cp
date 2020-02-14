@@ -123,7 +123,7 @@ class UploadChunk {
                     if ($check == true) {
                         $content = file_get_contents($tmpName);
                         
-                        file_put_contents("{$this->settings['path']}/$fileName", trim($content . PHP_EOL), FILE_APPEND);
+                        file_put_contents("{$this->settings['path']}/$fileName", trim($content), FILE_APPEND);
                         
                         $this->response['status'] = "send";
                         $this->response['messages']['success'] = "";

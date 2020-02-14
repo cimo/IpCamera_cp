@@ -3,7 +3,6 @@ namespace App\Classes\System;
 
 class ToolExcel {
     // Vars
-    private $self;
     private $encoding;
     
     private $path;
@@ -31,8 +30,7 @@ class ToolExcel {
     }
     
     // Functions public
-    public function __construct($self = null, $encoding = "UTF-8") {
-        $this->self = $self;
+    public function __construct($encoding = "UTF-8") {
         $this->encoding = $encoding;
         
         $this->path = null;
@@ -122,7 +120,7 @@ class ToolExcel {
         return $index;
     }
     
-    public function readCsv($path, $separator, $extras = Array()) {
+    public function readCsv($path, $separator, $extras, $self = null) {
         $result = false;
         
         if (file_exists($path) == true) {
@@ -130,10 +128,10 @@ class ToolExcel {
                 $index = 0;
                 
                 while (($cell = fgetcsv($handle, 0, $separator)) !== false) {
-                    if ($this->self == null)
+                    if ($self == null)
                         $result = $this->populateSheet($index, $cell, $extras);
                     else
-                        $result = $this->self->toolExcelCsvCallback($index, $cell, $extras);
+                        $result = $self->readCsvCallback($index, $cell, $extras);
                     
                     if ($result == false)
                         break;

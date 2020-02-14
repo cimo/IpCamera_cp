@@ -86,8 +86,7 @@ class ApiBasicController extends AbstractController {
                 
                 $this->apiBasicDatabase("update", $apiBasicEntity->getId(), $form->get("databasePassword")->getData());
                 
-                $logPath = "{$this->helper->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $apiBasicEntity->getName()) . ".log";
-                @file_put_contents($logPath, "Start" . PHP_EOL, FILE_APPEND);
+                $this->helper->writeLog($apiBasicEntity->getName(), "createAction()");
                 
                 $this->response['values']['id'] = $apiBasicEntity->getId();
                 
@@ -569,7 +568,7 @@ class ApiBasicController extends AbstractController {
         $this->query = $this->helper->getQuery();
         $this->ajax = new Ajax($this->helper);
         $this->uploadChunk = new UploadChunk($this->helper);
-        $this->toolExcel = new ToolExcel($this);
+        $this->toolExcel = new ToolExcel();
         
         $this->session = $this->helper->getSession();
         
@@ -612,7 +611,7 @@ class ApiBasicController extends AbstractController {
                             $this->session->set("lockPath", $lockPath);
                             $this->session->set("totalLineCsv", $this->toolExcel->totalLineCsv("$path/{$uploadChunkProcessFile['fileName']}", ","));
 
-                            $readCsv = $this->toolExcel->readCsv("$path/{$uploadChunkProcessFile['fileName']}", ",", $apiBasicDatabaseRow);
+                            $readCsv = $this->toolExcel->readCsv("$path/{$uploadChunkProcessFile['fileName']}", ",", $apiBasicDatabaseRow, $this);
 
                             if ($readCsv == true) {
                                 //...
@@ -633,15 +632,20 @@ class ApiBasicController extends AbstractController {
         ));
     }
     
-    public function toolExcelCsvCallback($index, $cell, $extra) {
-        if ($index == 0)
+    public function readCsvCallback($index, $cell, $extra) {
+        $sessionLockPath = $this->session->get("lockPath");
+        
+        if ($index == 0) {
             $this->apiBasicRow = $this->selectApiBasicDatabase($this->session->get("apiBasicProfileId"), true);
+            
+            //...$cell
+        }
         else if ($index > 0) {
             $parameters = Array();
             
-            $databaseExternal = $this->databaseExternal($parameters, $this->apiBasicRow, $extra);
+            //...$cell
             
-            $sessionLockPath = $this->session->get("lockPath");
+            $databaseExternal = $this->databaseExternal("test", $parameters, $this->apiBasicRow, $extra);
             
             if ($databaseExternal != false)
                 file_put_contents($sessionLockPath, "{$this->session->get("totalLineCsv")}|$index");
@@ -654,8 +658,15 @@ class ApiBasicController extends AbstractController {
         }
         
         if (isset($this->response['errorCode']) == true && $this->response['errorCode'] != 0) {
-            $logPath = "{$this->helper->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $this->apiBasicRow['name']) . ".log";
-            @file_put_contents($logPath, date("Y-m-d H:i:s") . " - $name - IP[{$_SERVER['REMOTE_ADDR']}]: " . print_r($this->response, true) . print_r($parameters, true) . PHP_EOL, FILE_APPEND);
+            $name = "{$this->apiBasicRow['name']}_csv";
+            
+            $this->helper->writeLog($name, "readCsvCallback() =>", $this->response);
+            
+            if (file_exists($sessionLockPath) == true) {
+                unlink($sessionLockPath);
+                
+                $this->session->remove("lockPath");
+            }
             
             return false;
         }
@@ -886,7 +897,7 @@ class ApiBasicController extends AbstractController {
                                 }
 
                                 if ($this->apiBasicRow['database_ip'] != "" && $this->apiBasicRow['database_name'] != "" && $this->apiBasicRow['database_username'] != "" && $this->apiBasicRow['database_password'] != "") {
-                                    $databaseExternal = $this->databaseExternal($this->parameters, $this->apiBasicRow, $apiBasicDatabaseRow);
+                                    $databaseExternal = $this->databaseExternal("test", $this->parameters, $this->apiBasicRow, $apiBasicDatabaseRow);
                                     
                                     if ($databaseExternal != false)
                                         $this->response['messages']['success'] = $this->helper->getTranslator()->trans("apiBasicController_10");
@@ -909,10 +920,8 @@ class ApiBasicController extends AbstractController {
 
                         $this->saveRequestDetail($name, $postFields, $this->response['errorCode']);
 
-                        if ((isset($this->response['errorCode']) == true && $this->response['errorCode'] != 0) || isset($this->response['messages']['error']) == true) {
-                            $logPath = "{$this->helper->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $this->apiBasicRow['name']) . ".log";
-                            @file_put_contents($logPath, date("Y-m-d H:i:s") . " - $name - IP[{$_SERVER['REMOTE_ADDR']}]: " . print_r($this->response, true) . print_r($this->parameters, true) . PHP_EOL, FILE_APPEND);
-                        }
+                        if ((isset($this->response['errorCode']) == true && $this->response['errorCode'] != 0) || isset($this->response['messages']['error']) == true)
+                            $this->helper->writeLog($this->apiBasicRow['name'], "requestTestAction() =>", $this->response);
                     }
                 }
                 else
@@ -1275,7 +1284,7 @@ class ApiBasicController extends AbstractController {
         return false;
     }
     
-    private function databaseExternal($parameters, $row, $extra) {
+    private function databaseExternal($type, $parameters, $row, $extra) {
         $response = false;
         
         if ($row['database_ip'] != "" && $row['database_name'] != "" && $row['database_username'] != "" && $extra['database_password'] != "") {
@@ -1284,12 +1293,23 @@ class ApiBasicController extends AbstractController {
             if ($checkHost == false)
                 return $response;
             
-            $pdo = new \PDO("mysql:host={$row['database_ip']};dbname={$row['database_name']};charset=utf8", $row['database_username'], $extra['database_password']);
+            try {
+                $pdo = new \PDO("mysql:host={$row['database_ip']};dbname={$row['database_name']};charset=utf8", $row['database_username'], $extra['database_password']);
+            }
+            catch(\PDOException $error) {
+                $pdo = false;
+            }
             
-            //...
+            if ($pdo != false) {
+                if ($type == "test") {
+                    //...
+                }
+            }
             
             if ($response == false || $pdo == false)
                 $this->response['messages']['errorCode'] = 10;
+            
+            $this->helper->writeLog($row['name'], "databaseExternal() =>", $this->response);
             
             unset($pdo);
         }

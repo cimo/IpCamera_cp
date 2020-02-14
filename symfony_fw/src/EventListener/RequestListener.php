@@ -51,12 +51,10 @@ class RequestListener {
         
         $request = $event->getRequest();
         
-        $this->helper->createCookie($this->session->getName(), null, time() + (10 * 365 * 24 * 60 * 60), $this->settingRow['https'], true);
-        
         $checkLanguage = $this->helper->checkLanguage($request, $this->router);
         $newRequest = $checkLanguage[0];
         
-        $checkSessionOverTime = $this->helper->checkSessionOverTime($newRequest, $this->router);
+        //$checkSessionOverTime = $this->helper->checkSessionOverTime($newRequest, $this->router);
         
         $urlCurrentPageId = 2;
         
@@ -81,10 +79,10 @@ class RequestListener {
         else
             $this->container->get("twig")->addGlobal("javascriptMinify", ".js");
         
-        if ($checkSessionOverTime != false)
-            $event->setResponse(new RedirectResponse($checkSessionOverTime));
-        else if ($checkLanguage[1] != false)
+        if ($checkLanguage[1] != false)
             $event->setResponse(new RedirectResponse($checkLanguage[1]));
+        /*else if ($checkSessionOverTime != false)
+            $event->setResponse(new RedirectResponse($checkSessionOverTime));*/
         
         if ($this->settingRow['https'] == true) {
             if ($newRequest->isSecure() == false) {

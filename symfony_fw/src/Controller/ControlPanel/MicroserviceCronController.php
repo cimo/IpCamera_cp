@@ -449,7 +449,7 @@ class MicroserviceCronController extends AbstractController {
         
         shell_exec("crontab -r");
         
-        $this->helper->searchInFile("{$path}/system/cron_job.txt", "{$microserviceCronEntity->getName()}.log", " ");
+        $this->helper->fileSearchInside("{$path}/system/cron_job.txt", "{$microserviceCronEntity->getName()}.log", " ");
         
         if ($delete == false) {
             if ($microserviceCronEntity->getActive() == true)

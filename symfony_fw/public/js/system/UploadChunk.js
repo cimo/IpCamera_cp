@@ -111,7 +111,7 @@ class UploadChunk {
             }
         };
         
-        xhr.open("post", this.urlRequest + "&action=start&fileName=" + fileName);
+        xhr.open("post", `${this.urlRequest}&action=start&fileName=${this.fileName}`);
         xhr.send(formData);
     }
     
@@ -147,7 +147,7 @@ class UploadChunk {
             }
         };
         
-        xhr.open("post", this.urlRequest + "&action=send&fileName=" + fileName);
+        xhr.open("post", `${this.urlRequest}&action=send&fileName=${this.fileName}`);
         xhr.send(formData);
     }
     
@@ -190,7 +190,7 @@ class UploadChunk {
             }
         };
         
-        xhr.open("post", this.urlRequest + "&action=complete&fileName=" + fileName);
+        xhr.open("post", `${this.urlRequest}&action=complete&fileName=${this.fileName}`);
         xhr.send(formData);
     }
     
@@ -227,7 +227,7 @@ class UploadChunk {
             }
         };
         
-        xhr.open("post", this.urlRequest + "&action=stop&fileName=" + fileName);
+        xhr.open("post", `${this.urlRequest}&action=stop&fileName=${this.fileName}`);
         xhr.send(formData);
     }
     

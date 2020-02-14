@@ -74,10 +74,10 @@ class PayPalIpnListener {
                         $this->entityManager->persist($payment);
                         $this->entityManager->flush();
 
-                        error_log("Completed: " . print_r($payPalElements, true) . PHP_EOL);
+                        error_log("Completed: " . print_r($payPalElements, true));
                     }
                     else if ($payPalElements['payment_status'] == "Pending")
-                        error_log("Pending: " . print_r($payPalElements, true) . PHP_EOL);
+                        error_log("Pending: " . print_r($payPalElements, true));
                 }
             }
         }
