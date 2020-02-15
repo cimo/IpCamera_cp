@@ -211,7 +211,7 @@ class ModuleController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                $id = $request->get("id");
+                $id = $request->get("id") == null ? 0 : $request->get("id");
                 
                 $moduleEntity = $this->entityManager->getRepository("App\Entity\Module")->find($id);
 

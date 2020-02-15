@@ -235,7 +235,7 @@ class PageController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                $id = $request->get("id");
+                $id = $request->get("id") == null ? 0 : $request->get("id");
                 
                 $pageEntity = $this->entityManager->getRepository("App\Entity\Page")->find($id);
                 
@@ -316,7 +316,9 @@ class PageController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                $rows = array_column($this->query->selectAllPageParentDatabase($request->get("id"), true), "alias", "id");
+                $id = $request->get("id") == null ? 0 : $request->get("id");
+                
+                $rows = array_column($this->query->selectAllPageParentDatabase($id, true), "alias", "id");
                 
                 $sessionPageProfileId = $this->session->get("pageProfileId");
                 

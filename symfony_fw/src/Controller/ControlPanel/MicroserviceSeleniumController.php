@@ -136,7 +136,7 @@ class MicroserviceSeleniumController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                $id = $request->get("id");
+                $id = $request->get("id") == null ? 0 : $request->get("id");
                 $name = $request->get("name");
                 
                 if (is_file("{$this->helper->getPathSrc()}/files/microservice/selenium/{$name}") == true) {

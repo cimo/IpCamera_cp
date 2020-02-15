@@ -275,7 +275,7 @@ class MicroserviceDeployController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                $id = $request->get("id");
+                $id = $request->get("id") == null ? 0 : $request->get("id");
                 
                 $microserviceDeployEntity = $this->entityManager->getRepository("App\Entity\MicroserviceDeploy")->find($id);
                 
@@ -448,7 +448,9 @@ class MicroserviceDeployController extends AbstractController {
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("action") == "clone" || $request->get("action") == "reset" || ($request->get("action") == "pull" && $request->get("branchName") != "")) {
-                    $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase($request->get("id"));
+                    $id = $request->get("id") == null ? 0 : $request->get("id");
+                    
+                    $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase($id);
                     
                     $sshConnection = $this->sshConnection($microserviceDeployRow, $request);
                     

@@ -203,7 +203,7 @@ class RoleUserController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                $id = $request->get("id");
+                $id = $request->get("id") == null ? 0 : $request->get("id");
                 
                 $roleUserEntity = $this->entityManager->getRepository("App\Entity\RoleUser")->find($id);
 
