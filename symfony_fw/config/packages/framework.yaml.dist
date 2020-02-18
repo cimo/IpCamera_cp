@@ -13,10 +13,6 @@ framework:
         save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
         #save_path: '/var/lib/php/sessions'
         name: ipCameraCp_dev
-        #cookie_domain: .machine.local
-        #cookie_lifetime: 0
-        #gc_maxlifetime: 0
-        #gc_probability: 0
 
     # cimo +
     assets:

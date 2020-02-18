@@ -54,7 +54,7 @@ class RequestListener {
         $checkLanguage = $this->helper->checkLanguage($request, $this->router);
         $newRequest = $checkLanguage[0];
         
-        //$checkSessionOverTime = $this->helper->checkSessionOverTime($newRequest, $this->router);
+        $checkSessionOverTime = $this->helper->checkSessionOverTime($newRequest, $this->router);
         
         $urlCurrentPageId = 2;
         
@@ -81,8 +81,8 @@ class RequestListener {
         
         if ($checkLanguage[1] != false)
             $event->setResponse(new RedirectResponse($checkLanguage[1]));
-        /*else if ($checkSessionOverTime != false)
-            $event->setResponse(new RedirectResponse($checkSessionOverTime));*/
+        else if ($checkSessionOverTime != false)
+            $event->setResponse(new RedirectResponse($checkSessionOverTime));
         
         if ($this->settingRow['https'] == true) {
             if ($newRequest->isSecure() == false) {

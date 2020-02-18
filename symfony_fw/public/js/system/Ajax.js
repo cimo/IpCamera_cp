@@ -26,9 +26,12 @@ class Ajax {
                     callbackBefore();
             },
             success: (xhr) => {
+                if (xhr.sessionOver !== undefined || (xhr.response !== undefined && xhr.response.length === 0)) {
+                    $(".menu_user_logged").find(".session_over").css("display", "flex");
+                    $(".menu_user_logged").find("li").not(".session_over").hide();
+                }
+                
                 if (xhr.userInform !== undefined && xhr.userInform !== "") {
-                    window.session.userInform = xhr.userInform;
-                    
                     this.reply(xhr.userInform, "");
                     
                     if (loaderEnabled === true)
@@ -103,9 +106,6 @@ class Ajax {
                     }
                 });
             }
-            
-            if (xhr.response.session !== undefined && xhr.response.session.userInform !== undefined)
-                window.session.userInform = xhr.response.session.userInform;
         }
         
         if (result !== "")

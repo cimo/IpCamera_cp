@@ -411,12 +411,15 @@ class User implements UserInterface, EquatableInterface, \Serializable {
     }
     
     public function getRoles(): array {
-        $rolesExplode = explode(",", $this->roles);
+        $roles = $this->roles;
         
-        if (in_array("ROLE_USER", $rolesExplode) === false)
-            $rolesExplode[] = "ROLE_USER";
+        if (is_string($this->roles) == true)
+            $roles = explode(",", $this->roles);
         
-        return $rolesExplode;
+        if (in_array("ROLE_USER", $roles) === false)
+            $roles[] = "ROLE_USER";
+        
+        return $roles;
     }
     
     public function eraseCredentials() {

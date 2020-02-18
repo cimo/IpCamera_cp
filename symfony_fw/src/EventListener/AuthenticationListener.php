@@ -68,7 +68,14 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
             $arrayExplodeFindValue = $this->helper->arrayExplodeFindValue($this->settingRow['role_user_id'], $user->getRoleUserId());
             
             if ($checkCaptcha == true && $checkAttemptLogin[0] == true || ($this->settingRow['website_active'] && $arrayExplodeFindValue == true)) {
-                $this->session->set("currentUser", $user);
+                $userRow = $this->query->selectUserDatabase($user->getId());
+                
+                $this->session->set("currentUser", $userRow);
+                
+                $this->helper->createCookie("{$this->session->getName()}_login", 1, 0, true, false);
+                
+                if ($request->get("_remember_me") != null)
+                    $this->helper->createCookie("{$this->session->getName()}_remember_me", 1, 0, true, false);
                 
                 $this->response['values']['url'] = $referer;
             }
@@ -152,19 +159,20 @@ class AuthenticationListener implements AuthenticationSuccessHandlerInterface, A
     public function onLogoutSuccess(Request $request) {
         $referer = $request->headers->get("referer");
         
-        $url = $referer;
+        $url = $this->router->generate(
+            "root_render",
+            Array(
+                '_locale' => $this->session->get("languageTextCode"),
+                'urlCurrentPageId' => 2,
+                'urlExtra' => ""
+            )
+        );
         
-        if (strpos($request, "control_panel") !== false || $url == null) {
-            $url = $this->router->generate(
-                "root_render",
-                Array(
-                    '_locale' => $this->session->get("languageTextCode"),
-                    'urlCurrentPageId' => 2,
-                    'urlExtra' => ""
-                )
-            );
-        }
-
+        $this->session->remove("currentUser");
+        
+        $this->helper->removeCookie("{$this->session->getName()}_login");
+        $this->helper->removeCookie("{$this->session->getName()}_remember_me");
+        
         return new RedirectResponse($url);
     }
     

@@ -742,6 +742,7 @@ date.time: H:i:s
 # Download
 "download_1": "Download error!"
 "download_2": "No download records!"
+"download_3": "File deleted."
 
 # Microservice deploy
 "microserviceDeployRender_1": "Microservice deploy render form"

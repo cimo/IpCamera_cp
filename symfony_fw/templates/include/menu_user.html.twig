@@ -1,8 +1,11 @@
 <div class="mdc-menu-anchor">
     <a href="#" class="material-icons mdc-top-app-bar__action-item" aria-label="label">account_circle</a>
     <div class="mdc-menu" tabindex="-1">
-        <ul id="menu_user" class="mdc-menu__items mdc-list" role="menu" aria-hidden="true">
-            {% if app.user %}
+        {% if app.user %}
+            <ul id="menu_user" class="mdc-menu__items mdc-list menu_user_logged" role="menu" aria-hidden="true">
+                <li class="mdc-list-item login session_over" role="menuitem">
+                    <span>{% trans %}menuUser_4{% endtrans %}</span>
+                </li>
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true or is_granted("ROLE_MICROSERVICE") == true %}
                     <li class="mdc-list-item control_panel" role="menuitem">
                         <span>{% trans %}menuUser_1{% endtrans %}</span>
@@ -14,7 +17,9 @@
                 <li class="mdc-list-item logout" role="menuitem">
                     <span>{% trans %}menuUser_3{% endtrans %}</span>
                 </li>
-            {% else %}
+            </ul>
+        {% else %}
+            <ul id="menu_user" class="mdc-menu__items mdc-list menu_user_unlogged" role="menu" aria-hidden="true">
                 <li class="mdc-list-item login" role="menuitem">
                     <span>{% trans %}menuUser_4{% endtrans %}</span>
                 </li>
@@ -24,14 +29,14 @@
                             <span>{% trans %}menuUser_5{% endtrans %}</span>
                         </li>
                     {% endif %}
-                    
+
                     {% if settingRow['recover_password'] == true %}
                         <li class="mdc-list-item recover_password" role="menuitem">
                             <span>{% trans %}menuUser_6{% endtrans %}</span>
                         </li>
                     {% endif %}
                 {% endif %}
-            {% endif %}
-        </ul>
+            </ul>
+        {% endif %}
     </div>
 </div>

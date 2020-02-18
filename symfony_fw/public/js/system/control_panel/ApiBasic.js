@@ -153,7 +153,7 @@ class ControlPanelApiBasic {
                 $(".download_detail_container").toggle("slow");
                 
                 $("#button_apiBasic_download_detail").off("click").on("click", "", (event) => {
-                    let dataEvent = $(event.target).attr("data-event");
+                    let dataEvent = $(event.target).attr("data-event") !== undefined ? $(event.target).attr("data-event") : $(event.target).parent().attr("data-event");
                     let dateStart = $("input[name='download_date_start']").val();
                     let dateEnd = $("input[name='download_date_end']").val();
                     
@@ -175,39 +175,32 @@ class ControlPanelApiBasic {
                         (xhr) => {
                             ajax.reply(xhr, "");
                             
-                            if (xhr.response.values !== undefined) {
-                                let xhrRequest = new XMLHttpRequest();
-                                xhrRequest.onreadystatechange = () => {
-                                    if (this.readyState === 4) {
-                                        window.location = xhr.response.values.url;
-                                        
-                                        let timeoutEvent = setTimeout(() => {
-                                            clearTimeout(timeoutEvent);
-                                            
-                                            ajax.send(
-                                                false,
-                                                window.url.cpApiBasicDownloadDetail,
-                                                "post",
-                                                {
-                                                    'event': "download_delete",
-                                                    'token': window.session.token
-                                                },
-                                                "json",
-                                                false,
-                                                true,
-                                                "application/x-www-form-urlencoded; charset=UTF-8",
-                                                null,
-                                                (xhr) => {
-                                                    ajax.reply(xhr, "");
-                                                },
-                                                null,
-                                                null
-                                            );
-                                        }, 100);
-                                    }
-                                };
-                                xhrRequest.open("head", xhr.response.values.url, true);
-                                xhrRequest.send();
+                            if (xhr.response.values !== undefined && xhr.response.values.url !== undefined) {
+                                window.location = xhr.response.values.url;
+                                
+                                let timeoutEvent = setTimeout(() => {
+                                    clearTimeout(timeoutEvent);
+                                    
+                                    ajax.send(
+                                        false,
+                                        window.url.cpApiBasicDownloadDetail,
+                                        "post",
+                                        {
+                                            'event': "download_delete",
+                                            'token': window.session.token
+                                        },
+                                        "json",
+                                        false,
+                                        true,
+                                        "application/x-www-form-urlencoded; charset=UTF-8",
+                                        null,
+                                        (xhr) => {
+                                            ajax.reply(xhr, "");
+                                        },
+                                        null,
+                                        null
+                                    );
+                                }, 100);
                             }
                         },
                         null,

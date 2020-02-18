@@ -584,18 +584,8 @@ class Helper {
             $currentCookieParams = session_get_cookie_params();
             
             setcookie($name, null, time() - 3600, $currentCookieParams['path'], $currentCookieParams['domain'], false, false);
-        }
-    }
-    
-    public function sessionUnset() {
-        $this->session->clear();
-        
-        $cookies = Array(
-            $this->session->getName() . "_REMEMBERME"
-        );
-        
-        foreach ($cookies as $value) {
-            unset($_COOKIE[$value]);
+            
+            unset($_COOKIE[$name]);
         }
     }
     
@@ -904,35 +894,30 @@ class Helper {
     }
     
     public function checkSessionOverTime($request, $router) {
-        if ($this->session->get("currentUser") != null) {
+        $currentUser = $this->session->get("currentUser");
+        
+        if ($currentUser != null) {
             $timeElapsed = time() - intval($this->session->get("userOvertime"));
             $userOverRole = false;
             
             if ($this->session->get("userOvertime") == null)
                 $timeElapsed = 0;
             
-            $currentUser = $this->tokenStorage->getToken()->getUser();
+            $userRow = $this->query->selectUserDatabase($currentUser['id']);
             
-            if (is_string($currentUser) == false) {
-                $userRow = $this->query->selectUserDatabase($currentUser->getId());
-                
-                $rolesExplode = explode(",", $userRow['roles']);
-                
-                $arrayDiff = array_diff($currentUser->getRoles(), $rolesExplode);
-                
-                if (count($arrayDiff) > 0) {
-                    $userOverRole = true;
-                    
-                    $this->session->set("userInform", $this->translator->trans("classHelper_6"));
-                }
+            if ($currentUser['roles'] != $userRow['roles']) {
+                $userOverRole = true;
+
+                $this->session->set("userInform", $this->translator->trans("classHelper_6"));
             }
             
-            if ($timeElapsed >= $this->sessionMaxIdleTime || $userOverRole == true) {
+            if (($timeElapsed >= $this->sessionMaxIdleTime && $request->cookies->has("{$this->session->getName()}_remember_me") == false) || $userOverRole == true) {
                 $this->session->set("userInform", $this->translator->trans("classHelper_7"));
                 
                 if ($request->isXmlHttpRequest() == true) {
                     echo json_encode(Array(
-                        'userInform' => $this->session->get("userInform")
+                        'userInform' => $this->session->get("userInform"),
+                        'sessionOver' => true
                     ));
                     
                     exit;
@@ -947,22 +932,26 @@ class Helper {
             $this->session->set("userOvertime", time());
         }
         else {
-            if ($this->session->get("forceLogout") == 2) {
-                $this->session->set("userInform", "");
+            if ($request->cookies->has("{$this->session->getName()}_login") == true) {
+                $this->session->set("userInform", $this->translator->trans("classHelper_6"));
                 
-                $this->session->remove("forceLogout");
+                $this->removeCookie("{$this->session->getName()}_login");
             }
-            
-            if ($this->session->get("userInform") != "")
-                $this->session->set("forceLogout", 2);
+            else {
+                if ($this->session->get("checkSessionOverTimeCount") != null) {
+                    $this->session->set("userInform", "");
+                    
+                    $this->session->remove("checkSessionOverTimeCount");
+                }
+                else if ($this->session->get("checkSessionOverTimeCount") == null && $this->session->get("userInform") != "")
+                    $this->session->set("checkSessionOverTimeCount", true);
+            }
         }
         
         return false;
     }
     
     public function forceLogout($router) {
-        $this->session->set("forceLogout", 1);
-        
         return $router->generate(
             "authentication_exit_check",
             Array(
@@ -1092,8 +1081,8 @@ class Helper {
         return array_reverse($lines);
     }
     
-    public function writeLog($name, $message, $elements = null) {
-        $logPath = "{$this->pathSrc}/files/microservice/api/sanyo/" . str_replace(" ", "_", $name) . ".log";
+    public function writeLog($path, $name, $message, $elements = null) {
+        $logPath = "{$path}/" . str_replace(" ", "_", $name) . ".log";
         
         file_put_contents($logPath, date("Y-m-d H:i:s") . " - IP[{$_SERVER['REMOTE_ADDR']}]: {$message}", FILE_APPEND);
         

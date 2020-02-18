@@ -86,7 +86,7 @@ class ApiBasicController extends AbstractController {
                 
                 $this->apiBasicDatabase("update", $apiBasicEntity->getId(), $form->get("databasePassword")->getData());
                 
-                $this->helper->writeLog($apiBasicEntity->getName(), "createAction()");
+                $this->helper->writeLog("{$this->pathSrc}/files/microservice/api/basic", $apiBasicEntity->getName(), "createAction()");
                 
                 $this->response['values']['id'] = $apiBasicEntity->getId();
                 
@@ -660,7 +660,7 @@ class ApiBasicController extends AbstractController {
         if (isset($this->response['errorCode']) == true && $this->response['errorCode'] != 0) {
             $name = "{$this->apiBasicRow['name']}_csv";
             
-            $this->helper->writeLog($name, "readCsvCallback() =>", $this->response);
+            $this->helper->writeLog("{$this->pathSrc}/files/microservice/api/basic", $name, "readCsvCallback() =>", $this->response);
             
             if (file_exists($sessionLockPath) == true) {
                 unlink($sessionLockPath);
@@ -706,20 +706,15 @@ class ApiBasicController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                $sessionDownload = $this->session->get("download");
+                $downloadPath = "{$this->helper->getPathPublic()}/files/microservice/api/basic";
                 
                 if ($request->get("event") == "download_requestTestAction") {
-                    $downloadPath = "{$this->helper->getPathPublic()}/files/microservice/api/basic";
                     $downloadName = rand() . "_point";
                     
                     $this->toolExcel->setPath($downloadPath);
                     $this->toolExcel->setName($downloadName);
                     
-                    $sessionDownload['path'] = $downloadPath;
-                    $sessionDownload['name'] = $this->toolExcel->getName();
-                    $sessionDownload['mime'] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    
-                    $this->session->set("download", $sessionDownload);
+                    $this->session->set("downloadName", $this->toolExcel->getName());
                     
                     $this->toolExcel->createSheet("Point");
                     
@@ -736,10 +731,13 @@ class ApiBasicController extends AbstractController {
                         foreach ($rows as $key => $value) {
                             if (trim($value['data']) !== "false") {
                                 $data = json_decode($value['data']);
-
+                                
+                                $name = isset($data->name) == false ? "" : $data->name;
+                                $errorCode = isset($data->errorCode) == false ? 0 : intval($data->errorCode);
+                                
                                 $elements['items'] = Array(
-                                    $data->name,
-                                    $data->errorCode
+                                    $name,
+                                    $errorCode
                                 );
 
                                 $this->toolExcel->populateSheet($key, $elements);
@@ -747,24 +745,24 @@ class ApiBasicController extends AbstractController {
                         }
 
                         $result = $this->toolExcel->save();
-
-                        if ($result == false)
-                            $this->response['messages']['error'] = $this->helper->getTranslator()->trans("download_1");
-                        else {
+                        
+                        if ($result == true && file_exists("{$downloadPath}/{$this->session->get("downloadName")}") == true) {
                             $url = "{$this->helper->getUrlRoot()}/files/microservice/api/basic";
-
-                            $this->response['values']['url'] = "{$url}/{$sessionDownload['name']}";
+                            
+                            $this->response['values']['url'] = "{$url}/{$this->toolExcel->getName()}";
                         }
+                        else
+                            $this->response['messages']['error'] = $this->helper->getTranslator()->trans("download_1");
                     }
                     else
                         $this->response['messages']['error'] = $this->helper->getTranslator()->trans("download_2");
                 }
                 else if ($request->get("event") == "download_delete") {
-                    unlink("{$sessionDownload['path']}/{$sessionDownload['name']}");
+                    unlink("{$downloadPath}/{$this->session->get("downloadName")}");
                     
-                    $this->session->remove("download");
+                    $this->session->remove("downloadName");
                     
-                    $this->response['messages']['success'] = "";
+                    $this->response['messages']['log'] = $this->helper->getTranslator()->trans("download_3");
                 }
             }
         }
@@ -915,13 +913,13 @@ class ApiBasicController extends AbstractController {
                     else
                         $this->response['messages']['error'] = $this->helper->getTranslator()->trans("apiBasicController_9");
                     
-                    if ($this->apiSanyoMyPageRow != false) {
+                    if ($this->apiBasicRow != false) {
                         $this->saveRequest($this->apiBasicRow['id'], $name, "apiBasic -> $name");
 
                         $this->saveRequestDetail($name, $postFields, $this->response['errorCode']);
 
                         if ((isset($this->response['errorCode']) == true && $this->response['errorCode'] != 0) || isset($this->response['messages']['error']) == true)
-                            $this->helper->writeLog($this->apiBasicRow['name'], "requestTestAction() =>", $this->response);
+                            $this->helper->writeLog("{$this->pathSrc}/files/microservice/api/basic", $this->apiBasicRow['name'], "requestTestAction() =>", $this->response);
                     }
                 }
                 else
@@ -1309,7 +1307,7 @@ class ApiBasicController extends AbstractController {
             if ($response == false || $pdo == false)
                 $this->response['messages']['errorCode'] = 10;
             
-            $this->helper->writeLog($row['name'], "databaseExternal() =>", $this->response);
+            $this->helper->writeLog("{$this->pathSrc}/files/microservice/api/basic", $row['name'], "databaseExternal() =>", $this->response);
             
             unset($pdo);
         }
