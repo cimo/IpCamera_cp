@@ -1,6 +1,6 @@
 "use strict";
 
-/* global helper, ajax, loader, flashBag, materialDesign */
+/* global helper, ajax, loader, flashBag, materialDesign, processLock */
 
 class UploadChunk {    
     // Properties
@@ -20,8 +20,8 @@ class UploadChunk {
         this.tagImageRefresh = value;
     }
     
-    set setLockUrl(value) {
-        this.lockUrl = value;
+    set setProcessLock(value) {
+        this.processLock = value;
     }
     
     // Functions public
@@ -30,7 +30,7 @@ class UploadChunk {
         this.tagContainer = "";
         this.tagProgressBar = "";
         this.tagImageRefresh = "";
-        this.lockUrl = "";
+        this.processLock = false;
         
         this.inputLabel = "";
         
@@ -178,8 +178,8 @@ class UploadChunk {
                     if (this.tagImageRefresh !== "")
                         helper.imageRefresh(this.tagImageRefresh, 1);
                     
-                    if (this.lockUrl !== "")
-                        this.lock(jsonParse.response.values.lockName);
+                    if (this.processLock === true)
+                        processLock.execute(this.tagContainer, jsonParse.response.processLock.name);
                     
                     if (response.messages.success !== undefined)
                         flashBag.show(response.messages.success);
@@ -243,77 +243,6 @@ class UploadChunk {
         
         this.sizeStart = this.sizeEnd;
         this.sizeEnd = this.sizeStart + this.byteChunk;
-    }
-    
-    lock = (lockName) => {
-        $(".loader_back").show();
-        
-        $(this.tagContainer).find(".popupWait").show();
-        
-        ajax.send(
-            false,
-            this.lockUrl,
-            "post",
-            {
-                'lockName': lockName
-            },
-            "json",
-            false,
-            true,
-            "application/x-www-form-urlencoded; charset=UTF-8",
-            null,
-            (xhr) => {
-                ajax.reply(xhr, "");
-                
-                if (xhr.response.status !== undefined) {
-                    $(this.tagContainer).find(".popupWait .close").off("click").on("click", "", (event) => {
-                        if ($(this.tagContainer).find(".popupWait .close").prop("disabled") === false) {
-                            $(".loader_back").hide();
-                            
-                            $(this.tagContainer).find(".popupWait .result").html("");
-                            $(this.tagContainer).find(".popupWait .result").hide();
-                            
-                            $(this.tagContainer).find(".popupWait .content").show();
-                            
-                            $(this.tagContainer).find(".popupWait").hide();
-                        }
-                    });
-                    
-                    if (xhr.response.values !== undefined) {
-                        if (xhr.response.values.count !== null) {
-                            $(this.tagContainer).find(".popupWait .content .status").html(xhr.response.values.count + "/" + xhr.response.values.total);
-                            
-                            materialDesign.linearProgress(this.tagContainer + " .popupWait .content .mdc-linear-progress", xhr.response.values.count, xhr.response.values.total);
-                        }
-                    }
-                    
-                    if (xhr.response.status === "error") {
-                        $(this.tagContainer).find(".popupWait .close").prop("disabled", false);
-                        
-                        $(this.tagContainer).find(".popupWait .content .status").html("");
-                        materialDesign.linearProgress(this.tagContainer + " .popupWait .content .mdc-linear-progress", 0, 0);
-                        $(this.tagContainer).find(".popupWait .content").hide();
-                        
-                        $(this.tagContainer).find(".popupWait .result").show();
-                        $(this.tagContainer).find(".popupWait .result").html("<p>" + window.textUploadChunk.label_1 + "</p>");
-                    }
-                    else if (xhr.response.status === "finish") {
-                        $(this.tagContainer).find(".popupWait .close").prop("disabled", false);
-                        
-                        $(this.tagContainer).find(".popupWait .content .status").html("");
-                        materialDesign.linearProgress(this.tagContainer + " .popupWait .content .mdc-linear-progress", 0, 0);
-                        $(this.tagContainer).find(".popupWait .content").hide();
-                        
-                        $(this.tagContainer).find(".popupWait .result").show();
-                        $(this.tagContainer).find(".popupWait .result").html("<p>" + window.textUploadChunk.label_2 + "</p>");
-                    }
-                    else if (xhr.response.status === "loop")
-                        this.lock(xhr.response.values.lockName);
-                }
-            },
-            null,
-            null
-        );
     }
     
     resetValue = () => {

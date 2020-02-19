@@ -1,4 +1,6 @@
-@media(max-width: "839px") {
+@import "helper.scss";
+
+@media(max-width: $widthMobile) {
     .wysiwyg {
         .toolbar {
             .mdc-fab {

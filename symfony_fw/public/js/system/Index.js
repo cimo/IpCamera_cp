@@ -2,18 +2,19 @@
 
 /* global */
 
+let helper = null;
 let ajax = null;
 let authentication = null;
 let captcha = null;
 let chaato = null;
 let flashBag = null;
-let helper = null;
 let language = null;
 let loader = null;
 let materialDesign = null;
 let menuUser = null;
 let pageComment = null;
 let popupEasy = null;
+let processLock = null;
 let recoverPassword = null;
 let registration = null;
 let search = null;
@@ -23,18 +24,19 @@ let widgetSearch = null;
 let wysiwyg = null;
 
 $(document).ready(() => {
+    helper = new Helper();
     ajax = new Ajax();
     authentication = new Authentication();
     captcha = new Captcha();
     chaato = new Chaato();
     flashBag = new FlashBag();
-    helper = new Helper();
     language = new Language();
     loader = new Loader();
     materialDesign = new MaterialDesign();
     menuUser = new MenuUser();
     pageComment = new PageComment();
     popupEasy = new PopupEasy();
+    processLock = new ProcessLock();
     recoverPassword = new RecoverPassword();
     registration = new Registration();
     search = new Search();

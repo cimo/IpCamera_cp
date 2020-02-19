@@ -145,7 +145,7 @@ $boxBackgroundColor: #ededed;
         width: 50%;
     }
 }
-@media(max-width: "599px") {
+@media(max-width: $widthMiddle) {
     .main {
         .sortable_column {
             padding-top: 45px !important;

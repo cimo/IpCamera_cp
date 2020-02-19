@@ -86,7 +86,7 @@ class ApiBasicController extends AbstractController {
                 
                 $this->apiBasicDatabase("update", $apiBasicEntity->getId(), $form->get("databasePassword")->getData());
                 
-                $this->helper->writeLog("{$this->pathSrc}/files/microservice/api/basic", $apiBasicEntity->getName(), "createAction()");
+                $this->helper->writeLog("{$this->helper->getPathSrc()}/files/microservice/api/basic", $apiBasicEntity->getName(), "createAction()");
                 
                 $this->response['values']['id'] = $apiBasicEntity->getId();
                 
@@ -587,39 +587,38 @@ class ApiBasicController extends AbstractController {
                     $this->apiBasicRow = $this->selectApiBasicDatabase($this->session->get("apiBasicProfileId"), true);
                     $apiBasicDatabaseRow = $this->apiBasicDatabase("select", $this->apiBasicRow['id'], $this->apiBasicRow['database_password']);
                     
-                    $lockPath = "{$this->helper->getPathSrc()}/files/lock/{$this->apiBasicRow['name']}_lock";
+                    $lockPath = "{$this->helper->getPathLock()}/{$this->apiBasicRow['name']}_lock";
                     
                     if (file_exists($lockPath) == false) {
                         $path = "{$this->helper->getPathSrc()}/files/microservice/api/basic";
-
+                        
                         $this->uploadChunk->setSettings(Array(
                             'path' => $path,
                             'chunkSize' => 1048576,
                             'mimeType' => Array("text/plain")
                         ));
                         $uploadChunkProcessFile = $this->uploadChunk->processFile();
-
+                        
                         $this->response['uploadChunk']['processFile'] = $uploadChunkProcessFile;
-
+                        
                         if (isset($uploadChunkProcessFile['status']) == true && $uploadChunkProcessFile['status'] == "complete") {
-                            $this->response['values']['lockName'] = "{$this->apiBasicRow['name']}_lock";
-
+                            $this->response = $this->helper->responseProcessLock($this->response, $this->apiBasicRow['name']);
+                            
                             $this->helper->closeAjaxRequest($this->response, true);
                             
-                            file_put_contents($lockPath, "");
+                            $totalLineCsv = $this->toolExcel->totalLineCsv("$path/{$uploadChunkProcessFile['fileName']}", ",") - 1;
                             
-                            $this->session->set("lockPath", $lockPath);
-                            $this->session->set("totalLineCsv", $this->toolExcel->totalLineCsv("$path/{$uploadChunkProcessFile['fileName']}", ","));
-
+                            $this->helper->createProcessLock($lockPath, $totalLineCsv);
+                            
                             $readCsv = $this->toolExcel->readCsv("$path/{$uploadChunkProcessFile['fileName']}", ",", $apiBasicDatabaseRow, $this);
-
+                            
                             if ($readCsv == true) {
                                 //...
                             }
                         }
                     }
                     else
-                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("lock_1");
+                        $this->response = $this->helper->responseProcessLock($this->response);
                 }
             }
         }
@@ -633,8 +632,6 @@ class ApiBasicController extends AbstractController {
     }
     
     public function readCsvCallback($index, $cell, $extra) {
-        $sessionLockPath = $this->session->get("lockPath");
-        
         if ($index == 0) {
             $this->apiBasicRow = $this->selectApiBasicDatabase($this->session->get("apiBasicProfileId"), true);
             
@@ -648,25 +645,17 @@ class ApiBasicController extends AbstractController {
             $databaseExternal = $this->databaseExternal("test", $parameters, $this->apiBasicRow, $extra);
             
             if ($databaseExternal != false)
-                file_put_contents($sessionLockPath, "{$this->session->get("totalLineCsv")}|$index");
-            else {
-                if (file_exists($sessionLockPath) == true)
-                    unlink($sessionLockPath);
-                
+                $this->helper->populateProcessLock($index);
+            else
                 $this->response['errorCode'] = 100;
-            }
         }
         
         if (isset($this->response['errorCode']) == true && $this->response['errorCode'] != 0) {
             $name = "{$this->apiBasicRow['name']}_csv";
             
-            $this->helper->writeLog("{$this->pathSrc}/files/microservice/api/basic", $name, "readCsvCallback() =>", $this->response);
+            $this->helper->writeLog("{$this->helper->getPathSrc()}/files/microservice/api/basic", $name, "readCsvCallback() =>", $this->response);
             
-            if (file_exists($sessionLockPath) == true) {
-                unlink($sessionLockPath);
-                
-                $this->session->remove("lockPath");
-            }
+            $this->helper->removeProcessLock();
             
             return false;
         }
@@ -919,7 +908,7 @@ class ApiBasicController extends AbstractController {
                         $this->saveRequestDetail($name, $postFields, $this->response['errorCode']);
 
                         if ((isset($this->response['errorCode']) == true && $this->response['errorCode'] != 0) || isset($this->response['messages']['error']) == true)
-                            $this->helper->writeLog("{$this->pathSrc}/files/microservice/api/basic", $this->apiBasicRow['name'], "requestTestAction() =>", $this->response);
+                            $this->helper->writeLog("{$this->helper->getPathSrc()}/files/microservice/api/basic", $this->apiBasicRow['name'], "requestTestAction() =>", $this->response);
                     }
                 }
                 else
@@ -1307,7 +1296,7 @@ class ApiBasicController extends AbstractController {
             if ($response == false || $pdo == false)
                 $this->response['messages']['errorCode'] = 10;
             
-            $this->helper->writeLog("{$this->pathSrc}/files/microservice/api/basic", $row['name'], "databaseExternal() =>", $this->response);
+            $this->helper->writeLog("{$this->helper->getPathSrc()}/files/microservice/api/basic", $row['name'], "databaseExternal() =>", $this->response);
             
             unset($pdo);
         }

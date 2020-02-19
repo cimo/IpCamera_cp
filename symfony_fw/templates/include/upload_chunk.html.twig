@@ -23,23 +23,5 @@
         </button>
     </div>
     
-    <div class="popupWait">
-        <i class="material-icons close" disabled="disabled">close</i>
-        <div class="content">
-            <p>{% trans %}upload_chunk_3{% endtrans %}</p>
-            <p class="status"></p>
-            
-            {{-include("@templateRoot/include/progress_bar.html.twig")-}}
-            
-        </div>
-        <div class="result"></div>
-    </div>
+    {{-include("@templateRoot/include/process_lock.html.twig")-}}
 </div>
-<script nonce="{{php_session.xssProtectionValue}}">
-    "use strict";
-    
-    window.textUploadChunk = {
-        'label_1': "{{"upload_chunk_4"|trans}}",
-        'label_2': "{{"upload_chunk_5"|trans}}"
-    };
-</script>

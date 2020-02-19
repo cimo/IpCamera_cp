@@ -142,9 +142,9 @@ class UploadChunk {
                 $fileName = $_REQUEST['fileName'];
                 
                 if (file_exists("{$this->settings['path']}/$fileName") == true) {
+                    $extension = pathinfo("{$this->settings['path']}/$fileName", PATHINFO_EXTENSION);
+                    
                     if (isset($this->settings['nameOverwrite']) == true && $this->settings['nameOverwrite'] != "") {
-                        $extension = pathinfo("{$this->settings['path']}/$fileName", PATHINFO_EXTENSION);
-                        
                         rename("{$this->settings['path']}/$fileName", "{$this->settings['path']}/{$this->settings['nameOverwrite']}.{$extension}");
                         
                         $fileName = $this->settings['nameOverwrite'];

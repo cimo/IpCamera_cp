@@ -70,7 +70,7 @@ class ControlPanelApiBasic {
             uploadChunk.setUrlRequest = `${window.url.cpApiBasicCsv}?token=${window.session.token}&event=csv`;
             uploadChunk.setTagContainer = "#upload_chunk_apiBasic_csv_container";
             uploadChunk.setTagProgressBar = "#upload_chunk_apiBasic_csv_container .upload_chunk .mdc-linear-progress";
-            uploadChunk.setLockUrl = `${window.url.root}/listener/lockListener.php`;
+            uploadChunk.setProcessLock = true;
             uploadChunk.processFile();
             
             widgetDatePicker.setInputFill = ".widget_datePicker_input";

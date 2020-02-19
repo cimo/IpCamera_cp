@@ -1,6 +1,6 @@
 "use strict";
 
-/* global */
+/* global helper */
 
 class MenuUser {
     // Properties
@@ -17,7 +17,10 @@ class MenuUser {
             window.location.href = `${window.url.root}/${window.session.languageTextCode}/1`;
         });
         $("#menu_user").find(".logout").on("click", "", (event) => {
-            window.location.href = window.url.authenticationExitCheck;
+            if (helper.readCookie(`${window.session.name}_login`) !== null)
+                window.location.href = window.url.authenticationExitCheck;
+            else
+                window.location.href = window.url.root;
         });
         $("#menu_user").find(".login").on("click", "", (event) => {
             window.location.href = `${window.url.root}/${window.session.languageTextCode}/0/user_login`;

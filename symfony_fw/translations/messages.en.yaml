@@ -207,9 +207,6 @@ date.time: H:i:s
 # Upload chunk
 "upload_chunk_1": "Start"
 "upload_chunk_2": "Stop"
-"upload_chunk_3": "Please don't close this window and wait..."
-"upload_chunk_4": "Error listener!"
-"upload_chunk_5": "Completed. Now you can close this window."
 
 "classUploadChunk_1": "Upload stopped."
 "classUploadChunk_2": "Upload not stopped!"
@@ -221,6 +218,12 @@ date.time: H:i:s
 "classUploadChunk_8": "Chunk not sended!"
 "classUploadChunk_9": "File uploaded successfully."
 "classUploadChunk_10": "File not uploaded!"
+
+# Process lock
+"process_lock_1": "Please don't close this window and wait..."
+"process_lock_2": "Error listener!"
+"process_lock_3": "Completed. Now you can close this window."
+"process_lock_4": "Process in progress, please try later."
 
 # Captcha
 "captcha_1": "Chaptcha code incorrect!"
@@ -735,9 +738,6 @@ date.time: H:i:s
 "settingLinePushController_9": "Push user not added!"
 "settingLinePushController_10": "Active"
 "settingLinePushController_11": "Not active"
-
-# Lock
-"lock_1": "Process in progress, please try later."
 
 # Download
 "download_1": "Download error!"

@@ -9,27 +9,26 @@ if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) == true && strtolower($_SERVER['HTT
     exit;
 
 $response = Array();
-$lockName = isset($_REQUEST['lockName']) == true ? $_REQUEST['lockName'] : "";
+$name = isset($_REQUEST['name']) == true ? $_REQUEST['name'] : "";
 
-if (empty($lockName) == true)
+if (empty($name) == true)
     exit;
 
 sleep(5);
 
-$path = "../../src/files/lock/$lockName";
+$path = "../../src/files/lock/$name";
 
 if (file_exists($path) == true) {
-    $fileContent = file_get_contents($path);
-    $fileContentExplode = explode("|", $fileContent);
+    $fileContentExplode = explode("|", file_get_contents($path));
     
-    if (($fileContentExplode[0] - 1) == $fileContentExplode[1]) {
+    if ($fileContentExplode[0] == $fileContentExplode[1]) {
         unlink($path);
         
         $response['status'] = "finish";
     }
     else {
         $response['status'] = "loop";
-        $response['values']['lockName'] = $lockName;
+        $response['values']['name'] = $name;
         $response['values']['total'] = $fileContentExplode[0];
         $response['values']['count'] = $fileContentExplode[1];
     }

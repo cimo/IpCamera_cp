@@ -1,3 +1,5 @@
+@import "helper.scss";
+
 /* Search */
 .widget_search {
     color: #ffffff;
@@ -55,7 +57,7 @@
         right: 100%;
     }
     
-    @media(max-width: "599px") {
+    @media(max-width: $widthMiddle) {
         right: 100px;
     }
 }

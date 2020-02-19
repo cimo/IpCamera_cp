@@ -94,6 +94,10 @@ class Helper {
         return $this->pathPublic;
     }
     
+    public function getPathLock() {
+        return $this->pathLock;
+    }
+    
     public function getUrlRoot() {
         return $this->urlRoot;
     }
@@ -134,6 +138,7 @@ class Helper {
         $this->pathRoot = $_SERVER['DOCUMENT_ROOT'] . $this->config->getPathRoot();
         $this->pathSrc = "{$this->pathRoot}/src";
         $this->pathPublic = "{$this->pathRoot}/public";
+        $this->pathLock = "{$this->pathRoot}/src/files/lock";
         
         $this->urlRoot = $this->config->getProtocol() . $_SERVER['HTTP_HOST'] . $this->config->getUrlRoot();
         
@@ -1133,6 +1138,47 @@ class Helper {
             return preg_replace($pattern, $replacement, $value);
         else
             return $value;
+    }
+    
+    public function createProcessLock($path, $total = 0) {
+        file_put_contents($path, "");
+        
+        $this->session->set("processLockPath", $path);
+        
+        if ($total > 0)
+            $this->session->set("processLockTotal", $total);
+    }
+    
+    public function populateProcessLock($content) {
+        $path = $this->session->get("processLockPath");
+        $total = $this->session->get("processLockTotal");
+        
+        if ($path != null) {
+            if ($total == null)
+                file_put_contents($path, $content);
+            else
+                file_put_contents($path, "$total|$content");
+        }
+    }
+    
+    public function responseProcessLock($response, $name = "") {
+        if ($name != "")
+            $response['processLock']['name'] = "{$name}_lock";
+        else
+            $response['messages']['error'] = $this->translator->trans("process_lock_4");
+        
+        return $response;
+    }
+    
+    public function removeProcessLock() {
+        $path = $this->session->get("processLockPath");
+        
+        if (file_exists($path) == true) {
+            unlink($path);
+            
+            $this->session->remove("processLockPath");
+            $this->session->remove("processLockTotal");
+        }
     }
     
     // Functions private
