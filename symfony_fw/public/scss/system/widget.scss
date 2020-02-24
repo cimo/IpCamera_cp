@@ -2,7 +2,7 @@
 
 /* Search */
 .widget_search {
-    color: #ffffff;
+    color: $mdc-theme-on-primary;
     font-size: 16px;
     margin: 0;
     display: flex;
@@ -32,10 +32,10 @@
         input {
             display: none;
             border: none;
-            border-bottom: 1px solid #ffffff;
+            border-bottom: 1px solid $mdc-theme-surface;
             font-size: 16px;
             background: none;
-            color: #ffffff;
+            color: $mdc-theme-on-surface;
             position: relative;
             width: 100%;
             top: 14px;
@@ -63,17 +63,6 @@
 }
 
 /* Date picker */
-.widget_datePicker_back {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #000000;
-    opacity: 0.5;
-    z-index: 1200;
-}
 .widget_datePicker {
     display: none;
     position: fixed;
@@ -87,7 +76,7 @@
     border-top: none;
     border-bottom: none;
     width: 310px;
-    background-color: #ffffff;
+    background-color: $mdc-theme-background;
     z-index: 1201;
     
     .header {

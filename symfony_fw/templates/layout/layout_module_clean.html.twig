@@ -1,4 +1,4 @@
 <div id="{% block panelId %}{% endblock %}" class="module_clean {% block panelClass %}{% endblock %}">
-    <div class="mdc-typography--body2">{% block moduleContainer %}{% endblock %}</div>
-    <div class="mdc-card__actions">{% block moduleFooter %}{% endblock %}</div>
+    {% block moduleContainer %}{% endblock %}
+    {% block moduleFooter %}{% endblock %}
 </div>

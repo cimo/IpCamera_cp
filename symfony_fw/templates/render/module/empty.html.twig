@@ -1,13 +1,10 @@
 {% extends "@templateRoot/layout/layout_module.html.twig" %}
 
 {% block panelId %}panel_id_3{% endblock %}
-{% block moduleHeaderIcon %}
-    <i class="material-icons">crop_square</i>
-{% endblock %}
-{% block moduleHeader %}{% trans %}module_3{% endtrans %}{% endblock %}
-{% block moduleContainer %}
-    container
-{% endblock %}
-{% block moduleFooter %}
-    footer
-{% endblock %}
+{% block panelClass %}module_empty{% endblock %}
+{% block moduleHeaderIcon %}<i class="material-icons">crop_square</i>{% endblock %}
+{% block moduleHeaderTitle %}{% trans %}module_3{% endtrans %}{% endblock %}
+{% block moduleHeaderSubTitle %}header sub title{% endblock %}
+{% block moduleContainer %}container{% endblock %}
+{% block moduleSupportText %}{% endblock %}
+{% block moduleFooter %}{% endblock %}

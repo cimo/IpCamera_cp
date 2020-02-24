@@ -1,10 +1,14 @@
 @import "helper.scss";
 
 $barBackgroundImage: url("../../images/templates/basic/16-9.jpg");
+
 $footerHeight: 80px;
-$borderColor: #dee2e6;
+
+$moduleBorderColor: #dee2e6;
 $moduleBackgroundColor: #ececec;
-$boxBackgroundColor: #ededed;
+
+$consoleBackgroundColor: #000000;
+$consoleTextColor: #ffffff;
 
 @media(max-width: $widthMobile) {
     .main {
@@ -152,11 +156,6 @@ $boxBackgroundColor: #ededed;
         }
     }
     
-    .microservice_api_card {
-        display: block !important;
-        margin: 20px auto !important;
-    }
-    
     .graph_container {
         overflow-y: scroll;
     }
@@ -185,7 +184,7 @@ table {
                 position: relative;
                 padding: 0 24px 0 24px;
                 text-align: center;
-                border-bottom: 2px solid $borderColor;
+                border-bottom: 2px solid $mdc-theme-on-surface;
                 cursor: pointer;
 
                 i {
@@ -200,7 +199,7 @@ table {
         tr {
             td {
                 text-align: center;
-                border-bottom: 1px solid $borderColor;
+                border-bottom: 1px solid $mdc-theme-on-surface;
                 padding: 5px;
             }
         }
@@ -216,14 +215,10 @@ pre {
     width: 70px;
     margin: auto;
 }
-.logo_main_small {
-    width: 45px;
-    margin-top: 8px;
-}
 
 .maintenance_container {
-    img {
-        width: 100px;
+    i {
+        font-size: 80px;
     }
 }
 
@@ -271,57 +266,46 @@ pre {
     }
 }
 
-.module, .module_clean {
-    padding: 5px;
-    overflow: hidden;
-    
-    .drag {
-        cursor: move;
-    }
-    
-    .title {
-        i, h1 {
-            display: inline-block;
-            vertical-align: middle;
-            margin: 0;
+.module {
+    display: block !important;
+    margin: auto !important;
+    background-color: $moduleBackgroundColor !important;
+    border-color: $moduleBorderColor !important;
+
+    .mdc-card__header {
+        .text_container {
+            vertical-align: super !important;
         }
     }
-    
-    .mdc-card__actions {
-        min-height: auto !important;
-        padding: 0;
-    }
-    
-    .form_row {
-        .mdc-text-field--box, .mdc-text-field--outlined, .mdc-text-field__basic {
-            margin-top: 8px;
-            margin-bottom: 0;
-        }
-        
-        .mdc-text-field__basic, .mdc-text-field__basicTrailing {
-            i {
-                margin-bottom: 5px;
+
+    .mdc-card__media {
+        background-color: transparent !important;
+        padding: 5px 10px 10px 10px !important;
+
+        .form_row {
+            .mdc-text-field--box, .mdc-text-field--outlined, .mdc-text-field__basic {
+                margin-top: 8px;
+                margin-bottom: 0;
+            }
+
+            .mdc-text-field__basic, .mdc-text-field__basicTrailing {
+                i {
+                    margin-bottom: 5px;
+                }
+            }
+
+            .mdc-select{
+                height: 48px;
+            }
+
+            .mdc-text-field-helper-text {
+                margin: 0;
             }
         }
-        
-        .mdc-select{
-            height: 48px;
-        }
-        
-        .mdc-text-field-helper-text {
-            margin: 0;
-        }
     }
-}
 
-.module {
-    width: 100%;
-    margin: auto;
-    border: 1px solid $borderColor;
-    background-color: $moduleBackgroundColor;
-    
-    .title {
-        border-bottom: 1px solid $borderColor;
+    .mdc-card__supporting-text, .mdc-card__actions {
+        display: none !important;
     }
 }
 
@@ -393,7 +377,7 @@ pre {
 }
 
 .sortable_placeholder {
-    border: 1px dotted black;
+    border: 1px dotted $mdc-theme-on-surface;
 }
 
 .wordTag_container {
@@ -462,14 +446,14 @@ pre {
 }
 
 .microservice_api_card {
-    display: inline-block;
+    width: 250px;
 }
 .microservice_api_log {
     height: 300px;
     overflow-y: scroll;
     padding: 10px;
-    background-color: #000000;
-    color: white;
+    background-color: $consoleBackgroundColor;
+    color: $consoleTextColor;
     user-select: text;
 }
 
@@ -485,6 +469,7 @@ pre {
 
 .mdc-top-app-bar {
     z-index: 1000;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
     
     .mdc-top-app-bar__row {
         -webkit-transition: all 0.4s ease-out;
@@ -497,6 +482,7 @@ pre {
         background-position: center;
         
         .mdc-top-app-bar__title {
+            color: $mdc-theme-on-primary;
             padding: 0;
         }
     }
@@ -508,6 +494,7 @@ pre {
 .mdc-drawer__header {
     background-image: $barBackgroundImage;
     height: 120px;
+    background-color: $mdc-theme-primary;
     
     .mdc-drawer__header-content {
         img {
@@ -560,30 +547,37 @@ pre {
     align-self: flex-start;
 }
 
-.mdc-card:not(.module) {
-    border-radius: 24px 4px;
-    width: 250px;
-    margin: 10px;
-    
-    .mdc_card_header {
-        display: flex;
-        border-top-left-radius: inherit;
-        min-height: 135px;
-        
-        .mdc-card__media {
-            width: 110px;
-            border-top-left-radius: inherit;
-            
-            img {
-                width: 80px;
-                position: absolute;
-                top: 0;
+.mdc-card {
+    display: inline-block;
+    background-color: $mdc-theme-background;
+
+    .mdc-card__header {
+        padding: 10px 10px 0 10px;
+
+        .text_container {
+            display: inline-block;
+            vertical-align: top;
+            padding: 5px;
+
+            .mdc-card__title, .mdc-card__subtitle {
+                font-size: 12px;
+                line-height: 16px;
             }
         }
-        
-        .mdc_card_description {
-            padding: 10px;
-        }
+    }
+
+    .mdc-card__media {
+        background-color: $mdc-theme-surface;
+        padding: 10px;
+    }
+
+    .mdc-card__supporting-text {
+        padding: 10px 10px 0 10px;
+        font-size: 12px;
+    }
+
+    .mdc-card__actions {
+        padding: 0px 5px 0 5px;
     }
 }
 
@@ -641,7 +635,7 @@ pre {
 }
 .download_detail_container {
     display: none;
-    border: 1px dotted #000000;
+    border: 1px dotted $mdc-theme-on-surface;
     padding: 10px;
     width: 50%;
     margin-top: 10px;
@@ -655,7 +649,7 @@ pre {
 .avatar {
     max-width: 150px;
     max-height: 150px;
-    border: 1px solid #000000;
+    border: 1px solid $mdc-theme-on-surface;
 }
 
 .upload_container {
@@ -695,13 +689,12 @@ pre {
 }
 
 .square_code {
-    background-color: #c6c6c6;
-    border: 1px dotted #000000;
+    background-color: $moduleBackgroundColor;
+    border: 1px dotted $moduleBorderColor;
     padding: 10px;
     word-wrap: break-word;
     white-space: pre-wrap;
     white-space: -moz-pre-wrap;
-    white-space: -pre-wrap;
     white-space: -o-pre-wrap;
 }
 
@@ -712,7 +705,7 @@ pre {
 #body_progress {
     display: block;
     height: 100%;
-    background-color: #ffffff;
+    background-color: $mdc-theme-background;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -724,6 +717,7 @@ pre {
 #panel_id_1 {
     p {
         margin: 0;
+        margin-top: 5px;
     }
     
     .mdc-text-field {
@@ -732,7 +726,6 @@ pre {
     
     .submit_container {
         button {
-            margin-top: 0;
             width: 100%;
         }
     }
@@ -748,6 +741,8 @@ pre {
     }
     
     .button_container {
+        margin-top: 5px;
+
         a {
             width: 100%;
         }
@@ -792,7 +787,7 @@ pre {
         .quote {
             margin: 0;
             display: block;
-            background: $boxBackgroundColor;
+            background: $mdc-theme-on-surface;
             padding: 10px;
             border-radius: 20px;
             white-space: initial !important;
@@ -821,7 +816,7 @@ pre {
 
 #setting_language_manage_container {
     display: none;
-    background-color: $boxBackgroundColor;
+    background-color: $mdc-theme-on-surface;
     padding: 10px;
     
     &> p {
@@ -912,7 +907,7 @@ pre {
     box-shadow: inset 0 0 2px $mdc-theme-on-surface; 
 }
 ::-webkit-scrollbar-thumb {
-    background: $mdc-theme-primary; 
+    background: $mdc-theme-surface;
 }
 ::-webkit-scrollbar-thumb:hover {
     background: $mdc-theme-secondary; 

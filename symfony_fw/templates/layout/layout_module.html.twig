@@ -1,8 +1,14 @@
 <div id="{% block panelId %}{% endblock %}" class="mdc-card module {% block panelClass %}{% endblock %}">
-    <div class="title">
+    <section class="mdc-card__header">
         {% block moduleHeaderIcon %}{% endblock %}
-        <h1 class="mdc-typography--headline6">{% block moduleHeader %}{% endblock %}</h1>
-    </div>
-    <div class="mdc-typography--body2">{% block moduleContainer %}{% endblock %}</div>
-    <div class="mdc-card__actions">{% block moduleFooter %}{% endblock %}</div>
+        <div class="text_container">
+            <p class="mdc-card__title">{% block moduleHeaderTitle %}{% endblock %}</p>
+            <p class="mdc-card__subtitle">{% block moduleHeaderSubTitle %}{% endblock %}</p>
+        </div>
+    </section>
+    <section class="mdc-card__media">
+        {% block moduleContainer %}{% endblock %}
+    </section>
+    <section class="mdc-card__supporting-text">{% block moduleSupportText %}{% endblock %}</section>
+    <section class="mdc-card__actions">{% block moduleFooter %}{% endblock %}</section>
 </div>

@@ -10,11 +10,11 @@ class ProcessLock {
     }
     
     execute = (tag, name) => {
-        $(tag).find(".processLock .close").prop("disabled", true);
+        $(tag).find(".process_lock .close").prop("disabled", true);
         
         $(".loader_back").show();
         
-        $(tag).find(".processLock").show();
+        $(tag).find(".process_lock").show();
         
         ajax.send(
             false,
@@ -32,50 +32,50 @@ class ProcessLock {
                 ajax.reply(xhr, "");
                 
                 if (xhr.response.status !== undefined) {
-                    $(tag).find(".processLock .close").off("click").on("click", "", (event) => {
-                        if ($(tag).find(".processLock .close").prop("disabled") === false) {
+                    $(tag).find(".process_lock .close").off("click").on("click", "", (event) => {
+                        if ($(tag).find(".process_lock .close").prop("disabled") === false) {
                             $(".loader_back").hide();
                             
-                            $(tag).find(".processLock .result").html("");
-                            $(tag).find(".processLock .result").hide();
+                            $(tag).find(".process_lock .result").html("");
+                            $(tag).find(".process_lock .result").hide();
                             
-                            $(tag).find(".processLock .content").show();
+                            $(tag).find(".process_lock .content").show();
                             
-                            $(tag).find(".processLock").hide();
+                            $(tag).find(".process_lock").hide();
                         }
                     });
                     
                     if (xhr.response.values !== undefined) {
                         if (xhr.response.values.count !== null) {
-                            $(tag).find(".processLock .content .status").html(`${xhr.response.values.count}/${xhr.response.values.total}`);
+                            $(tag).find(".process_lock .content .status").html(`${xhr.response.values.count}/${xhr.response.values.total}`);
                             
-                            materialDesign.linearProgress(`${tag} .processLock .content .mdc-linear-progress`, xhr.response.values.count, xhr.response.values.total);
+                            materialDesign.linearProgress(`${tag} .process_lock .content .mdc-linear-progress`, xhr.response.values.count, xhr.response.values.total);
                         }
                     }
                     
                     if (xhr.response.status === "error") {
-                        $(tag).find(".processLock .close").prop("disabled", false);
+                        $(tag).find(".process_lock .close").prop("disabled", false);
                         
-                        $(tag).find(".processLock .content .status").html("");
+                        $(tag).find(".process_lock .content .status").html("");
                         
-                        materialDesign.linearProgress(`${tag} .processLock .content .mdc-linear-progress`, 0, 0);
+                        materialDesign.linearProgress(`${tag} .process_lock .content .mdc-linear-progress`, 0, 0);
                         
-                        $(tag).find(".processLock .content").hide();
+                        $(tag).find(".process_lock .content").hide();
                         
-                        $(tag).find(".processLock .result").show();
-                        $(tag).find(".processLock .result").html(`<p>${window.textProcessLock.label_1}</p>`);
+                        $(tag).find(".process_lock .result").show();
+                        $(tag).find(".process_lock .result").html(`<p>${window.textProcessLock.label_1}</p>`);
                     }
                     else if (xhr.response.status === "finish") {
-                        $(tag).find(".processLock .close").prop("disabled", false);
+                        $(tag).find(".process_lock .close").prop("disabled", false);
                         
-                        $(tag).find(".processLock .content .status").html("");
+                        $(tag).find(".process_lock .content .status").html("");
                         
-                        materialDesign.linearProgress(`${tag} .processLock .content .mdc-linear-progress`, 0, 0);
+                        materialDesign.linearProgress(`${tag} .process_lock .content .mdc-linear-progress`, 0, 0);
                         
-                        $(tag).find(".processLock .content").hide();
+                        $(tag).find(".process_lock .content").hide();
                         
-                        $(tag).find(".processLock .result").show();
-                        $(tag).find(".processLock .result").html(`<p>${window.textProcessLock.label_2}</p>`);
+                        $(tag).find(".process_lock .result").show();
+                        $(tag).find(".process_lock .result").html(`<p>${window.textProcessLock.label_2}</p>`);
                     }
                     else if (xhr.response.status === "loop")
                         this.execute(tag, xhr.response.values.name);

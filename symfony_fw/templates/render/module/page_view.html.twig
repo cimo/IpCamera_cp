@@ -31,7 +31,7 @@
                 {% endif %}
             </div>
         {% endif %}
-        
+
         {% if response.values.comment == true and urlCurrentPageId > 5 %}
             {{-render(controller("App\\Controller\\PageCommentController::renderAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
 

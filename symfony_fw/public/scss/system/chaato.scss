@@ -1,3 +1,5 @@
+@import "helper.scss";
+
 .graph_container {
     position: relative;
 }
@@ -15,9 +17,9 @@
     position: absolute;
     top: 0;
     left: 0;
-    background-color: #000000;
+    background-color: $mdc-theme-primary;
     opacity: 0.8;
-    color: #ffffff;
+    color: $mdc-theme-on-primary;
     padding: 5px;
     width: auto;
     z-index: 1;

@@ -7,12 +7,14 @@ $mdc-theme-on-primary: #ffffff;
 $mdc-theme-secondary: #d50000;
 $mdc-theme-on-secondary: #ffffff;
 $mdc-theme-background: #ffffff;
-$mdc-theme-surface: #ffffff;
-$mdc-theme-on-surface: #0000b3;
+$mdc-theme-surface: #0000b3;
+$mdc-theme-on-surface: #9e9e9e;
+
+$backBackgroundColor: 000000;
 
 @mixin opacity($value) {
     $msOpacity: $value * 100;
-    
+
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$msOpacity})";
     filter: alpha(opacity=$msOpacity);
     opacity: $value;
@@ -99,3 +101,5 @@ $mdc-theme-on-surface: #0000b3;
 
 .material-icons.md-light {color: rgba(255, 255, 255, 1) !important;}
 .material-icons.md-light.md-inactive {color: rgba(255, 255, 255, 0.3) !important;}
+
+@import "helper_custom.scss";

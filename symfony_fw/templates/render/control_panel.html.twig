@@ -11,9 +11,6 @@
                     <img class="logo_main_big" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/logo.svg")}}" alt="logo.svg"/>
                     <span class="mdc-top-app-bar__title">{{websiteName}}</span>
                 </div>
-                <span class="mdc-top-app-bar__title display_mobile">
-                    <img class="logo_main_small" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/logo.svg")}}" alt="logo.svg"/>
-                </span>
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
                 {{-render(controller("App\\Controller\\SearchController::moduleAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}

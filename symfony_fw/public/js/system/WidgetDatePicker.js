@@ -79,8 +79,7 @@ class WidgetDatePicker {
         this.calculateWeekDayShift();
         this.calculateDayPosition();
         
-        let content = `<div class="widget_datePicker_back"></div>
-        <div class="mdc-elevation--z8 widget_datePicker unselect">
+        let content = `<div class="mdc-elevation--z8 widget_datePicker unselect">
             ${this.createHeaderHtml(true)}
             ${this.createListYearsHtml()}
             <div class="calendar">
@@ -94,12 +93,14 @@ class WidgetDatePicker {
         if ($(".widget_datePicker").length === 0)
             $("body").append(content);
         else {
-            $(".widget_datePicker_back").remove();
+            $(".loader_back").hide();
+
             $(".widget_datePicker").remove();
             
             $("body").append(content);
-            
-            $(".widget_datePicker_back").show();
+
+            $(".loader_back").show();
+
             $(".widget_datePicker").show();
         }
         
@@ -120,7 +121,8 @@ class WidgetDatePicker {
     
     action = () => {
         $(this.inputFillTag).off("click").on("click", "", (event) => {
-            $(".widget_datePicker_back").show();
+            $(".loader_back").show();
+
             $(".widget_datePicker").show();
             
             this.currentInput = $(event.target);
@@ -216,7 +218,8 @@ class WidgetDatePicker {
         $(".widget_datePicker").find(".header > .mdc-fab").off("click").on("click", "", (event) => {
             $(this.currentInput).focus();
 
-            $(".widget_datePicker_back").hide();
+            $(".loader_back").hide();
+
             $(".widget_datePicker").hide();
         });
     }
@@ -390,8 +393,9 @@ class WidgetDatePicker {
         }
         else
             $(this.currentInput).focus();
-        
-        $(".widget_datePicker_back").hide();
+
+        $(".loader_back").hide();
+
         $(".widget_datePicker").hide();
     }
 }

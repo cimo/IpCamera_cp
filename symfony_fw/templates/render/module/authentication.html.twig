@@ -1,19 +1,13 @@
 {% extends "@templateRoot/layout/layout_module.html.twig" %}
 
 {% block panelId %}panel_id_{{response.module.id}}{% endblock %}
-{% block panelClass %}
-{% if urlExtra == "user_login" %}user_login{% endif %}
-{% endblock %}
-{% block moduleHeaderIcon %}
-    <i class="material-icons">account_box</i>
-{% endblock %}
-{% block moduleHeader %}
-    {{response.module.label|trans}}
-{% endblock %}
+{% block panelClass %}{% if urlExtra == "user_login" %}user_login{% endif %}{% endblock %}
+{% block moduleHeaderIcon %}<i class="material-icons">account_box</i>{% endblock %}
+{% block moduleHeaderTitle %}{{response.module.label|trans}}{% endblock %}
+{% block moduleHeaderSubTitle %}{% endblock %}
 {% block moduleContainer %}
     {% if form is null %}
-        <p><b>{% trans %}authentication_1{% endtrans %}</b></p>
-        <p>{{response.values.user.username}}</p>
+        <p>{% trans %}authentication_1{% endtrans %} {{response.values.user.username}}</p>
         <p><b>{% trans %}authentication_2{% endtrans %}</b></p>
         <p>
             {% for key, value in response.values.roleUserRow %}
@@ -44,13 +38,13 @@
                 {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
             </div>
         </form>
-        
+
         {% if settingRow['website_active'] == true %}
             <div class="link_container">
                 {% if settingRow['registration'] == true %}
                     <a class="mdc-typography--caption mdc-theme--on-surface" href="{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': 3, 'urlExtra': ""})}}">{% trans %}authentication_6{% endtrans %}</a>
                 {% endif %}
-                
+
                 {% if settingRow['recover_password'] == true %}
                     <a class="mdc-typography--caption mdc-theme--on-surface" href="{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': 4, 'urlExtra': ""})}}">{% trans %}authentication_7{% endtrans %}</a>
                 {% endif %}
@@ -58,4 +52,5 @@
         {% endif %}
     {% endif %}
 {% endblock %}
+{% block moduleSupportText %}{% endblock %}
 {% block moduleFooter %}{% endblock %}

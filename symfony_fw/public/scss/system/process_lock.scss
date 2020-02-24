@@ -1,4 +1,6 @@
-.processLock {
+@import "helper.scss";
+
+.process_lock {
     display: none;
     position: fixed;
     top: 25%;
@@ -6,8 +8,8 @@
     left: 25%;
     width: 40%;
     padding: 5%;
-    border: 1px solid #cecece;
-    background-color: #fff;
+    border: 1px solid $mdc-theme-on-surface;
+    background-color: $mdc-theme-background;
     z-index: 1201;
 
     .close {

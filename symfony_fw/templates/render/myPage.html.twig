@@ -24,6 +24,8 @@
     {{-render(controller("App\\Controller\\MyPage\\MyPagePaymentController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
 {% endif %}
 
+<script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/my_page/MyPageProfile" ~ javascriptMinify)}}"></script>
+<script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/my_page/MyPagePayment" ~ javascriptMinify)}}"></script>
 <script nonce="{{php_session.xssProtectionValue}}">
     "use strict";
     
@@ -50,5 +52,3 @@
         'label_2': "{{"myPage_5"|trans}}"
     };
 </script>
-<script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/my_page/MyPageProfile" ~ javascriptMinify)}}"></script>
-<script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/my_page/MyPagePayment" ~ javascriptMinify)}}"></script>
