@@ -6,9 +6,7 @@
             <p class="mdc-card__subtitle">{% block moduleHeaderSubTitle %}{% endblock %}</p>
         </div>
     </section>
-    <section class="mdc-card__media">
-        {% block moduleContainer %}{% endblock %}
-    </section>
+    <section class="mdc-card__media">{% block moduleContainer %}{% endblock %}</section>
     <section class="mdc-card__supporting-text">{% block moduleSupportText %}{% endblock %}</section>
     <section class="mdc-card__actions">{% block moduleFooter %}{% endblock %}</section>
 </div>

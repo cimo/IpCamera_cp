@@ -10,7 +10,7 @@
 <html lang="{{app.request.getLocale()}}">
     <head>
         <title>{{websiteName}}</title>
-
+        
         <!-- Meta -->
         <meta charset="UTF-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,10 +27,10 @@
         {% endif %}
         
         {{-include("@templateRoot/include/google_script.html.twig")-}}
-
+        
         <!-- Favicon -->
         <link href="{{asset("images/templates/" ~ settingRow['template'] ~ "/favicon.ico")}}" rel="icon" type="image/x-icon">
-
+        
         <!-- Css -->
         <link href="{{asset("css/library/jquery-ui_1.12.1.min.css")}}" rel="stylesheet"/>
         <link href="{{asset("css/library/jquery-ui_1.12.1_structure.min.css")}}" rel="stylesheet"/>
@@ -38,7 +38,7 @@
         <link href="{{asset("css/library/Roboto_300_400_500_custom.css")}}" rel="stylesheet"/>
         <link href="{{asset("css/library/material-icons_custom.css")}}" rel="stylesheet"/>
         <link href="{{asset("css/library/material-components-web_custom.min.css")}}" rel="stylesheet"/>
-
+        
         <link href="{{asset("css/system/" ~ settingRow['template'] ~ ".css")}}" rel="stylesheet"/>
         <link href="{{asset("css/system/animation.css")}}" rel="stylesheet"/>
         <link href="{{asset("css/system/loader.css")}}" rel="stylesheet"/>
@@ -49,6 +49,7 @@
         <link href="{{asset("css/system/wysiwyg.css")}}" rel="stylesheet"/>
         <link href="{{asset("css/system/chaato.css")}}" rel="stylesheet"/>
         <link href="{{asset("css/system/widget.css")}}" rel="stylesheet"/>
+        <link href="{{asset("css/system/helper_custom.css")}}" rel="stylesheet"/>
         
         {{-include("@templateRoot/layout/layout_site_custom_top.html.twig")-}}
     </head>
@@ -58,7 +59,7 @@
         </div>
         
         {% block headerContainer %}{% endblock %}
-
+        
         <div class="mdc-layout-grid main">
             <div class="mdc-layout-grid__inner">
                 {% if settingRow['template_column'] == 1 or settingRow['template_column'] == 2 or urlExtra == "user_login" or app.request.attributes.get("_route") == "control_panel" %}
@@ -76,13 +77,13 @@
                 {% endif %}
             </div>
         </div>
-
+        
         {% block footerContainer %}{% endblock %}
-
+        
         {{-include("@templateRoot/include/loader.html.twig")-}}
         {{-include("@templateRoot/include/flashBag.html.twig")-}}
         {{-include("@templateRoot/include/popup_easy.html.twig")-}}
-
+        
         <script nonce="{{php_session.xssProtectionValue}}">
             "use strict";
             
@@ -96,9 +97,9 @@
             };
             
             window.url = {
+                'processLockListener': "{{response.url.root}}/listener/processLockListener.php",
                 'root': "{{response.url.root}}",
                 'rootRender': "{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
-                'processLockListener': "{{response.url.root}}/listener/processLockListener.php",
                 'languageText': "{{path("language_text", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
                 'languagePage': "{{path("language_page", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
                 'searchModule': "{{path("search_module", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",

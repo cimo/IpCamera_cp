@@ -1,14 +1,8 @@
 @import "helper.scss";
 
-$barBackgroundImage: url("../../images/templates/basic/16-9.jpg");
+$backgroundImage: url("../../images/templates/basic/16-9.jpg");
 
 $footerHeight: 80px;
-
-$moduleBorderColor: #dee2e6;
-$moduleBackgroundColor: #ececec;
-
-$consoleBackgroundColor: #000000;
-$consoleTextColor: #ffffff;
 
 @media(max-width: $widthMobile) {
     .main {
@@ -174,38 +168,6 @@ body {
     min-height:100%;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    
-    thead {
-        tr {
-            th {
-                position: relative;
-                padding: 0 24px 0 24px;
-                text-align: center;
-                border-bottom: 2px solid $mdc-theme-on-surface;
-                cursor: pointer;
-
-                i {
-                    top: 0;
-                    right: 0;
-                    position: absolute;
-                }
-            }
-        }
-    }
-    tbody {
-        tr {
-            td {
-                text-align: center;
-                border-bottom: 1px solid $mdc-theme-on-surface;
-                padding: 5px;
-            }
-        }
-    }
-}
-
 pre {
     white-space: pre-wrap;
 }
@@ -275,12 +237,17 @@ pre {
     .mdc-card__header {
         .text_container {
             vertical-align: super !important;
+            
+            p {
+                margin: 0 !important;
+                margin-top: 5px !important;
+            }
         }
     }
 
     .mdc-card__media {
         background-color: transparent !important;
-        padding: 5px 10px 10px 10px !important;
+        padding: 0 10px 10px 10px !important;
 
         .form_row {
             .mdc-text-field--box, .mdc-text-field--outlined, .mdc-text-field__basic {
@@ -477,7 +444,7 @@ pre {
         -o-transition: all 0.4s ease-out;
         transition: all 0.4s ease-out;
         
-        background-image: $barBackgroundImage;
+        background-image: $backgroundImage;
         background-size: cover;
         background-position: center;
         
@@ -492,7 +459,7 @@ pre {
 }
 
 .mdc-drawer__header {
-    background-image: $barBackgroundImage;
+    background-image: $backgroundImage;
     height: 120px;
     background-color: $mdc-theme-primary;
     
@@ -537,6 +504,10 @@ pre {
     .mdc-chip__icon--leading {
         opacity: 1 !important;
     }
+    
+    .mdc-chip__text {
+        color: $mdc-theme-on-primary;
+    }
 }
 
 .mdc-dialog {
@@ -569,6 +540,10 @@ pre {
     .mdc-card__media {
         background-color: $mdc-theme-surface;
         padding: 10px;
+        
+        p {
+            color: $mdc-theme-on-surface;
+        }
     }
 
     .mdc-card__supporting-text {
@@ -689,8 +664,8 @@ pre {
 }
 
 .square_code {
-    background-color: $moduleBackgroundColor;
-    border: 1px dotted $moduleBorderColor;
+    background-color: $codeBackgroundColor;
+    border: 1px dotted $codeTextColor;
     padding: 10px;
     word-wrap: break-word;
     white-space: pre-wrap;
@@ -702,26 +677,11 @@ pre {
     width: 30px;
 }
 
-#body_progress {
-    display: block;
-    height: 100%;
-    background-color: $mdc-theme-background;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 2000;
-}
-
 #panel_id_1 {
-    p {
-        margin: 0;
-        margin-top: 5px;
-    }
-    
-    .mdc-text-field {
-        width: 100%;
+    .mdc-card__media {
+        p {
+            margin: 5px 0 5px 0;
+        }
     }
     
     .submit_container {
@@ -747,6 +707,18 @@ pre {
             width: 100%;
         }
     }
+}
+
+#body_progress {
+    display: block;
+    height: 100%;
+    background-color: $mdc-theme-background;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2000;
 }
 
 #menu_user {
@@ -787,7 +759,7 @@ pre {
         .quote {
             margin: 0;
             display: block;
-            background: $mdc-theme-on-surface;
+            background: $mdc-theme-surface;
             padding: 10px;
             border-radius: 20px;
             white-space: initial !important;
@@ -799,6 +771,10 @@ pre {
                 vertical-align: middle;
                 margin-right: 5px;
                 border-radius: 50%;
+            }
+            
+            .quote_text {
+                color: $mdc-theme-on-surface;
             }
         }
         
@@ -903,12 +879,12 @@ pre {
 ::-webkit-scrollbar {
     width: 10px;
 }
-::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 2px $mdc-theme-on-surface; 
-}
 ::-webkit-scrollbar-thumb {
     background: $mdc-theme-surface;
 }
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 2px $mdc-theme-on-surface;
+}
 ::-webkit-scrollbar-thumb:hover {
-    background: $mdc-theme-secondary; 
+    background: $mdc-theme-secondary;
 }

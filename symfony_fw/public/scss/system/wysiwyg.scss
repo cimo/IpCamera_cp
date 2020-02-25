@@ -15,14 +15,6 @@
     margin-top: 10px;
     
     .toolbar {
-        i {
-            display: inline-block;
-            cursor: pointer;
-            border: 1px solid $mdc-theme-on-surface;
-            border-radius: 5px;
-            margin: 2px;
-        }
-        
         input, select {
             display: inline-block;
             position: relative;
@@ -31,6 +23,10 @@
         
         .icon_container {
             display: inline-block;
+        }
+        
+        .mdc-fab {
+            margin-bottom: 10px;
         }
     }
     
@@ -45,8 +41,8 @@
         display: none;
         border: 1px solid;
         height: 700px;
-        background-color: $mdc-theme-secondary;
-        color: $mdc-theme-on-secondary;
+        background-color: $codeBackgroundColor;
+        color: $codeTextColor;
         padding: 5px;
         overflow-y: scroll;
         margin-top: 10px;
