@@ -1,14 +1,4 @@
-$color1: #008744;
-$color2: #0057e7;
-$color3: #d62d20;
-$color4: #ffa700;
-
-$backBackgroundColor: #000000;
-
-$backgroundColor: #ffffff;
-$borderColor: #000000;
-
-$width: 50px;
+@import "helper.scss";
 
 .loader_back {
     display: none;
@@ -18,7 +8,7 @@ $width: 50px;
     right:0;
     top:0;
     bottom:0;
-    background-color: $backBackgroundColor;
+    background-color: $loaderBackBackgroundColor;
     opacity: 0.7;
     filter: alpha(opacity=70);
     z-index: 1200;
@@ -31,11 +21,11 @@ $width: 50px;
     margin-top: -25px;
     margin-left: -25px;
     z-index: 1201;
-    background-color: $backgroundColor;
-    border: 1px solid $borderColor;
+    background-color: $loaderBackgroundColor;
+    border: 1px solid $loaderBorderColor;
     border-radius: 50%;
-    width: $width;
-  
+    width: $loaderWidth;
+    
     &:before {
         content: "";
         display: block;
@@ -86,15 +76,15 @@ $width: 50px;
 }
 @keyframes color {
     100%, 0% {
-        stroke: $color1;
+        stroke: $loaderColor1;
     }
     40% {
-        stroke: $color2;
+        stroke: $loaderColor2;
     }
     66% {
-        stroke: $color3;
+        stroke: $loaderColor3;
     }
     80%, 90% {
-        stroke: $color4;
+        stroke: $loaderColor4;
     }
 }

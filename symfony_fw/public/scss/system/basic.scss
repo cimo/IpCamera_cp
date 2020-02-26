@@ -1,9 +1,5 @@
 @import "helper.scss";
 
-$backgroundImage: url("../../images/templates/basic/16-9.jpg");
-
-$footerHeight: 80px;
-
 @media(max-width: $widthMobile) {
     .main {
         .sortable_column {
@@ -50,44 +46,55 @@ $footerHeight: 80px;
     .menu_root_container {
         position: absolute;
         left: 200px;
-        bottom: 0;
+        bottom: $menuRootBottom;
         z-index: 100;
-
+        
         ul {
             display: flex;
             list-style: none;
             padding: 0;
-
-            .parent {
-                &:hover > .parent_content {
-                    display: block !important;
-                    background-color: $mdc-theme-primary;
+            margin: 0;
+            
+            .main {
+                margin-left: 2px;
+                margin-right: 2px;
+                
+                &> .target {
+                    background-color: $menuRootMainTargetBackgroundColor;
+                    border: 1px solid $menuRootMainTargetBorderColor;
                 }
-
+            }
+            
+            &> .parent {
                 .material-icons {
                     vertical-align: middle;
-                    color: $mdc-theme-on-primary;
+                    color: $menuRootParentIconColor;
                 }
-
+                
+                &:hover > .parent_content {
+                    display: block !important;
+                    background-color: $menuRootParentContentBackgroundColor;
+                }
+                
                 &> .target {
                     cursor: pointer;
-                    padding: 18px;
+                    padding: $menuRootTargetPadding;
                     border-bottom: 2px solid transparent;
                     text-decoration: none;
-
+                    
                     span {
-                        color: $mdc-theme-on-primary;
+                        color: $menuRootTargetSpanTextColor;
                     }
-
+                    
                     &:hover, &.current {
-                        background-color: rgba(0, 0, 0, 0.1);
-
-                        &:not(.target_clean) {
-                            border-bottom: 2px solid $mdc-theme-secondary;
+                        background-color: $menuRootTargetHoverBackgroundColor;
+                        
+                        &:not(.target_parent) {
+                            border-bottom: 2px solid $menuRootTargetParentBorderColor;
                         }
                     }
                 }
-
+                
                 &> .parent_icon {
                     display: none;
                 }
@@ -95,34 +102,34 @@ $footerHeight: 80px;
                     display: none;
                     position: absolute;
                     width: 200px;
-                    top: 56px;
-                    border-bottom: 2px solid $mdc-theme-secondary;
-
+                    top: $menuRootParentContentTop;
+                    box-shadow: $boxShadow;
+                    
                     .children_container {
                         display: block;
-
+                        
                         .parent {
                             position: relative;
-
+                            
                             .material-icons {
                                 padding-bottom: 2px;
                             }
-
+                            
                             .target {
                                 display: block;
-                                padding: 10px;
+                                padding: 5px;
                                 border-bottom: none;
                                 
                                 span {
                                     display: inline-block;
                                     width: 84%;
                                 }
-
+                                
                                 &:hover {
-                                    background-color: rgba(0, 0, 0, 0.1);
+                                    background-color: $menuRootTargetHoverBackgroundColor;
                                 }
                             }
-
+                            
                             .parent_icon {
                                 display: none;
                             }
@@ -232,6 +239,7 @@ pre {
     display: block !important;
     margin: auto !important;
     background-color: $moduleBackgroundColor !important;
+    border: 1px solid;
     border-color: $moduleBorderColor !important;
 
     .mdc-card__header {
@@ -248,6 +256,10 @@ pre {
     .mdc-card__media {
         background-color: transparent !important;
         padding: 0 10px 10px 10px !important;
+        
+        p {
+            color: $moduleTextColor !important;
+        }
 
         .form_row {
             .mdc-text-field--box, .mdc-text-field--outlined, .mdc-text-field__basic {
@@ -267,6 +279,10 @@ pre {
 
             .mdc-text-field-helper-text {
                 margin: 0;
+            }
+            
+            .mdc-floating-label {
+                background-color: transparent !important;
             }
         }
     }
@@ -414,6 +430,13 @@ pre {
 
 .microservice_api_card {
     width: 250px;
+    margin: 5px;
+    
+    .mdc-card__header {
+        img {
+            width: 80px;
+        }
+    }
 }
 .microservice_api_log {
     height: 300px;
@@ -436,7 +459,7 @@ pre {
 
 .mdc-top-app-bar {
     z-index: 1000;
-    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+    box-shadow: $boxShadow;
     
     .mdc-top-app-bar__row {
         -webkit-transition: all 0.4s ease-out;
@@ -444,7 +467,7 @@ pre {
         -o-transition: all 0.4s ease-out;
         transition: all 0.4s ease-out;
         
-        background-image: $backgroundImage;
+        background-image: $menuRootBackgroundImage;
         background-size: cover;
         background-position: center;
         
@@ -459,7 +482,7 @@ pre {
 }
 
 .mdc-drawer__header {
-    background-image: $backgroundImage;
+    background-image: $menuRootBackgroundImage;
     height: 120px;
     background-color: $mdc-theme-primary;
     
@@ -493,7 +516,7 @@ pre {
 }
 
 .mdc-list {
-    border: 1px solid rgba(0,0,0,.12);
+    border: 1px solid $mdcListBorderColor;
     padding: 0;
 }
 
@@ -521,6 +544,7 @@ pre {
 .mdc-card {
     display: inline-block;
     background-color: $mdc-theme-background;
+    box-shadow: $boxShadow;
 
     .mdc-card__header {
         padding: 10px 10px 0 10px;
@@ -538,11 +562,11 @@ pre {
     }
 
     .mdc-card__media {
-        background-color: $mdc-theme-surface;
+        background-color: $mdc-theme-primary;
         padding: 10px;
         
         p {
-            color: $mdc-theme-on-surface;
+            color: $mdc-theme-on-primary;
         }
     }
 
@@ -586,6 +610,15 @@ pre {
         margin: 30px 0 8px 0 !important;
         height: 19px;
     }
+}
+
+.mdc-floating-label {
+    background-color: $mdcInputLabelBackgroundColor !important;
+    color: $mdcInputLabelTextColor !important;
+    z-index: 1 !important;
+}
+.mdc-floating-label_password {
+    padding: 0 5px 0 5px;
 }
 
 .button_svg {
@@ -853,38 +886,4 @@ pre {
 }
 #cp_microservice_deploy_ssh_connection_result {
     margin-top: 20px;
-}
-
-:root {
-    --mdc-theme-primary: #{$mdc-theme-primary};
-    --mdc-theme-on-primary: #{$mdc-theme-on-primary};
-    
-    --mdc-theme-secondary: #{$mdc-theme-secondary};
-    --mdc-theme-on-secondary: #{$mdc-theme-on-secondary};
-    
-    --mdc-theme-background: #{$mdc-theme-background};
-    
-    --mdc-theme-surface: #{$mdc-theme-surface};
-    --mdc-theme-on-surface: #{$mdc-theme-on-surface};
-}
-
-::placeholder {
-    color: $mdc-theme-on-primary;
-    opacity: 1;
-}
-::-ms-input-placeholder {
-    color: $mdc-theme-on-primary;
-}
-
-::-webkit-scrollbar {
-    width: 10px;
-}
-::-webkit-scrollbar-thumb {
-    background: $mdc-theme-surface;
-}
-::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 2px $mdc-theme-on-surface;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: $mdc-theme-secondary;
 }

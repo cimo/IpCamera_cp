@@ -10,14 +10,79 @@ $mdc-theme-background: #ffffff;
 $mdc-theme-surface: #63a4ff;
 $mdc-theme-on-surface: #000000;
 
+$mdc-theme-text-primary-on-background: rgba(0, 0, 0, 0.87);
+$mdc-theme-text-secondary-on-background: rgba(0, 0, 0, 0.54);
+$mdc-theme-text-hint-on-background: rgba(0, 0, 0, 0.38);
+$mdc-theme-text-disabled-on-background: rgba(0, 0, 0, 0.38);
+$mdc-theme-text-icon-on-background: rgba(0, 0, 0, 0.38);
+$mdc-theme-text-primary-on-light: rgba(0, 0, 0, 0.87);
+$mdc-theme-text-secondary-on-light: rgba(0, 0, 0, 0.54);
+$mdc-theme-text-hint-on-light: rgba(0, 0, 0, 0.38);
+$mdc-theme-text-disabled-on-light: rgba(0, 0, 0, 0.38);
+$mdc-theme-text-icon-on-light: rgba(0, 0, 0, 0.38);
+$mdc-theme-text-primary-on-dark: #ffffff;
+$mdc-theme-text-secondary-on-dark: hsla(0, 0, 100, 0.7);
+$mdc-theme-text-hint-on-dark: hsla(0, 0, 100, 0.5);
+$mdc-theme-text-disabled-on-dark: hsla(0, 0, 100, 0.5);
+$mdc-theme-text-icon-on-dark: hsla(0, 0, 100, 0.5);
+
+$mdc-layout-grid-margin-desktop: 24px;
+$mdc-layout-grid-gutter-desktop: 24px;
+$mdc-layout-grid-column-width-desktop: 72px;
+$mdc-layout-grid-margin-tablet: 16px;
+$mdc-layout-grid-gutter-tablet: 16px;
+$mdc-layout-grid-column-width-tablet: 72px;
+$mdc-layout-grid-margin-phone: 16px;
+$mdc-layout-grid-gutter-phone: 16px;
+$mdc-layout-grid-column-width-phone: 72px;
+
+$mdcInputLabelBackgroundColor: #ffffff;
+$mdcInputLabelTextColor: #000000;
+
+$mdcListBorderColor: rgba(0, 0, 0, 0.12);
+
+$loaderColor1: #008744;
+$loaderColor2: #0057e7;
+$loaderColor3: #d62d20;
+$loaderColor4: #ffa700;
+$loaderBackBackgroundColor: #000000;
+$loaderBackgroundColor: #ffffff;
+$loaderBorderColor: #000000;
+$loaderWidth: 50px;
+
+$menuRootBottom: 8px;
+$menuRootBackgroundImage: url("../../images/templates/basic/16-9.jpg");
+$menuRootMainTargetBackgroundColor: #1976d2;
+$menuRootMainTargetBorderColor: #000000;
+$menuRootParentIconColor: #000000;
+$menuRootParentContentTop: 32px;
+$menuRootParentContentBackgroundColor: #1976d2;
+$menuRootTargetPadding: 10px 15px;
+$menuRootTargetSpanTextColor: #ffffff;
+$menuRootTargetHoverBackgroundColor: rgba(0, 0, 0, 0.1);
+$menuRootTargetParentBorderColor: #d50000;
+
+$tableAndPaginationBorderColor: #000000;
+$tableAndPaginationAlternateBackgroundColor1: #d8d8d8;
+$tableAndPaginationAlternateTextColor1: #000000;
+$tableAndPaginationAlternateBackgroundColor2: #63a4ff;
+$tableAndPaginationAlternateTextColor2: #000000;
+
 $moduleBorderColor: #dee2e6;
 $moduleBackgroundColor: #ececec;
+$moduleTextColor: #000000;
 
 $codeBackgroundColor: #9e9e9e;
 $codeTextColor: #000000;
 
 $consoleBackgroundColor: #000000;
 $consoleTextColor: #ffffff;
+
+$boxShadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+
+$footerHeight: 80px;
+
+@import "helper_custom.scss";
 
 @mixin opacity($value) {
     $msOpacity: $value * 100;
@@ -108,3 +173,69 @@ $consoleTextColor: #ffffff;
 
 .material-icons.md-light {color: rgba(255, 255, 255, 1) !important;}
 .material-icons.md-light.md-inactive {color: rgba(255, 255, 255, 0.3) !important;}
+
+:root {
+    --mdc-theme-primary: #{$mdc-theme-primary};
+    --mdc-theme-on-primary: #{$mdc-theme-on-primary};
+    
+    --mdc-theme-secondary: #{$mdc-theme-secondary};
+    --mdc-theme-on-secondary: #{$mdc-theme-on-secondary};
+    
+    --mdc-theme-background: #{$mdc-theme-background};
+    
+    --mdc-theme-surface: #{$mdc-theme-surface};
+    --mdc-theme-on-surface: #{$mdc-theme-on-surface};
+    
+    --mdc-theme-text-primary-on-background: #{$mdc-theme-text-primary-on-background};
+    --mdc-theme-text-secondary-on-background: #{$mdc-theme-text-secondary-on-background};
+    
+    --mdc-theme-text-hint-on-background: #{$mdc-theme-text-hint-on-background};
+    --mdc-theme-text-disabled-on-background: #{$mdc-theme-text-disabled-on-background};
+    
+    --mdc-theme-text-icon-on-background: #{$mdc-theme-text-icon-on-background};
+    
+    --mdc-theme-text-primary-on-light: #{$mdc-theme-text-primary-on-light};
+    --mdc-theme-text-secondary-on-light: #{$mdc-theme-text-secondary-on-light};
+    --mdc-theme-text-hint-on-light: #{$mdc-theme-text-hint-on-light};
+    --mdc-theme-text-disabled-on-light: #{$mdc-theme-text-disabled-on-light};
+    --mdc-theme-text-icon-on-light: #{$mdc-theme-text-icon-on-light};
+    
+    --mdc-theme-text-primary-on-dark: #{$mdc-theme-text-primary-on-dark};
+    --mdc-theme-text-secondary-on-dark: #{$mdc-theme-text-secondary-on-dark};
+    --mdc-theme-text-hint-on-dark: #{$mdc-theme-text-hint-on-dark};
+    --mdc-theme-text-disabled-on-dark: #{$mdc-theme-text-disabled-on-dark};
+    --mdc-theme-text-icon-on-dark: #{$mdc-theme-text-icon-on-dark};
+    
+    --mdc-layout-grid-margin-desktop: #{$mdc-layout-grid-margin-desktop};
+    --mdc-layout-grid-gutter-desktop: #{$mdc-layout-grid-gutter-desktop};
+    --mdc-layout-grid-column-width-desktop: #{$mdc-layout-grid-column-width-desktop};
+    
+    --mdc-layout-grid-margin-tablet: #{$mdc-layout-grid-margin-tablet};
+    --mdc-layout-grid-gutter-tablet: #{$mdc-layout-grid-gutter-tablet};
+    --mdc-layout-grid-column-width-tablet: #{$mdc-layout-grid-column-width-tablet};
+    
+    --mdc-layout-grid-margin-phone: #{$mdc-layout-grid-margin-phone};
+    --mdc-layout-grid-gutter-phone: #{$mdc-layout-grid-gutter-phone};
+    --mdc-layout-grid-column-width-phone: #{$mdc-layout-grid-column-width-phone};
+}
+
+::placeholder {
+    color: $mdc-theme-on-primary;
+    opacity: 1;
+}
+::-ms-input-placeholder {
+    color: $mdc-theme-on-primary;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: $mdc-theme-surface;
+}
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 2px $mdc-theme-on-surface;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: $mdc-theme-secondary;
+}

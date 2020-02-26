@@ -66,10 +66,9 @@ class MicroserviceDeployFormType extends AbstractType {
             'required' => false,
             'label' => "microserviceDeployFormType_9"
         ))
-        ->add('keyPrivatePassword', TextType::class, Array(
+        ->add('keyPrivatePassword', PasswordType::class, Array(
             'required' => false,
-            'label' => "microserviceDeployFormType_10",
-            'data_class' => null
+            'label' => "microserviceDeployFormType_10"
         ))
         ->add("ip", TextType::class, Array(
             'required' => true,

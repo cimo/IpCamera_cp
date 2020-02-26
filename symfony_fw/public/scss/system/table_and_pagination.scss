@@ -1,10 +1,4 @@
-$borderColor: #000000;
-
-$alternateBackgroundColor1: #d8d8d8;
-$alternateTextColor1: #000000;
-
-$alternateBackgroundColor2: #63a4ff;
-$alternateTextColor2: #000000;
+@import "helper.scss";
 
 .tableAndPagination {
     .button_container {
@@ -36,7 +30,7 @@ table {
                 position: relative;
                 padding: 0 24px 0 24px;
                 text-align: center;
-                border-bottom: 2px solid $borderColor;
+                border-bottom: 2px solid $tableAndPaginationBorderColor;
                 cursor: pointer;
                 font-weight: normal;
 
@@ -53,17 +47,17 @@ table {
         tr {
             td {
                 text-align: center;
-                border-bottom: 1px solid $borderColor;
+                border-bottom: 1px solid $tableAndPaginationBorderColor;
                 padding: 5px;
             }
         }
         tr:nth-child(even) {
-            background-color: $alternateBackgroundColor1;
-            color: $alternateTextColor1;
+            background-color: $tableAndPaginationAlternateBackgroundColor1;
+            color: $tableAndPaginationAlternateTextColor1;
         }
         tr:nth-child(odd) {
-            background-color: $alternateBackgroundColor2;
-            color: $alternateTextColor2;
+            background-color: $tableAndPaginationAlternateBackgroundColor2;
+            color: $tableAndPaginationAlternateTextColor2;
         }
     }
 }

@@ -79,7 +79,7 @@ class WidgetDatePicker {
         this.calculateWeekDayShift();
         this.calculateDayPosition();
         
-        let content = `<div class="mdc-elevation--z8 widget_datePicker unselect">
+        let content = `<div class="widget_datePicker unselect">
             ${this.createHeaderHtml(true)}
             ${this.createListYearsHtml()}
             <div class="calendar">

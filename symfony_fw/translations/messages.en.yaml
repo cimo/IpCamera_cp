@@ -330,18 +330,19 @@ date.time: H:i:s
 "controlPanelMicroserviceApi_1": "Api section."
 
 "controlPanelMicroserviceUnitTest_1": "Unit test section."
-"controlPanelMicroserviceUnitTest_2": "Insert iframe code in your page and script code on bottom of your page."
+"controlPanelMicroserviceUnitTest_2": "Insert iframe code in your page and script code on bottom of your page:"
 "controlPanelMicroserviceUnitTest_3": "Really delete this unit test?"
 "controlPanelMicroserviceUnitTest_4": "Really delete all unit test?"
 
 "controlPanelMicroserviceSelenium_1": "Selenium section."
-"controlPanelMicroserviceSelenium_2": "Install."
-"controlPanelMicroserviceSelenium_3": "Test."
+"controlPanelMicroserviceSelenium_2": "Install:"
+"controlPanelMicroserviceSelenium_3": "Test:"
 "controlPanelMicroserviceSelenium_4": "Really delete all selenium project file?"
 
 "controlPanelMicroserviceCron_1": "Cron section."
-"controlPanelMicroserviceCron_2": "Really delete this cron?"
-"controlPanelMicroserviceCron_3": "Really delete all cron?"
+"controlPanelMicroserviceCron_2": "Time:"
+"controlPanelMicroserviceCron_3": "Really delete this cron?"
+"controlPanelMicroserviceCron_4": "Really delete all cron?"
 
 # IpCamera
 "controlPanelMenuIpCamera_1": "Ip camera"
