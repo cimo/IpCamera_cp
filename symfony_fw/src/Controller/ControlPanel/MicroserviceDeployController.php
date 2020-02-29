@@ -944,8 +944,7 @@ class MicroserviceDeployController extends AbstractController {
                         "{$sudo} git config --global user.email '{$row['git_user_email']}'",
                         "{$sudo} git config --global user.name '{$row['git_user_name']}'",
                         "cd {$row['git_clone_path']}",
-                        "{$sudo} -u {$row['user_git_script']} git clone https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password']}@{$row['git_clone_url']} {$row['git_clone_path']}",
-                        "{$sudo} chown -R {$row['user_web_script']} {$row['root_web_path']}"
+                        "{$sudo} -u {$row['user_git_script']} git clone https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password']}@{$row['git_clone_url']} {$row['git_clone_path']}"
                     );
                 }
                 else if ($request->get("action") == "pull") {
@@ -954,8 +953,7 @@ class MicroserviceDeployController extends AbstractController {
                         "{$sudo} git config --global user.email '{$row['git_user_email']}'",
                         "{$sudo} git config --global user.name '{$row['git_user_name']}'",
                         "cd {$row['git_clone_path']}",
-                        "{$sudo} -u {$row['user_git_script']} git pull --no-edit https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password']}@{$row['git_clone_url']} {$request->get("branchName")}",
-                        "{$sudo} chown -R {$row['user_web_script']} {$row['root_web_path']}"
+                        "{$sudo} -u {$row['user_git_script']} git pull --no-edit https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password']}@{$row['git_clone_url']} {$request->get("branchName")}"
                     );
                 }
                 else if ($request->get("action") == "reset") {
@@ -965,8 +963,7 @@ class MicroserviceDeployController extends AbstractController {
                         "{$sudo} git config --global user.name '{$row['git_user_name']}'",
                         "cd {$row['git_clone_path']}",
                         "{$sudo} -u {$row['user_git_script']} git fetch --all",
-                        "{$sudo} -u {$row['user_git_script']} git reset --hard origin/master",
-                        "{$sudo} chown -R {$row['user_web_script']} {$row['root_web_path']}"
+                        "{$sudo} -u {$row['user_git_script']} git reset --hard origin/master"
                     );
                 }
                 
