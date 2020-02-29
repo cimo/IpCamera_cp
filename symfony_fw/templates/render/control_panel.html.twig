@@ -414,7 +414,7 @@
                     
                     {% set iframe = "<iframe id=\"unitTest_iframe\" src=\"[website_public_url]/files/microservice/unit_test/run/[filen_name].html\" style=\"width: 100%; height: 400px;\"></iframe>" %}
                     
-                    {% set script = "<script id=\"unitTest_script\">\n"~
+                    {% set script = "<script nonce=\"{{php_session.xssProtectionValue}}\" id=\"unitTest_script\">\n"~
                     "   const unitTestStartup = (event) => {\n"~
                     "       let page = JSON.stringify({'page': document.body.innerHTML});\n"~
                     "       let iframe = document.querySelectorAll(\"#unitTest_iframe\")[0];\n\n"~
