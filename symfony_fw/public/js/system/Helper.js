@@ -83,10 +83,10 @@ class Helper {
                 'type': "hidden",
                 'name': key,
                 'value': value
-            }).appendTo("#" + formTag);
+            }).appendTo(`#${formTag}`);
         });
         
-        $("#" + formTag).submit();
+        $(`#${formTag}`).submit();
     };
     
     urlParameters = (language) => {

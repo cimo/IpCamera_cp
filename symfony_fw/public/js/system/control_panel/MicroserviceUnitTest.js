@@ -30,7 +30,7 @@ class ControlPanelMicroserviceUnitTest {
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, "#" + event.currentTarget.id);
+                    ajax.reply(xhr, `#${event.target.id}`);
                 },
                 null,
                 null
@@ -167,7 +167,7 @@ class ControlPanelMicroserviceUnitTest {
                     $("#cp_microservice_unit_test_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, "#" + event.currentTarget.id);
+                    this.profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -196,7 +196,7 @@ class ControlPanelMicroserviceUnitTest {
                     $("#cp_microservice_unit_test_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, "#" + event.currentTarget.id);
+                    this.profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -236,7 +236,7 @@ class ControlPanelMicroserviceUnitTest {
                     "application/x-www-form-urlencoded; charset=UTF-8",
                     null,
                     (xhr) => {
-                        ajax.reply(xhr, "#" + event.currentTarget.id);
+                        ajax.reply(xhr, `#${event.currentTarget.id}`);
                         
                         if (xhr.response.messages.success !== undefined) {
                             $("#cp_microservice_unit_test_select_result").html("");

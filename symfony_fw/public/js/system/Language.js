@@ -54,7 +54,7 @@ class Language {
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, "#" + event.currentTarget.id);
+                    ajax.reply(xhr, `#${event.target.id}`);
                     
                     if ($.isEmptyObject(xhr.response) === false && xhr.response.values !== undefined) {
                         wysiwyg.historyClear();

@@ -34,7 +34,7 @@ class ControlPanelRoleUser {
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.target.id}`);
                 },
                 null,
                 null
@@ -238,7 +238,7 @@ class ControlPanelRoleUser {
                     "application/x-www-form-urlencoded; charset=UTF-8",
                     null,
                     (xhr) => {
-                        ajax.reply(xhr, "#" + event.currentTarget.id);
+                        ajax.reply(xhr, `#${event.target.id}`);
                         
                         if (xhr.response.messages.success !== undefined) {
                             $("#cp_roleUser_select_result").html("");

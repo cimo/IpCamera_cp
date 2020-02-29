@@ -17,14 +17,14 @@ class ControlPanelMicroserviceApi {
                 true,
                 $(event.target).prop("action"),
                 $(event.target).prop("method"),
-                new FormData(this),
+                new FormData(event.target),
                 "json",
                 false,
                 false,
                 false,
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.target.id}`);
                 },
                 null,
                 null
@@ -38,14 +38,14 @@ class ControlPanelMicroserviceApi {
                 true,
                 $(event.target).prop("action"),
                 $(event.target).prop("method"),
-                new FormData(this),
+                new FormData(event.target),
                 "json",
                 false,
                 false,
                 false,
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.target.id}`);
                 },
                 null,
                 null

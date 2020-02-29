@@ -24,7 +24,7 @@ class MyPageProfile {
                 false,
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.target.id}`);
                 },
                 null,
                 null
@@ -45,7 +45,7 @@ class MyPageProfile {
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.target.id}`);
                 },
                 null,
                 null
@@ -66,7 +66,7 @@ class MyPageProfile {
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.target.id}`);
                     
                     if (xhr.response.messages.success !== undefined) {
                         let credit = $("#form_myPage_profile_credit").find("input[name='credit']").val();

@@ -42,7 +42,7 @@ class ControlPanelSetting {
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, "#" + event.currentTarget.id);
+                    ajax.reply(xhr, `#${event.target.id}`);
                     
                     $("#form_setting_languageManageCode").prop("name", propNameLanguageManageCode);
                     $("#form_setting_languageManageDate").prop("name", propNameLanguageManageDate);

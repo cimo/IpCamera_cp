@@ -439,6 +439,8 @@ class MicroserviceUnitTestController extends AbstractController {
     }
     
     private function createFile($microserviceUnitTestEntity) {
+        $settingRow = $this->helper->getSettingRow();
+        
         $path = "{$this->helper->getPathPublic()}/files/microservice/unit_test/run/{$microserviceUnitTestEntity->getName()}.html";
         
         $html = "<!DOCTYPE html>
@@ -450,13 +452,12 @@ class MicroserviceUnitTestController extends AbstractController {
                 <meta charset=\"UTF-8\"/>
                 <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=5, user-scalable=1\">
                 <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">
-                <!--<meta http-equiv=\"Content-Security-Policy\" content=\"upgrade-insecure-requests\">-->
                 <meta name=\"description\" content=\"...\"/>
                 <meta name=\"keywords\" content=\"...\"/>
                 <meta name=\"robots\" content=\"index, follow\"/>
                 
                 <!-- Favicon -->
-                <link href=\"favicon.ico\" rel=\"icon\" type=\"image/x-icon\">
+                <link href=\"{$this->helper->getUrlRoot()}/images/templates/{$settingRow['template']}/favicon.ico\" rel=\"icon\" type=\"image/x-icon\">
                 
                 <!-- Css -->
                 <link href=\"{$this->helper->getUrlRoot()}/files/microservice/unit_test/library/qunit_2.9.2.css\" rel=\"stylesheet\"/>
@@ -487,8 +488,7 @@ class MicroserviceUnitTestController extends AbstractController {
                             if (originFilterSplit.includes(origin) === true) {
                                 let json = JSON.parse(data);
                                 
-                                let page = $(json.page).not(\"#unitTest_script\").remove();
-                                page = $(page).find(\"iframe\").remove().end();
+                                let page = json.page.replace(/<\/?(iframe|script)\b[^<>]*>/g, \"\");
                                 
                                 result.html(page);
                                 

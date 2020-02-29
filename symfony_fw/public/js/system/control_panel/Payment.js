@@ -40,7 +40,7 @@ class ControlPanelPayment {
                         $("#form_payment_select_id").append("<option value=\"" + value + "\">" + key + "</>");
                     });
                     
-                    ajax.reply(xhr, "#" + event.currentTarget.id);
+                    ajax.reply(xhr, `#${event.target.id}`);
                 },
                 null,
                 null
@@ -185,7 +185,7 @@ class ControlPanelPayment {
                     $("#cp_payment_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, "#" + event.currentTarget.id);
+                    this.profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -210,7 +210,7 @@ class ControlPanelPayment {
                     $("#cp_payment_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, "#" + event.currentTarget.id);
+                    this.profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null

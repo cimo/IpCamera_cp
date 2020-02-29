@@ -144,12 +144,12 @@ class PageCommentController extends AbstractController {
                     $typeExplode = explode("_", $form->get("type")->getData());
                     
                     $argument = $this->helper->escapeScript($form->get("argument")->getData());
-                    $pageCommentEntity->setArgument($argument);
                     
                     if ($typeExplode[0] == "new") {
                         if ($pageCommentRows[count($pageCommentRows) - 1]['username'] !== $this->getUser()->getUsername()) {
                             $pageCommentEntity->setPageId($this->urlCurrentPageId);
                             $pageCommentEntity->setUsername($this->getUser()->getUsername());
+                            $pageCommentEntity->setArgument($argument);
                             $pageCommentEntity->setDateCreate(date("Y-m-d H:i:s"));
                             
                             $this->entityManager->persist($pageCommentEntity);
@@ -167,6 +167,7 @@ class PageCommentController extends AbstractController {
                             $pageCommentEntity->setPageId($this->urlCurrentPageId);
                             $pageCommentEntity->setUsername($this->getUser()->getUsername());
                             $pageCommentEntity->setIdReply($typeExplode[1]);
+                            $pageCommentEntity->setArgument($argument);
                             $pageCommentEntity->setDateCreate(date("Y-m-d H:i:s"));
                             
                             $this->entityManager->persist($pageCommentEntity);
@@ -253,10 +254,14 @@ class PageCommentController extends AbstractController {
                 $listHtml .= "<span class=\"mdc-list-item__text\">
                     <p class=\"detail\">$detail</p>";
                     
-                    if ($row['argument'] != "")
-                        $listHtml .= "<p class=\"quote\">$quoteAvatar <span class=\"quote_text\">" . wordwrap($row['argument'], 50, "<br>\n", true) . "</span></p>";
+                    $argument = base64_decode($row['argument']);
                     
-                    $listHtml .= "<p class=\"mdc-list-item__secondary-text argument\">{$value['argument']}</p>
+                    if ($argument != "")
+                        $listHtml .= "<p class=\"quote\">$quoteAvatar <span class=\"quote_text\">" . wordwrap($argument, 50, "<br>\n", true) . "</span></p>";
+                    
+                    $argument = base64_decode($value['argument']);
+                    
+                    $listHtml .= "<p class=\"mdc-list-item__secondary-text argument\">{$argument}</p>
                 </span>";
                 
                 if ($this->getUser() != null) {
@@ -291,12 +296,12 @@ class PageCommentController extends AbstractController {
                                                                 date_modify = :dateModify
                                                             WHERE id = :id
                                                             AND username = :username");
-
-        $query->bindValue(":argument", $argument);
+        
+        $query->bindValue(":argument", base64_encode($argument));
         $query->bindValue(":dateModify", date("Y-m-d H:i:s"));
         $query->bindValue(":id", $id);
         $query->bindValue(":username", $this->getUser()->getUsername());
-
+        
         return $query->execute();
     }
 }

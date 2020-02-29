@@ -6,13 +6,13 @@ echo Terser - Mac
 
 source="$(dirname ${BASH_SOURCE[0]})"/js/system
 
-minifiedFiles=$(find "$source" -name *.min.js)
+minifiedFiles=$(find "$source" -name "*.min.js")
 
 echo "$minifiedFiles" | while read fileName; do
     rm -f "$fileName"
 done
 
-originalFiles=$(find "$source" -name *.js)
+originalFiles=$(find "$source" -name "*.js")
 
 echo Count: $(echo ls -f "$originalFiles" | wc -l)
 

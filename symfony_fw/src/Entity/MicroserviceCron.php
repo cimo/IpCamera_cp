@@ -23,7 +23,7 @@ class MicroserviceCron {
     private $name = "";
     
     /**
-     * @ORM\Column(name="time", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT ''")
+     * @ORM\Column(name="time", type="string", columnDefinition="longtext NOT NULL")
      */
     private $time = "";
     

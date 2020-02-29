@@ -24,7 +24,7 @@ class ControlPanelSettingSlackIw {
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.target.id}`);
                     
                     if (xhr.response.values.wordTagListHtml !== undefined)
                         $("#form_cp_setting_slack_iw_render").find(".wordTag_container").html(xhr.response.values.wordTagListHtml);

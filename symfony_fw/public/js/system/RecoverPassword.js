@@ -24,7 +24,7 @@ class RecoverPassword {
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, "#" + event.currentTarget.id);
+                    ajax.reply(xhr, `#${event.target.id}`);
                 },
                 null,
                 null
@@ -45,7 +45,7 @@ class RecoverPassword {
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, "#" + event.currentTarget.id);
+                    ajax.reply(xhr, `#${event.target.id}`);
                 },
                 null,
                 null

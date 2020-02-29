@@ -30,7 +30,7 @@ class ControlPanelMicroserviceDeploy {
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, "#" + event.currentTarget.id);
+                    ajax.reply(xhr, `#${event.target.id}`);
                     
                     if (xhr.response.values !== undefined) {
                         $("#cp_microservice_deploy_render_result").html(xhr.response.values.renderHtml);
@@ -53,14 +53,14 @@ class ControlPanelMicroserviceDeploy {
                 true,
                 $(event.target).prop("action"),
                 $(event.target).prop("method"),
-                new FormData(this),
+                new FormData(event.target),
                 "json",
                 false,
                 false,
                 false,
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, "#" + event.currentTarget.id);
+                    ajax.reply(xhr, `#${event.target.id}`);
                 },
                 null,
                 null
@@ -197,7 +197,7 @@ class ControlPanelMicroserviceDeploy {
                     $("#cp_microservice_deploy_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, "#" + event.currentTarget.id);
+                    this.profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -222,7 +222,7 @@ class ControlPanelMicroserviceDeploy {
                     $("#cp_microservice_deploy_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, "#" + event.currentTarget.id);
+                    this.profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -254,7 +254,7 @@ class ControlPanelMicroserviceDeploy {
                     false,
                     null,
                     (xhr) => {
-                        ajax.reply(xhr, "#" + event.currentTarget.id);
+                        ajax.reply(xhr, `#${event.target.id}`);
                         
                         if (xhr.response.messages.success !== undefined) {
                             $("#cp_microservice_deploy_select_result").html("");

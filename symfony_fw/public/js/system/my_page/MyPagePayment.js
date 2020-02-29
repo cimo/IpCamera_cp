@@ -141,7 +141,7 @@ class MyPagePayment {
                     $("#myPage_payment_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, "#" + event.currentTarget.id);
+                    this.profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -166,7 +166,7 @@ class MyPagePayment {
                     $("#myPage_payment_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, "#" + event.currentTarget.id);
+                    this.profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null

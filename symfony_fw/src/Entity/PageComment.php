@@ -31,7 +31,7 @@ class PageComment {
     private $idReply = null;
     
     /**
-     * @ORM\Column(name="argument", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT ''")
+     * @ORM\Column(name="argument", type="string", columnDefinition="longtext NOT NULL")
      */
     private $argument = "";
     
@@ -62,7 +62,7 @@ class PageComment {
     }
     
     public function setArgument($value) {
-        $this->argument = $value;
+        $this->argument = base64_encode($value);
     }
     
     public function setDateCreate($value) {
@@ -96,7 +96,7 @@ class PageComment {
     }
     
     public function getArgument() {
-        return $this->argument;
+        return base64_decode($this->argument);
     }
     
     public function getDateCreate() {

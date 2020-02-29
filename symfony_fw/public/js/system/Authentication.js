@@ -24,7 +24,7 @@ class Authentication {
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.target.id}`);
                     
                     if (xhr.response.messages !== undefined) {
                         if (xhr.response.values !== undefined && xhr.response.values.captchaReload === true)

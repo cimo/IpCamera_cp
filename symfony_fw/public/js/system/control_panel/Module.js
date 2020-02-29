@@ -32,7 +32,7 @@ class ControlPanelModule {
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.target.id}`);
                 },
                 null,
                 null
@@ -236,7 +236,7 @@ class ControlPanelModule {
                     "application/x-www-form-urlencoded; charset=UTF-8",
                     null,
                     (xhr) => {
-                        ajax.reply(xhr, `#${event.currentTarget.id}`);
+                        ajax.reply(xhr, `#${event.target.id}`);
                         
                         if (xhr.response.messages.success !== undefined) {
                             $("#cp_module_select_result").html("");

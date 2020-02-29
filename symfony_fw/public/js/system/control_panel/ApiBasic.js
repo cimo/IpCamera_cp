@@ -49,7 +49,7 @@ class ControlPanelApiBasic {
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, "#" + event.currentTarget.id);
+                    ajax.reply(xhr, `#${event.target.id}`);
                     
                     if (xhr.response.messages.success !== undefined)
                         $("#form_apiBasic_select_id").append(`<option value="${xhr.response.values.id}">${name}</option>`);
@@ -226,7 +226,7 @@ class ControlPanelApiBasic {
                     "application/x-www-form-urlencoded; charset=UTF-8",
                     null,
                     (xhr) => {
-                        ajax.reply(xhr, "#" + event.currentTarget.id);
+                        ajax.reply(xhr, `#${event.target.id}`);
                         
                         if (xhr.response.messages.success !== undefined) {
                             $("#form_apiBasic_select_id").find(`option[value="${selectValue}"]`).text(name);

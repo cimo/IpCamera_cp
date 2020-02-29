@@ -53,7 +53,7 @@ class ControlPanelPage {
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 null,
                 (xhr) => {
-                    ajax.reply(xhr, "#" + event.currentTarget.id);
+                    ajax.reply(xhr, `#${event.target.id}`);
                     
                     if (xhr.response.values !== undefined && xhr.response.values.id !== undefined) {
                         $("#cp_page_select_result").html("");
@@ -198,7 +198,7 @@ class ControlPanelPage {
                     $("#cp_page_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, "#" + event.currentTarget.id);
+                    this.profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -227,7 +227,7 @@ class ControlPanelPage {
                     $("#cp_page_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, "#" + event.currentTarget.id);
+                    this.profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -304,7 +304,7 @@ class ControlPanelPage {
                     "application/x-www-form-urlencoded; charset=UTF-8",
                     null,
                     (xhr) => {
-                        ajax.reply(xhr, "#" + event.currentTarget.id);
+                        ajax.reply(xhr, `#${event.target.id}`);
                         
                         if (xhr.response.messages.success !== undefined) {
                             this.profileFocus = false;
