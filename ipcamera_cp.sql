@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.62, for Win64 (AMD64)
 --
 -- Host: 127.0.0.1    Database: ipcamera_cp
 -- ------------------------------------------------------
@@ -44,7 +44,7 @@ CREATE TABLE `ipCamera_device` (
 
 LOCK TABLES `ipCamera_device` WRITE;
 /*!40000 ALTER TABLE `ipCamera_device` DISABLE KEYS */;
-INSERT INTO `ipCamera_device` VALUES (1,'Cosenza - Salone','1,','http://url/media/?action=stream','http://url/media/?action=snapshot','admin','W�aIE\���1%�\rw\�\�\�',0.100,0,'0',1);
+INSERT INTO `ipCamera_device` VALUES (1,'Cosenza - Salone','1,','http://url/media/?action=stream','http://url/media/?action=snapshot','admin','W�aIE���1%�\rw���',0.100,0,'0',1);
 /*!40000 ALTER TABLE `ipCamera_device` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -197,7 +197,7 @@ DROP TABLE IF EXISTS `microservice_cron`;
 CREATE TABLE `microservice_cron` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `time` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `time` longtext COLLATE utf8_unicode_ci NOT NULL,
   `code` longtext COLLATE utf8_unicode_ci NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '0',
   `last_execution` varchar(19) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -394,7 +394,7 @@ CREATE TABLE `page_comment` (
   `page_id` int(11) NOT NULL DEFAULT '0',
   `username` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `id_reply` int(11) DEFAULT NULL,
-  `argument` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `argument` longtext COLLATE utf8_unicode_ci NOT NULL,
   `date_create` varchar(19) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0000-00-00 00:00:00',
   `date_modify` varchar(19) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
@@ -714,4 +714,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-02-12 22:16:29
+-- Dump completed on 2020-03-01  0:41:11

@@ -346,13 +346,13 @@ date.time: H:i:s
 
 # IpCamera
 "controlPanelMenuIpCamera_1": "Ip camera"
-"controlPanelMenuIpCamera_2": "Devices"
-"controlPanelMenuIpCamera_3": "Files"
+"controlPanelMenuIpCamera_2": "Device"
+"controlPanelMenuIpCamera_3": "File"
 
-"controlPanelPageIpCamera_1": "IpCamera devices section."
+"controlPanelPageIpCamera_1": "IpCamera device section."
 "controlPanelPageIpCamera_2": "Really delete this device?"
 "controlPanelPageIpCamera_3": "Really delete all devices?"
-"controlPanelPageIpCamera_4": "Really delete this files?"
+"controlPanelPageIpCamera_4": "Really delete this file?"
 "controlPanelPageIpCamera_5": "Really delete all files?"
 
 # Payment
