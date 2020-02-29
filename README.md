@@ -14,6 +14,6 @@ WORK IN PROGRESS...
 
 | Library: |
 |:---|
-| Uebusaito - https://github.com/cimo/Uebusaito/ |
+| Uebusaito - https://github.com/cimo/Uebusaito |
 
 <b>By CIMO - https://reinventsoftware.org</b>

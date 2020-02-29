@@ -2,6 +2,8 @@
 
 echo Scss2css - Windows
 
-sass --watch "%CD%\scss:%CD%\css" --style compressed
+set source="%cd%"
+
+sass --watch %source%\scss:%source%\css --style compressed
 
 pause
