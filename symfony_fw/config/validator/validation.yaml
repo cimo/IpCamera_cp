@@ -609,6 +609,10 @@ App\Entity\Setting:
         secretPassphrase:
             - NotBlank:
                 groups: [setting]
+            - Regex:
+                groups: [setting]
+                htmlPattern: false
+                pattern: /^[a-zA-Z0-9]+$/
         payment:
             - NotBlank:
                 groups: [setting]
