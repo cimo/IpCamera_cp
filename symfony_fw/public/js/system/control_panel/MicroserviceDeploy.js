@@ -12,9 +12,9 @@ class ControlPanelMicroserviceDeploy {
     }
     
     action = () => {
-        this.selectDesktop();
+        this._selectDesktop();
         
-        this.selectMobile();
+        this._selectMobile();
         
         $("#form_cp_microservice_deploy_render").on("submit", "", (event) => {
             event.preventDefault();
@@ -38,7 +38,7 @@ class ControlPanelMicroserviceDeploy {
                         
                         materialDesign.refresh();
                         
-                        this.execute();
+                        this._execute();
                     }
                 },
                 null,
@@ -105,7 +105,7 @@ class ControlPanelMicroserviceDeploy {
     }
     
     // Function private
-    selectDesktop = () => {
+    _selectDesktop = () => {
         const tableAndPagination = new TableAndPagination();
         tableAndPagination.setButtonsStatus = "show";
         tableAndPagination.create(window.url.cpMicroserviceDeploySelect, "#cp_microservice_deploy_select_result_desktop", true);
@@ -174,7 +174,7 @@ class ControlPanelMicroserviceDeploy {
         $(document).on("click", "#cp_microservice_deploy_select_result_desktop .cp_module_delete", (event) => {
             let id = $.trim($(event.currentTarget).parents("tr").find(".id_column").text());
             
-            this.deleteElement(id);
+            this._deleteElement(id);
         });
         
         $(document).on("click", "#cp_microservice_deploy_select_button_desktop", (event) => {
@@ -197,7 +197,7 @@ class ControlPanelMicroserviceDeploy {
                     $("#cp_microservice_deploy_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -205,7 +205,7 @@ class ControlPanelMicroserviceDeploy {
         });
     }
     
-    selectMobile = () => {
+    _selectMobile = () => {
         $(document).on("submit", "#form_cp_microservice_deploy_select_mobile", (event) => {
             event.preventDefault();
 
@@ -222,7 +222,7 @@ class ControlPanelMicroserviceDeploy {
                     $("#cp_microservice_deploy_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -230,7 +230,7 @@ class ControlPanelMicroserviceDeploy {
         });
     }
     
-    profile = (xhr, tag) => {
+    _profile = (xhr, tag) => {
         ajax.reply(xhr, tag);
         
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
@@ -268,12 +268,12 @@ class ControlPanelMicroserviceDeploy {
             });
             
             $("#cp_microservice_deploy_delete").on("click", "", (event) => {
-               this.deleteElement(null);
+               this._deleteElement(null);
             });
         }
     }
     
-    deleteElement = (id) => {
+    _deleteElement = (id) => {
         popupEasy.create(
             window.text.index_5,
             window.textMicroserviceDeploy.label_1,
@@ -315,7 +315,7 @@ class ControlPanelMicroserviceDeploy {
         );
     }
     
-    execute = () => {
+    _execute = () => {
         $(".git_execute").on("click", "", (event) => {
             let id = $("#form_microservice_deploy_select_id").val();
             let action = $(event.target).attr("data-action");

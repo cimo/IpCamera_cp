@@ -12,9 +12,9 @@ class ControlPanelUser {
     }
     
     action = () => {
-        this.selectDesktop();
+        this._selectDesktop();
         
-        this.selectMobile();
+        this._selectMobile();
         
         helper.wordTag("#user_roleUserId", "#form_user_roleUserId");
         
@@ -72,7 +72,7 @@ class ControlPanelUser {
     }
     
     // Function private
-    selectDesktop = () => {
+    _selectDesktop = () => {
         const tableAndPagination = new TableAndPagination();
         tableAndPagination.setButtonsStatus = "show";
         tableAndPagination.create(window.url.cpUserSelect, "#cp_user_select_result_desktop", true);
@@ -144,7 +144,7 @@ class ControlPanelUser {
         $(document).on("click", "#cp_user_select_result_desktop .cp_user_delete", (event) => {
             let id = $.trim($(event.currentTarget).parents("tr").find(".id_column").text());
             
-            this.deleteElement(id);
+            this._deleteElement(id);
         });
         
         $(document).on("click", "#cp_user_select_button_desktop", (event) => {
@@ -167,7 +167,7 @@ class ControlPanelUser {
                     $("#cp_user_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -179,7 +179,7 @@ class ControlPanelUser {
         });
     }
     
-    selectMobile = () => {
+    _selectMobile = () => {
         $(document).on("submit", "#form_cp_user_select_mobile", (event) => {
             event.preventDefault();
 
@@ -196,7 +196,7 @@ class ControlPanelUser {
                     $("#cp_user_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -208,7 +208,7 @@ class ControlPanelUser {
         });
     }
     
-    profile = (xhr, tag) => {
+    _profile = (xhr, tag) => {
         ajax.reply(xhr, tag);
         
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
@@ -278,12 +278,12 @@ class ControlPanelUser {
             });
             
             $("#cp_user_delete").on("click", "", (event) => {
-               this.deleteElement(null);
+               this._deleteElement(null);
             });
         }
     }
     
-    deleteElement = (id) => {
+    _deleteElement = (id) => {
         popupEasy.create(
             window.text.index_5,
             window.textUser.label_1,

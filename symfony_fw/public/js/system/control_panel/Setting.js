@@ -10,7 +10,7 @@ class ControlPanelSetting {
     }
     
     action = () => {
-        this.languageManage();
+        this._languageManage();
         
         helper.wordTag("#setting_roleUserId", "#form_setting_roleUserId");
         
@@ -55,7 +55,7 @@ class ControlPanelSetting {
     };
     
     // Function private
-    languageManage = () => {
+    _languageManage = () => {
         let index = $("#form_setting_language").prop("selectedIndex");
         let code = $("#form_setting_language").val();
         let eventAjax = "";

@@ -23,20 +23,20 @@ class ControlPanelPage {
     }
     
     action = () => {
-        this.selectDesktop();
+        this._selectDesktop();
         
-        this.selectMobile();
+        this._selectMobile();
         
-        this.rankInMenu();
+        this._rankInMenu();
         
         wysiwyg.create("#form_page_argument", $("#form_cp_page_create").find("input[type='submit']"));
         
-        this.fieldsVisibility();
+        this._fieldsVisibility();
         
         helper.wordTag("#page_roleUserId", "#form_page_roleUserId");
         
         $("#cp_page_saveDraft").on("click", "", (event) => {
-            this.saveDraft("create");
+            this._saveDraft("create");
         });
         
         $("#form_cp_page_create").on("submit", "", (event) => {
@@ -99,11 +99,11 @@ class ControlPanelPage {
                 $("#form_cp_page_select_mobile").find("select option[value='" + this.selectId + "']").prop("selected", true);
         }
         
-        this.rankInMenu();
+        this._rankInMenu();
     }
     
     // Function private
-    selectDesktop = () => {
+    _selectDesktop = () => {
         const tableAndPagination = new TableAndPagination();
         tableAndPagination.setButtonsStatus = "show";
         tableAndPagination.create(window.url.cpPageSelect, "#cp_page_select_result_desktop", true);
@@ -175,7 +175,7 @@ class ControlPanelPage {
         $(document).on("click", "#cp_page_select_result_desktop .cp_page_delete", (event) => {
             let id = $.trim($(event.currentTarget).parents("tr").find(".id_column").text());
             
-            this.deleteElement(id);
+            this._deleteElement(id);
         });
         
         $(document).on("click", "#cp_page_select_button_desktop", (event) => {
@@ -198,7 +198,7 @@ class ControlPanelPage {
                     $("#cp_page_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -210,7 +210,7 @@ class ControlPanelPage {
         });
     }
     
-    selectMobile = () => {
+    _selectMobile = () => {
         $(document).on("submit", "#form_cp_page_select_mobile", (event) => {
             event.preventDefault();
 
@@ -227,7 +227,7 @@ class ControlPanelPage {
                     $("#cp_page_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -239,7 +239,7 @@ class ControlPanelPage {
         });
     }
     
-    profile = (xhr, tag) => {
+    _profile = (xhr, tag) => {
         ajax.reply(xhr, tag);
         
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
@@ -247,15 +247,15 @@ class ControlPanelPage {
             
             $("#cp_page_select_result").html(xhr.response.render);
             
-            this.rankInMenu();
+            this._rankInMenu();
 
             language.page();
             
             wysiwyg.create("#form_page_argument", $("#form_cp_page_profile").find("input[type='submit']"));
             
-            this.fieldsVisibility();
+            this._fieldsVisibility();
             
-            this.selectFieldWithDisabledElement("#form_page_parent", xhr);
+            this._selectFieldWithDisabledElement("#form_page_parent", xhr);
 
             helper.wordTag("#page_roleUserId", "#form_page_roleUserId");
             
@@ -281,11 +281,11 @@ class ControlPanelPage {
             });
             
             $("#cp_page_saveDraft").on("click", "", (event) => {
-                this.saveDraft("modify");
+                this._saveDraft("modify");
             });
             
             $("#cp_page_publishDraft").on("click", "", (event) => {
-                this.publishDraft();
+                this._publishDraft();
             });
 
             $("#form_cp_page_profile").on("submit", "", (event) => {
@@ -322,12 +322,12 @@ class ControlPanelPage {
             });
             
             $("#cp_page_delete").on("click", "", (event) => {
-               this.deleteElement(null);
+               this._deleteElement(null);
             });
         }
     }
     
-    rankInMenu = () => {
+    _rankInMenu = () => {
         helper.sortableElement("#page_rankMenuSort", "#form_page_rankMenuSort");
         
         $("#form_page_parent").off("change").on("change", "", (event) => {
@@ -360,7 +360,7 @@ class ControlPanelPage {
         });
     }
     
-    deleteElement = (id) => {
+    _deleteElement = (id) => {
         popupEasy.create(
             window.text.index_5,
             window.textPage.label_1,
@@ -406,7 +406,7 @@ class ControlPanelPage {
                                     (xhr) => {
                                         ajax.reply(xhr, "");
                                         
-                                        this.deleteResponse(xhr);
+                                        this._deleteResponse(xhr);
                                     },
                                     null,
                                     null
@@ -432,17 +432,17 @@ class ControlPanelPage {
                                     (xhr) => {
                                         ajax.reply(xhr, "");
                                         
-                                        this.deleteResponse(xhr);
+                                        this._deleteResponse(xhr);
                                     },
                                     null,
                                     null
                                 );
                             });
 
-                            this.selectFieldWithDisabledElement("#cp_page_delete_parent_new", xhr);
+                            this._selectFieldWithDisabledElement("#cp_page_delete_parent_new", xhr);
                         }
                         else
-                            this.deleteResponse(xhr);
+                            this._deleteResponse(xhr);
                     },
                     null,
                     null
@@ -451,7 +451,7 @@ class ControlPanelPage {
         );
     }
     
-    saveDraft = (type) => {
+    _saveDraft = (type) => {
         popupEasy.create(
             window.text.index_5,
             window.textPage.label_3,
@@ -468,7 +468,7 @@ class ControlPanelPage {
         );
     }
     
-    publishDraft = () => {
+   _publishDraft = () => {
         popupEasy.create(
             window.text.index_5,
             window.textPage.label_4,
@@ -482,7 +482,7 @@ class ControlPanelPage {
         );
     }
     
-    selectFieldWithDisabledElement = (id, xhr) => {
+    _selectFieldWithDisabledElement = (id, xhr) => {
         let options = $(id).find("option");
         
         let disabled = false;
@@ -506,7 +506,7 @@ class ControlPanelPage {
         });
     }
     
-    deleteResponse = (xhr) => {
+    _deleteResponse = (xhr) => {
         if (xhr.response.messages.success !== undefined) {
             $.each($("#cp_page_select_result_desktop").find("table .id_column"), (key, value) => {
                 if (xhr.response.values.id !== undefined && xhr.response.values.id === $.trim($(value).text()) ||
@@ -522,25 +522,25 @@ class ControlPanelPage {
         }
     }
     
-    fieldsVisibility = () => {
-        this.fieldsVisibilityMenu();
+    _fieldsVisibility = () => {
+        this._fieldsVisibilityMenu();
         
-        this.fieldsVisibilityLink();
+        this._fieldsVisibilityLink();
         
         $("#form_page_showInMenu").on("change", "", (event) => {
-            this.fieldsVisibilityMenu();
+            this._fieldsVisibilityMenu();
             
             materialDesign.refresh();
         });
         
         $("#form_page_onlyLink").on("change", "", (event) => {
-            this.fieldsVisibilityLink();
+            this._fieldsVisibilityLink();
             
             materialDesign.refresh();
         });
     }
     
-    fieldsVisibilityMenu = () => {
+    _fieldsVisibilityMenu = () => {
         if ($("#form_page_showInMenu").val() === "0") {
             $("#form_page_menuName").parents(".form_row ").hide();
             $("#page_rankMenuSort").hide();
@@ -551,7 +551,7 @@ class ControlPanelPage {
         }
     }
     
-    fieldsVisibilityLink = () => {
+    _fieldsVisibilityLink = () => {
         if ($("#form_page_onlyLink").val() === "0")
             $("#form_page_link").parents(".form_row ").hide();
         else

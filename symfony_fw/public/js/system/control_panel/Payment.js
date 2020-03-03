@@ -12,9 +12,9 @@ class ControlPanelPayment {
     }
     
     action = () => {
-        this.selectDesktop();
+        this._selectDesktop();
         
-        this.selectMobile();
+        this._selectMobile();
         
         $("#form_cp_payment_user_select").on("submit", "", (event) => {
             event.preventDefault();
@@ -48,7 +48,7 @@ class ControlPanelPayment {
         });
         
         $("#form_payment_user_select_userId").on("change", "", (event) => {
-            this.selectChangeClear();
+            this._selectChangeClear();
         });
         
         let timeoutEvent = setTimeout(() => {
@@ -90,7 +90,7 @@ class ControlPanelPayment {
     }
     
     // Function private
-    selectDesktop = () => {
+    _selectDesktop = () => {
         const tableAndPagination = new TableAndPagination();
         tableAndPagination.setButtonsStatus = "show";
         tableAndPagination.create(window.url.cpPaymentSelect, "#cp_payment_select_result_desktop", true);
@@ -162,7 +162,7 @@ class ControlPanelPayment {
         $(document).on("click", "#cp_payment_select_result_desktop .cp_payment_delete", (event) => {
             let id = $.trim($(event.currentTarget).parents("tr").find(".id_column").text());
             
-            this.deleteElement(id);
+            this._deleteElement(id);
         });
         
         $(document).on("click", "#cp_payment_select_button_desktop", (event) => {
@@ -185,7 +185,7 @@ class ControlPanelPayment {
                     $("#cp_payment_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -193,7 +193,7 @@ class ControlPanelPayment {
         });
     }
     
-    selectMobile = () => {
+    _selectMobile = () => {
         $(document).on("submit", "#form_cp_payment_select_mobile", (event) => {
             event.preventDefault();
             
@@ -210,7 +210,7 @@ class ControlPanelPayment {
                     $("#cp_payment_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -218,7 +218,7 @@ class ControlPanelPayment {
         });
     }
     
-    profile = (xhr, tag) => {
+    _profile = (xhr, tag) => {
         ajax.reply(xhr, tag);
         
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
@@ -229,12 +229,12 @@ class ControlPanelPayment {
             materialDesign.refresh();
             
             $("#cp_payment_delete").on("click", "", (event) => {
-               this.deleteElement(null);
+               this._deleteElement(null);
             });
         }
     }
     
-    deleteElement = (id) => {
+    _deleteElement = (id) => {
         popupEasy.create(
             window.text.index_5,
             window.textPayment.label_1,
@@ -276,7 +276,7 @@ class ControlPanelPayment {
         );
     }
     
-    selectChangeClear = () => {
+    _selectChangeClear = () => {
         $("#cp_payment_select_result_desktop").find("tbody").html("");
         $("#form_payment_select_id").find("option").not(":eq(0)").remove();
         $("#cp_payment_select_result").html("");

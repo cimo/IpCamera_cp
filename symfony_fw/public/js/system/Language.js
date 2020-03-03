@@ -38,7 +38,7 @@ class Language {
     }
     
     page = () => {
-        this.selectOnPage();
+        this._selectOnPage();
         
         $("#form_language_page").on("submit", "", (event) => {
             event.preventDefault();
@@ -72,7 +72,7 @@ class Language {
     }
     
     // Functions private
-    selectOnPage = () => {
+    _selectOnPage = () => {
         $("#language_page_container").find(".flag_" + window.session.languageTextCode).parent().addClass("mdc-chip--selected");
         $("#language_page_container").find("input[name='form_language[codePage]']").val(window.session.languageTextCode);
         
@@ -82,16 +82,16 @@ class Language {
                     window.text.index_1,
                     window.textLanguagePage.label_1,
                     () => {
-                        this.formPageFlagSubmit(event);
+                        this._formPageFlagSubmit(event);
                     }
                 );
             }
             else
-                this.formPageFlagSubmit(event);
+                this._formPageFlagSubmit(event);
         });
     }
     
-    formPageFlagSubmit = (event) => {
+    _formPageFlagSubmit = (event) => {
         controlPanelPage.setProfileFocus = false;
         
         let target = $(event.target).parent().hasClass("mdc-chip") === true ? $(event.target).parent() : $(event.target);

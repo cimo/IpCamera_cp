@@ -56,27 +56,27 @@ class UploadChunk {
             this.file = $(event.target)[0].files[0];
             this.fileName = this.file.name;
             
-            this.ready();
+            this._ready();
         });
     }
     
     // Functions private
-    ready = () => {
+    _ready = () => {
         if (this.file === null)
             return;
         
         $(this.tagContainer).find(".controls").show();
         
         $(this.tagContainer).find(".controls .button_start").off("click").on("click", "", (event) => {
-            this.start();
+            this._start();
         });
         
         $(this.tagContainer).find(".controls .button_stop").off("click").on("click", "", (event) => {
-            this.stop();
+            this._stop();
         });
     }
     
-    start = () => {
+    _start = () => {
         if (this.file === null)
             return;
         
@@ -94,7 +94,7 @@ class UploadChunk {
                 let response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
                 
                 if (response.messages.error !== undefined) {
-                    this.resetValue();
+                    this._resetValue();
                     
                     flashBag.show(response.messages.error);
                 }
@@ -106,7 +106,7 @@ class UploadChunk {
                     $(this.tagContainer).find(".controls .button_start").prop("disabled", true);
                     $(this.tagContainer).find(".controls .button_stop").prop("disabled", false);
                     
-                    this.chunk();
+                    this._chunk();
                 }
             }
         };
@@ -115,7 +115,7 @@ class UploadChunk {
         xhr.send(formData);
     }
     
-    send = (chunkSize) => {
+    _send = (chunkSize) => {
         if (this.file === null)
             return;
         
@@ -132,16 +132,16 @@ class UploadChunk {
                 let response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
                 
                 if (response.messages.error !== undefined) {
-                    this.resetValue();
+                    this._resetValue();
                     
                     flashBag.show(response.messages.error);
                 }
                 else if (response.status === "send") {
                     if (this.isStop === false) {
                         if (this.sizeStart < this.file.size)
-                            this.chunk();
+                            this._chunk();
                         else
-                            this.complete();
+                            this._complete();
                     }
                 }
             }
@@ -151,7 +151,7 @@ class UploadChunk {
         xhr.send(formData);
     }
     
-    complete = () => {
+    _complete = () => {
         if (this.file === null)
             return;
         
@@ -168,12 +168,12 @@ class UploadChunk {
                 let response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
                 
                 if (response.messages.error !== undefined) {
-                    this.resetValue();
+                    this._resetValue();
                     
                     flashBag.show(response.messages.error);
                 }
                 else if (response.status === "complete") {
-                    this.resetValue();
+                    this._resetValue();
                     
                     if (this.tagImageRefresh !== "")
                         helper.imageRefresh(this.tagImageRefresh, 1);
@@ -194,7 +194,7 @@ class UploadChunk {
         xhr.send(formData);
     }
     
-    stop = () => {
+    _stop = () => {
         if (this.file === null)
             return;
         
@@ -214,12 +214,12 @@ class UploadChunk {
                 let response = jsonParse.response.uploadChunk !== undefined ? jsonParse.response.uploadChunk.processFile : jsonParse.response;
                 
                 if (response.messages.error !== undefined) {
-                    this.resetValue();
+                    this._resetValue();
                     
                     flashBag.show(response.messages.error);
                 }
                 else if (response.status === "stop") {
-                    this.resetValue();
+                    this._resetValue();
                     
                     if (response.messages.success !== undefined)
                         flashBag.show(response.messages.success);
@@ -231,13 +231,13 @@ class UploadChunk {
         xhr.send(formData);
     }
     
-    chunk = () => {
+    _chunk = () => {
         if (this.file === null)
             return;
         
         let chunkSize = this.file.slice(this.sizeStart, this.sizeEnd);
         
-        this.send(chunkSize);
+        this._send(chunkSize);
         
         materialDesign.linearProgress(this.tagProgressBar, this.sizeStart, this.file.size);
         
@@ -245,7 +245,7 @@ class UploadChunk {
         this.sizeEnd = this.sizeStart + this.byteChunk;
     }
     
-    resetValue = () => {
+    _resetValue = () => {
         this.file = null;
         this.fileName = "";
         this.byteChunk = this.byteChunkInit;

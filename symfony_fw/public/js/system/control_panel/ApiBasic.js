@@ -26,7 +26,7 @@ class ControlPanelApiBasic {
                     $("#cp_api_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -61,7 +61,7 @@ class ControlPanelApiBasic {
     }
     
     // Function private
-    profile = (xhr, tag) => {
+    _profile = (xhr, tag) => {
         ajax.reply(xhr, tag);
         
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {

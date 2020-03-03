@@ -198,7 +198,7 @@ class MaterialDesign {
             $.each($(".mdc-tab-bar").not(".mdc-tab-bar-scroller__scroll-frame__tabs"), (key, value) => {
                 let tabBarMdc = new mdc.tabs.MDCTabBar.attachTo(value);
 
-                this.mdcTabBarCustom("tabBar", tabBarMdc);
+                this._mdcTabBarCustom("tabBar", tabBarMdc);
             });
         }
         
@@ -206,7 +206,7 @@ class MaterialDesign {
             $.each($(".mdc-tab-bar-scroller"), (key, value) => {
                 let tabBarScrollerMdc = new mdc.tabs.MDCTabBarScroller.attachTo(value);
 
-                this.mdcTabBarCustom("tabBarScroller", tabBarScrollerMdc);
+                this._mdcTabBarCustom("tabBarScroller", tabBarScrollerMdc);
             });
         }
     }
@@ -230,13 +230,13 @@ class MaterialDesign {
     }
     
     fix = () => {
-        this.mdcTopAppBarCustom();
-        this.mdcDrawerCustom();
-        this.mdcTextFieldHelperTextClear();
+        this._mdcTopAppBarCustom();
+        this._mdcDrawerCustom();
+        this._mdcTextFieldHelperTextClear();
     }
     
     // Functions private
-    mdcTabBarCustom = (type, mdc) => {
+    _mdcTabBarCustom = (type, mdc) => {
         let parameters = helper.urlParameters(window.session.languageTextCode);
 
         $(".mdc-tab-bar").find(".mdc-tab").removeClass("mdc-tab--active");
@@ -269,7 +269,7 @@ class MaterialDesign {
         });
     }
     
-    mdcTopAppBarCustom = () => {
+    _mdcTopAppBarCustom = () => {
         if ($(".mdc-top-app-bar").length > 0) {
             let scrollLimit = 30;
 
@@ -304,7 +304,7 @@ class MaterialDesign {
         }
     }
     
-    mdcDrawerCustom = () => {
+    _mdcDrawerCustom = () => {
         if (helper.checkWidthType() === "desktop") {
             $("body").removeClass("mdc-drawer-scroll-lock");
             $(".mdc-drawer").removeClass("mdc-drawer--open");
@@ -350,7 +350,7 @@ class MaterialDesign {
         });
     }
     
-    mdcTextFieldHelperTextClear = () => {
+    _mdcTextFieldHelperTextClear = () => {
         $(".mdc-text-field__input").on("blur", "", (event) => {
             $(event.target).parents(".form_row").find(".mdc-text-field-helper-text").text("");
         });

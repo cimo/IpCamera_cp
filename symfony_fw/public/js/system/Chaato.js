@@ -72,39 +72,39 @@ class Chaato {
         });
         
         this.itemMax = Math.max.apply(null, tmpItemMax);
-        this.itemMaxKey = this.indexOfMax(tmpItemMax);
+        this.itemMaxKey = this._indexOfMax(tmpItemMax);
         this.itemSpace = Math.floor(this.canvasHeight / this.jsonResult.elements[this.itemMaxKey].items.length) - 1;
         
-        this.render();
+        this._render();
         
         $(this.canvas).on("mousemove", "", (event) => {
-            this.mousePosition = this.findMousePosition("canvas", event);
+            this.mousePosition = this._findMousePosition("canvas", event);
             
-            this.info(event);
+            this._info(event);
         });
     }
     
     // Functions private
-    render = () => {
+    _render = () => {
         this.context.translate(this.translate[0], this.translate[1]);
         this.context.scale(this.scale[0], this.scale[1]);
         
-        this.axes();
+        this._axes();
         
-        this.background();
+        this._background();
         
         $.each(this.jsonResult.elements, (key, value) => {
             $.each(value, (keySub, valueSub) => {
                 if (keySub === "items") {
                     this.listItems[key] = [];
                     
-                    this.dataLine(key, this.jsonResult.elements[key].color, valueSub);
+                    this._dataLine(key, this.jsonResult.elements[key].color, valueSub);
                 }
             });
         });
     }
     
-    axes = () => {
+    _axes = () => {
         this.context.beginPath();
         
         this.context.lineWidth = 1;
@@ -122,7 +122,7 @@ class Chaato {
         this.context.stroke();
     }
     
-    background = () => {
+    _background = () => {
         let labelItems = this.jsonResult.label.items;
         
         // Days
@@ -175,19 +175,19 @@ class Chaato {
         }
     }
     
-    dataLine = (index, color, items) => {
+    _dataLine = (index, color, items) => {
         this.itemPrevious = [];
         
         if (this.animationSpeed === 0)
-            this.dataLineStatic(index, color, items);
+            this._dataLineStatic(index, color, items);
         else {
             this.animationCount = 0;
             
-            this.dataLineAnimation(index, color, items, this.itemPrevious, this.animationCount);
+            this._dataLineAnimation(index, color, items, this.itemPrevious, this.animationCount);
         }
     }
     
-    dataLineStatic = (index, color, items) => {
+    _dataLineStatic = (index, color, items) => {
         $.each(items, (key, value) => {
             this.context.beginPath();
             
@@ -217,7 +217,7 @@ class Chaato {
         });
     }
     
-    dataLineAnimation = (index, color, items, itemPrevious, animationCount) => {
+    _dataLineAnimation = (index, color, items, itemPrevious, animationCount) => {
         let x = (animationCount * this.labelSpace);
         let y = this.canvasHeight - (items[animationCount] * this.itemSpace / (this.itemMax / this.jsonResult.elements[this.itemMaxKey].items.length));
         
@@ -259,14 +259,14 @@ class Chaato {
                 itemPrevious[1] = y;
                 
                 if (animationCount < items.length)
-                    this.dataLineAnimation(index, color, items, itemPrevious, animationCount);
+                    this._dataLineAnimation(index, color, items, itemPrevious, animationCount);
             }
         }, 30);
         
         animationCount ++;
     }
     
-    findMousePosition = (type, event) => {
+    _findMousePosition = (type, event) => {
         let x = 0;
         let y = 0;
         
@@ -290,7 +290,7 @@ class Chaato {
         };
     }
     
-    info = (event) => {
+    _info = (event) => {
         $(".graph_container").find(".info").css({top: event.offsetY + 20, left: event.offsetX + 20});
         $(".graph_container").find(".info").hide();
         
@@ -313,7 +313,7 @@ class Chaato {
         });
     }
     
-    indexOfMax = (elements) => {
+    _indexOfMax = (elements) => {
         if (elements.length === 0)
             return -1;
         

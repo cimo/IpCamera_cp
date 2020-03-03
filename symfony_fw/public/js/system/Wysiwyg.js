@@ -31,7 +31,7 @@ class Wysiwyg {
                 this.fillField("source");
             });
 
-            this.iframe();
+            this._iframe();
         }, 100);
     }
     
@@ -44,7 +44,7 @@ class Wysiwyg {
     }
     
     // Functions private
-    iframe = () => {
+    _iframe = () => {
         if ($(".wysiwyg").length > 0) {
             $(".wysiwyg").find(".editor").contents().find("head").append(
                 "<style>\n\

@@ -12,9 +12,9 @@ class ControlPanelMicroserviceSelenium {
     }
     
     action = () => {
-        this.selectDesktop();
+        this._selectDesktop();
         
-        this.selectMobile();
+        this._selectMobile();
         
         uploadChunk.setUrlRequest = `${window.url.cpMicroserviceSeleniumUpload}?token=${window.session.token}&event=upload`;
         uploadChunk.setTagContainer = "#upload_chunk_microserviceSelenium_test_container";
@@ -56,7 +56,7 @@ class ControlPanelMicroserviceSelenium {
     }
     
     // Function private
-    selectDesktop = () => {
+    _selectDesktop = () => {
         const tableAndPagination = new TableAndPagination();
         tableAndPagination.setButtonsStatus = "show";
         tableAndPagination.create(window.url.cpMicroserviceSeleniumSelect, "#cp_microservice_selenium_select_result_table", true);
@@ -128,7 +128,7 @@ class ControlPanelMicroserviceSelenium {
             let id = $.trim($(event.currentTarget).parents("tr").find(".id_column").text());
             let name = $.trim($(event.currentTarget).parents("tr").find(".name_column").text());
             
-            this.deleteElement(id, name);
+            this._deleteElement(id, name);
         });
         
         $(document).on("click", "#cp_microservice_selenium_select_button_desktop", (event) => {
@@ -153,7 +153,7 @@ class ControlPanelMicroserviceSelenium {
                     $("#cp_microservice_selenium_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -165,7 +165,7 @@ class ControlPanelMicroserviceSelenium {
         });
     }
     
-    selectMobile = () => {
+    _selectMobile = () => {
         $(document).on("submit", "#form_cp_microservice_selenium_select_mobile", (event) => {
             event.preventDefault();
             
@@ -186,7 +186,7 @@ class ControlPanelMicroserviceSelenium {
                     $("#cp_microservice_selenium_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -198,7 +198,7 @@ class ControlPanelMicroserviceSelenium {
         });
     }
     
-    profile = (xhr, tag) => {
+    _profile = (xhr, tag) => {
         ajax.reply(xhr, tag);
         
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
@@ -240,12 +240,12 @@ class ControlPanelMicroserviceSelenium {
             });
             
             $("#cp_microservice_selenium_delete").on("click", "", (event) => {
-               this.deleteElement(null, null);
+               this._deleteElement(null, null);
             });
         }
     }
     
-    deleteElement = (id, name) => {
+    _deleteElement = (id, name) => {
         popupEasy.create(
             window.text.index_5,
             window.textMicroserviceSelenium.label_1,

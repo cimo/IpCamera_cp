@@ -28,14 +28,14 @@ class TableAndPagination {
         this.idResult = id;
         this.selectOnlyOne = singleSelect;
         
-        this.status();
+        this._status();
         
         helper.linkPreventDefault();
         
         if (this.selectOnlyOne === true)
             helper.selectOnlyOneElement(this.idResult + " table tbody");
         
-        this.resizeColumn();
+        this._resizeColumn();
     }
     
     search = () => {
@@ -49,7 +49,7 @@ class TableAndPagination {
             if (event.which === 13) {
                 this.current = 0;
                 
-                this.send();
+                this._send();
                 
                 this.clickedEvent = true;
             }
@@ -61,7 +61,7 @@ class TableAndPagination {
             
             this.current = 0;
             
-            this.send();
+            this._send();
             
             this.clickedEvent = true;
         });
@@ -78,7 +78,7 @@ class TableAndPagination {
             if (this.total > 1 && this.current > 0) {
                 this.current --;
                 
-                this.send();
+                this._send();
                 
                 this.clickedEvent = true;
             }
@@ -91,7 +91,7 @@ class TableAndPagination {
             if (this.total > 1 && this.current < (this.total - 1)) {
                 this.current ++;
                 
-                this.send();
+                this._send();
                 
                 this.clickedEvent = true;
             }
@@ -168,14 +168,14 @@ class TableAndPagination {
             else
                 $(this.idResult).find(".list_result").html(xhr.response.values.listHtml);
 
-            this.status();
+            this._status();
             
-            this.resizeColumn();
+            this._resizeColumn();
         }
     }
     
     // Functions private
-    status = () => {
+    _status = () => {
         let textHtml = $.trim($(this.idResult).find(".tableAndPagination .text").text());
         
         if (textHtml !== undefined || textHtml !== "") {
@@ -214,7 +214,7 @@ class TableAndPagination {
         }
     }
     
-    send = () => {
+    _send = () => {
         let data = {
             'event': "tableAndPagination",
             'searchWritten': $(this.idResult).find(".tableAndPagination .mdc-text-field__input").val(),
@@ -247,7 +247,7 @@ class TableAndPagination {
                 if (this.selectOnlyOne === true)
                     helper.selectOnlyOneElement(this.idResult + " table tbody");
                 
-                this.resizeColumn();
+                this._resizeColumn();
                 
                 this.clickedEvent = false;
                 
@@ -258,7 +258,7 @@ class TableAndPagination {
         );
     }
     
-    resizeColumn = () => {
+    _resizeColumn = () => {
         $(() => {
             $(this.idResult).find("table tbody tr td").resizable({
                 handles: "e"

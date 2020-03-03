@@ -12,11 +12,11 @@ class ControlPanelModule {
     }
     
     action = () => {
-        this.selectDesktop();
+        this._selectDesktop();
         
-        this.selectMobile();
+        this._selectMobile();
         
-        this.rankInColumn();
+        this._rankInColumn();
         
         $("#form_cp_module_create").on("submit", "", (event) => {
             event.preventDefault();
@@ -70,11 +70,11 @@ class ControlPanelModule {
                 $("#cp_module_select_mobile").find(`select option[value="${this.selectId}"]`).prop("selected", true);
         }
         
-        this.rankInColumn();
+        this._rankInColumn();
     }
     
     // Function private
-    selectDesktop = () => {
+    _selectDesktop = () => {
         const tableAndPagination = new TableAndPagination();
         tableAndPagination.setButtonsStatus = "show";
         tableAndPagination.create(window.url.cpModuleSelect, "#cp_module_select_result_desktop", true);
@@ -146,7 +146,7 @@ class ControlPanelModule {
         $(document).on("click", "#cp_module_select_result_desktop .cp_module_delete", (event) => {
             let id = $.trim($(event.currentTarget).parents("tr").find(".id_column").text());
             
-            this.deleteElement(id);
+            this._deleteElement(id);
         });
         
         $(document).on("click", "#cp_module_select_button_desktop", (event) => {
@@ -169,7 +169,7 @@ class ControlPanelModule {
                     $("#cp_module_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -181,7 +181,7 @@ class ControlPanelModule {
         });
     }
     
-    selectMobile = () => {
+    _selectMobile = () => {
         $(document).on("submit", "#form_cp_module_select_mobile", (event) => {
             event.preventDefault();
             
@@ -198,7 +198,7 @@ class ControlPanelModule {
                     $("#cp_module_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -210,7 +210,7 @@ class ControlPanelModule {
         });
     }
     
-    profile = (xhr, tag) => {
+    _profile = (xhr, tag) => {
         ajax.reply(xhr, tag);
         
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
@@ -218,7 +218,7 @@ class ControlPanelModule {
             
             $("#cp_module_select_result").html(xhr.response.render);
             
-            this.rankInColumn();
+            this._rankInColumn();
             
             materialDesign.refresh();
 
@@ -250,12 +250,12 @@ class ControlPanelModule {
             });
             
             $("#cp_module_delete").on("click", "", (event) => {
-               this.deleteElement(null);
+               this._deleteElement(null);
             });
         }
     }
     
-    rankInColumn = () => {
+    _rankInColumn = () => {
         helper.sortableElement("#module_rankColumnSort", "#form_module_rankColumnSort");
         
         $("#form_module_position").off("change").on("change", "", (event) => {
@@ -288,7 +288,7 @@ class ControlPanelModule {
         });
     }
     
-    deleteElement = (id) => {
+    _deleteElement = (id) => {
         popupEasy.create(
             window.text.index_5,
             window.textModule.label_1,

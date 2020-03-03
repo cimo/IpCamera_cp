@@ -62,7 +62,7 @@ class ControlPanelSettingLinePush {
                     ajax.reply(xhr, "");
                     
                     if (xhr.response.messages.success !== undefined) {
-                        this.resetField();
+                        this._resetField();
                         
                         tableAndPagination.populate(xhr);
 
@@ -147,7 +147,7 @@ class ControlPanelSettingLinePush {
                             if (xhr.response.values.wordTagListHtml !== undefined) {
                                 $("#form_cp_setting_line_push_render").find(".wordTag_container").html(xhr.response.values.wordTagListHtml);
                                 
-                                this.resetField();
+                                this._resetField();
                                 
                                 tableAndPagination.populate(xhr);
                                 
@@ -163,7 +163,7 @@ class ControlPanelSettingLinePush {
     };
     
     // Function private
-    resetField = () => {
+    _resetField = () => {
         $("#form_settingLinePush_name").val("");
         $("#form_settingLinePush_name").parent().find("label").removeClass("mdc-floating-label--float-above");
 

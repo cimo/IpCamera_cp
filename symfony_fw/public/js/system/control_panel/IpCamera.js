@@ -12,9 +12,9 @@ class IpCamera {
     }
     
     action = () => {
-        this.selectDesktop();
+        this._selectDesktop();
         
-        this.selectMobile();
+        this._selectMobile();
         
         helper.wordTag("#ipCamera_userId", "#form_ipCamera_userId");
         
@@ -39,7 +39,7 @@ class IpCamera {
             );
         });
         
-        this.file();
+        this._file();
     }
     
     changeView = () => {
@@ -85,7 +85,7 @@ class IpCamera {
     }
     
     // Function private
-    selectDesktop = () => {
+    _selectDesktop = () => {
         const tableAndPagination = new TableAndPagination();
         tableAndPagination.setButtonsStatus = "show";
         tableAndPagination.create(window.url.cpIpCameraSelect, "#cp_ipCamera_select_result_desktop", true);
@@ -154,7 +154,7 @@ class IpCamera {
         $(document).on("click", "#cp_ipCamera_select_result_desktop .cp_ipCamera_delete", (event) => {
             let id = $.trim($(event.currentTarget).parents("tr").find(".id_column").text());
             
-            this.deleteElement(id);
+            this._deleteElement(id);
         });
         
         $(document).on("click", "#cp_ipCamera_select_button_desktop", (event) => {
@@ -177,7 +177,7 @@ class IpCamera {
                     $("#cp_ipCamera_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -189,7 +189,7 @@ class IpCamera {
         });
     }
     
-    selectMobile = () => {
+    _selectMobile = () => {
         $(document).on("submit", "#form_cp_ipCamera_select_mobile", (event) => {
             event.preventDefault();
             
@@ -206,7 +206,7 @@ class IpCamera {
                     $("#cp_ipCamera_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -218,7 +218,7 @@ class IpCamera {
         });
     }
     
-    profile = (xhr, tag) => {
+    _profile = (xhr, tag) => {
         ajax.reply(xhr, tag);
         
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
@@ -258,12 +258,12 @@ class IpCamera {
             });
             
             $("#cp_ipCamera_delete").on("click", "", (event) => {
-               this.deleteElement(null);
+               this._deleteElement(null);
             });
         }
     }
     
-    deleteElement = (id) => {
+    _deleteElement = (id) => {
         popupEasy.create(
             window.text.index_5,
             window.textIpCamera.label_1,
@@ -305,7 +305,7 @@ class IpCamera {
         );
     }
     
-    file = () => {
+    _file = () => {
         const tableAndPagination = new TableAndPagination();
         tableAndPagination.setButtonsStatus = "show";
         tableAndPagination.create(window.url.cpIpCameraFile, "#cp_ipCamera_file_result", true);

@@ -41,7 +41,7 @@ class Helper {
             isMobile = true;
             
             if (fix === true)
-                this.swipeFix();
+                this._swipeFix();
         }
 
         return isMobile;
@@ -170,7 +170,7 @@ class Helper {
     }
     
     sortableElement = (tagParent, tagInput) => {
-        this.populateSortableInput(tagParent, tagInput);
+        this._populateSortableInput(tagParent, tagInput);
         
         if (this.checkWidthType() === "desktop") {
             $(".sort_result").find(".mdc-chip").removeClass("mdc-chip--selected");
@@ -188,7 +188,7 @@ class Helper {
                 'stop': (event, ui) => {
                     ui.placeholder.height(0);
                     
-                    this.populateSortableInput(tagParent, tagInput);
+                    this._populateSortableInput(tagParent, tagInput);
                 }
             }).disableSelection();
         }
@@ -220,7 +220,7 @@ class Helper {
                 else if ($(event.target).find("i").hasClass("button_down") === true)
                     element.parent().insertAfter(element.parent().next());
 
-                this.populateSortableInput(tagParent, tagInput);
+                this._populateSortableInput(tagParent, tagInput);
             });
         }
     }
@@ -541,7 +541,7 @@ class Helper {
     }
     
     // Functions private
-    populateSortableInput = (tagParent, tagInput) => {
+    _populateSortableInput = (tagParent, tagInput) => {
         let idList = "";
 
         $.each($(tagParent).find(".sort_elemet_data"), (key, value) => {
@@ -551,7 +551,7 @@ class Helper {
         $(tagInput).val(idList);
     }
     
-    swipeFix = () => {
+    _swipeFix = () => {
         let defaults = {
             min: {
                 'x': 20,

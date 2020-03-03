@@ -52,7 +52,7 @@ class ControlPanelSettingSlackIw {
                     ajax.reply(xhr, "");
                     
                     if (xhr.response.messages.success !== undefined) {
-                        this.resetField();
+                        this._resetField();
 
                         materialDesign.refresh();
                     }
@@ -131,7 +131,7 @@ class ControlPanelSettingSlackIw {
                             if (xhr.response.values.wordTagListHtml !== undefined) {
                                 $("#form_cp_setting_slack_iw_render").find(".wordTag_container").html(xhr.response.values.wordTagListHtml);
                                 
-                                this.resetField();
+                                this._resetField();
                                 
                                 materialDesign.refresh();
                             }
@@ -145,7 +145,7 @@ class ControlPanelSettingSlackIw {
     };
     
     // Function private
-    resetField = () => {
+    _resetField = () => {
         $("#form_settingSlackIw_name").val("");
         $("#form_settingSlackIw_name").parent().find("label").removeClass("mdc-floating-label--float-above");
 

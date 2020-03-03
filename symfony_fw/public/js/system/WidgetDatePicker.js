@@ -75,18 +75,18 @@ class WidgetDatePicker {
         if (this.currentDay === -1)
             this.currentDay = date.getDate();
         
-        this.calculateMonthLength();
-        this.calculateWeekDayShift();
-        this.calculateDayPosition();
+        this._calculateMonthLength();
+        this._calculateWeekDayShift();
+        this._calculateDayPosition();
         
         let content = `<div class="widget_datePicker unselect">
-            ${this.createHeaderHtml(true)}
-            ${this.createListYearsHtml()}
+            ${this._createHeaderHtml(true)}
+            ${this._createListYearsHtml()}
             <div class="calendar">
-                ${this.createMonthHtml()}
-                ${this.createWeekHtml()}
-                ${this.createDayHtml()}
-                ${this.createButtonHtml()}
+                ${this._createMonthHtml()}
+                ${this._createWeekHtml()}
+                ${this._createDayHtml()}
+                ${this._createButtonHtml()}
             </div>
         </div>`;
         
@@ -193,7 +193,7 @@ class WidgetDatePicker {
                 
                 this.currentDay = parseInt(text);
                 
-                let html = this.createHeaderHtml(false);
+                let html = this._createHeaderHtml(false);
                 
                 $(".widget_datePicker").find(".header .text").html(html);
             }
@@ -208,11 +208,11 @@ class WidgetDatePicker {
         });
         
         $(".widget_datePicker").find(".button .button_clear").off("click").on("click", "", (event) => {
-            this.fillInput(false);
+            this._fillInput(false);
         });
         
         $(".widget_datePicker").find(".button .button_confirm").off("click").on("click", "", (event) => {
-            this.fillInput(true);
+            this._fillInput(true);
         });
         
         $(".widget_datePicker").find(".header > .mdc-fab").off("click").on("click", "", (event) => {
@@ -225,7 +225,7 @@ class WidgetDatePicker {
     }
 
     // Functions private
-    calculateMonthLength = () => {
+    _calculateMonthLength = () => {
         this.monthLength = this.monthDays[this.currentMonth];
         
         if (this.currentMonth === 1) {
@@ -234,7 +234,7 @@ class WidgetDatePicker {
         }
     }
     
-    calculateWeekDayShift = () => {
+    _calculateWeekDayShift = () => {
         let value = 0;
         
         if (this.language === "it")
@@ -245,14 +245,14 @@ class WidgetDatePicker {
         this.weekCurrentDay = this.dayLabels[this.language][(new Date(this.currentYear, this.currentMonth, this.currentDay).getDay() + this.weekDayShift + 7) % 7];
     }
     
-    calculateDayPosition = () => {
+    _calculateDayPosition = () => {
         this.dayFirstPosition = new Date(this.currentYear, this.currentMonth, 1).getDay();
         
         if (this.weekDayShift > this.dayFirstPosition)
             this.weekDayShift -= 7;
     }
     
-    createHeaderHtml = (type) => {
+    _createHeaderHtml = (type) => {
         let html = "";
         
         if (type === true) {
@@ -268,7 +268,7 @@ class WidgetDatePicker {
         return html;
     }
     
-    createListYearsHtml = () => {
+    _createListYearsHtml = () => {
         this.yearMin = 1900;
         this.yearMax = new Date().getFullYear();
         
@@ -294,7 +294,7 @@ class WidgetDatePicker {
         return html;
     }
 
-    createMonthHtml = () => {
+    _createMonthHtml = () => {
         let html = `<div class="month">
             <div class="left"><i class="material-icons mdc-ripple-surface">keyboard_arrow_left</i></div>
             <div class="mdc-typography--body2 label">${this.monthLabels[this.language][this.currentMonth]}</div>
@@ -304,7 +304,7 @@ class WidgetDatePicker {
         return html;
     }
 
-    createWeekHtml = () => {
+    _createWeekHtml = () => {
         let html = "<div class=\"mdc-typography--body2 week\"><ul>";
         
         for (let a = 0; a <= 6; a ++) {
@@ -316,7 +316,7 @@ class WidgetDatePicker {
         return html;
     }
     
-    createDayHtml = () => {
+    _createDayHtml = () => {
         let html = "<div class=\"mdc-typography--body2 day\">";
         
         let day = 1;
@@ -356,7 +356,7 @@ class WidgetDatePicker {
         return html;
     }
     
-    createButtonHtml = () => {
+    _createButtonHtml = () => {
         let html = `<div class="button">
             <button class="mdc-button mdc-button--dense mdc-button--raised button_today" type="button">${window.textWidgetDatePicker.label_1}</button>
             <button class="mdc-button mdc-button--dense mdc-button--raised button_clear" type="button">${window.textWidgetDatePicker.label_2}</button>
@@ -366,7 +366,7 @@ class WidgetDatePicker {
         return html;
     }
     
-    fillInput = (type) => {
+    _fillInput = (type) => {
         let currentMontTmp = this.currentMonth + 1;
         
         this.result = this.currentYear + "-" + helper.padZero(currentMontTmp) + "-" + this.currentDay;

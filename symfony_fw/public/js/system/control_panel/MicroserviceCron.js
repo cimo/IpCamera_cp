@@ -12,9 +12,9 @@ class ControlPanelMicroserviceCron {
     }
     
     action = () => {
-        this.selectDesktop();
+        this._selectDesktop();
         
-        this.selectMobile();
+        this._selectMobile();
         
         $("#form_cp_microservice_cron_create").on("submit", "", (event) => {
             event.preventDefault();
@@ -70,7 +70,7 @@ class ControlPanelMicroserviceCron {
     }
     
     // Function private
-    selectDesktop = () => {
+    _selectDesktop = () => {
         const tableAndPagination = new TableAndPagination();
         tableAndPagination.setButtonsStatus = "show";
         tableAndPagination.create(window.url.cpMicroserviceCronSelect, "#cp_microservice_cron_select_result_desktop", true);
@@ -142,7 +142,7 @@ class ControlPanelMicroserviceCron {
         $(document).on("click", "#cp_microservice_cron_select_result_desktop .cp_microservice_cron_delete", (event) => {
             let id = $.trim($(event.currentTarget).parents("tr").find(".id_column").text());
             
-            this.deleteElement(id);
+            this._deleteElement(id);
         });
         
         $(document).on("click", "#cp_microservice_cron_select_button_desktop", (event) => {
@@ -165,7 +165,7 @@ class ControlPanelMicroserviceCron {
                     $("#cp_microservice_cron_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -177,7 +177,7 @@ class ControlPanelMicroserviceCron {
         });
     }
     
-    selectMobile = () => {
+    _selectMobile = () => {
         $(document).on("submit", "#form_cp_microservice_cron_select_mobile", (event) => {
             event.preventDefault();
 
@@ -194,7 +194,7 @@ class ControlPanelMicroserviceCron {
                     $("#cp_microservice_cron_select_result").html("");
                 },
                 (xhr) => {
-                    this.profile(xhr, `#${event.currentTarget.id}`);
+                    this._profile(xhr, `#${event.currentTarget.id}`);
                 },
                 null,
                 null
@@ -206,7 +206,7 @@ class ControlPanelMicroserviceCron {
         });
     }
     
-    profile = (xhr, tag) => {
+    _profile = (xhr, tag) => {
         ajax.reply(xhr, tag);
         
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
@@ -248,12 +248,12 @@ class ControlPanelMicroserviceCron {
             });
 
             $("#cp_microservice_cron_delete").on("click", "", (event) => {
-               this.deleteElement(null);
+               this._deleteElement(null);
             });
         }
     }
     
-    deleteElement = (id) => {
+    _deleteElement = (id) => {
         popupEasy.create(
             window.text.index_5,
             window.textMicroserviceCron.label_1,
