@@ -191,6 +191,10 @@ class ControlPanelPayment {
                 null
             );
         });
+        
+        $(document).on("click", ".checkbox_column input[type='checkbox']", (event) => {
+            $("#cp_payment_select_result").html("");
+        });
     }
     
     _selectMobile = () => {
@@ -215,6 +219,10 @@ class ControlPanelPayment {
                 null,
                 null
             );
+        });
+        
+        $(document).on("change", "#form_payment_select_id", (event) => {
+            $("#cp_payment_select_result").html("");
         });
     }
     

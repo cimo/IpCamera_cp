@@ -487,55 +487,19 @@ class ApiBasicController extends AbstractController {
                     $this->response['values']['selectPeriodYearHtml'] = $this->createSelectPeriodYearHtml($request);
                     $this->response['values']['selectPeriodMonthHtml'] = $this->createSelectPeriodMonthHtml($request);
                     
-                    // Label
-                    $labelItems = Array(
+                    $labels = Array(
                         "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"
                     );
                     
-                    // Elements
-                    $requestTestActionRows = $this->selectAllApiBasicRequestDatabase($this->session->get("apiBasicProfileId"), "requestTestAction");
-                    
-                    $elementBasicNames = Array();
-                    $elementBasicItems = Array();
-                    $countBasic = 0;
-                    
-                    foreach ($labelItems as $key => $value) {
-                        if (isset($requestTestActionRows[$countBasic]) == true) {
-                            $dateExplode = explode(" ", $requestTestActionRows[$countBasic]['date']);
-                            $date = $dateExplode[0];
-                            
-                            $dateA = new \DateTime("{$this->session->get("apiBasicGraphPeriod_year")}-{$this->session->get("apiBasicGraphPeriod_month")}-{$labelItems[$key]}");
-                            $dateB = new \DateTime($date);
-                            
-                            if (date_diff($dateA, $dateB)->y == 0 && date_diff($dateA, $dateB)->m == 0 && date_diff($dateA, $dateB)->d == 0) {
-                                $elementBasicNames[] = $requestTestActionRows[$countBasic]['name'];
-                                $elementBasicItems[] = $requestTestActionRows[$countBasic]['count'];
-                                
-                                $countBasic ++;
-                            }
-                            else {
-                                $elementBasicNames[] = "";
-                                $elementBasicItems[] = "";
-                            }
-                                
-                        }
-                        else {
-                            $elementBasicNames[] = "";
-                            $elementBasicItems[] = "";
-                        }
-                    }
+                    $testElements = $this->graphLogic($labels, "requestTestAction", "#ff0000");
                     
                     $this->response['values']['json'] = Array(
                         "label" => Array(
                             "name" => "Requests",
-                            "items" => $labelItems
+                            "items" => $labels
                         ),
                         "elements" => Array(
-                            Array(
-                                "name" => $elementBasicNames,
-                                "color" => "#ff0000",
-                                "items" => $elementBasicItems
-                            )
+                            $testElements
                         )
                     );
                 }
@@ -1133,6 +1097,45 @@ class ApiBasicController extends AbstractController {
         $query->execute();
         
         return $query->fetchAll();
+    }
+    
+    private function graphLogic($labels, $tag, $color) {
+        $requestRows = $this->selectAllApiBasicRequestDatabase($this->session->get("apiBasicProfileId"), $tag);
+        
+        $elementNames = Array();
+        $elementItems = Array();
+        $count = 0;
+        
+        foreach ($labels as $key => $value) {
+            if (isset($requestRows[$count]) == true) {
+                $dateExplode = explode(" ", $requestRows[$count]['date']);
+                $date = $dateExplode[0];
+                
+                $dateA = new \DateTime("{$this->session->get("apiBasicGraphPeriod_year")}-{$this->session->get("apiBasicGraphPeriod_month")}-{$labels[$key]}");
+                $dateB = new \DateTime($date);
+                
+                if (date_diff($dateA, $dateB)->y == 0 && date_diff($dateA, $dateB)->m == 0 && date_diff($dateA, $dateB)->d == 0) {
+                    $elementNames[] = $requestRows[$count]['name'];
+                    $elementItems[] = $requestRows[$count]['count'];
+                    
+                    $count ++;
+                }
+                else {
+                    $elementNames[] = "";
+                    $elementItems[] = "";
+                }
+            }
+            else {
+                $elementNames[] = "";
+                $elementItems[] = "";
+            }
+        }
+        
+        return Array(
+            "name" => $elementNames,
+            "items" => $elementItems,
+            "color" => $color
+        );
     }
     
     private function createSelectPeriodYearHtml($request) {

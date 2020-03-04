@@ -32,6 +32,7 @@ security:
                 check_path: authentication_enter_check
                 success_handler: app.authentication_listener
                 failure_handler: app.authentication_listener
+                require_previous_session: false
             logout:
                 target: root_render
                 path: authentication_exit_check

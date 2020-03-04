@@ -203,6 +203,10 @@ class ControlPanelMicroserviceDeploy {
                 null
             );
         });
+        
+        $(document).on("click", ".checkbox_column input[type='checkbox']", (event) => {
+            $("#cp_microservice_deploy_select_result").html("");
+        });
     }
     
     _selectMobile = () => {
@@ -227,6 +231,10 @@ class ControlPanelMicroserviceDeploy {
                 null,
                 null
             );
+        });
+        
+        $(document).on("change", "#form_microservice_deploy_select_id", (event) => {
+            $("#cp_microservice_deploy_select_result").html("");
         });
     }
     

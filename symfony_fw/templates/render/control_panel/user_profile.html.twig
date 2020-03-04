@@ -2,6 +2,11 @@
 
 <h2 class="mdc-typography--headline6">{% trans %}userProfile_1{% endtrans %}</h2>
 <form id="form_cp_user_profile" action="{{path("cp_user_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+    <div id="attemptLogin_reset" class="form_row">
+        <p>{% trans %}userProfile_2{% endtrans %} <span class="attemptLogin_reset_text">{{response.values.attemptLogin}}</span></p>
+        <button class="mdc-button mdc-button--dense mdc-button--raised" type="button">{% trans %}userProfile_3{% endtrans %}</button>
+    </div>
+    
     {% if is_granted("ROLE_ADMIN") == true %}
         <div id="user_roleUserId" class="wordTag_container">
             {{form_row(form.roleUserId)}}
@@ -9,7 +14,7 @@
             <div class="wordTag_result"></div>
         </div>
     {% endif %}
-
+    
     {{form_row(form.username, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "pets"})}}
     {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing"})}}
     {{form_row(form.surname, {'dense': "", 'styleType': "outlinedTrailing"})}}
@@ -32,9 +37,6 @@
     {{form_row(form.password, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "linear_scale"})}}
     {{form_row(form.passwordConfirm, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "linear_scale"})}}
     {{form_row(form.active)}}
-    
-    <p class="attemptLogin_reset_text">{% trans %}userProfile_2{% endtrans %} <span class="attemptLogin_reset_result">{{response.values.attemptLogin}}</span></p>
-    <button id="attemptLogin_reset" class="mdc-button mdc-button--dense mdc-button--raised" type="button">{% trans %}userProfile_3{% endtrans %}</button>
     
     {{form_row(form.credit, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "monetization_on"})}}
 

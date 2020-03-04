@@ -250,7 +250,7 @@ class ControlPanelUser {
                 );
             });
             
-            $("#attemptLogin_reset").on("click", "", (event) => {
+            $("#attemptLogin_reset").find("button").on("click", "", (event) => {
                 event.preventDefault();
 
                 ajax.send(
@@ -270,7 +270,7 @@ class ControlPanelUser {
                         ajax.reply(xhr, "");
                         
                         if (xhr.response.messages.success !== undefined)
-                            $(".attemptLogin_reset_result").text(0);
+                            $(".attemptLogin_reset_text").text(0);
                     },
                     null,
                     null

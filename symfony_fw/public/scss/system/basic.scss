@@ -5,7 +5,7 @@
         .sortable_column {
             padding-top: 55px !important;
             
-            form {
+            .form_row {
                 .mdc-text-field, .mdc-select {
                     width: 100% !important;
                 }
@@ -185,18 +185,22 @@ pre {
     margin: auto;
 }
 
-.maintenance_container {
-    i {
-        font-size: 80px;
-    }
-}
-
 .main {
     .sortable_column {
         padding-top: 120px;
         padding-bottom: $footerHeight;
         
-        form {
+        .mdc-list-item {
+            .mdc-list-item__text {
+                width: 100%;
+                
+                .mdc-text-field {
+                    margin-top: 6px;
+                }
+            }
+        }
+        
+        .form_row {
             .mdc-text-field, .mdc-select {
                 @include user_select_none();
                 
@@ -292,6 +296,100 @@ pre {
     }
 }
 
+.sortable_placeholder {
+    border: 1px dotted $mdc-theme-on-surface;
+}
+
+.user_login {
+    max-width: 300px;
+}
+
+.cursor_custom {
+    cursor: pointer;
+}
+
+.wysiwyg {
+    .toolbar {
+        .select_format, .select_font {
+            width: 120px !important;
+        }
+    }
+}
+
+.info_field {
+    margin-bottom: 0;
+}
+
+.button_svg {
+    height: 39px;
+    
+    img {
+        width: 29px;
+        height: 29px;
+        margin-right: 10px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        display: block;
+    }
+    
+    span {
+        height: 29px;
+    }
+}
+
+.avatar {
+    max-width: 150px;
+    max-height: 150px;
+    border: 1px solid $mdc-theme-on-surface;
+}
+
+.square_code {
+    background-color: $codeBackgroundColor;
+    border: 1px dotted $codeTextColor;
+    padding: 10px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+}
+
+.icon_logo {
+    width: 30px;
+}
+
+.material_upload {
+    label {
+        vertical-align: super;
+    }
+    
+    input {
+        display: none;
+    }
+}
+
+.download_detail_text {
+    display: inline-block;
+}
+
+.download_detail_command {
+    display: none;
+    border: 1px dotted $mdc-theme-on-surface;
+    padding: 10px;
+    width: 50%;
+    margin-top: 10px;
+    
+    button {
+        display: block;
+        margin-bottom: 14px;
+    }
+}
+
+.maintenance_container {
+    i {
+        font-size: 80px;
+    }
+}
+
 .page_container {
     .header {
         h1 {
@@ -359,38 +457,45 @@ pre {
     }
 }
 
-.sortable_placeholder {
-    border: 1px dotted $mdc-theme-on-surface;
-}
-
 .wordTag_container {
     .mdc-chip{
         margin: 5px;
     }
 }
 
-.user_login {
-    max-width: 300px;
-}
-
-.cursor_custom {
-    cursor: pointer;
-}
-
 .graph_container {
     height: 400px;
 }
 
-.wysiwyg {
-    .toolbar {
-        .select_format, .select_font {
-            width: 120px !important;
+.upload_container {
+    .input {
+        margin: 0 0 5px 5px;
+        
+        .form_row {
+            display: inline-block;
+            
+            .material_upload {
+                .mdc-button {
+                    padding: 0 !important;
+                    min-width: 35px !important;
+                }
+                
+                .material-icons {
+                    margin: 0 !important;
+                }
+            }
+            
+            .mdc-form-field {
+                .mdc-checkbox {
+                    margin-top: 5px !important;
+                }
+
+                label {
+                    margin-top: 5px !important;
+                }
+            }
         }
     }
-}
-
-.info_field {
-    margin-bottom: 0;
 }
 
 .cp_menu {
@@ -404,14 +509,17 @@ pre {
         margin: 0 0 0 10px;
     }
 }
+
 .cp_section_button {
     margin-bottom: 10px;
 }
+
 .cp_system_info {
     .mdc-list-item {
         height: auto;
     }
 }
+
 .cp_line_push_user {
     .mdc-list-item {
         height: auto;
@@ -438,6 +546,7 @@ pre {
         }
     }
 }
+
 .microservice_api_log {
     height: 300px;
     overflow-y: scroll;
@@ -445,16 +554,6 @@ pre {
     background-color: $consoleBackgroundColor;
     color: $consoleTextColor;
     user-select: text;
-}
-
-.material_upload {
-    label {
-        vertical-align: super;
-    }
-    
-    input {
-        display: none;
-    }
 }
 
 .mdc-top-app-bar {
@@ -476,9 +575,10 @@ pre {
             padding: 0;
         }
     }
-}
-.mdc-top-app-bar_shrink {
-    height: 64px !important;
+    
+    .mdc-top-app-bar_shrink {
+        height: 64px !important;
+    }
 }
 
 .mdc-drawer__header {
@@ -523,6 +623,7 @@ pre {
 .mdc-chip {
     @include user_select_none();
 }
+
 .mdc-chip--selected {
     .mdc-chip__icon--leading {
         opacity: 1 !important;
@@ -617,97 +718,9 @@ pre {
     color: $mdcInputLabelTextColor !important;
     z-index: 1 !important;
 }
+
 .mdc-floating-label_password {
     padding: 0 5px 0 5px;
-}
-
-.button_svg {
-    height: 39px;
-    
-    img {
-        width: 29px;
-        height: 29px;
-        margin-right: 10px;
-        margin-top: 5px;
-        margin-bottom: 5px;
-        display: block;
-    }
-    
-    span {
-        height: 29px;
-    }
-}
-
-.download_detail_text {
-    display: inline-block;
-}
-.download_detail_container {
-    display: none;
-    border: 1px dotted $mdc-theme-on-surface;
-    padding: 10px;
-    width: 50%;
-    margin-top: 10px;
-    
-    button {
-        display: block;
-        margin-bottom: 14px;
-    }
-}
-
-.avatar {
-    max-width: 150px;
-    max-height: 150px;
-    border: 1px solid $mdc-theme-on-surface;
-}
-
-.upload_container {
-    .input {
-        margin: 0 0 5px 5px;
-        
-        .form_row {
-            display: inline-block;
-            
-            .material_upload {
-                .mdc-button {
-                    padding: 0 !important;
-                    min-width: 35px !important;
-                }
-                
-                .material-icons {
-                    margin: 0 !important;
-                }
-            }
-            
-            .mdc-form-field {
-                .mdc-checkbox {
-                    margin-top: 5px !important;
-                }
-
-                label {
-                    margin-top: 5px !important;
-                }
-            }
-        }
-    }
-}
-
-.attemptLogin_reset_text {
-    display: inline-block;
-    margin-bottom: 0;
-}
-
-.square_code {
-    background-color: $codeBackgroundColor;
-    border: 1px dotted $codeTextColor;
-    padding: 10px;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    white-space: -moz-pre-wrap;
-    white-space: -o-pre-wrap;
-}
-
-.icon_logo {
-    width: 30px;
 }
 
 #panel_id_1 {
@@ -760,6 +773,57 @@ pre {
     }
 }
 
+#page_rankMenuSort {
+    &> p {
+        vertical-align: middle;
+        margin-bottom: 2px;
+    }
+}
+
+#attemptLogin_reset {
+    p {
+        margin: 0;
+    }
+    
+    button {
+        margin-bottom: 5px;
+    }
+}
+
+#form_microservice_deploy_command {
+    height: 200px;
+}
+
+#form_microservice_unit_test_code {
+    width: 100%;
+    height: 500px;
+    overflow-y: scroll;
+}
+
+#form_cp_setting_save {
+    .template_column {
+        margin-bottom: 10px;
+        
+        p {
+            margin: 0;
+        }
+        
+        &> div {
+            display: inline-block;
+            margin-left: 35px;
+            
+            .mdc-form-field {
+                vertical-align: top;
+            }
+            
+            img {
+                margin-left: 10px;
+                display: block;
+            }
+        }
+    }
+}
+
 #language_text_container {
     .mdc-list-item {
         span {
@@ -772,10 +836,13 @@ pre {
     }
 }
 
-#page_rankMenuSort {
+#setting_language_manage_container {
+    display: none;
+    background-color: $mdc-theme-on-surface;
+    padding: 10px;
+    
     &> p {
-        vertical-align: middle;
-        margin-bottom: 2px;
+        margin: 0;
     }
 }
 
@@ -823,64 +890,6 @@ pre {
     }
 }
 
-#setting_language_manage_container {
-    display: none;
-    background-color: $mdc-theme-on-surface;
-    padding: 10px;
-    
-    &> p {
-        margin: 0;
-    }
-}
-
-#unit_test_code_row .mdc-text-field {
-    width: 100%;
-}
-
-#attemptLogin_reset {
-    margin-top: -3px;
-}
-
-#form_microservice_deploy_command {
-    height: 200px;
-}
-
-#form_microservice_unit_test_code {
-    width: 100%;
-    height: 500px;
-    overflow-y: scroll;
-}
-
-#form_pageComment {
-    .mdc-text-field--textarea {
-        width: 100%;
-    }
-}
-
-#form_cp_setting_save {
-    .template_column {
-        margin-bottom: 10px;
-        
-        p {
-            margin: 0;
-        }
-        
-        &> div {
-            display: inline-block;
-            margin-left: 35px;
-            
-            .mdc-form-field {
-                vertical-align: top;
-            }
-            
-            img {
-                margin-left: 10px;
-                display: block;
-            }
-        }
-    }
-}
-
 #cp_microservice_deploy_render_result {
     margin-top: 10px;
     
@@ -888,6 +897,7 @@ pre {
         height: auto;
     }
 }
+
 #cp_microservice_deploy_ssh_connection_result {
     margin-top: 20px;
 }

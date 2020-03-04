@@ -150,7 +150,7 @@ class ControlPanelApiBasic {
             });
             
             $("#download_detail_button").on("click", "", (event) => {
-                $(".download_detail_container").toggle("slow");
+                $(".download_detail_command").toggle("slow");
                 
                 $("#button_apiBasic_download_detail").off("click").on("click", "", (event) => {
                     let dataEvent = $(event.target).attr("data-event") !== undefined ? $(event.target).attr("data-event") : $(event.target).parent().attr("data-event");

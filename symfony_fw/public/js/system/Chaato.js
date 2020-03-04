@@ -72,7 +72,7 @@ class Chaato {
         });
         
         this.itemMax = Math.max.apply(null, tmpItemMax);
-        this.itemMaxKey = this._indexOfMax(tmpItemMax);
+        this.itemMaxKey = this._indexMajorElement(tmpItemMax);
         this.itemSpace = Math.floor(this.canvasHeight / this.jsonResult.elements[this.itemMaxKey].items.length) - 1;
         
         this._render();
@@ -313,20 +313,20 @@ class Chaato {
         });
     }
     
-    _indexOfMax = (elements) => {
+    _indexMajorElement = (elements) => {
         if (elements.length === 0)
             return -1;
         
         let max = elements[0];
-        let maxIndex = 0;
+        let index = 0;
         
         for (let a = 1; a < elements.length; a ++) {
             if (elements[a] > max) {
-                maxIndex = a;
+                index = a;
                 max = elements[a];
             }
         }
         
-        return maxIndex;
+        return index;
     }
 }

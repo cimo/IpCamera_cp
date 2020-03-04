@@ -28,33 +28,28 @@ then
 
         if [ ! -z "$branchNameA $branchNameB" -a "$branchNameA $branchNameB" != " " ]
         then
-                cd $gitClonePath
-                sudo -u $userGitScript git pull --no-edit $gitCloneUrl $branchNameA $branchNameB
-                
-                success=1
+            cd $gitClonePath
+            sudo -u $userGitScript git pull --no-edit $gitCloneUrl $branchNameA $branchNameB
+            
+            success=1
         else
-                echo "Empty value, please restart!"
+            echo "Empty value, please restart!"
         fi
     elif [ $gitChoice -eq 3 ]
     then
         cd $gitClonePath
         sudo -u $userGitScript git fetch --all
-        sudo -u $userGitScript git reset --hard
+        sudo -u $userGitScript git reset --hard origin/master
         
         success=1
     fi
     
     if [ $success -eq 1 ]
     then
-        cd $rootWebPath/symfony_fw
-        sudo -u www-data php bin/console cache:clear --no-warmup --env=dev
-
         echo "Settings project in progress, please wait..."
-
-        sudo chown -R $userWebScript $rootWebPath
-        sudo find $rootWebPath -type d -exec chmod 775 {} \;
-        sudo find $rootWebPath -type f -exec chmod 664 {} \;
-
+        
+        #...
+        
         echo "Finito ciao ciao =D"
     fi
 else
