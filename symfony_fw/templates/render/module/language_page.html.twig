@@ -14,7 +14,7 @@
     {% endfor %}
     
     <form id="form_language_page" action="{{path("language_page", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
-        {{form_row(form.codePage)}}
+        {{form_row(form.code)}}
 
         {{form_widget(form._token)}}
     </form>

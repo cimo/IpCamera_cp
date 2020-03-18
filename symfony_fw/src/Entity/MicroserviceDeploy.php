@@ -47,6 +47,7 @@ class MicroserviceDeploy {
      */
     private $keyPublic = "";
     
+    // #
     private $removeKeyPublic = false;
     
     /**
@@ -54,6 +55,7 @@ class MicroserviceDeploy {
      */
     private $keyPrivate = "";
     
+    // #
     private $removeKeyPrivate = false;
     
     /**

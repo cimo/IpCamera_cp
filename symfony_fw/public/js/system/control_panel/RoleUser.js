@@ -1,6 +1,6 @@
 "use strict";
 
-/* global helper, ajax, popupEasy, materialDesign */
+/* global helper, ajax, materialDesign, popupEasy */
 
 class ControlPanelRoleUser {
     // Properties
@@ -53,9 +53,9 @@ class ControlPanelRoleUser {
             if (this.selectId >= 0) {
                 $("#cp_roleUser_select_result_desktop").find(".checkbox_column input[type='checkbox']").prop("checked", false);
 
-                let id = $("#cp_roleUser_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
+                let ids = $("#cp_roleUser_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
 
-                $.each(id, (key, value) => {
+                $.each(ids, (key, value) => {
                     if ($.trim($(value).text()) === String(this.selectId))
                         $(value).parents("tr").find(".checkbox_column input").prop("checked", true);
                 });
@@ -75,8 +75,8 @@ class ControlPanelRoleUser {
     
     // Function private
     _selectDesktop = () => {
-        const tableAndPagination = new TableAndPagination();
-        tableAndPagination.setButtonsStatus = "show";
+        let tableAndPagination = new TableAndPagination();
+        tableAndPagination.setButtonStatus = "show";
         tableAndPagination.create(window.url.cpRoleUserSelect, "#cp_roleUser_select_result_desktop", true);
         tableAndPagination.search();
         tableAndPagination.pagination();
@@ -100,6 +100,8 @@ class ControlPanelRoleUser {
                     ajax.reply(xhr, "");
                     
                     tableAndPagination.populate(xhr);
+                    
+                    $("#cp_roleUser_select_result").html("");
                 },
                 null,
                 null
@@ -107,7 +109,7 @@ class ControlPanelRoleUser {
         });
         
         $(document).on("click", "#cp_roleUser_select_result_desktop .delete_all", (event) => {
-            popupEasy.create(
+            popupEasy.show(
                 window.text.index_5,
                 window.textRole.label_2,
                 () => {
@@ -126,8 +128,10 @@ class ControlPanelRoleUser {
                         null,
                         (xhr) => {
                             ajax.reply(xhr, "");
-
-                            $.each($("#cp_roleUser_select_result_desktop").find("table .id_column"), (key, value) => {
+                            
+                            let ids = $("#cp_roleUser_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 let id = $.trim($(value).parents("tr").find(".id_column").text());
                                 
                                 if (id > 4)
@@ -154,7 +158,7 @@ class ControlPanelRoleUser {
             
             ajax.send(
                 true,
-                window.url.cpRoleUserProfile,
+                window.url.cpRoleUserSelect,
                 "post",
                 {
                     'event': "result",
@@ -169,7 +173,9 @@ class ControlPanelRoleUser {
                     $("#cp_roleUser_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -189,7 +195,7 @@ class ControlPanelRoleUser {
                 true,
                 $(event.currentTarget).prop("action"),
                 $(event.currentTarget).prop("method"),
-                helper.serializeJson($(event.currentTarget)),
+                $(event.currentTarget).serialize(),
                 "json",
                 false,
                 true,
@@ -198,7 +204,9 @@ class ControlPanelRoleUser {
                     $("#cp_roleUser_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -210,20 +218,18 @@ class ControlPanelRoleUser {
         });
     }
     
-    _profile = (xhr, tag) => {
-        ajax.reply(xhr, tag);
-        
+    _profile = (xhr) => {
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
             this.selectSended = true;
             
             $("#cp_roleUser_select_result").html(xhr.response.render);
             
             materialDesign.refresh();
-
+            
             $("#form_roleUser_level").on("keyup", "", (event) => {
                 $(event.target).val($(event.target).val().toUpperCase());
             });
-
+            
             $("#form_cp_roleUser_profile").on("submit", "", (event) => {
                 event.preventDefault();
 
@@ -243,7 +249,7 @@ class ControlPanelRoleUser {
                         if (xhr.response.messages.success !== undefined) {
                             $("#cp_roleUser_select_result").html("");
                             
-                            $("#cp_roleUser_select_result_desktop .refresh").click();
+                            $("#cp_roleUser_select_result_desktop").find(".refresh").click();
                         }
                     },
                     null,
@@ -252,13 +258,15 @@ class ControlPanelRoleUser {
             });
 
             $("#cp_roleUser_delete").on("click", "", (event) => {
-               this._deleteElement(null);
+               this._deleteElement();
             });
         }
     }
     
     _deleteElement = (id) => {
-        popupEasy.create(
+        let idValue = id === undefined ? null : id;
+        
+        popupEasy.show(
             window.text.index_5,
             window.textRole.label_1,
             () => {
@@ -268,7 +276,7 @@ class ControlPanelRoleUser {
                     "post",
                     {
                         'event': "delete",
-                        'id': id,
+                        'id': idValue,
                         'token': window.session.token
                     },
                     "json",
@@ -280,7 +288,9 @@ class ControlPanelRoleUser {
                         ajax.reply(xhr, "");
                         
                         if (xhr.response.messages.success !== undefined) {
-                            $.each($("#cp_roleUser_select_result_desktop").find("table .id_column"), (key, value) => {
+                            let ids = $("#cp_roleUser_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 if (xhr.response.values.id === $.trim($(value).text()))
                                     $(value).parents("tr").remove();
                             });

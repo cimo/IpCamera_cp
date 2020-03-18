@@ -4,13 +4,16 @@
 
 class PopupEasy {
     // Properties
+    set setElement(value) {
+        this.dialogMdc = value;
+    }
     
     // Functions public
     constructor() {
         this.dialogMdc = null;
     }
     
-    create = (title, message, callbackOk, callbackCancel) => {
+    show = (title, message, callbackOk, callbackCancel) => {
         $(".mdc-dialog").find(".mdc-dialog__header__title").html(title);
         $(".mdc-dialog").find(".mdc-dialog__body").html(message);
         $(".mdc-dialog").find(".mdc-dialog__footer__button--accept").text(window.text.index_6);
@@ -37,7 +40,6 @@ class PopupEasy {
             $(".mdc-dialog").find(".mdc-dialog__footer__button--cancel").off("click").on("click", "", clickCancel);
         }
         
-        this.dialogMdc = materialDesign.getDialogMdc;
         this.dialogMdc.show();
     }
     
@@ -46,7 +48,7 @@ class PopupEasy {
     }
     
     recursive = (title, elements, key) => {
-        this.create(
+        this.show(
             title,
             elements[key],
             () => {

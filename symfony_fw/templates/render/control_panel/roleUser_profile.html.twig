@@ -1,7 +1,7 @@
 {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
 
 <h2 class="mdc-typography--headline6">{% trans %}roleUserProfile_1{% endtrans %}</h2>
-<form id="form_cp_roleUser_profile" action="{{path("cp_roleUser_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+<form id="form_cp_roleUser_profile" action="{{path("cp_roleUser_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
     {{form_row(form.level, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "supervisor_account"})}}
 
     {{form_widget(form._token)}}

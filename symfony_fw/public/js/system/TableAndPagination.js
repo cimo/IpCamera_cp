@@ -4,15 +4,15 @@
 
 class TableAndPagination {
     // Properties
-    set setButtonsStatus(value) {
-        this.buttonsStatus = value;
+    set setButtonStatus(value) {
+        this.buttonStatus = value;
     }
     
     // Functions public
     constructor() {
         this.urlRequest = "";
-        this.idResult = "";
-        this.selectOnlyOne = "";
+        this.idResult = 0;
+        this.selectOnlyOne = false;
 
         this.current = 0;
         this.total = 0;
@@ -20,7 +20,7 @@ class TableAndPagination {
         this.clickedEvent = false;
         this.sortOrderBy = false;
 
-        this.buttonsStatus = "";
+        this.buttonStatus = "";
     }
     
     create = (url, id, singleSelect) => {
@@ -39,8 +39,8 @@ class TableAndPagination {
     }
     
     search = () => {
-        let parentField = this.idResult + " .tableAndPagination .mdc-text-field__input";
-        let parentButton = this.idResult + " .tableAndPagination .mdc-text-field .material-icons";
+        let parentField = this.idResult + " .tableAndPagination_container .mdc-text-field__input";
+        let parentButton = this.idResult + " .tableAndPagination_container .mdc-text-field .material-icons";
         
         $(parentField).on("keyup", "", (event) => {
             if (this.clickedEvent === true)
@@ -68,8 +68,8 @@ class TableAndPagination {
     }
     
     pagination = () => {
-        let parentPrevious = this.idResult + " .tableAndPagination .previous";
-        let parentNext = this.idResult + " .tableAndPagination .next";
+        let parentPrevious = this.idResult + " .tableAndPagination_container .previous";
+        let parentNext = this.idResult + " .tableAndPagination_container .next";
         
         $(parentPrevious).on("click", "", (event) => {
             if (this.clickedEvent === true)
@@ -151,16 +151,16 @@ class TableAndPagination {
     }
     
     populate = (xhr) => {
-        $(this.idResult).find(".tableAndPagination .mdc-text-field__input").val("");
+        $(this.idResult).find(".tableAndPagination_container .mdc-text-field__input").val("");
         $(this.idResult).find("table tbody").css("visibility", "visible");
         
         if (xhr.response.values !== undefined) {
-            $(this.idResult).find(".tableAndPagination .mdc-text-field__input").val(xhr.response.values.search.value);
-            $(this.idResult).find(".tableAndPagination .text").html(xhr.response.values.pagination.text);
+            $(this.idResult).find(".tableAndPagination_container .mdc-text-field__input").val(xhr.response.values.search.value);
+            $(this.idResult).find(".tableAndPagination_container .text").html(xhr.response.values.pagination.text);
             
             if (xhr.response.values.count !== undefined) {
-                $(this.idResult).find(".tableAndPagination .count").show();
-                $(this.idResult).find(".tableAndPagination .count span").html(xhr.response.values.count);
+                $(this.idResult).find(".tableAndPagination_container .count").show();
+                $(this.idResult).find(".tableAndPagination_container .count span").html(xhr.response.values.count);
             }
             
             if ($(this.idResult).find("table tbody").length > 0)
@@ -176,7 +176,7 @@ class TableAndPagination {
     
     // Functions private
     _status = () => {
-        let textHtml = $.trim($(this.idResult).find(".tableAndPagination .text").text());
+        let textHtml = $.trim($(this.idResult).find(".tableAndPagination_container .text").text());
         
         if (textHtml !== undefined || textHtml !== "") {
             let textSplit = textHtml.split("/");
@@ -184,7 +184,7 @@ class TableAndPagination {
             let valueB = parseInt($.trim(textSplit[1]));
             
             if (valueA > valueB && $(this.idResult).find("table tbody tr").length === 0)
-                $(this.idResult).find(".tableAndPagination .previous").click();
+                $(this.idResult).find(".tableAndPagination_container .previous").click();
             
             if (this.current < 0)
                 this.current = 0;
@@ -192,11 +192,11 @@ class TableAndPagination {
             this.total = valueB;
         }
         
-        $(".tableAndPagination .previous .mdc-button").prop("disabled", true);
-        $(".tableAndPagination .next .mdc-button").prop("disabled", true);
+        $(this.idResult).find(".tableAndPagination_container .previous .mdc-button").prop("disabled", true);
+        $(this.idResult).find(".tableAndPagination_container .next .mdc-button").prop("disabled", true);
         
-        let buttonPrevious = $(this.idResult).find(".tableAndPagination .previous .mdc-button");
-        let buttonNext = $(this.idResult).find(".tableAndPagination .next .mdc-button");
+        let buttonPrevious = $(this.idResult).find(".tableAndPagination_container .previous .mdc-button");
+        let buttonNext = $(this.idResult).find(".tableAndPagination_container .next .mdc-button");
         
         if (buttonPrevious.length > 0 && buttonNext.length > 0) {
             if (this.total > 1 && this.current > 0)
@@ -209,15 +209,15 @@ class TableAndPagination {
                 $(value).find("i").hide();
             });
 
-            if (this.buttonsStatus === "show")
-                $(this.idResult).find(".tableAndPagination .button_container").show();
+            if (this.buttonStatus === "show")
+                $(this.idResult).find(".tableAndPagination_container .button_container").show();
         }
     }
     
     _send = () => {
         let data = {
             'event': "tableAndPagination",
-            'searchWritten': $(this.idResult).find(".tableAndPagination .mdc-text-field__input").val(),
+            'searchWritten': $(this.idResult).find(".tableAndPagination_container .mdc-text-field__input").val(),
             'paginationCurrent': this.current,
             'token': window.session.token
         };

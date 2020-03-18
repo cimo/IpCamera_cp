@@ -10,14 +10,14 @@ class Captcha {
     }
     
     action = () => {
-        this.image();
+        this.actionImage();
         
         $(".captcha").find("img").on("click", "", (event) => {
             this.image();
         });
     }
     
-    image = () => {
+    actionImage = () => {
         ajax.send(
             false,
             window.url.rootRender,

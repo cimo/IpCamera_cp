@@ -43,6 +43,10 @@ class MicroserviceCron {
     private $lastExecution = "0000-00-00 00:00:00";
     
     // Properties
+    public function setId($value) {
+        $this->id = $value;
+    }
+    
     public function setName($value) {
         $this->name = $value;
     }

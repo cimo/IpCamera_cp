@@ -54,9 +54,7 @@ class MicroserviceApiController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -95,9 +93,7 @@ class MicroserviceApiController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -108,7 +104,7 @@ class MicroserviceApiController extends AbstractController {
         $this->session->set("microserviceApiProfileId", 0);
         
         $form = $this->createForm(MicroserviceApiFormType::class, $microserviceApiEntity, Array(
-            'validation_groups' => Array('microservice_api_create')
+            'validation_groups' => Array("microservice_api_create")
         ));
         $form->handleRequest($request);
         
@@ -145,15 +141,15 @@ class MicroserviceApiController extends AbstractController {
     
     /**
     * @Route(
-    *   name = "cp_microservice_api_profile_save",
-    *   path = "/cp_microservice_api_profile_save/{_locale}/{urlCurrentPageId}/{urlExtra}",
+    *   name = "cp_microservice_api_profile",
+    *   path = "/cp_microservice_api_profile/{_locale}/{urlCurrentPageId}/{urlExtra}",
     *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = "", "id" = "0"},
     *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
     *	methods={"GET", "POST"}
     * )
     * @Template("@templateRoot/render/control_panel/microservice_api_profile.html.twig")
     */
-    public function profileSaveAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
+    public function profileAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -165,9 +161,7 @@ class MicroserviceApiController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -179,24 +173,25 @@ class MicroserviceApiController extends AbstractController {
         
         $id = isset($urlExtraExplode[4]) == true ? $urlExtraExplode[4] : 0;
         
-        $this->session->set("microserviceApiProfileId", $id);
-        
         $microserviceApiEntity = $this->entityManager->getRepository("App\Entity\MicroserviceApi")->find($id);
         
-        $logo = "{$this->helper->getUrlRoot()}/images/templates/{$settingRow['template']}/api.png";
+        if ($microserviceApiEntity != null) {
+            $this->session->set("microserviceApiProfileId", $microserviceApiEntity->getId());
+            
+            $logo = "{$this->helper->getUrlRoot()}/images/templates/{$settingRow['template']}/api.png";
+            
+            if ($microserviceApiEntity->getImage() != "" && file_exists("{$this->helper->getPathPublic()}/files/microservice/api/{$microserviceApiEntity->getImage()}") == true)
+                $logo = "{$this->helper->getUrlRoot()}/files/microservice/api/{$microserviceApiEntity->getImage()}";
+            
+            $this->response['fileExists'] = file_exists("{$this->helper->getPathSrc()}/Controller/Microservice/Api/{$microserviceApiEntity->getName()}/{$microserviceApiEntity->getControllerName()}Controller.php");
+            $this->response['logo'] = $logo;
+            $this->response['values']['microserviceApiEntity'] = $microserviceApiEntity;
+        }
         
-        if ($microserviceApiEntity->getImage() != "" && file_exists("{$this->helper->getPathPublic()}/files/microservice/api/{$microserviceApiEntity->getImage()}") == true)
-            $logo = "{$this->helper->getUrlRoot()}/files/microservice/api/{$microserviceApiEntity->getImage()}";
-        
-        $this->response['values']['microserviceApiEntity'] = $microserviceApiEntity;
-
         $form = $this->createForm(MicroserviceApiFormType::class, $microserviceApiEntity, Array(
-            'validation_groups' => Array('microservice_api_profile')
+            'validation_groups' => Array("microservice_api_profile")
         ));
         $form->handleRequest($request);
-        
-        $this->response['fileExists'] = file_exists("{$this->helper->getPathSrc()}/Controller/Microservice/Api/{$microserviceApiEntity->getName()}/{$microserviceApiEntity->getControllerName()}Controller.php");
-        $this->response['logo'] = $logo;
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
@@ -231,7 +226,7 @@ class MicroserviceApiController extends AbstractController {
     
     // Functions private
     private function fileUpload($form, $entity) {
-        $row = $this->query->selectMicroserviceApiDatabase($this->session->get("microserviceApiProfileId"), true);
+        $microserviceApiRow = $this->query->selectMicroserviceApiDatabase($this->session->get("microserviceApiProfileId"), true);
         
         $pathImage = "{$this->helper->getPathPublic()}/files/microservice/api";
         
@@ -239,21 +234,21 @@ class MicroserviceApiController extends AbstractController {
         
         // Remove image
         if ($form->get("removeImage")->getData() == true) {
-            if (file_exists("{$pathImage}/{$row['image']}") == true)
-                unlink("{$pathImage}/{$row['image']}");
+            if ($microserviceApiRow['image'] != "" && file_exists("{$pathImage}/{$microserviceApiRow['image']}") == true)
+                unlink("{$pathImage}/{$microserviceApiRow['image']}");
             
-            $entity->setImage("");
+            $entity->setImage(null);
         }
+        else if ($microserviceApiRow['image'] != "")
+            $entity->setImage($microserviceApiRow['image']);
         
         // Upload image
         if ($image != null && $form->get("removeImage")->getData() == false) {
-            if ($row['image'] != "" && file_exists("{$pathImage}/{$row['image']}") == true)
-                unlink("{$pathImage}/{$row['image']}");
-            
             $fileName = $image->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
             $newName = uniqid() . ".{$extension}";
             $image->move($pathImage, $newName);
+            
             $entity->setImage($newName);
         }
     }

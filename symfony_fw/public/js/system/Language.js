@@ -35,9 +35,7 @@ class Language {
                 null
             );
         });
-    }
-    
-    page = () => {
+        
         this._selectOnPage();
         
         $("#form_language_page").on("submit", "", (event) => {
@@ -59,7 +57,7 @@ class Language {
                     if ($.isEmptyObject(xhr.response) === false && xhr.response.values !== undefined) {
                         wysiwyg.historyClear();
                         
-                        $("#form_cp_page_profile").find("input[name='form_page[language]']").val(xhr.response.values.codePage);
+                        $("#form_cp_page_profile").find("input[name='form_page[language]']").val(xhr.response.values.code);
                         $("#form_cp_page_profile").find("input[name='form_page[title]']").val(xhr.response.values.pageTitle);
                         $(".wysiwyg").find(".editor").contents().find("body").html(xhr.response.values.pageArgument);
                         $("#form_cp_page_profile").find("input[name='form_page[menuName]']").val(xhr.response.values.pageMenuName);
@@ -74,11 +72,11 @@ class Language {
     // Functions private
     _selectOnPage = () => {
         $("#language_page_container").find(".flag_" + window.session.languageTextCode).parent().addClass("mdc-chip--selected");
-        $("#language_page_container").find("input[name='form_language[codePage]']").val(window.session.languageTextCode);
+        $("#language_page_container").find("input[name='form_language[code]']").val(window.session.languageTextCode);
         
-        $("#language_page_container .mdc-chip").on("click", "", (event) => {
+        $("#language_page_container").find(".mdc-chip").on("click", "", (event) => {
             if (controlPanelPage.getProfileFocus === true) {
-                popupEasy.create(
+                popupEasy.show(
                     window.text.index_1,
                     window.textLanguagePage.label_1,
                     () => {
@@ -100,8 +98,8 @@ class Language {
         target.addClass("mdc-chip--selected");
         
         let altSplit = target.find("img").prop("alt").split(".");
-
-        $("#form_language_page").find("input[name='form_language[codePage]']").val(altSplit[0]);
+        
+        $("#form_language_page").find("input[name='form_language[code]']").val(altSplit[0]);
         $("#form_language_page").submit();
     }
 }

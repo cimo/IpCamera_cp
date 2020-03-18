@@ -1,6 +1,6 @@
 "use strict";
 
-/* global helper, ajax, popupEasy, materialDesign */
+/* global helper, ajax, materialDesign, popupEasy */
 
 class MyPagePayment {
     // Properties
@@ -28,9 +28,9 @@ class MyPagePayment {
             if (this.selectId >= 0) {
                 $("#myPage_payment_select_result_desktop").find(".checkbox_column input[type='checkbox']").prop("checked", false);
 
-                let id = $("#myPage_payment_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
+                let ids = $("#myPage_payment_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
 
-                $.each(id, (key, value) => {
+                $.each(ids, (key, value) => {
                     if ($.trim($(value).text()) === String(this.selectId))
                         $(value).parents("tr").find(".checkbox_column input").prop("checked", true);
                 });
@@ -50,8 +50,8 @@ class MyPagePayment {
     
     // Function private
     _selectDesktop = () => {
-        const tableAndPagination = new TableAndPagination();
-        tableAndPagination.setButtonsStatus = "show";
+        let tableAndPagination = new TableAndPagination();
+        tableAndPagination.setButtonStatus = "show";
         tableAndPagination.create(window.url.myPagePaymentSelect, "#myPage_payment_select_result_desktop", true);
         tableAndPagination.search();
         tableAndPagination.pagination();
@@ -75,6 +75,8 @@ class MyPagePayment {
                     ajax.reply(xhr, "");
                     
                     tableAndPagination.populate(xhr);
+                    
+                    $("#myPage_payment_select_result").html("");
                 },
                 null,
                 null
@@ -82,7 +84,7 @@ class MyPagePayment {
         });
         
         $(document).on("click", "#myPage_payment_select_result_desktop .delete_all", (event) => {
-            popupEasy.create(
+            popupEasy.show(
                 window.text.index_5,
                 window.textPayment.label_2,
                 () => {
@@ -101,8 +103,10 @@ class MyPagePayment {
                         null,
                         (xhr) => {
                             ajax.reply(xhr, "");
-
-                            $.each($("#myPage_payment_select_result_desktop").find("table .id_column"), (key, value) => {
+                            
+                            let ids = $("#myPage_payment_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 $(value).parents("tr").remove();
                             });
                             
@@ -126,7 +130,7 @@ class MyPagePayment {
 
             ajax.send(
                 true,
-                window.url.myPagePaymentProfile,
+                window.url.myPagePaymentSelect,
                 "post",
                 {
                     'event': "result",
@@ -141,7 +145,9 @@ class MyPagePayment {
                     $("#myPage_payment_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -157,7 +163,7 @@ class MyPagePayment {
                 true,
                 $(event.currentTarget).prop("action"),
                 $(event.currentTarget).prop("method"),
-                helper.serializeJson($(event.currentTarget)),
+                $(event.currentTarget).serialize(),
                 "json",
                 false,
                 true,
@@ -166,7 +172,9 @@ class MyPagePayment {
                     $("#myPage_payment_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -174,9 +182,7 @@ class MyPagePayment {
         });
     }
     
-    _profile = (xhr, tag) => {
-        ajax.reply(xhr, tag);
-        
+    _profile = (xhr) => {
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
             this.selectSended = true;
             
@@ -185,13 +191,15 @@ class MyPagePayment {
             materialDesign.refresh();
             
             $("#myPage_payment_delete").on("click", "", (event) => {
-               this._deleteElement(null);
+               this._deleteElement();
             });
         }
     }
     
     _deleteElement = (id) => {
-        popupEasy.create(
+        let idValue = id === undefined ? null : id;
+        
+        popupEasy.show(
             window.text.index_5,
             window.textPayment.label_1,
             () => {
@@ -201,7 +209,7 @@ class MyPagePayment {
                     "post",
                     {
                         'event': "delete",
-                        'id': id,
+                        'id': idValue,
                         'token': window.session.token
                     },
                     "json",
@@ -213,7 +221,9 @@ class MyPagePayment {
                         ajax.reply(xhr, "");
                         
                         if (xhr.response.messages.success !== undefined) {
-                            $.each($("#myPage_payment_select_result_desktop").find("table .id_column"), (key, value) => {
+                            let ids = $("#myPage_payment_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 if (xhr.response.values.id === $.trim($(value).text()))
                                     $(value).parents("tr").remove();
                             });

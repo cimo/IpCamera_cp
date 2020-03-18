@@ -1,6 +1,6 @@
 "use strict";
 
-/* global helper, ajax, popupEasy, materialDesign */
+/* global helper, ajax, materialDesign, popupEasy */
 
 class ControlPanelModule {
     // Properties
@@ -16,7 +16,9 @@ class ControlPanelModule {
         
         this._selectMobile();
         
-        this._rankInColumn();
+        $("#form_module_position").on("change", "", (event) => {
+            this._rankInColumn($(event.target).val());
+        });
         
         $("#form_cp_module_create").on("submit", "", (event) => {
             event.preventDefault();
@@ -70,13 +72,13 @@ class ControlPanelModule {
                 $("#cp_module_select_mobile").find(`select option[value="${this.selectId}"]`).prop("selected", true);
         }
         
-        this._rankInColumn();
+        helper.sortableElement("#module_rankColumnSort", "#form_module_rankColumnSort");
     }
     
     // Function private
     _selectDesktop = () => {
-        const tableAndPagination = new TableAndPagination();
-        tableAndPagination.setButtonsStatus = "show";
+        let tableAndPagination = new TableAndPagination();
+        tableAndPagination.setButtonStatus = "show";
         tableAndPagination.create(window.url.cpModuleSelect, "#cp_module_select_result_desktop", true);
         tableAndPagination.search();
         tableAndPagination.pagination();
@@ -100,6 +102,8 @@ class ControlPanelModule {
                     ajax.reply(xhr, "");
                     
                     tableAndPagination.populate(xhr);
+                    
+                    $("#cp_module_select_result").html("");
                 },
                 null,
                 null
@@ -107,7 +111,7 @@ class ControlPanelModule {
         });
         
         $(document).on("click", "#cp_module_select_result_desktop .delete_all", (event) => {
-            popupEasy.create(
+            popupEasy.show(
                 window.text.index_5,
                 window.textModule.label_2,
                 () => {
@@ -126,8 +130,10 @@ class ControlPanelModule {
                         null,
                         (xhr) => {
                             ajax.reply(xhr, "");
-
-                            $.each($("#cp_module_select_result_desktop").find("table .id_column"), (key, value) => {
+                            
+                            let ids = $("#cp_module_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 let id = $.trim($(value).parents("tr").find(".id_column").text());
                                 
                                 if (id > 2)
@@ -154,7 +160,7 @@ class ControlPanelModule {
 
             ajax.send(
                 true,
-                window.url.cpModuleProfile,
+                window.url.cpModuleSelect,
                 "post",
                 {
                     'event': "result",
@@ -169,7 +175,9 @@ class ControlPanelModule {
                     $("#cp_module_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -189,7 +197,7 @@ class ControlPanelModule {
                 true,
                 $(event.currentTarget).prop("action"),
                 $(event.currentTarget).prop("method"),
-                helper.serializeJson($(event.currentTarget)),
+                $(event.currentTarget).serialize(),
                 "json",
                 false,
                 true,
@@ -198,7 +206,9 @@ class ControlPanelModule {
                     $("#cp_module_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -210,15 +220,13 @@ class ControlPanelModule {
         });
     }
     
-    _profile = (xhr, tag) => {
-        ajax.reply(xhr, tag);
-        
+    _profile = (xhr) => {
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
             this.selectSended = true;
             
             $("#cp_module_select_result").html(xhr.response.render);
             
-            this._rankInColumn();
+            this._rankInColumn($("#form_module_position").val());
             
             materialDesign.refresh();
 
@@ -241,7 +249,7 @@ class ControlPanelModule {
                         if (xhr.response.messages.success !== undefined) {
                             $("#cp_module_select_result").html("");
                             
-                            $("#cp_module_select_result_desktop .refresh").click();
+                            $("#cp_module_select_result_desktop").find(".refresh").click();
                         }
                     },
                     null,
@@ -250,46 +258,44 @@ class ControlPanelModule {
             });
             
             $("#cp_module_delete").on("click", "", (event) => {
-               this._deleteElement(null);
+               this._deleteElement();
             });
         }
     }
     
-    _rankInColumn = () => {
-        helper.sortableElement("#module_rankColumnSort", "#form_module_rankColumnSort");
-        
-        $("#form_module_position").off("change").on("change", "", (event) => {
-            ajax.send(
-                true,
-                window.url.cpModuleProfileSort,
-                "post",
-                {
-                    'event': "refresh",
-                    'position': $(event.target).val(),
-                    'token': window.session.token
-                },
-                "json",
-                false,
-                true,
-                "application/x-www-form-urlencoded; charset=UTF-8",
-                null,
-                (xhr) => {
-                    ajax.reply(xhr, "");
-                    
-                    if (xhr.response.values.moduleSortListHtml !== undefined) {
-                        $("#module_rankColumnSort").find(".sort_result").html(xhr.response.values.moduleSortListHtml);
+    _rankInColumn = (position) => {
+        ajax.send(
+            true,
+            window.url.cpModuleProfileSort,
+            "post",
+            {
+                'event': "refresh",
+                'position': position,
+                'token': window.session.token
+            },
+            "json",
+            false,
+            true,
+            "application/x-www-form-urlencoded; charset=UTF-8",
+            null,
+            (xhr) => {
+                ajax.reply(xhr, "");
 
-                        helper.sortableElement("#module_rankColumnSort", "#form_module_rankColumnSort");
-                    }
-                },
-                null,
-                null
-            );
-        });
+                if (xhr.response.values.moduleSortListHtml !== undefined) {
+                    $("#module_rankColumnSort").find(".sort_result").html(xhr.response.values.moduleSortListHtml);
+
+                    helper.sortableElement("#module_rankColumnSort", "#form_module_rankColumnSort");
+                }
+            },
+            null,
+            null
+        );
     }
     
     _deleteElement = (id) => {
-        popupEasy.create(
+        let idValue = id === undefined ? null : id;
+        
+        popupEasy.show(
             window.text.index_5,
             window.textModule.label_1,
             () => {
@@ -299,7 +305,7 @@ class ControlPanelModule {
                     "post",
                     {
                         'event': "delete",
-                        'id': id,
+                        'id': idValue,
                         'token': window.session.token
                     },
                     "json",
@@ -311,7 +317,9 @@ class ControlPanelModule {
                         ajax.reply(xhr, "");
                         
                         if (xhr.response.messages.success !== undefined) {
-                            $.each($("#cp_module_select_result_desktop").find("table .id_column"), (key, value) => {
+                            let ids = $("#cp_module_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 if (xhr.response.values.id === $.trim($(value).text()))
                                     $(value).parents("tr").remove();
                             });

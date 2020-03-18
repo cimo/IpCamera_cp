@@ -58,9 +58,7 @@ class UserController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -71,7 +69,7 @@ class UserController extends AbstractController {
         $this->session->set("userProfileId", 0);
         
         $form = $this->createForm(UserFormType::class, $userEntity, Array(
-            'validation_groups' => Array('user_create')
+            'validation_groups' => Array("user_create")
         ));
         $form->handleRequest($request);
         
@@ -79,9 +77,9 @@ class UserController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                $messagePassword = $this->helper->assignUserPassword("withoutOld", $userEntity, $form);
+                $messagePassword = $this->helper->assignUserPassword($userEntity, $form);
 
-                if ($messagePassword == "ok") {
+                if ($messagePassword === true) {
                     $this->helper->assignUserParameter($userEntity);
 
                     mkdir("{$this->helper->getPathPublic()}/files/user/{$form->get("username")->getData()}");
@@ -139,9 +137,7 @@ class UserController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -155,24 +151,59 @@ class UserController extends AbstractController {
         
         $this->response['values']['search'] = $tableAndPagination['search'];
         $this->response['values']['pagination'] = $tableAndPagination['pagination'];
-        $this->response['values']['listHtml'] = $this->createListHtml($userRows, $tableAndPagination['listHtml']);
+        $this->response['values']['listHtml'] = $this->createListHtml($tableAndPagination['listHtml']);
         $this->response['values']['count'] = $tableAndPagination['count'];
         
         $form = $this->createForm(UserSelectFormType::class, null, Array(
-            'validation_groups' => Array('user_select'),
-            'choicesId' => array_column($userRows, "id", "username")
+            'validation_groups' => Array("user_select"),
+            'id' => array_column($userRows, "id", "username")
         ));
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                return $this->ajax->response(Array(
-                    'urlLocale' => $this->urlLocale,
-                    'urlCurrentPageId' => $this->urlCurrentPageId,
-                    'urlExtra' => $this->urlExtra,
-                    'response' => $this->response
-                ));
+            $id = 0;
+            
+            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true)
+                $id = $request->get("id");
+            else if ($form->isSubmitted() == true && $form->isValid() == true)
+                $id = $form->get("id")->getData();
+            
+            if ($request->get("event") != "refresh" && $request->get("event") != "tableAndPagination") {
+                $userEntity = $this->entityManager->getRepository("App\Entity\User")->find($id);
+
+                if ($userEntity != null) {
+                    $this->session->set("userProfileId", $userEntity->getId());
+
+                    $formSub = $this->createForm(UserFormType::class, $userEntity, Array(
+                        'validation_groups' => Array("user_profile")
+                    ));
+                    $formSub->handleRequest($request);
+
+                    $this->response['values']['userRoleSelectHtml'] = $this->helper->createUserRoleSelectHtml("form_user_roleUserId_select", "userController_1", true);
+                    $this->response['values']['id'] = $this->session->get("userProfileId");
+                    $this->response['values']['attemptLogin'] = $userEntity->getAttemptLogin();
+                    $this->response['values']['credit'] = $userEntity->getCredit();
+
+                    $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/user_profile.html.twig", Array(
+                        'urlLocale' => $this->urlLocale,
+                        'urlCurrentPageId' => $this->urlCurrentPageId,
+                        'urlExtra' => $this->urlExtra,
+                        'response' => $this->response,
+                        'form' => $formSub->createView()
+                    ));
+                }
+                else {
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("userController_4");
+                    $this->response['errors'] = $this->ajax->errors($form);
+                }
             }
+            
+            return $this->ajax->response(Array(
+                'urlLocale' => $this->urlLocale,
+                'urlCurrentPageId' => $this->urlCurrentPageId,
+                'urlExtra' => $this->urlExtra,
+                'response' => $this->response
+            ));
         }
         
         return Array(
@@ -194,77 +225,7 @@ class UserController extends AbstractController {
     * )
     * @Template("@templateRoot/render/control_panel/user_profile.html.twig")
     */
-    public function profileAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->entityManager = $this->getDoctrine()->getManager();
-        
-        $this->response = Array();
-        
-        $this->helper = new Helper($this->container, $this->entityManager, $translator);
-        $this->query = $this->helper->getQuery();
-        $this->ajax = new Ajax($this->helper);
-        
-        $this->session = $this->helper->getSession();
-        
-        // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
-        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
-        
-        if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                $id = $request->get("id") == null ? 0 : $request->get("id");
-                
-                $userEntity = $this->entityManager->getRepository("App\Entity\User")->find($id);
-
-                if ($userEntity != null) {
-                    $this->session->set("userProfileId", $id);
-
-                    $form = $this->createForm(UserFormType::class, $userEntity, Array(
-                        'validation_groups' => Array('user_profile')
-                    ));
-                    $form->handleRequest($request);
-
-                    $this->response['values']['userRoleSelectHtml'] = $this->helper->createUserRoleSelectHtml("form_user_roleUserId_select", "userController_1", true);
-                    $this->response['values']['id'] = $this->session->get("userProfileId");
-                    $this->response['values']['attemptLogin'] = $userEntity->getAttemptLogin();
-                    $this->response['values']['credit'] = $userEntity->getCredit();
-
-                    $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/user_profile.html.twig", Array(
-                        'urlLocale' => $this->urlLocale,
-                        'urlCurrentPageId' => $this->urlCurrentPageId,
-                        'urlExtra' => $this->urlExtra,
-                        'response' => $this->response,
-                        'form' => $form->createView()
-                    ));
-                }
-                else
-                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("userController_4");
-            }
-        }
-        
-        return $this->ajax->response(Array(
-            'urlLocale' => $this->urlLocale,
-            'urlCurrentPageId' => $this->urlCurrentPageId,
-            'urlExtra' => $this->urlExtra,
-            'response' => $this->response
-        ));
-    }
-    
-    /**
-    * @Route(
-    *   name = "cp_user_profile_save",
-    *   path = "/cp_user_profile_save/{_locale}/{urlCurrentPageId}/{urlExtra}",
-    *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
-    *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
-    *	methods={"POST"}
-    * )
-    * @Template("@templateRoot/render/control_panel/user_profile.html.twig")
-    */
-    public function profileSaveAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator, UserPasswordEncoderInterface $passwordEncoder) {
+    public function profileAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator, UserPasswordEncoderInterface $passwordEncoder) {
         $this->entityManager = $this->getDoctrine()->getManager();
         
         $this->response = Array();
@@ -276,9 +237,7 @@ class UserController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -287,28 +246,28 @@ class UserController extends AbstractController {
         $userEntity = $this->entityManager->getRepository("App\Entity\User")->find($this->session->get("userProfileId"));
         
         $form = $this->createForm(UserFormType::class, $userEntity, Array(
-            'validation_groups' => Array('user_profile')
+            'validation_groups' => Array("user_profile")
         ));
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                $messagePassword = $this->helper->assignUserPassword("withoutOld", $userEntity, $form);
-
-                if ($messagePassword == "ok") {
-                    $usernameOld = $userEntity->getUsername();
-                    
-                    if (file_exists("{$this->helper->getPathPublic()}/files/user/$usernameOld") == true)
-                        rename("{$this->helper->getPathPublic()}/files/user/$usernameOld", "{$this->helper->getPathPublic()}/files/user/{$form->get("username")->getData()}");
+                $messagePassword = $this->helper->assignUserPassword($userEntity, $form);
+                
+                if ($messagePassword === true) {
+                    if (file_exists("{$this->helper->getPathPublic()}/files/user/{$userEntity->getUsername()}") == true)
+                        rename("{$this->helper->getPathPublic()}/files/user/{$userEntity->getUsername()}", "{$this->helper->getPathPublic()}/files/user/{$form->get("username")->getData()}");
                     
                     if ($form->get("active")->getData() == true)
-                        $userEntity->setHelpCode("");
+                        $userEntity->setHelpCode(null);
                     
-                    $this->updateRoles($userEntity, $form->get("roleUserId")->getData());
+                    $roleUserRow = $this->query->selectRoleUserDatabase($form->get("roleUserId")->getData());
+                    
+                    $userEntity->setRoles($roleUserRow);
                     
                     $this->entityManager->persist($userEntity);
                     $this->entityManager->flush();
-
+                    
                     $this->response['messages']['success'] = $this->helper->getTranslator()->trans("userController_5");
                 }
                 else
@@ -358,9 +317,7 @@ class UserController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -413,9 +370,7 @@ class UserController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -430,7 +385,7 @@ class UserController extends AbstractController {
 
                     $this->helper->removeDirRecursive("{$this->helper->getPathPublic()}/files/user/{$userEntity->getUsername()}", true);
 
-                    $userDatabase = $this->userDatabase("delete", $userEntity->getId());
+                    $userDatabase = $this->query->deleteUserDatabase("one", $userEntity->getId());
 
                     if ($userDatabase == true) {
                         $this->response['values']['id'] = $id;
@@ -445,7 +400,7 @@ class UserController extends AbstractController {
                         $this->helper->removeDirRecursive("{$this->helper->getPathPublic()}/files/user/{$userRows[$a]['username']}", true);
                     }
 
-                    $userDatabase = $this->userDatabase("deleteAll", null);
+                    $userDatabase = $this->query->deleteUserDatabase("all");
 
                     if ($userDatabase == true)
                         $this->response['messages']['success'] = $this->helper->getTranslator()->trans("userController_10");
@@ -471,13 +426,8 @@ class UserController extends AbstractController {
     }
     
     // Functions private    
-    private function createListHtml($userRows, $elements) {
+    private function createListHtml($elements) {
         $listHtml = "";
-        
-        $roleUserRow = Array();
-        
-        foreach ($userRows as $key => $value)
-            $roleUserRow[] = $this->query->selectRoleUserDatabase($value['role_user_id'], true);
         
         foreach ($elements as $key => $value) {
             $listHtml .= "<tr>
@@ -517,50 +467,5 @@ class UserController extends AbstractController {
         }
         
         return $listHtml;
-    }
-    
-    private function userDatabase($type, $id) {
-        if ($type == "delete") {
-            $query = $this->helper->getConnection()->prepare("DELETE FROM user
-                                                                WHERE id > :idExclude
-                                                                AND id = :id");
-            
-            $query->bindValue(":idExclude", 1);
-            $query->bindValue(":id", $id);
-
-            $query->execute();
-            
-            // payment
-            $query = $this->helper->getConnection()->prepare("DELETE FROM payment
-                                                                WHERE user_id > :idExclude
-                                                                AND user_id = :id");
-            
-            $query->bindValue(":idExclude", 1);
-            $query->bindValue(":id", $id);
-
-            return $query->execute();
-        }
-        else if ($type == "deleteAll") {
-            $query = $this->helper->getConnection()->prepare("DELETE FROM user
-                                                                WHERE id > :idExclude");
-
-            $query->bindValue(":idExclude", 1);
-
-            $query->execute();
-            
-            // payment
-            $query = $this->helper->getConnection()->prepare("DELETE FROM payment
-                                                                WHERE user_id > :idExclude");
-            
-            $query->bindValue(":idExclude", 1);
-
-            return $query->execute();
-        }
-    }
-    
-    private function updateRoles($user, $roleUserId) {
-        $roleIds = $this->query->selectRoleUserDatabase($roleUserId);
-        
-        $user->setRoles($roleIds);
     }
 }

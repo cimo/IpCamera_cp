@@ -86,8 +86,8 @@ class IpCamera {
     
     // Function private
     _selectDesktop = () => {
-        const tableAndPagination = new TableAndPagination();
-        tableAndPagination.setButtonsStatus = "show";
+        let tableAndPagination = new TableAndPagination();
+        tableAndPagination.setButtonStatus = "show";
         tableAndPagination.create(window.url.cpIpCameraSelect, "#cp_ipCamera_select_result_desktop", true);
         tableAndPagination.search();
         tableAndPagination.pagination();
@@ -111,6 +111,8 @@ class IpCamera {
                     ajax.reply(xhr, "");
                     
                     tableAndPagination.populate(xhr);
+                    
+                    $("#cp_ipCamera_select_result").html("");
                 },
                 null,
                 null
@@ -138,7 +140,9 @@ class IpCamera {
                         (xhr) => {
                             ajax.reply(xhr, "");
                             
-                            $.each($("#cp_ipCamera_select_result_desktop").find("table .id_column"), (key, value) => {
+                            let ids = $("#cp_ipCamera_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 $(value).parents("tr").remove();
                             });
                             
@@ -162,7 +166,7 @@ class IpCamera {
             
             ajax.send(
                 true,
-                window.url.cpIpCameraProfile,
+                window.url.cpIpCameraSelect,
                 "post",
                 {
                     'event': "result",
@@ -177,7 +181,9 @@ class IpCamera {
                     $("#cp_ipCamera_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -197,7 +203,7 @@ class IpCamera {
                 true,
                 $(event.currentTarget).prop("action"),
                 $(event.currentTarget).prop("method"),
-                helper.serializeJson($(event.currentTarget)),
+                $(event.currentTarget).serialize(),
                 "json",
                 false,
                 true,
@@ -206,7 +212,9 @@ class IpCamera {
                     $("#cp_ipCamera_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -218,9 +226,7 @@ class IpCamera {
         });
     }
     
-    _profile = (xhr, tag) => {
-        ajax.reply(xhr, tag);
-        
+    _profile = (xhr) => {
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
             this.selectSended = true;
             
@@ -258,12 +264,14 @@ class IpCamera {
             });
             
             $("#cp_ipCamera_delete").on("click", "", (event) => {
-               this._deleteElement(null);
+               this._deleteElement();
             });
         }
     }
     
     _deleteElement = (id) => {
+        let idValue = id === undefined ? null : id;
+        
         popupEasy.create(
             window.text.index_5,
             window.textIpCamera.label_1,
@@ -274,7 +282,7 @@ class IpCamera {
                     "post",
                     {
                         'event': "delete",
-                        'id': id,
+                        'id': idValue,
                         'token': window.session.token
                     },
                     "json",
@@ -286,7 +294,9 @@ class IpCamera {
                         ajax.reply(xhr, "");
                         
                         if (xhr.response.messages.success !== undefined) {
-                            $.each($("#cp_ipCamera_select_result_desktop").find("table .id_column"), (key, value) => {
+                            let ids = $("#cp_ipCamera_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 if (xhr.response.values.id === $.trim($(value).text()))
                                     $(value).parents("tr").remove();
                             });
@@ -306,8 +316,8 @@ class IpCamera {
     }
     
     _file = () => {
-        const tableAndPagination = new TableAndPagination();
-        tableAndPagination.setButtonsStatus = "show";
+        let tableAndPagination = new TableAndPagination();
+        tableAndPagination.setButtonStatus = "show";
         tableAndPagination.create(window.url.cpIpCameraFile, "#cp_ipCamera_file_result", true);
         tableAndPagination.search();
         tableAndPagination.pagination();
@@ -358,7 +368,9 @@ class IpCamera {
                         (xhr) => {
                             ajax.reply(xhr, "");
                             
-                            $.each($("#cp_ipCamera_file_result").find("table .id_column"), (key, value) => {
+                            let ids = $("#cp_ipCamera_file_result").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 $(value).parents("tr").remove();
                             });
                         },
@@ -398,7 +410,9 @@ class IpCamera {
                             ajax.reply(xhr, "");
                             
                             if (xhr.response.messages.success !== undefined) {
-                                $.each($("#cp_ipCamera_file_result").find("table .id_column"), (key, value) => {
+                                let ids = $("#cp_ipCamera_file_result").find("table .id_column");
+                                
+                                $.each(ids, (key, value) => {
                                     if (xhr.response.values.id === $.trim($(value).text()))
                                         $(value).parents("tr").remove();
                                 });

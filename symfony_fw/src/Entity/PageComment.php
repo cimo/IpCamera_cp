@@ -49,6 +49,10 @@ class PageComment {
     private $type = "";
     
     // Properties
+    public function setId($value) {
+        $this->id = $value;
+    }
+    
     public function setPageId($value) {
         $this->pageId = $value;
     }

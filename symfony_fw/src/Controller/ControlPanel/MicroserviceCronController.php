@@ -57,9 +57,7 @@ class MicroserviceCronController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -70,7 +68,7 @@ class MicroserviceCronController extends AbstractController {
         $this->session->set("microserviceCronProfileId", 0);
         
         $form = $this->createForm(MicroserviceCronFormType::class, $microserviceCronEntity, Array(
-            'validation_groups' => Array('microservice_cron_create')
+            'validation_groups' => Array("microservice_cron_create")
         ));
         $form->handleRequest($request);
         
@@ -79,7 +77,7 @@ class MicroserviceCronController extends AbstractController {
                 $this->entityManager->persist($microserviceCronEntity);
                 $this->entityManager->flush();
                 
-                $this->settingJob(false, $microserviceCronEntity);
+                $this->settingJob($microserviceCronEntity, false);
                 
                 $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceCronController_1");
             }
@@ -128,9 +126,7 @@ class MicroserviceCronController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -148,20 +144,54 @@ class MicroserviceCronController extends AbstractController {
         $this->response['values']['count'] = $tableAndPagination['count'];
         
         $form = $this->createForm(MicroserviceCronSelectFormType::class, null, Array(
-            'validation_groups' => Array('microservice_cron_select'),
-            'choicesId' => array_column($microserviceCronRows, "id", "name")
+            'validation_groups' => Array("microservice_cron_select"),
+            'id' => array_column($microserviceCronRows, "id", "name")
         ));
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                return $this->ajax->response(Array(
-                    'urlLocale' => $this->urlLocale,
-                    'urlCurrentPageId' => $this->urlCurrentPageId,
-                    'urlExtra' => $this->urlExtra,
-                    'response' => $this->response
-                ));
+            $id = 0;
+            
+            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true)
+                $id = $request->get("id");
+            else if ($form->isSubmitted() == true && $form->isValid() == true)
+                $id = $form->get("id")->getData();
+            
+            if ($request->get("event") != "refresh" && $request->get("event") != "tableAndPagination") {
+                $microserviceCronEntity = $this->entityManager->getRepository("App\Entity\MicroserviceCron")->find($id);
+
+                if ($microserviceCronEntity != null) {
+                    $this->session->set("microserviceCronProfileId", $microserviceCronEntity->getId());
+
+                    $formSub = $this->createForm(MicroserviceCronFormType::class, $microserviceCronEntity, Array(
+                        'validation_groups' => Array("microservice_cron_profile")
+                    ));
+                    $formSub->handleRequest($request);
+
+                    $this->response['values']['id'] = $this->session->get("microserviceCronProfileId");
+
+                    $this->response['values']['lastExecution'] = $microserviceCronEntity->getLastExecution();
+
+                    $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/microservice_cron_profile.html.twig", Array(
+                        'urlLocale' => $this->urlLocale,
+                        'urlCurrentPageId' => $this->urlCurrentPageId,
+                        'urlExtra' => $this->urlExtra,
+                        'response' => $this->response,
+                        'form' => $formSub->createView()
+                    ));
+                }
+                else {
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceCronController_3");
+                    $this->response['errors'] = $this->ajax->errors($form);
+                }
             }
+            
+            return $this->ajax->response(Array(
+                'urlLocale' => $this->urlLocale,
+                'urlCurrentPageId' => $this->urlCurrentPageId,
+                'urlExtra' => $this->urlExtra,
+                'response' => $this->response
+            ));
         }
         
         return Array(
@@ -195,78 +225,7 @@ class MicroserviceCronController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
-        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
-        
-        if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                $id = $request->get("id") == null ? 0 : $request->get("id");
-                
-                $microserviceCronEntity = $this->entityManager->getRepository("App\Entity\MicroserviceCron")->find($id);
-
-                if ($microserviceCronEntity != null) {
-                    $this->session->set("microserviceCronProfileId", $id);
-
-                    $form = $this->createForm(MicroserviceCronFormType::class, $microserviceCronEntity, Array(
-                        'validation_groups' => Array('microservice_cron_profile')
-                    ));
-                    $form->handleRequest($request);
-
-                    $this->response['values']['id'] = $this->session->get("microserviceCronProfileId");
-                    
-                    $this->response['values']['lastExecution'] = $microserviceCronEntity->getLastExecution();
-
-                    $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/microservice_cron_profile.html.twig", Array(
-                        'urlLocale' => $this->urlLocale,
-                        'urlCurrentPageId' => $this->urlCurrentPageId,
-                        'urlExtra' => $this->urlExtra,
-                        'response' => $this->response,
-                        'form' => $form->createView()
-                    ));
-                }
-                else
-                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceCronController_3");
-            }
-        }
-        
-        return $this->ajax->response(Array(
-            'urlLocale' => $this->urlLocale,
-            'urlCurrentPageId' => $this->urlCurrentPageId,
-            'urlExtra' => $this->urlExtra,
-            'response' => $this->response
-        ));
-    }
-    
-    /**
-    * @Route(
-    *   name = "cp_microservice_cron_profile_save",
-    *   path = "/cp_microservice_cron_profile_save/{_locale}/{urlCurrentPageId}/{urlExtra}",
-    *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
-    *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
-    *	methods={"POST"}
-    * )
-    * @Template("@templateRoot/render/control_panel/microservice_cron_profile.html.twig")
-    */
-    public function profileSaveAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->entityManager = $this->getDoctrine()->getManager();
-        
-        $this->response = Array();
-        
-        $this->helper = new Helper($this->container, $this->entityManager, $translator);
-        $this->query = $this->helper->getQuery();
-        $this->ajax = new Ajax($this->helper);
-        
-        $this->session = $this->helper->getSession();
-        
-        // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -275,7 +234,7 @@ class MicroserviceCronController extends AbstractController {
         $microserviceCronEntity = $this->entityManager->getRepository("App\Entity\MicroserviceCron")->find($this->session->get("microserviceCronProfileId"));
         
         $form = $this->createForm(MicroserviceCronFormType::class, $microserviceCronEntity, Array(
-            'validation_groups' => Array('microservice_cron_profile')
+            'validation_groups' => Array("microservice_cron_profile")
         ));
         $form->handleRequest($request);
         
@@ -284,7 +243,7 @@ class MicroserviceCronController extends AbstractController {
                 $this->entityManager->persist($microserviceCronEntity);
                 $this->entityManager->flush();
                 
-                $this->settingJob(false, $microserviceCronEntity);
+                $this->settingJob($microserviceCronEntity, false);
                 
                 $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceCronController_4");
             }
@@ -332,9 +291,7 @@ class MicroserviceCronController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -347,9 +304,9 @@ class MicroserviceCronController extends AbstractController {
                     
                     $microserviceCronEntity = $this->entityManager->getRepository("App\Entity\MicroserviceCron")->find($id);
                     
-                    $this->settingJob(true, $microserviceCronEntity);
+                    $this->settingJob($microserviceCronEntity, true);
                     
-                    $microserviceCronDatabase = $this->microserviceCronDatabase("delete", $id);
+                    $microserviceCronDatabase = $this->query->deleteMicroserviceCronDatabase("one", $id);
                     
                     if ($microserviceCronDatabase == true) {
                         $this->response['values']['id'] = $id;
@@ -358,7 +315,7 @@ class MicroserviceCronController extends AbstractController {
                     }
                 }
                 else if ($request->get("event") == "deleteAll") {
-                    $microserviceCronDatabase = $this->microserviceCronDatabase("deleteAll");
+                    $microserviceCronDatabase = $this->query->deleteMicroserviceCronDatabase("all");
 
                     if ($microserviceCronDatabase == true)
                         $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceCronController_7");
@@ -424,40 +381,24 @@ class MicroserviceCronController extends AbstractController {
         return $listHtml;
     }
     
-    private function microserviceCronDatabase($type, $id = null) {
-        if ($type == "delete") {
-            $query = $this->helper->getConnection()->prepare("DELETE FROM microservice_cron
-                                                                WHERE id = :id");
-            
-            $query->bindValue(":id", $id);
-            
-            return $query->execute();
-        }
-        else if ($type == "deleteAll") {
-            $query = $this->helper->getConnection()->prepare("DELETE FROM microservice_cron");
-            
-            return $query->execute();
-        }
-    }
-    
-    private function settingJob($delete, $microserviceCronEntity) {
-        $path = "{$this->helper->getPathSrc()}/files/microservice/cron";
+    private function settingJob($microserviceCronEntity, $remove) {
+        $pathCron = "{$this->helper->getPathSrc()}/files/microservice/cron";
         
         $code = $microserviceCronEntity->getCode() != "" ? " && {$microserviceCronEntity->getCode()}" : "";
         
-        $command = "{$microserviceCronEntity->getTime()} (echo $(date){$code} && echo \"\" && php {$path}/system/CronJob.php {$microserviceCronEntity->getId()}) >> {$path}/{$microserviceCronEntity->getName()}.log";
+        $command = "{$microserviceCronEntity->getTime()} (echo $(date){$code} && echo \"\" && php {$this->helper->getPathRoot()}/bin/console app:run-cron {$microserviceCronEntity->getId()}) >> {$pathCron}/{$microserviceCronEntity->getName()}.log";
         
         shell_exec("crontab -r");
         
-        $this->helper->fileSearchInside("{$path}/system/cron_job.txt", "{$microserviceCronEntity->getName()}.log", " ");
+        $this->helper->fileSearchInside("{$pathCron}/job.txt", "{$microserviceCronEntity->getName()}.log", " ");
         
-        if ($delete == false) {
+        if ($remove == false) {
             if ($microserviceCronEntity->getActive() == true)
-                shell_exec("grep -qxF '{$command}' {$path}/system/cron_job.txt || echo '{$command}' >> {$path}/system/cron_job.txt");
+                shell_exec("grep -qxF '{$command}' {$pathCron}/job.txt || echo '{$command}' >> {$pathCron}/job.txt");
         }
         else
-            unlink("{$path}/{$microserviceCronEntity->getName()}.log");
+            unlink("{$pathCron}/{$microserviceCronEntity->getName()}.log");
         
-        shell_exec("crontab {$path}/system/cron_job.txt");
+        shell_exec("crontab {$pathCron}/job.txt");
     }
 }

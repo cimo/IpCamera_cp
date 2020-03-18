@@ -54,9 +54,7 @@ class SettingSlackIwController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -75,7 +73,7 @@ class SettingSlackIwController extends AbstractController {
         }
         
         $form = $this->createForm(SettingSlackIwFormType::class, $settingSlackIwEntity, Array(
-            'validation_groups' => Array('setting_slack_iw')
+            'validation_groups' => Array("setting_slack_iw")
         ));
         $form->handleRequest($request);
         
@@ -157,9 +155,7 @@ class SettingSlackIwController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -226,9 +222,7 @@ class SettingSlackIwController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -263,8 +257,8 @@ class SettingSlackIwController extends AbstractController {
     
     // Functions private
     private function settingSlackIwList() {
-        $rows = $this->query->selectAllSettingSlackIwDatabase();
+        $settingSlackIwRows = $this->query->selectAllSettingSlackIwDatabase();
         
-        $this->response['values']['wordTagListHtml'] = $this->helper->createWordTagListHtml($rows);
+        $this->response['values']['wordTagListHtml'] = $this->helper->createWordTagListHtml($settingSlackIwRows);
     }
 }

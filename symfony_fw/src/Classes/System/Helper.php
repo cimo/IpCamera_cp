@@ -6,6 +6,7 @@ use RecursiveIteratorIterator;
 
 use App\Config;
 use App\Classes\System\Query;
+use App\Classes\System\QueryCustom;
 
 class Helper {
     // Vars
@@ -23,8 +24,11 @@ class Helper {
     
     private $config;
     private $query;
+    private $queryCustom;
     
     private $settingRow;
+    
+    private $languageFormat;
     
     private $protocol;
     
@@ -64,14 +68,16 @@ class Helper {
         return $this->passwordEncoder;
     }
     
-    // ---
-    
     public function getSessionMaxIdleTime() {
         return $this->sessionMaxIdleTime;
     }
     
     public function getQuery() {
         return $this->query;
+    }
+    
+    public function getQueryCustom() {
+        return $this->queryCustom;
     }
     
     public function getSettingRow() {
@@ -129,18 +135,25 @@ class Helper {
         $this->sessionMaxIdleTime = 3600;
         
         $this->config = new Config();
-        $this->query = new Query($this->connection);
+        $this->query = new Query($this);
+        $this->queryCustom = new QueryCustom($this);
         
         $this->settingRow = $this->query->selectSettingDatabase();
         
+        $languageRow = $this->query->selectLanguageDatabase($this->settingRow['language']);
+        $this->languageFormat = $languageRow['date'];
+        
+        $serverRoot = isset($_SERVER['DOCUMENT_ROOT']) == true ? $_SERVER['DOCUMENT_ROOT'] : $this->settingRow['server_root'];
+        $serverHost = isset($_SERVER['HTTP_HOST']) == true ? $_SERVER['HTTP_HOST'] : $this->settingRow['server_host'];
+        
         $this->protocol = $this->config->getProtocol();
         
-        $this->pathRoot = $_SERVER['DOCUMENT_ROOT'] . $this->config->getPathRoot();
+        $this->pathRoot = $serverRoot . $this->config->getPathRoot();
         $this->pathSrc = "{$this->pathRoot}/src";
         $this->pathPublic = "{$this->pathRoot}/public";
         $this->pathLock = "{$this->pathRoot}/src/files/lock";
         
-        $this->urlRoot = $this->config->getProtocol() . $_SERVER['HTTP_HOST'] . $this->config->getUrlRoot();
+        $this->urlRoot = $this->config->getProtocol() . $serverHost . $this->config->getUrlRoot();
         
         $this->supportSymlink = $this->config->getSupportSymlink();
         
@@ -151,14 +164,14 @@ class Helper {
     }
     
     public function createUserSelectHtml($selectId, $label, $isRequired = false) {
-        $rows = $this->query->selectAllUserDatabase();
+        $userRows = $this->query->selectAllUserDatabase();
         
         $required = $isRequired == true ? "required=\"required\"" : "";
         
         $html = "<div id=\"$selectId\" class=\"mdc-select\" $required>
             <select class=\"mdc-select__native-control\">
                 <option value=\"\"></option>";
-                foreach ($rows as $key => $value) {
+                foreach ($userRows as $key => $value) {
                     $html .= "<option value=\"{$value['id']}\">{$value['username']}</option>";
                 }
             $html .= "</select>
@@ -170,14 +183,14 @@ class Helper {
     }
     
     public function createUserRoleSelectHtml($selectId, $label, $isRequired = false) {
-        $rows = $this->query->selectAllRoleUserDatabase();
+        $roleUserRows = $this->query->selectAllRoleUserDatabase();
         
         $required = $isRequired == true ? "required=\"required\"" : "";
         
         $html = "<div id=\"$selectId\" class=\"mdc-select\" $required>
             <select class=\"mdc-select__native-control\">
                 <option value=\"\"></option>";
-                foreach ($rows as $key => $value) {
+                foreach ($roleUserRows as $key => $value) {
                     $html .= "<option value=\"{$value['id']}\">{$value['level']}</option>";
                 }
             $html .= "</select>
@@ -188,10 +201,10 @@ class Helper {
         return $html;
     }
     
-    public function createPageSelectHtml($urlLocale, $selectId, $label, $draft = false) {
-        $rows = $this->query->selectAllPageDatabase($urlLocale, null, $draft);
+    public function createPageSelectHtml($language, $selectId, $label, $draft = false) {
+        $pageRows = $this->query->selectAllPageDatabase($language, null, $draft);
         
-        $pageList = $this->createPageList($rows, true);
+        $pageList = $this->createPageList($pageRows, true);
         
         $html = "<div id=\"$selectId\" class=\"mdc-select\">
             <select class=\"mdc-select__native-control\">
@@ -208,16 +221,16 @@ class Helper {
     }
     
     public function createLanguageSelectOptionHtml($code) {
-        $row = $this->query->selectLanguageDatabase($code);
-        $rows = $this->query->selectAllLanguageDatabase();
+        $languageRow = $this->query->selectLanguageDatabase($code);
+        $languageRows = $this->query->selectAllLanguageDatabase();
         
-        $key = array_search($row, $rows);
-        unset($rows[$key]);
-        array_unshift($rows, $row);
+        $key = array_search($languageRow, $languageRows);
+        unset($languageRows[$key]);
+        array_unshift($languageRows, $languageRow);
         
         $html = "";
         
-        foreach ($rows as $key => $value) {
+        foreach ($languageRows as $key => $value) {
             $html .= "<option value=\"{$value['code']}\">{$value['code']}</option>";
         }
         
@@ -237,12 +250,13 @@ class Helper {
             
             if ($this->session->get("pageProfileId") == 0) {
                 $pageRows = $this->query->selectAllPageDatabase($this->session->get("languageTextCode"), null, $draft);
+                
                 $id = count($pageRows) + 1;
                 
                 $html .= "<li class=\"ui-state-default\">
                     <div class=\"mdc-chip\">
                         <i class=\"material-icons mdc-chip__icon mdc-chip__icon--leading\">drag_handle</i>
-                        <div class=\"mdc-chip__text sort_elemet_data\" data-id=\"$id\">[$id] " . $this->translator->trans("classHelper_4") . "</div>
+                        <div class=\"mdc-chip__text sort_elemet_data\" data-id=\"$id\">[$id] " . $this->translator->trans("classHelper_3") . "</div>
                     </div>
                 </li>";
             }
@@ -264,12 +278,13 @@ class Helper {
             
             if ($this->session->get("moduleProfileId") == 0) {
                 $moduleRows = $this->query->selectAllModuleDatabase();
+                
                 $id = count($moduleRows) + 1;
                 
                 $html .= "<li class=\"ui-state-default\">
                     <div class=\"mdc-chip\">
                         <i class=\"material-icons mdc-chip__icon mdc-chip__icon--leading\">drag_handle</i>
-                        <div class=\"mdc-chip__text sort_elemet_data\" data-id=\"$id\">[$id] " . $this->translator->trans("classHelper_5") . "</div>
+                        <div class=\"mdc-chip__text sort_elemet_data\" data-id=\"$id\">[$id] " . $this->translator->trans("classHelper_4") . "</div>
                     </div>
                 </li>";
             }
@@ -327,40 +342,35 @@ class Helper {
         return $pageListHierarchy;
     }
     
-    public function assignUserPassword($type, $user, $form) {
-        $row = $this->query->selectUserDatabase($user->getId());
+    public function assignUserPassword($user, $form) {
+        $userRow = $this->query->selectUserDatabase($user->getId());
         
-        if ($type == "withOld") {
-            if (password_verify($form->get("old")->getData(), $row['password']) == false)
+        if ($form->has("passwordOld") == true) {
+            if ($this->passwordEncoder->isPasswordValid($user, $form->get("passwordOld")->getData()) == false)
                 return $this->translator->trans("classHelper_1");
-            else if ($form->get("new")->getData() != $form->get("newConfirm")->getData())
+            else if ($form->get("password")->getData() != $form->get("passwordConfirm")->getData())
                 return $this->translator->trans("classHelper_2");
             
-            $user->setPassword($this->createPasswordEncoder($type, $user, $form));
+            $user->setPassword($this->createPasswordEncoder($user, $form->get("password")->getData()));
         }
-        else if ($type == "withoutOld") {
-            if ($form->get("password")->getData() != "" || $form->get("passwordConfirm")->getData() != "") {
+        else {
+            if ($form->get("password")->getData() != "") {
                 if ($form->get("password")->getData() != $form->get("passwordConfirm")->getData())
-                    return $this->translator->trans("classHelper_3");
+                    return $this->translator->trans("classHelper_2");
                 
-                $user->setPassword($this->createPasswordEncoder($type, $user, $form));
+                $user->setPassword($this->createPasswordEncoder($user, $form->get("password")->getData()));
             }
             else
-                $user->setPassword($row['password']);
+                $user->setPassword($userRow['password']);
         }
         
-        return "ok";
+        return true;
     }
     
     public function assignUserParameter($user) {
-        $query = $this->connection->prepare("SELECT id FROM user
-                                                ORDER BY id ASC LIMIT 1");
+        $firstRow = $this->query->selectFirstRowDatabase("user");
         
-        $query->execute();
-        
-        $rowsCount = $query->rowCount();
-        
-        if ($rowsCount == 0) {
+        if (count($firstRow) == 0) {
             $user->setRoleUserId("1,2,");
             $user->setRoles(Array("ROLE_USER", "ROLE_ADMIN"));
             $user->setCredit(0);
@@ -374,92 +384,56 @@ class Helper {
         }
     }
     
-    public function checkAttemptLogin($type, $userValue) {
-        $row = $this->query->selectUserDatabase($userValue);
+    public function checkAttemptLogin($type, $username) {
+        $userRow = $this->query->selectUserDatabase($username);
         
-        $dateTimeCurrentLogin = new \DateTime($row['date_current_login']);
+        $dateTimeCurrentLogin = new \DateTime($userRow['date_current_login']);
         $dateTimeCurrent = new \DateTime();
         
-        $interval = intval($dateTimeCurrentLogin->diff($dateTimeCurrent)->format("%i"));
-        $total = $this->settingRow['login_attempt_time'] - $interval;
+        $difference = $this->settingRow['login_attempt_time'] - intval($dateTimeCurrentLogin->diff($dateTimeCurrent)->format("%i"));
         
-        if ($total < 0)
-            $total = 0;
+        if ($difference < 0)
+            $difference = 0;
         
-        $dateCurrent = date("Y-m-d H:i:s");
-        $dateLastLogin = strpos($row['date_last_login'], "0000") !== false ? $dateCurrent : $row['date_current_login'];
+        $dateCurrent = $this->dateFormat();
+        $dateLast = strpos($userRow['date_last_login'], "0000") !== false ? $dateCurrent : $userRow['date_current_login'];
         
-        $result = Array("", "");
-        
-        if (isset($row['id']) == true && $this->settingRow['login_attempt_time'] > 0) {
-            $count = $row['attempt_login'] + 1;
-            
-            $query = $this->connection->prepare("UPDATE user
-                                                    SET date_current_login = :dateCurrentLogin,
-                                                        date_last_login = :dateLastLogin,
-                                                        ip = :ip,
-                                                        attempt_login = :attemptLogin
-                                                    WHERE id = :id");
-            
-            if ($type == "success") {
-                if ($count > $this->settingRow['login_attempt_count'] && $total > 0) {
-                    $result[0] = "lock";
-                    $result[1] = $total;
-                    
-                    return Array(false, $result[0], $result[1]);
-                }
-                else {
-                    $query->bindValue(":dateCurrentLogin", $dateCurrent);
-                    $query->bindValue(":dateLastLogin", $dateLastLogin);
-                    $query->bindValue(":ip", $this->clientIp());
-                    $query->bindValue(":attemptLogin", 0);
-                    $query->bindValue(":id", $row['id']);
-
-                    $query->execute();
-                }
-            }
-            else if ($type == "failure") {
-                if ($count > $this->settingRow['login_attempt_count'] && $total > 0) {
-                    $result[0] = "lock";
-                    $result[1] = $total;
-                }
-                else {
-                    if ($count > $this->settingRow['login_attempt_count'])
-                        $count = 1;
-                    
-                    $query->bindValue(":dateCurrentLogin", $dateCurrent);
-                    $query->bindValue(":dateLastLogin", $row['date_last_login']);
-                    $query->bindValue(":ip", $this->clientIp());
-                    $query->bindValue(":attemptLogin", $count);
-                    $query->bindValue(":id", $row['id']);
-                    
-                    $query->execute();
-                    
-                    $result[0] = "try";
-                    $result[1] = $count;
-                }
+        if (isset($userRow['id']) == true) {
+            if ($this->settingRow['login_attempt_time'] > 0) {
+                $count = $userRow['attempt_login'] + 1;
                 
-                return Array(false, $result[0], $result[1]);
+                if ($difference > 0 && $count > $this->settingRow['login_attempt_count'])
+                    return Array(false, "{$this->translator->trans("classHelper_7a")} {$this->settingRow['login_attempt_time']} {$this->translator->trans("classHelper_7b")}");
+                
+                if ($type == "success")
+                    $this->query->updateUserDatabase("success", 0, $userRow['id'], $this->clientIp(), $dateCurrent, $dateLast, 0);
+                else if ($type == "failure") {
+                    $this->query->updateUserDatabase("failure", 0, $userRow['id'], $this->clientIp(), $dateCurrent, $dateLast, $count);
+                    
+                    return Array(false, "{$this->translator->trans("classHelper_8")} {$count} / {$this->settingRow['login_attempt_count']}");
+                }
             }
         }
+        else
+            return Array(false, $this->translator->trans("classHelper_9"));
         
-        return Array(true, $result[0], $result[1]);
+        return Array(true, "");
     }
     
     public function checkUserActive($username) {
-        $row = $this->query->selectUserDatabase($username);
+        $userRow = $this->query->selectUserDatabase($username);
         
-        if ($row['active'] == false)
-            return false;
-        else
-            return true;
+        if ($userRow['active'] == false)
+            return Array(false, $this->translator->trans("classHelper_10"));
+        
+        return Array(true, "");
     }
     
     public function checkUserRole($roleName, $user) {
         if ($user != null) {
-            $row = $this->query->selectRoleUserDatabase($user->getRoleUserId());
+            $roleUserRow = $this->query->selectRoleUserDatabase($user->getRoleUserId());
 
-            if ($this->arrayFindValue($roleName, $row) == true)
+            if ($this->arrayFindValue($roleName, $roleUserRow) == true)
                 return true;
         }
         
@@ -467,16 +441,17 @@ class Helper {
     }
     
     public function sendMessageToSlackRoom($name, $text) {
-        $row = $this->query->selectSettingSlackIwDatabase($name);
+        $settingSlackIwRow = $this->query->selectSettingSlackIwDatabase($name);
         
-        if ($row != false) {
+        if ($settingSlackIwRow != false) {
             $postFields = Array();
-            $postFields['channel'] = $row['channel'];
+            
+            $postFields['channel'] = $settingSlackIwRow['channel'];
             $postFields['text'] = $text;
 
             $curl = curl_init();
 
-            curl_setopt($curl, CURLOPT_URL, $row['hook']);
+            curl_setopt($curl, CURLOPT_URL, $settingSlackIwRow['hook']);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -495,11 +470,12 @@ class Helper {
     }
     
     public function sendMessageToLineChat($name, $text) {
-        $row = $this->query->selectSettingLinePushDatabase($name);
+        $settingLinePushRow = $this->query->selectSettingLinePushDatabase($name);
         
-        if ($row != false) {
+        if ($settingLinePushRow != false) {
             $postFields = Array();
-            $postFields['to'] = $row['user_id'];
+            
+            $postFields['to'] = $settingLinePushRow['user_id'];
             $postFields['messages'] = Array(Array('type' => "text", 'text' => $text));
             
             $curl = curl_init();
@@ -512,7 +488,7 @@ class Helper {
             curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postFields));
             curl_setopt($curl, CURLOPT_HTTPHEADER, Array(
                 "Content-Type: application/json",
-                "Authorization: Bearer {$row['access_token']}"
+                "Authorization: Bearer {$settingLinePushRow['access_token']}"
             ));
             
             $curlResponse = curl_exec($curl);
@@ -524,14 +500,14 @@ class Helper {
     }
     
     public function sendMessageToLineChatMultiple($name, $text) {
-        $pushRow = $this->query->selectSettingLinePushDatabase($name);
+        $settingLinePushRow = $this->query->selectSettingLinePushDatabase($name);
         
-        if ($pushRow != false) {
-            $pushUserRows = $this->query->selectAllSettingLinePushUserDatabase("allPushName", $name);
+        if ($settingLinePushRow != false) {
+            $to[] = $settingLinePushRow['user_id'];
             
-            $to[] = $pushRow['user_id'];
+            $settingLinePushUserRows = $this->query->selectAllSettingLinePushUserDatabase("allPushName", $name);
             
-            foreach ($pushUserRows as $key => $value) {
+            foreach ($settingLinePushUserRows as $key => $value) {
                 if ($value['push_name'] == $name && $value['active'] == 1)
                     $to[] = $value['user_id'];
             }
@@ -553,7 +529,7 @@ class Helper {
                 curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($postFields));
                 curl_setopt($curl, CURLOPT_HTTPHEADER, Array(
                     "Content-Type: application/json",
-                    "Authorization: Bearer {$pushRow['access_token']}"
+                    "Authorization: Bearer {$settingLinePushRow['access_token']}"
                 ));
 
                 $curlResponse = curl_exec($curl);
@@ -564,8 +540,6 @@ class Helper {
             }
         }
     }
-    
-    // ---
     
     public function xssProtection() {
         $nonceCsp = base64_encode(random_bytes(20));
@@ -579,16 +553,19 @@ class Helper {
         $currentCookieParams = session_get_cookie_params();
         
         if ($value == null)
-            $value = isset($_COOKIE[$name]) == true ? $_COOKIE[$name] : $this->session->getId();
+            $value = isset($_COOKIE[$name]) == true ? $_COOKIE[$name] : 0;
+        
+        if ($expire == 0)
+            $expire = time() + (10 * 365 * 24 * 60 * 60);
+        else if ($expire == -1)
+            $expire = time() - 3600;
         
         setcookie($name, $value, $expire, $currentCookieParams['path'], $currentCookieParams['domain'], $secure, $httpOnly);
     }
     
     public function removeCookie($name) {
         if (isset($_COOKIE[$name]) == true) {
-            $currentCookieParams = session_get_cookie_params();
-            
-            setcookie($name, null, time() - 3600, $currentCookieParams['path'], $currentCookieParams['domain'], false, false);
+            $this->createCookie($name, null, -1, false, false);
             
             unset($_COOKIE[$name]);
         }
@@ -655,28 +632,19 @@ class Helper {
         return $ip;
     }
     
-    public function dateFormat($date) {
-        $newData = Array("", "");
+    public function dateFormat($date = null, $time = true) {
+        $newTime = $time == true ? "H:i:s" : "";
+        $newDate = "{$this->languageFormat} {$newTime}";
         
-        $dateExplode = explode(" ", $date);
+        if ($date == null)
+            $date = date($newDate);
         
-        if (count($dateExplode) == 0)
-            $dateExplode = $newData;
-        else {
-            $sessionLanguageDate = $this->session->get("languageDate");
-            
-            $languageDate = $sessionLanguageDate == null ? "Y-m-d" : $sessionLanguageDate;
-            
-            if (strpos($dateExplode[0], "0000") === false)
-                $dateExplode[0] = date($languageDate, strtotime($dateExplode[0]));
-        }
-        
-        return $dateExplode;
+        return date($newDate, strtotime($date));
     }
     
     public function timeFormat($type, $time) {
         if ($time == 0)
-            return "0s";
+            return "0";
         
         $result = Array();
         
@@ -862,62 +830,45 @@ class Helper {
         return $result;
     }
     
-    public function checkLanguage($request, $router) {
-        $url = false;
-        
-        if ($this->session->get("languageTextCode") == null)
-            $this->session->set("languageTextCode", $this->settingRow['language']);
+    public function checkLanguage($request) {
+        $this->session->set("languageTextCode", $this->settingRow['language']);
         
         if ($request->get("languageTextCode") != null)
             $this->session->set("languageTextCode", $request->get("languageTextCode"));
-        else if ($request->get("languageTextCode") == null && $request->get("_locale") != null)
+        else if ($request->get("_locale") != null)
             $this->session->set("languageTextCode", $request->get("_locale"));
         
         $request->setLocale($this->session->get("languageTextCode"));
         $request->setDefaultLocale($this->session->get("languageTextCode"));
         
-        $languageRow = $this->query->selectLanguageDatabase($request->getLocale()); 
-        
-        if ($languageRow['active'] == false) {
-            $request->setLocale($this->settingRow['language']);
-            $request->setDefaultLocale($this->settingRow['language']);
-
-            $url = $router->generate(
-                "root_render",
-                Array(
-                    '_locale' => $request->getLocale(),
-                    'urlCurrentPageId' => 2,
-                    'urlExtra' => ""
-                )
-            );
-        }
-        
-        return Array(
-            $request,
-            $url
-        );
+        return $request;
     }
     
     public function checkSessionOverTime($request, $router) {
         $currentUser = $this->session->get("currentUser");
         
         if ($currentUser != null) {
+            $this->session->set("checkSessionOverTimeReload", false);
+            
             $timeElapsed = time() - intval($this->session->get("userOvertime"));
             $userOverRole = false;
             
-            if ($this->session->get("userOvertime") == null)
+            if ($this->session->remove("userOvertime") == null)
                 $timeElapsed = 0;
             
             $userRow = $this->query->selectUserDatabase($currentUser['id']);
             
             if ($currentUser['roles'] != $userRow['roles']) {
                 $userOverRole = true;
-
-                $this->session->set("userInform", $this->translator->trans("classHelper_6"));
+                
+                $this->session->set("userInform", $this->translator->trans("classHelper_5"));
             }
             
             if (($timeElapsed >= $this->sessionMaxIdleTime && $request->cookies->has("{$this->session->getName()}_remember_me") == false) || $userOverRole == true) {
-                $this->session->set("userInform", $this->translator->trans("classHelper_7"));
+                $this->createCookie("{$this->session->getName()}_sessionOver", 1, 0, true, false);
+                
+                if ($userOverRole == false)
+                    $this->session->set("userInform", $this->translator->trans("classHelper_6"));
                 
                 if ($request->isXmlHttpRequest() == true) {
                     echo json_encode(Array(
@@ -925,32 +876,35 @@ class Helper {
                         'sessionOver' => true
                     ));
                     
+                    $this->removeCookie("{$this->session->getName()}_login");
+                    
                     exit;
                 }
-                else {
-                    $this->session->remove("userOvertime");
-                    
+                else
                     return $this->forceLogout($router);
-                }
             }
             
             $this->session->set("userOvertime", time());
         }
         else {
-            if ($request->cookies->has("{$this->session->getName()}_login") == true) {
+            if ($request->cookies->has("{$this->session->getName()}_sessionOver") == true) {
+                $this->removeCookie("{$this->session->getName()}_sessionOver");
+                
                 $this->session->set("userInform", $this->translator->trans("classHelper_6"));
                 
-                $this->removeCookie("{$this->session->getName()}_login");
-            }
-            else {
-                if ($this->session->get("checkSessionOverTimeCount") != null) {
-                    $this->session->set("userInform", "");
+                if ($request->isXmlHttpRequest() == true) {
+                    echo json_encode(Array(
+                        'userInform' => $this->session->get("userInform"),
+                        'sessionOver' => true
+                    ));
                     
-                    $this->session->remove("checkSessionOverTimeCount");
+                    $this->removeCookie("{$this->session->getName()}_login");
+                    
+                    exit;
                 }
-                else if ($this->session->get("checkSessionOverTimeCount") == null && $this->session->get("userInform") != "")
-                    $this->session->set("checkSessionOverTimeCount", true);
             }
+            else
+                $this->session->set("userInform", "");
         }
         
         return false;
@@ -983,7 +937,7 @@ class Helper {
         
         curl_close($curl);
         
-        if ($curlResponse == false)
+        if ($curlResponse === false)
             return false;
         
         return true;
@@ -1089,7 +1043,7 @@ class Helper {
     public function writeLog($path, $name, $message, $elements = null) {
         $logPath = "{$path}/" . str_replace(" ", "_", $name) . ".log";
         
-        file_put_contents($logPath, date("Y-m-d H:i:s") . " - IP[{$_SERVER['REMOTE_ADDR']}]: {$message}", FILE_APPEND);
+        file_put_contents($logPath, "{$this->dateFormat()} - IP[{$_SERVER['REMOTE_ADDR']}]: {$message}", FILE_APPEND);
         
         if ($elements != null && (is_array($elements) == true || is_object($elements) == true))
             file_put_contents($logPath, print_r($elements, true), FILE_APPEND);
@@ -1140,32 +1094,22 @@ class Helper {
             return $value;
     }
     
-    public function createProcessLock($path, $total = 0) {
-        file_put_contents($path, "");
+    public function createProcessLock($name) {
+        $path = "{$this->pathLock}/{$name}_lock";
         
-        $this->session->set("processLockPath", $path);
-        
-        if ($total > 0)
-            $this->session->set("processLockTotal", $total);
-    }
-    
-    public function populateProcessLock($content) {
-        $path = $this->session->get("processLockPath");
-        $total = $this->session->get("processLockTotal");
-        
-        if ($path != null) {
-            if ($total == null)
-                file_put_contents($path, $content);
-            else
-                file_put_contents($path, "$total|$content");
+        if (file_exists($path) == false) {
+            $this->session->set("processLockPath", $path);
+            
+            file_put_contents($this->session->get("processLockPath"), "");
+            
+            return true;
         }
+        
+        return false;
     }
     
-    public function responseProcessLock($response, $name = "") {
-        if ($name != "")
-            $response['processLock']['name'] = "{$name}_lock";
-        else
-            $response['messages']['error'] = $this->translator->trans("process_lock_4");
+    public function responseProcessLock($response) {
+        $response['messages']['error'] = $this->translator->trans("process_lock_1");
         
         return $response;
     }
@@ -1173,20 +1117,15 @@ class Helper {
     public function removeProcessLock() {
         $path = $this->session->get("processLockPath");
         
-        if (file_exists($path) == true) {
+        if (file_exists($path) == true)
             unlink($path);
-            
-            $this->session->remove("processLockPath");
-            $this->session->remove("processLockTotal");
-        }
+        
+        $this->session->remove("processLockPath");
     }
     
     // Functions private
-    private function createPasswordEncoder($type, $user, $form) {
-        if ($type == "withOld")
-            return $this->passwordEncoder->encodePassword($user, $form->get("new")->getData());
-        else if ($type == "withoutOld")
-            return $this->passwordEncoder->encodePassword($user, $form->get("password")->getData());
+    private function createPasswordEncoder($user, $password) {
+        return $this->passwordEncoder->encodePassword($user, $password);
     }
     
     private function createPageListHierarchy($pageRows, $pagination) {
@@ -1246,8 +1185,6 @@ class Helper {
         return $elements;
     }
     
-    // ---
-    
     private function arrayColumnFix() {
         if (function_exists("array_column") == false) {
             function array_column($input = null, $columnKey = null, $indexKey = null) {
@@ -1278,38 +1215,38 @@ class Helper {
                     return false;
                 }
                 
-                $paramsInput = $params[0];
-                $paramsColumnKey = ($params[1] !== null) ? (string) $params[1] : null;
-                $paramsIndexKey = null;
+                $inputs = $params[0];
+                $columnKeys = ($params[1] !== null) ? (string) $params[1] : null;
+                $indexKeys = null;
                 
                 if (isset($params[2])) {
                     if (is_float($params[2]) || is_int($params[2]))
-                        $paramsIndexKey = (int)$params[2];
+                        $indexKeys = (int)$params[2];
                     else
-                        $paramsIndexKey = (string)$params[2];
+                        $indexKeys = (string)$params[2];
                 }
                 
                 $resultArray = array();
                 
-                foreach ($paramsInput as $row) {
+                foreach ($inputs as $key => $value) {
                     $key = null;
                     $value = null;
                     
                     $keySet = false;
                     $valueSet = false;
                     
-                    if ($paramsIndexKey !== null && array_key_exists($paramsIndexKey, $row)) {
+                    if ($indexKeys !== null && array_key_exists($indexKeys, $value)) {
                         $keySet = true;
-                        $key = (string)$row[$paramsIndexKey];
+                        $key = (string) $value[$indexKeys];
                     }
                     
-                    if ($paramsColumnKey == null) {
+                    if ($columnKeys == null) {
                         $valueSet = true;
-                        $value = $row;
+                        $value = $value;
                     }
-                    else if (is_array($row) && array_key_exists($paramsColumnKey, $row)) {
+                    else if (is_array($value) && array_key_exists($columnKeys, $value)) {
                         $valueSet = true;
-                        $value = $row[$paramsColumnKey];
+                        $value = $value[$columnKeys];
                     }
                     
                     if ($valueSet) {

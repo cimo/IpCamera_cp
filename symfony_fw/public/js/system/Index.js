@@ -6,7 +6,6 @@ let helper = null;
 let ajax = null;
 let authentication = null;
 let captcha = null;
-let chaato = null;
 let flashBag = null;
 let language = null;
 let loader = null;
@@ -14,7 +13,6 @@ let materialDesign = null;
 let menuUser = null;
 let pageComment = null;
 let popupEasy = null;
-let processLock = null;
 let recoverPassword = null;
 let registration = null;
 let search = null;
@@ -28,7 +26,6 @@ $(document).ready(() => {
     ajax = new Ajax();
     authentication = new Authentication();
     captcha = new Captcha();
-    chaato = new Chaato();
     flashBag = new FlashBag();
     language = new Language();
     loader = new Loader();
@@ -36,12 +33,11 @@ $(document).ready(() => {
     menuUser = new MenuUser();
     pageComment = new PageComment();
     popupEasy = new PopupEasy();
-    processLock = new ProcessLock();
     recoverPassword = new RecoverPassword();
     registration = new Registration();
     search = new Search();
     uploadChunk = new UploadChunk();
-    widgetDatePicker = new WidgetDatePicker();
+    widgetDatePicker = new WidgetDatePicker(window.setting.language);
     widgetSearch = new WidgetSearch();
     wysiwyg = new Wysiwyg();
     
@@ -72,26 +68,28 @@ $(document).ready(() => {
     materialDesign.tabBar();
     materialDesign.fix();
     
+    authentication.action();
+    
+    captcha.action();
+    
     flashBag.setElement = materialDesign.getSnackbarMdc;
     flashBag.sessionActivity();
     
-    authentication.action();
-    captcha.action();
     language.action();
+    
     menuUser.action();
+    
     pageComment.action();
+    
+    popupEasy.setElement = materialDesign.getDialogMdc;
+    
     recoverPassword.action();
+    
     registration.action();
+    
     search.action();
     
-    widgetDatePicker.setLanguage = "en";
-    //widgetDatePicker.setCurrentYear = 1984;
-    //widgetDatePicker.setCurrentMonth = 4;
-    //widgetDatePicker.setCurrentDay = 11;
-    widgetDatePicker.setInputFill = ".widget_datePicker_input";
-    widgetDatePicker.create();
-    
-    widgetSearch.create();
+    widgetSearch.action();
     widgetSearch.changeView();
     
     $(window).on("resize", "", (event) => {

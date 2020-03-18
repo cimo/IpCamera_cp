@@ -14,22 +14,22 @@ class PasswordFormType extends AbstractType {
     
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(Array(
-            'data_class' => "App\Form\Model\PasswordModel",
+            'data_class' => "App\Entity\User",
             'csrf_protection' => true,
             'validation_groups' => null
         ));
     }
     
     public function buildForm(FormBuilderInterface $builder, Array $options) {
-        $builder->add("old", PasswordType::class, Array(
+        $builder->add("passwordOld", PasswordType::class, Array(
             'required' => true,
             'label' => "passwordFormType_1"
         ))
-        ->add("new", PasswordType::class, Array(
+        ->add("password", PasswordType::class, Array(
             'required' => true,
             'label' => "passwordFormType_2"
         ))
-        ->add("newConfirm", PasswordType::class, Array(
+        ->add("passwordConfirm", PasswordType::class, Array(
             'required' => true,
             'label' => "passwordFormType_3"
         ))

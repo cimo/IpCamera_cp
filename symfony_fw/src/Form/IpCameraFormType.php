@@ -4,6 +4,8 @@ namespace App\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -19,7 +21,8 @@ class IpCameraFormType extends AbstractType {
         $resolver->setDefaults(Array(
             'data_class' => "App\Entity\IpCamera",
             'csrf_protection' => true,
-            'validation_groups' => null
+            'validation_groups' => null,
+            'password' => ""
         ));
     }
     
@@ -60,23 +63,25 @@ class IpCameraFormType extends AbstractType {
                 "ipCameraFormType_9" => "1"
             )
         ))
-        ->add("detectionPid", TextType::class, Array(
-            'required' => false,
-            'label' => "ipCameraFormType_10",
-            'attr' => Array(
-                'readonly' => true
-            )
-        ))
         ->add("active", ChoiceType::class, Array(
             'required' => true,
-            'placeholder' => "ipCameraFormType_11",
+            'placeholder' => "ipCameraFormType_10",
             'choices' => Array(
                 "ipCameraFormType_8" => "0",
                 "ipCameraFormType_9" => "1"
             )
         ))
         ->add("submit", SubmitType::class, Array(
-            'label' => "ipCameraFormType_12"
+            'label' => "ipCameraFormType_11"
         ));
+        
+        $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $formEvent) {
+            $data = $formEvent->getData();
+            $form = $formEvent->getForm();
+            $options = $form->getConfig()->getOptions();
+            
+            if ($data->getPassword() == "")
+                $data->setPassword($options['password']);
+        });
     }
 }

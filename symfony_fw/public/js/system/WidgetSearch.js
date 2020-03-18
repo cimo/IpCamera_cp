@@ -7,39 +7,30 @@ class WidgetSearch {
     
     // Functions public
     constructor() {
-        this.widgetSearchButtonOpen = null;
-        this.widgetSearchButtonClose = null;
-        this.widgetSearchButtonInput = null;
-        this.topAppBarSectionStart = null;
     }
     
-    create = () => {
-        this.widgetSearchButtonOpen = $(".widget_search").find(".button_open");
-        this.widgetSearchButtonClose = $(".widget_search").find(".button_close");
-        this.widgetSearchButtonInput = $(".widget_search").find("input[name='form_search[words]']");
-        this.topAppBarSectionStart = $(".mdc-top-app-bar__section--align-start");
-
-        this.widgetSearchButtonOpen.on("click", "", (event) => {
+    action = () => {
+        $(".widget_search").find(".button_open").on("click", "", (event) => {
             if ($(event.target).hasClass("animate") === false) {
                 $(event.target).addClass("animate");
                 
-                this.widgetSearchButtonClose.show();
-                this.widgetSearchButtonInput.show();
+                $(".widget_search").find(".button_close").show();
+                $(".widget_search").find("input[name='form_search[words]']").show();
                 
-                this.topAppBarSectionStart.hide();
+                $(".mdc-top-app-bar__section--align-start").hide();
                 $(".menu_root_container").hide();
             }
         });
 
-        this.widgetSearchButtonClose.on("click", "", (event) => {
-            if (this.widgetSearchButtonOpen.hasClass("animate") === true) {
+        $(".widget_search").find(".button_close").on("click", "", (event) => {
+            if ($(".widget_search").find(".button_open").hasClass("animate") === true) {
                 $(event.target).hide();
                 
-                this.widgetSearchButtonOpen.removeClass("animate");
-                this.widgetSearchButtonInput.val("");
-                this.widgetSearchButtonInput.hide();
+                $(".widget_search").find(".button_open").removeClass("animate");
+                $(".widget_search").find("input[name='form_search[words]']").val("");
+                $(".widget_search").find("input[name='form_search[words]']").hide();
                 
-                this.topAppBarSectionStart.css("display", "inline-flex");
+                $(".mdc-top-app-bar__section--align-start").css("display", "inline-flex");
                 $(".menu_root_container").show();
             }
         });
@@ -47,10 +38,10 @@ class WidgetSearch {
     
     changeView = () => {
         if (helper.checkWidthType() === "desktop")
-            this.topAppBarSectionStart.css("display", "inline-flex");
+            $(".mdc-top-app-bar__section--align-start").css("display", "inline-flex");
         else {
-            if (this.widgetSearchButtonOpen.hasClass("animate") === true)
-                this.topAppBarSectionStart.hide();
+            if ($(".widget_search").find(".button_open").hasClass("animate") === true)
+                $(".mdc-top-app-bar__section--align-start").hide();
         }
     }
 

@@ -42,8 +42,8 @@ class UploadChunk {
         if ($action == "stop") {
             $fileName = $_REQUEST['fileName'];
             
-            if (file_exists("{$this->settings['path']}/$fileName") == true) {
-                unlink("{$this->settings['path']}/$fileName");
+            if (file_exists("{$this->settings['path']}/{$fileName}") == true) {
+                unlink("{$this->settings['path']}/{$fileName}");
                 
                 $this->response['status'] = "stop";
                 $this->response['messages']['success'] = $this->helper->getTranslator()->trans("classUploadChunk_1");
@@ -57,12 +57,12 @@ class UploadChunk {
             if ($action == "start") {
                 $fileName = $_REQUEST['fileName'];
                 
-                if (file_exists("{$this->settings['path']}/$fileName") == true) {
+                if (file_exists("{$this->settings['path']}/{$fileName}") == true) {
                     $this->response['status'] = "error";
                     $this->response['messages']['error'] = $this->helper->getTranslator()->trans("classUploadChunk_3");
                 }
                 else {
-                    touch("{$this->settings['path']}/$fileName");
+                    touch("{$this->settings['path']}/{$fileName}");
                     
                     $this->response['status'] = "start";
                     $this->response['messages']['success'] = "";
@@ -82,8 +82,8 @@ class UploadChunk {
                     if (isset($this->settings['chunkSize']) == true && $fileSize > $this->settings['chunkSize']) {
                         $check = false;
                         
-                        if (file_exists("{$this->settings['path']}/$fileName") == true)
-                            unlink("{$this->settings['path']}/$fileName");
+                        if (file_exists("{$this->settings['path']}/{$fileName}") == true)
+                            unlink("{$this->settings['path']}/{$fileName}");
                         
                         $this->response['status'] = "error";
                         $this->response['messages']['error'] = $this->helper->getTranslator()->trans("classUploadChunk_4");
@@ -91,8 +91,8 @@ class UploadChunk {
                     else if (isset($this->settings['mimeType']) == true && in_array($mimeType, $this->settings['mimeType']) == false) {
                         $check = false;
                         
-                        if (file_exists("{$this->settings['path']}/$fileName") == true)
-                            unlink("{$this->settings['path']}/$fileName");
+                        if (file_exists("{$this->settings['path']}/{$fileName}") == true)
+                            unlink("{$this->settings['path']}/{$fileName}");
                         
                         $this->response['status'] = "error";
                         $this->response['messages']['error'] = $this->helper->getTranslator()->trans("classUploadChunk_5");
@@ -100,8 +100,8 @@ class UploadChunk {
                     else if (isset($this->settings['maxSize']) == true && $this->maxSize > $this->settings['maxSize']) {
                         $check = false;
                         
-                        if (file_exists("{$this->settings['path']}/$fileName") == true)
-                            unlink("{$this->settings['path']}/$fileName");
+                        if (file_exists("{$this->settings['path']}/{$fileName}") == true)
+                            unlink("{$this->settings['path']}/{$fileName}");
                         
                         $this->response['status'] = "error";
                         $this->response['messages']['error'] = $this->helper->getTranslator()->trans("classUploadChunk_6");
@@ -112,8 +112,8 @@ class UploadChunk {
                         if ($imageSize[0] > $this->settings['imageSize'][0] || $imageSize[1] > $this->settings['imageSize'][1]) {
                             $check = false;
                             
-                            if (file_exists("{$this->settings['path']}/$fileName") == true)
-                                unlink("{$this->settings['path']}/$fileName");
+                            if (file_exists("{$this->settings['path']}/{$fileName}") == true)
+                                unlink("{$this->settings['path']}/{$fileName}");
                             
                             $this->response['status'] = "error";
                             $this->response['messages']['error'] = $this->helper->getTranslator()->trans("classUploadChunk_7");
@@ -123,15 +123,15 @@ class UploadChunk {
                     if ($check == true) {
                         $content = file_get_contents($tmpName);
                         
-                        file_put_contents("{$this->settings['path']}/$fileName", trim($content), FILE_APPEND);
+                        file_put_contents("{$this->settings['path']}/{$fileName}", trim($content), FILE_APPEND);
                         
                         $this->response['status'] = "send";
                         $this->response['messages']['success'] = "";
                     }
                 }
                 else {
-                    if (file_exists("{$this->settings['path']}/$fileName") == true)
-                        unlink("{$this->settings['path']}/$fileName");
+                    if (file_exists("{$this->settings['path']}/{$fileName}") == true)
+                        unlink("{$this->settings['path']}/{$fileName}");
                     
                     $this->response['status'] = "error";
                     $this->response['messages']['error'] = $this->helper->getTranslator()->trans("classUploadChunk_8");
@@ -141,11 +141,11 @@ class UploadChunk {
                 $extension = "";
                 $fileName = $_REQUEST['fileName'];
                 
-                if (file_exists("{$this->settings['path']}/$fileName") == true) {
-                    $extension = pathinfo("{$this->settings['path']}/$fileName", PATHINFO_EXTENSION);
+                if (file_exists("{$this->settings['path']}/{$fileName}") == true) {
+                    $extension = pathinfo("{$this->settings['path']}/{$fileName}", PATHINFO_EXTENSION);
                     
                     if (isset($this->settings['nameOverwrite']) == true && $this->settings['nameOverwrite'] != "") {
-                        rename("{$this->settings['path']}/$fileName", "{$this->settings['path']}/{$this->settings['nameOverwrite']}.{$extension}");
+                        rename("{$this->settings['path']}/{$fileName}", "{$this->settings['path']}/{$this->settings['nameOverwrite']}.{$extension}");
                         
                         $fileName = $this->settings['nameOverwrite'];
                     }

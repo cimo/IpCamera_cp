@@ -20,7 +20,7 @@
     background-color: $mdc-theme-primary;
     color: $mdc-theme-on-primary;
     padding: 5px;
-    width: auto;
+    min-width: 200px;
     z-index: 1;
 }
 

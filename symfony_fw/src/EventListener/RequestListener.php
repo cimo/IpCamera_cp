@@ -2,7 +2,7 @@
 namespace App\EventListener;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -29,7 +29,7 @@ class RequestListener {
     // Properties
     
     // Functions public
-    public function __construct(ContainerInterface $container, EntityManager $entityManager, Router $router, RequestStack $requestStack, TranslatorInterface $translator) {
+    public function __construct(ContainerInterface $container, EntityManagerInterface $entityManager, Router $router, RequestStack $requestStack, TranslatorInterface $translator) {
         $this->container = $container;
         $this->entityManager = $entityManager;
         $this->router = $router;
@@ -49,17 +49,14 @@ class RequestListener {
         
         $this->helper->xssProtection();
         
-        $request = $event->getRequest();
+        $request = $this->helper->checkLanguage($event->getRequest());
         
-        $checkLanguage = $this->helper->checkLanguage($request, $this->router);
-        $newRequest = $checkLanguage[0];
-        
-        $checkSessionOverTime = $this->helper->checkSessionOverTime($newRequest, $this->router);
+        $checkSessionOverTime = $this->helper->checkSessionOverTime($request, $this->router);
         
         $urlCurrentPageId = 2;
         
-        if ($newRequest->get("urlCurrentPageId") != null && $newRequest->get("urlCurrentPageId") > 0)
-             $urlCurrentPageId = $newRequest->get("urlCurrentPageId");
+        if ($request->get("urlCurrentPageId") != null && $request->get("urlCurrentPageId") > 0)
+             $urlCurrentPageId = $request->get("urlCurrentPageId");
         
         $phpSession = Array(
             'name' => $this->session->getName(),
@@ -72,32 +69,30 @@ class RequestListener {
         $this->container->get("twig")->addGlobal("php_session", $phpSession);
         $this->container->get("twig")->addGlobal("websiteName", $this->helper->getWebsiteName());
         $this->container->get("twig")->addGlobal("settingRow", $this->settingRow);
-        $this->container->get("twig")->addGlobal("pageRow", $this->query->selectPageDatabase($newRequest->getLocale(), $urlCurrentPageId));
+        $this->container->get("twig")->addGlobal("pageRow", $this->query->selectPageDatabase($request->getLocale(), $urlCurrentPageId));
         
         if ($this->settingRow['javascript_minify'] == 1)
             $this->container->get("twig")->addGlobal("javascriptMinify", ".min.js");
         else
             $this->container->get("twig")->addGlobal("javascriptMinify", ".js");
         
-        if ($checkLanguage[1] != false)
-            $event->setResponse(new RedirectResponse($checkLanguage[1]));
-        else if ($checkSessionOverTime != false)
+        if ($checkSessionOverTime != false)
             $event->setResponse(new RedirectResponse($checkSessionOverTime));
         
         if ($this->settingRow['https'] == true) {
-            if ($newRequest->isSecure() == false) {
-                $newRequest->server->set("HTTPS", true);
-                $newRequest->server->set("SERVER_PORT", 443);
+            if ($request->isSecure() == false) {
+                $request->server->set("HTTPS", true);
+                $request->server->set("SERVER_PORT", 443);
                 
-                $event->setResponse(new RedirectResponse($newRequest->getUri()));
+                $event->setResponse(new RedirectResponse($request->getUri()));
             }
         }
         else {
-            if ($newRequest->isSecure() == true) {
-                $newRequest->server->set("HTTPS", false);
-                $newRequest->server->set("SERVER_PORT", 80);
+            if ($request->isSecure() == true) {
+                $request->server->set("HTTPS", false);
+                $request->server->set("SERVER_PORT", 80);
                 
-                $event->setResponse(new RedirectResponse($newRequest->getUri()));
+                $event->setResponse(new RedirectResponse($request->getUri()));
             }
         }
     }

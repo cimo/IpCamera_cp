@@ -1,0 +1,34 @@
+<script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/IpCamera" ~ javascriptMinify)}}"></script>
+
+<script nonce="{{php_session.xssProtectionValue}}">
+    "use strict";
+    
+    $(document).ready(() => {
+        let ipCamera = new IpCamera();
+        ipCamera.action();
+        ipCamera.changeView();
+        
+        $(window).on("resize", "", (event) => {
+            ipCamera.changeView();
+        });
+        
+        $(window).on("orientationchange", "", (event) => {
+            ipCamera.changeView();
+        });
+    });
+    
+    window.textIpCamera = {
+        'label_1': "{{"controlPanelPageIpCamera_2"|trans}}",
+        'label_2': "{{"controlPanelPageIpCamera_3"|trans}}",
+        'label_3': "{{"controlPanelPageIpCamera_4"|trans}}",
+        'label_4': "{{"controlPanelPageIpCamera_5"|trans}}"
+    };
+    
+    window.url['cpIpCameraCreate'] = "{{path("cp_ipCamera_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+    window.url['cpIpCameraSelect'] = "{{path("cp_ipCamera_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+    window.url['cpIpCameraProfile'] = "{{path("cp_ipCamera_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+    window.url['cpIpCameraDelete'] = "{{path("cp_ipCamera_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+    window.url['cpIpCameraFile'] = "{{path("cp_ipCamera_file", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+    window.url['cpIpCameraFileDownload'] = "{{path("cp_ipCamera_file_download", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+    window.url['cpIpCameraFileDelete'] = "{{path("cp_ipCamera_file_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+</script>

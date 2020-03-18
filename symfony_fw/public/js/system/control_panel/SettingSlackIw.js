@@ -1,6 +1,6 @@
 "use strict";
 
-/* global ajax, popupEasy, materialDesign */
+/* global ajax, materialDesign, popupEasy */
 
 class ControlPanelSettingSlackIw {
     // Properties
@@ -27,7 +27,7 @@ class ControlPanelSettingSlackIw {
                     ajax.reply(xhr, `#${event.target.id}`);
                     
                     if (xhr.response.values.wordTagListHtml !== undefined)
-                        $("#form_cp_setting_slack_iw_render").find(".wordTag_container").html(xhr.response.values.wordTagListHtml);
+                        $(event.target).find(".wordTag_container").html(xhr.response.values.wordTagListHtml);
                 },
                 null,
                 null
@@ -53,7 +53,7 @@ class ControlPanelSettingSlackIw {
                     
                     if (xhr.response.messages.success !== undefined) {
                         this._resetField();
-
+                        
                         materialDesign.refresh();
                     }
                 },
@@ -62,7 +62,7 @@ class ControlPanelSettingSlackIw {
             );
         });
         
-        $("#form_cp_setting_slack_iw_render .wordTag_container").on("click", ".edit", (event) => {
+        $("#form_cp_setting_slack_iw_render").find(".wordTag_container").on("click", ".edit", (event) => {
             if ($(event.currentTarget).hasClass("delete") === true)
                 return;
             
@@ -91,7 +91,7 @@ class ControlPanelSettingSlackIw {
                         $("#form_settingSlackIw_channel").val(xhr.response.values.entity[2]);
                         $("#form_settingSlackIw_active").val(xhr.response.values.entity[3] === true ? 1 : 0);
                         
-                        $("#form_cp_setting_slack_iw_render").find(".wordTag_container").html(xhr.response.values.wordTagListHtml);
+                        $(event.currentTarget).parent().html(xhr.response.values.wordTagListHtml);
                         
                         materialDesign.refresh();
                     }
@@ -101,13 +101,13 @@ class ControlPanelSettingSlackIw {
             );
         });
         
-        $("#form_cp_setting_slack_iw_render .wordTag_container").on("click", ".delete", (event) => {
+        $("#form_cp_setting_slack_iw_render").find(".wordTag_container").on("click", ".delete", (event) => {
             if ($(event.currentTarget).hasClass("edit") === true)
                 return;
             
             let id = $.trim($(event.currentTarget).parent().find(".mdc-chip__text").attr("data-id"));
             
-            popupEasy.create(
+            popupEasy.show(
                 window.text.index_5,
                 window.textSettingSlackIw.label_1,
                 () => {
@@ -127,9 +127,9 @@ class ControlPanelSettingSlackIw {
                         null,
                         (xhr) => {
                             ajax.reply(xhr, "");
-
+                            
                             if (xhr.response.values.wordTagListHtml !== undefined) {
-                                $("#form_cp_setting_slack_iw_render").find(".wordTag_container").html(xhr.response.values.wordTagListHtml);
+                                $(event.currentTarget).parent().html(xhr.response.values.wordTagListHtml);
                                 
                                 this._resetField();
                                 

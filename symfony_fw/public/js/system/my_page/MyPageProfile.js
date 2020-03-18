@@ -70,6 +70,7 @@ class MyPageProfile {
                     
                     if (xhr.response.messages.success !== undefined) {
                         let credit = $("#form_myPage_profile_credit").find("input[name='credit']").val();
+                        
                         $("#form_myPage_profile_credit_paypal").find("input[name='quantity']").val(credit);
                         
                         $("#form_myPage_profile_credit_paypal").submit();

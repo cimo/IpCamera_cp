@@ -1,6 +1,6 @@
 "use strict";
 
-/* global helper, ajax, uploadChunk, materialDesign, popupEasy, chaato, widgetDatePicker */
+/* global helper, ajax, materialDesign, uploadChunk, popupEasy, widgetDatePicker */
 
 class ControlPanelApiBasic {
     // Properties
@@ -10,29 +10,6 @@ class ControlPanelApiBasic {
     }
     
     action = () => {
-        $(document).on("submit", "#form_cp_apiBasic_select", (event) => {
-            event.preventDefault();
-
-            ajax.send(
-                true,
-                $(event.currentTarget).prop("action"),
-                $(event.currentTarget).prop("method"),
-                helper.serializeJson($(event.currentTarget)),
-                "json",
-                false,
-                true,
-                "application/x-www-form-urlencoded; charset=UTF-8",
-                () => {
-                    $("#cp_api_select_result").html("");
-                },
-                (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
-                },
-                null,
-                null
-            );
-        });
-        
         $("#form_cp_apiBasic_create").on("submit", "", (event) => {
             event.preventDefault();
             
@@ -58,23 +35,45 @@ class ControlPanelApiBasic {
                 null
             );
         });
+        
+        $("#form_cp_apiBasic_select").on("submit", "", (event) => {
+            event.preventDefault();
+
+            ajax.send(
+                true,
+                $(event.target).prop("action"),
+                $(event.target).prop("method"),
+                $(event.target).serialize(),
+                "json",
+                false,
+                true,
+                "application/x-www-form-urlencoded; charset=UTF-8",
+                () => {
+                    $("#cp_api_select_result").html("");
+                },
+                (xhr) => {
+                    ajax.reply(xhr, `#${event.target.id}`);
+                    
+                    this._profile(xhr);
+                },
+                null,
+                null
+            );
+        });
     }
     
     // Function private
-    _profile = (xhr, tag) => {
-        ajax.reply(xhr, tag);
-        
+    _profile = (xhr) => {
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
             $("#cp_api_select_result").html(xhr.response.render);
             
             uploadChunk.setUrlRequest = `${window.url.cpApiBasicCsv}?token=${window.session.token}&event=csv`;
             uploadChunk.setTagContainer = "#upload_chunk_apiBasic_csv_container";
             uploadChunk.setTagProgressBar = "#upload_chunk_apiBasic_csv_container .upload_chunk .mdc-linear-progress";
-            uploadChunk.setProcessLock = true;
             uploadChunk.processFile();
             
             widgetDatePicker.setInputFill = ".widget_datePicker_input";
-            widgetDatePicker.action();
+            widgetDatePicker.create();
             
             materialDesign.refresh();
             
@@ -96,7 +95,7 @@ class ControlPanelApiBasic {
                         ajax.reply(xhr, "");
 
                         if (xhr.response.values.log !== undefined) {
-                            popupEasy.create(
+                            popupEasy.show(
                                 "File log",
                                 xhr.response.values.log
                             );
@@ -127,7 +126,7 @@ class ControlPanelApiBasic {
                         ajax.reply(xhr, "");
                         
                         if (xhr.response.render !== undefined) {
-                            popupEasy.create(
+                            popupEasy.show(
                                 `<p>Show graph</p>${xhr.response.values.selectPeriodYearHtml} ${xhr.response.values.selectPeriodMonthHtml}`,
                                 xhr.response.render
                             );
@@ -136,12 +135,14 @@ class ControlPanelApiBasic {
                                 $("#button_apiBasic_show_graph").click();
                             });
                             
-                            chaato.setBackgroundType = "grid"; // grid - lineX - lineY
+                            let chaato = new Chaato();
+                            chaato.setBackgroundType = "grid";
                             chaato.setAnimationSpeed = 0.50;
                             chaato.setPadding = 30;
                             chaato.setTranslate = [95, 20];
                             chaato.setScale = [0.91, 0.88];
-                            chaato.create = xhr.response.values.json;
+                            chaato.create(xhr.response.values.json);
+                            chaato.action();
                         }
                     },
                     null,
@@ -149,8 +150,8 @@ class ControlPanelApiBasic {
                 );
             });
             
-            $("#download_detail_button").on("click", "", (event) => {
-                $(".download_detail_command").toggle("slow");
+            $("#download_detail_container").find("button").on("click", "", (event) => {
+                $("#download_detail_command").toggle("slow");
                 
                 $("#button_apiBasic_download_detail").off("click").on("click", "", (event) => {
                     let dataEvent = $(event.target).attr("data-event") !== undefined ? $(event.target).attr("data-event") : $(event.target).parent().attr("data-event");
@@ -175,33 +176,8 @@ class ControlPanelApiBasic {
                         (xhr) => {
                             ajax.reply(xhr, "");
                             
-                            if (xhr.response.values !== undefined && xhr.response.values.url !== undefined) {
+                            if (xhr.response.values !== undefined && xhr.response.values.url !== undefined)
                                 window.location = xhr.response.values.url;
-                                
-                                let timeoutEvent = setTimeout(() => {
-                                    clearTimeout(timeoutEvent);
-                                    
-                                    ajax.send(
-                                        false,
-                                        window.url.cpApiBasicDownloadDetail,
-                                        "post",
-                                        {
-                                            'event': "download_delete",
-                                            'token': window.session.token
-                                        },
-                                        "json",
-                                        false,
-                                        true,
-                                        "application/x-www-form-urlencoded; charset=UTF-8",
-                                        null,
-                                        (xhr) => {
-                                            ajax.reply(xhr, "");
-                                        },
-                                        null,
-                                        null
-                                    );
-                                }, 100);
-                            }
                         },
                         null,
                         null
@@ -240,7 +216,7 @@ class ControlPanelApiBasic {
             });
 
             $("#cp_apiBasic_delete").on("click", "", (event) => {
-               popupEasy.create(
+                popupEasy.show(
                     window.text.index_5,
                     window.textApiBasic.label_1,
                     () => {
@@ -265,6 +241,45 @@ class ControlPanelApiBasic {
                                     $("#form_apiBasic_select_id").find(`option[value="${xhr.response.values.id}"]`).remove();
 
                                     $("#cp_api_select_result").html("");
+                                }
+                            },
+                            null,
+                            null
+                        );
+                    }
+                );
+            });
+            
+            $(".button_password").on("click", "", (event) => {
+                let target = $(event.target).parent().hasClass("mdc-button") === true ? $(event.target).parent() : $(event.target);
+                
+                let inputName = $(target).prev().find("input[type='password']").prop("name");
+                
+                popupEasy.show(
+                    window.text.index_5,
+                    window.textApiBasic.label_2,
+                    () => {
+                        ajax.send(
+                            true,
+                            window.url.cpApiBasicClearPassword,
+                            "post",
+                            {
+                                'event': "clear",
+                                'inputName': inputName,
+                                'token': window.session.token
+                            },
+                            "json",
+                            false,
+                            true,
+                            "application/x-www-form-urlencoded; charset=UTF-8",
+                            null,
+                            (xhr) => {
+                                ajax.reply(xhr, "");
+                                
+                                if (xhr.response.messages.success !== undefined) {
+                                    $(target).prev().find("input[type='password']").val("");
+                                    $(target).prev().find("input[type='password']").attr("placeholder", "");
+                                    $(target).prev().find(".mdc-floating-label").removeClass("mdc-floating-label--float-above");
                                 }
                             },
                             null,

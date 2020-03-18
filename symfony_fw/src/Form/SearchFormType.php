@@ -22,7 +22,7 @@ class SearchFormType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, Array $options) {
         $builder->add("words", TextType::class, Array(
             'required' => true,
-            'attr' => array(
+            'attr' => Array(
                 'placeholder' => "searchFormType_1",
                 'autocomplete' => "off",
                 'autocorrect' => "off",

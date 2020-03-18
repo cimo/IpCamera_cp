@@ -131,6 +131,10 @@ class Page {
     private $event = "";
     
     // Properties
+    public function setId($value) {
+        $this->id = $value;
+    }
+    
     public function setAlias($value) {
         $this->alias = $value;
     }

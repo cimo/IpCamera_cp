@@ -1,6 +1,6 @@
 "use strict";
 
-/* global helper, ajax, popupEasy, materialDesign */
+/* global helper, ajax, materialDesign, popupEasy */
 
 class ControlPanelMicroserviceUnitTest {
     // Properties
@@ -71,8 +71,8 @@ class ControlPanelMicroserviceUnitTest {
     
     // Function private
     _selectDesktop = () => {
-        const tableAndPagination = new TableAndPagination();
-        tableAndPagination.setButtonsStatus = "show";
+        let tableAndPagination = new TableAndPagination();
+        tableAndPagination.setButtonStatus = "show";
         tableAndPagination.create(window.url.cpMicroserviceUnitTestSelect, "#cp_microservice_unit_test_select_result_desktop", true);
         tableAndPagination.search();
         tableAndPagination.pagination();
@@ -105,7 +105,7 @@ class ControlPanelMicroserviceUnitTest {
         });
         
         $(document).on("click", "#cp_microservice_unit_test_select_result_desktop .delete_all", (event) => {
-            popupEasy.create(
+            popupEasy.show(
                 window.text.index_5,
                 window.textMicroserviceUnitTest.label_2,
                 () => {
@@ -124,8 +124,10 @@ class ControlPanelMicroserviceUnitTest {
                         null,
                         (xhr) => {
                             ajax.reply(xhr, "");
-
-                            $.each($("#cp_microservice_unit_test_select_result_desktop").find("table .id_column"), (key, value) => {
+                            
+                            let ids = $("#cp_microservice_unit_test_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 let id = $.trim($(value).parents("tr").find(".id_column").text());
                                 
                                 if (id > 4)
@@ -152,7 +154,7 @@ class ControlPanelMicroserviceUnitTest {
 
             ajax.send(
                 true,
-                window.url.cpMicroserviceUnitTestProfile,
+                window.url.cpMicroserviceUnitTestSelect,
                 "post",
                 {
                     'event': "result",
@@ -167,7 +169,9 @@ class ControlPanelMicroserviceUnitTest {
                     $("#cp_microservice_unit_test_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -187,7 +191,7 @@ class ControlPanelMicroserviceUnitTest {
                 true,
                 $(event.currentTarget).prop("action"),
                 $(event.currentTarget).prop("method"),
-                helper.serializeJson($(event.currentTarget)),
+                $(event.currentTarget).serialize(),
                 "json",
                 false,
                 true,
@@ -196,7 +200,9 @@ class ControlPanelMicroserviceUnitTest {
                     $("#cp_microservice_unit_test_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -208,9 +214,7 @@ class ControlPanelMicroserviceUnitTest {
         });
     }
     
-    _profile = (xhr, tag) => {
-        ajax.reply(xhr, tag);
-        
+    _profile = (xhr) => {
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
             this.selectSended = true;
             
@@ -241,7 +245,7 @@ class ControlPanelMicroserviceUnitTest {
                         if (xhr.response.messages.success !== undefined) {
                             $("#cp_microservice_unit_test_select_result").html("");
                             
-                            $("#cp_microservice_unit_test_select_result_desktop .refresh").click();
+                            $("#cp_microservice_unit_test_select_result_desktop").find(".refresh").click();
                         }
                     },
                     null,
@@ -250,13 +254,15 @@ class ControlPanelMicroserviceUnitTest {
             });
 
             $("#cp_microservice_unit_test_delete").on("click", "", (event) => {
-               this._deleteElement(null);
+               this._deleteElement();
             });
         }
     }
     
     _deleteElement = (id) => {
-        popupEasy.create(
+        let idValue = id === undefined ? null : id;
+        
+        popupEasy.show(
             window.text.index_5,
             window.textMicroserviceUnitTest.label_1,
             () => {
@@ -266,7 +272,7 @@ class ControlPanelMicroserviceUnitTest {
                     "post",
                     {
                         'event': "delete",
-                        'id': id,
+                        'id': idValue,
                         'token': window.session.token
                     },
                     "json",
@@ -278,7 +284,9 @@ class ControlPanelMicroserviceUnitTest {
                         ajax.reply(xhr, "");
                         
                         if (xhr.response.messages.success !== undefined) {
-                            $.each($("#cp_microservice_unit_test_select_result_desktop").find("table .id_column"), (key, value) => {
+                            let ids = $("#cp_microservice_unit_test_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 if (xhr.response.values.id === $.trim($(value).text()))
                                     $(value).parents("tr").remove();
                             });

@@ -35,9 +35,13 @@ class SettingSlackIw {
     /**
      * @ORM\Column(name="active", type="boolean", columnDefinition="tinyint(1) NOT NULL DEFAULT 0")
      */
-    private $active = "";
+    private $active = false;
     
     // Properties
+    public function setId($value) {
+        $this->id = $value;
+    }
+    
     public function setName($value) {
         $this->name = $value;
     }

@@ -1,6 +1,6 @@
 "use strict";
 
-/* global helper, ajax, loader, flashBag, materialDesign, processLock */
+/* global helper, ajax, materialDesign, loader, flashBag */
 
 class UploadChunk {    
     // Properties
@@ -20,17 +20,12 @@ class UploadChunk {
         this.tagImageRefresh = value;
     }
     
-    set setProcessLock(value) {
-        this.processLock = value;
-    }
-    
     // Functions public
     constructor() {
         this.urlRequest = "";
         this.tagContainer = "";
         this.tagProgressBar = "";
         this.tagImageRefresh = "";
-        this.processLock = false;
         
         this.inputLabel = "";
         
@@ -67,11 +62,11 @@ class UploadChunk {
         
         $(this.tagContainer).find(".controls").show();
         
-        $(this.tagContainer).find(".controls .button_start").off("click").on("click", "", (event) => {
+        $(this.tagContainer).find(".controls .button_start").on("click", "", (event) => {
             this._start();
         });
         
-        $(this.tagContainer).find(".controls .button_stop").off("click").on("click", "", (event) => {
+        $(this.tagContainer).find(".controls .button_stop").on("click", "", (event) => {
             this._stop();
         });
     }
@@ -177,9 +172,6 @@ class UploadChunk {
                     
                     if (this.tagImageRefresh !== "")
                         helper.imageRefresh(this.tagImageRefresh, 1);
-                    
-                    if (this.processLock === true)
-                        processLock.execute(this.tagContainer, jsonParse.response.processLock.name);
                     
                     if (response.messages.success !== undefined)
                         flashBag.show(response.messages.success);

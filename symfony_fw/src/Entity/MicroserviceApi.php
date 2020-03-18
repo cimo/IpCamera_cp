@@ -37,6 +37,7 @@ class MicroserviceApi {
      */
     private $image = "";
     
+    // #
     private $removeImage = false;
     
     /**
@@ -45,6 +46,10 @@ class MicroserviceApi {
     private $active = false;
     
     // Properties
+    public function setId($value) {
+        $this->id = $value;
+    }
+    
     public function setName($value) {
         $this->name = $value;
     }

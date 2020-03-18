@@ -23,7 +23,10 @@ class MicroserviceDeployFormType extends AbstractType {
         $resolver->setDefaults(Array(
             'data_class' => "App\Entity\MicroserviceDeploy",
             'csrf_protection' => true,
-            'validation_groups' => null
+            'validation_groups' => null,
+            'sshPassword' => "",
+            'keyPrivatePassword' => "",
+            'gitCloneUrlPassword' => ""
         ));
     }
     
@@ -128,6 +131,17 @@ class MicroserviceDeployFormType extends AbstractType {
         
         $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $formEvent) {
             $data = $formEvent->getData();
+            $form = $formEvent->getForm();
+            $options = $form->getConfig()->getOptions();
+            
+            if ($data->getSshPassword() == "")
+                $data->setSshPassword($options['sshPassword']);
+            
+            if ($data->getKeyPrivatePassword() == "")
+                $data->setKeyPrivatePassword($options['keyPrivatePassword']);
+            
+            if ($data->getGitCloneUrlPassword() == "")
+                $data->setGitCloneUrlPassword($options['gitCloneUrlPassword']);
             
             if ($data->getRemoveKeyPublic() == false)
                 $data->setRemoveKeyPublic("0");

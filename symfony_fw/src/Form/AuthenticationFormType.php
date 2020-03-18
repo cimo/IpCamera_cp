@@ -16,7 +16,9 @@ class AuthenticationFormType extends AbstractType {
     
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(Array(
-            'csrf_protection' => true
+            'data_class' => null,
+            'csrf_protection' => true,
+            'validation_groups' => null
         ));
     }
     

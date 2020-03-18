@@ -22,7 +22,8 @@ class ApiBasicFormType extends AbstractType {
         $resolver->setDefaults(Array(
             'data_class' => "App\Entity\ApiBasic",
             'csrf_protection' => true,
-            'validation_groups' => null
+            'validation_groups' => null,
+            'databasePassword' => null
         ));
     }
     
@@ -57,8 +58,7 @@ class ApiBasicFormType extends AbstractType {
         ))
         ->add("databasePassword", PasswordType::class, Array(
             'required' => false,
-            'label' => "apiBasicFormType_8",
-            'always_empty' => false
+            'label' => "apiBasicFormType_8"
         ))
         ->add("active", ChoiceType::class, Array(
             'required' => true,
@@ -82,6 +82,11 @@ class ApiBasicFormType extends AbstractType {
         
         $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $formEvent) {
             $data = $formEvent->getData();
+            $form = $formEvent->getForm();
+            $options = $form->getConfig()->getOptions();
+            
+            if ($data->getDatabasePassword() == "")
+                $data->setDatabasePassword($options['databasePassword']);
             
             if ($data->getSlackActive() == false)
                 $data->setSlackActive("0");

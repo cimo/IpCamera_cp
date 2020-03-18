@@ -30,6 +30,7 @@ class User implements UserInterface, EquatableInterface, \Serializable {
      */
     private $image = "";
     
+    // #
     private $removeImage = false;
     
     /**
@@ -152,7 +153,17 @@ class User implements UserInterface, EquatableInterface, \Serializable {
      */
     private $attemptLogin = 0;
     
+    // #
+    private $passwordOld = "";
+    
+    // #
+    private $passwordConfirm = "";
+    
     // Properties
+    public function setId($value) {
+        $this->id = $value;
+    }
+    
     public function setRoleUserId($value) {
         $this->roleUserId = $value;
     }
@@ -165,10 +176,6 @@ class User implements UserInterface, EquatableInterface, \Serializable {
         $this->removeImage = $value;
     }
     
-    public function setUsername($value) {
-        $this->username = $value;
-    }
-
     public function setName($value) {
         $this->name = $value;
     }
@@ -224,10 +231,6 @@ class User implements UserInterface, EquatableInterface, \Serializable {
     public function setAddress($value) {
         $this->address = $value;
     }
-
-    public function setPassword($value) {
-        $this->password = $value;
-    }
     
     public function setCredit($value) {
         $newValue = $value == null ? 0 : $value;
@@ -261,6 +264,14 @@ class User implements UserInterface, EquatableInterface, \Serializable {
     
     public function setAttemptLogin($value) {
         $this->attemptLogin = $value;
+    }
+    
+    public function setPasswordOld($value) {
+        $this->passwordOld = $value;
+    }
+    
+    public function setPasswordConfirm($value) {
+        $this->passwordConfirm = $value;
     }
     
     // ---
@@ -369,26 +380,35 @@ class User implements UserInterface, EquatableInterface, \Serializable {
         return $this->attemptLogin;
     }
     
-    // Plus
-    private $passwordConfirm = "";
-    
-    public function setPasswordConfirm($value) {
-        $this->passwordConfirm = $value;
+    public function getPasswordOld() {
+        return $this->passwordOld;
     }
-    
-    // ---
     
     public function getPasswordConfirm() {
         return $this->passwordConfirm;
     }
     
     // UserInterface
+    
+    // #
     private $salt = null;
     
     /**
      * @ORM\Column(name="roles", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT 'ROLE_USER,'")
      */
     private $roles = Array();
+    
+    public function setUsername($value) {
+        $this->username = $value;
+    }
+    
+    public function setPassword($value) {
+        $this->password = $value;
+    }
+    
+    public function setSalt($value) {
+        return $this->salt = $value;
+    }
     
     public function setRoles(array $roles) {
         $rolesImplode = implode(",", $roles);
@@ -446,7 +466,7 @@ class User implements UserInterface, EquatableInterface, \Serializable {
     }
     
     public function serialize() {
-        return serialize(array(
+        return serialize(Array(
             $this->id,
             $this->username,
             $this->email,

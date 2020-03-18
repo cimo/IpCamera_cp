@@ -1,7 +1,7 @@
 {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
 
 <h2 class="mdc-typography--headline6">{% trans %}userProfile_1{% endtrans %}</h2>
-<form id="form_cp_user_profile" action="{{path("cp_user_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+<form id="form_cp_user_profile" action="{{path("cp_user_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
     <div id="attemptLogin_reset" class="form_row">
         <p>{% trans %}userProfile_2{% endtrans %} <span class="attemptLogin_reset_text">{{response.values.attemptLogin}}</span></p>
         <button class="mdc-button mdc-button--dense mdc-button--raised" type="button">{% trans %}userProfile_3{% endtrans %}</button>

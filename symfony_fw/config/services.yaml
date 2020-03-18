@@ -58,3 +58,7 @@ services:
         arguments: ['@service_container', '@doctrine.orm.entity_manager', '@router', '@request_stack']
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+    
+    App\Command\CronCommand:
+        tags:
+            - { name: console.command, command: app:run-cron }

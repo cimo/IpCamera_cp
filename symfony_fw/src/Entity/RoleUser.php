@@ -23,6 +23,10 @@ class RoleUser {
     private $level = "ROLE_USER";
     
     // Properties
+    public function setId($value) {
+        $this->id = $value;
+    }
+    
     public function setLevel($value) {
         $this->level = $value;
     }

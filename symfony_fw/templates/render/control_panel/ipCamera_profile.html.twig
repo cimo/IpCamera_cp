@@ -2,7 +2,7 @@
 
 <div>
     <h2 class="mdc-typography--headline6">{% trans %}ipCameraProfile_1{% endtrans %}</h2>
-    <form id="form_cp_ipCamera_profile" action="{{path("cp_ipCamera_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+    <form id="form_cp_ipCamera_profile" action="{{path("cp_ipCamera_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
         {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
         
         <div id="ipCamera_userId" class="wordTag_container">
@@ -17,7 +17,6 @@
         {{form_row(form.password, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
         {{form_row(form.detectionSensitivity, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
         {{form_row(form.detectionActive)}}
-        {{form_row(form.detectionPid, {'styleType': "readonly"})}}
         {{form_row(form.active)}}
 
         {{form_widget(form._token)}}

@@ -1,6 +1,6 @@
 "use strict";
 
-/* global helper, ajax, popupEasy, materialDesign */
+/* global helper, ajax, materialDesign, popupEasy */
 
 class ControlPanelMicroserviceDeploy {
     // Properties
@@ -106,8 +106,8 @@ class ControlPanelMicroserviceDeploy {
     
     // Function private
     _selectDesktop = () => {
-        const tableAndPagination = new TableAndPagination();
-        tableAndPagination.setButtonsStatus = "show";
+        let tableAndPagination = new TableAndPagination();
+        tableAndPagination.setButtonStatus = "show";
         tableAndPagination.create(window.url.cpMicroserviceDeploySelect, "#cp_microservice_deploy_select_result_desktop", true);
         tableAndPagination.search();
         tableAndPagination.pagination();
@@ -131,6 +131,8 @@ class ControlPanelMicroserviceDeploy {
                     ajax.reply(xhr, "");
                     
                     tableAndPagination.populate(xhr);
+                    
+                    $("#cp_microservice_deploy_select_result").html("");
                 },
                 null,
                 null
@@ -138,7 +140,7 @@ class ControlPanelMicroserviceDeploy {
         });
         
         $(document).on("click", "#cp_microservice_deploy_select_result_desktop .delete_all", (event) => {
-            popupEasy.create(
+            popupEasy.show(
                 window.text.index_5,
                 window.textMicroserviceDeploy.label_2,
                 () => {
@@ -157,8 +159,10 @@ class ControlPanelMicroserviceDeploy {
                         null,
                         (xhr) => {
                             ajax.reply(xhr, "");
-
-                            $.each($("#cp_microservice_deploy_select_result_desktop").find("table .id_column"), (key, value) => {
+                            
+                            let ids = $("#cp_microservice_deploy_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 $(value).parents("tr").remove();
                             });
                             
@@ -182,7 +186,7 @@ class ControlPanelMicroserviceDeploy {
 
             ajax.send(
                 true,
-                window.url.cpMicroserviceDeployProfile,
+                window.url.cpMicroserviceDeploySelect,
                 "post",
                 {
                     'event': "result",
@@ -197,7 +201,9 @@ class ControlPanelMicroserviceDeploy {
                     $("#cp_microservice_deploy_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -217,7 +223,7 @@ class ControlPanelMicroserviceDeploy {
                 true,
                 $(event.currentTarget).prop("action"),
                 $(event.currentTarget).prop("method"),
-                helper.serializeJson($(event.currentTarget)),
+                $(event.currentTarget).serialize(),
                 "json",
                 false,
                 true,
@@ -226,7 +232,9 @@ class ControlPanelMicroserviceDeploy {
                     $("#cp_microservice_deploy_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -238,9 +246,7 @@ class ControlPanelMicroserviceDeploy {
         });
     }
     
-    _profile = (xhr, tag) => {
-        ajax.reply(xhr, tag);
-        
+    _profile = (xhr) => {
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
             this.selectSended = true;
             
@@ -267,7 +273,7 @@ class ControlPanelMicroserviceDeploy {
                         if (xhr.response.messages.success !== undefined) {
                             $("#cp_microservice_deploy_select_result").html("");
                             
-                            $("#cp_microservice_deploy_select_result_desktop .refresh").click();
+                            $("#cp_microservice_deploy_select_result_desktop").find(".refresh").click();
                         }
                     },
                     null,
@@ -276,13 +282,54 @@ class ControlPanelMicroserviceDeploy {
             });
             
             $("#cp_microservice_deploy_delete").on("click", "", (event) => {
-               this._deleteElement(null);
+               this._deleteElement();
+            });
+            
+            $(".button_password").on("click", "", (event) => {
+                let target = $(event.target).parent().hasClass("mdc-button") === true ? $(event.target).parent() : $(event.target);
+                
+                let inputName = $(target).prev().find("input[type='password']").prop("name");
+                
+                popupEasy.show(
+                    window.text.index_5,
+                    window.textMicroserviceDeploy.label_4,
+                    () => {
+                        ajax.send(
+                            true,
+                            window.url.cpMicroserviceDeployClearPassword,
+                            "post",
+                            {
+                                'event': "clear",
+                                'inputName': inputName,
+                                'token': window.session.token
+                            },
+                            "json",
+                            false,
+                            true,
+                            "application/x-www-form-urlencoded; charset=UTF-8",
+                            null,
+                            (xhr) => {
+                                ajax.reply(xhr, "");
+                                
+                                if (xhr.response.messages.success !== undefined) {
+                                    $(target).prev().find("input[type='password']").val("");
+                                    $(target).prev().find("input[type='password']").attr("placeholder", "");
+                                    $(target).prev().find(".mdc-floating-label").removeClass("mdc-floating-label--float-above");
+                                }
+                            },
+                            null,
+                            null
+                        );
+                    }
+                );
             });
         }
     }
     
     _deleteElement = (id) => {
-        popupEasy.create(
+        let idValue = id === undefined ? null : id;
+        
+        popupEasy.show(
             window.text.index_5,
             window.textMicroserviceDeploy.label_1,
             () => {
@@ -292,7 +339,7 @@ class ControlPanelMicroserviceDeploy {
                     "post",
                     {
                         'event': "delete",
-                        'id': id,
+                        'id': idValue,
                         'token': window.session.token
                     },
                     "json",
@@ -304,7 +351,9 @@ class ControlPanelMicroserviceDeploy {
                         ajax.reply(xhr, "");
                         
                         if (xhr.response.messages.success !== undefined) {
-                            $.each($("#cp_microservice_deploy_select_result_desktop").find("table .id_column"), (key, value) => {
+                            let ids = $("#cp_microservice_deploy_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 if (xhr.response.values.id === $.trim($(value).text()))
                                     $(value).parents("tr").remove();
                             });
@@ -329,7 +378,7 @@ class ControlPanelMicroserviceDeploy {
             let action = $(event.target).attr("data-action");
             let branchName = $("#cp_microservice_deploy_render_result").find("input[name='branchName']");
             
-            popupEasy.create(
+            popupEasy.show(
                 window.text.index_5,
                 window.textMicroserviceDeploy.label_3,
                 () => {

@@ -56,22 +56,20 @@ class RecoverPasswordController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
         $settingRow = $this->helper->getSettingRow();
         
         if ($settingRow['recover_password'] == true) {
-            $userRow = $this->query->selectUserWithHelpCodeDatabase($this->urlExtra);
+            $helpCodeUserRow = $this->query->selectWithHelpCodeUserDatabase($this->urlExtra);
 
-            if ($userRow == false) {
-                $this->response['values']['userId'] = $userRow['id'];
+            if ($helpCodeUserRow == false) {
+                $this->response['values']['userId'] = $helpCodeUserRow['id'];
 
                 $form = $this->createForm(RecoverPasswordFormType::class, null, Array(
-                    'validation_groups' => Array('recover_password')
+                    'validation_groups' => Array("recover_password")
                 ));
                 $form->handleRequest($request);
 
@@ -90,20 +88,20 @@ class RecoverPasswordController extends AbstractController {
 
                             // Send email to user
                             $this->helper->sendEmail($userEntity->getEmail(),
-                                                        "Recover password",
-                                                        "<p>Click on this link for reset your password:</p> <a href=\"$url\">$url</a>",
+                                                        $this->helper->getTranslator()->trans("recoverPasswordController_1"),
+                                                        "<p>{$this->helper->getTranslator()->trans("recoverPasswordController_2")}</p> <a href=\"{$url}\">{$url}</a>",
                                                         $settingRow['email_admin']);
                             
                             $this->entityManager->persist($userEntity);
                             $this->entityManager->flush();
 
-                            $this->response['messages']['success'] = $this->helper->getTranslator()->trans("recoverPasswordController_1");
+                            $this->response['messages']['success'] = $this->helper->getTranslator()->trans("recoverPasswordController_3");
                         }
                         else
-                            $this->response['messages']['error'] = $this->helper->getTranslator()->trans("recoverPasswordController_2");
+                            $this->response['messages']['error'] = $this->helper->getTranslator()->trans("recoverPasswordController_4");
                     }
                     else {
-                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("recoverPasswordController_3");
+                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("recoverPasswordController_5");
                         $this->response['errors'] = $this->ajax->errors($form);
                     }
 
@@ -116,32 +114,32 @@ class RecoverPasswordController extends AbstractController {
                 }
             }
             else {
-                $userEntity = $this->entityManager->getRepository("App\Entity\User")->find($userRow['id']);
+                $userEntity = $this->entityManager->getRepository("App\Entity\User")->find($helpCodeUserRow['id']);
 
                 $this->response['values']['userId'] = $userEntity->getId();
 
                 $form = $this->createForm(ForgotPasswordFormType::class, null, Array(
-                    'validation_groups' => Array('forgot_password')
+                    'validation_groups' => Array("forgot_password")
                 ));
                 $form->handleRequest($request);
 
                 if ($request->isMethod("POST") == true) {
                     if ($form->isSubmitted() == true && $form->isValid() == true) {
-                        $messagePassword = $this->helper->assignUserPassword("withoutOld", $userEntity, $form);
+                        $messagePassword = $this->helper->assignUserPassword($userEntity, $form);
 
-                        if ($messagePassword == "ok") {
+                        if ($messagePassword === true) {
                             $userEntity->setHelpCode(null);
                             
                             $this->entityManager->persist($userEntity);
                             $this->entityManager->flush();
 
-                            $this->response['messages']['success'] = $this->helper->getTranslator()->trans("recoverPasswordController_4");
+                            $this->response['messages']['success'] = $this->helper->getTranslator()->trans("recoverPasswordController_6");
                         }
                         else
                             $this->response['messages']['error'] = $messagePassword;
                     }
                     else {
-                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("recoverPasswordController_5");
+                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("recoverPasswordController_7");
                         $this->response['errors'] = $this->ajax->errors($form);
                     }
 

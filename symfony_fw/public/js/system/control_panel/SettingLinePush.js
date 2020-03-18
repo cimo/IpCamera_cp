@@ -1,6 +1,6 @@
 "use strict";
 
-/* global ajax, popupEasy, materialDesign, tableAndPagination */
+/* global ajax, materialDesign, popupEasy */
 
 class ControlPanelSettingLinePush {
     // Properties
@@ -10,17 +10,17 @@ class ControlPanelSettingLinePush {
     }
     
     action = () => {
-        const tableAndPagination = new TableAndPagination();
+        let tableAndPagination = new TableAndPagination();
         tableAndPagination.create(window.url.cpSettingLinePushRender, "#cp_setting_line_push_user_result", false);
         tableAndPagination.search();
         tableAndPagination.pagination();
         
-        $("#cp_setting_line_push_user_result").find(".tableAndPagination").hide();
+        $("#cp_setting_line_push_user_result").find(".tableAndPagination_container").hide();
         
         $("#form_cp_setting_line_push_render").on("submit", "", (event) => {
             event.preventDefault();
             
-            if ($(".tableAndPagination .mdc-text-field__input").is(":focus") === true)
+            if ($(".tableAndPagination_container").find(".mdc-text-field__input").is(":focus") === true)
                 return false;
             
             ajax.send(
@@ -74,7 +74,7 @@ class ControlPanelSettingLinePush {
             );
         });
         
-        $("#form_cp_setting_line_push_render .wordTag_container").on("click", ".edit", (event) => {
+        $("#form_cp_setting_line_push_render").find(".wordTag_container").on("click", ".edit", (event) => {
             if ($(event.currentTarget).hasClass("delete") === true)
                 return;
             
@@ -103,7 +103,7 @@ class ControlPanelSettingLinePush {
                         $("#form_settingLinePush_accessToken").val(xhr.response.values.entity[2]);
                         $("#form_settingLinePush_active").val(xhr.response.values.entity[3] === true ? 1 : 0);
                         
-                        $("#cp_setting_line_push_user_result").find(".tableAndPagination").show();
+                        $("#cp_setting_line_push_user_result").find(".tableAndPagination_container").show();
                         
                         $("#form_cp_setting_line_push_render").find(".wordTag_container").html(xhr.response.values.wordTagListHtml);
                         
@@ -117,13 +117,13 @@ class ControlPanelSettingLinePush {
             );
         });
         
-        $("#form_cp_setting_line_push_render .wordTag_container").on("click", ".delete", (event) => {
+        $("#form_cp_setting_line_push_render").find(".wordTag_container").on("click", ".delete", (event) => {
             if ($(event.currentTarget).hasClass("edit") === true)
                 return;
             
             let id = $.trim($(event.currentTarget).parent().find(".mdc-chip__text").attr("data-id"));
             
-            popupEasy.create(
+            popupEasy.show(
                 window.text.index_5,
                 window.textSettingLinePush.label_1,
                 () => {
@@ -176,6 +176,6 @@ class ControlPanelSettingLinePush {
         $("#form_settingLinePush_active").val("");
         $("#form_settingLinePush_active").parent().find("label").removeClass("mdc-floating-label--float-above");
         
-        $("#cp_setting_line_push_user_result").find(".tableAndPagination").hide();
+        $("#cp_setting_line_push_user_result").find(".tableAndPagination_container").hide();
     }
 }

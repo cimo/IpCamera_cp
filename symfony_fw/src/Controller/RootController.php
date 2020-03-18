@@ -54,9 +54,7 @@ class RootController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -64,9 +62,9 @@ class RootController extends AbstractController {
         
         $this->response['url']['root'] = $this->helper->getUrlRoot();
         
-        $this->response['module']['left'] = $this->query->selectAllModuleDatabase(null, "left");
-        $this->response['module']['center'] = $this->query->selectAllModuleDatabase(null, "center");
-        $this->response['module']['right'] = $this->query->selectAllModuleDatabase(null, "right");
+        $this->response['module']['leftRows'] = $this->query->selectAllModuleDatabase(0, "left");
+        $this->response['module']['centerRows'] = $this->query->selectAllModuleDatabase(0, "center");
+        $this->response['module']['rightRows'] = $this->query->selectAllModuleDatabase(0, "right");
         
         if ($request->get("event") == "captchaImage") {
             $this->response['captchaImage'] = $this->captcha->create(7);

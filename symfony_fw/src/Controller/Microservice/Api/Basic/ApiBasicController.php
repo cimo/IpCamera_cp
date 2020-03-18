@@ -35,10 +35,6 @@ class ApiBasicController extends AbstractController {
     
     private $session;
     
-    private $parameters;
-    
-    private $apiBasicRow;
-    
     // Properties
     
     // Functions public
@@ -64,9 +60,7 @@ class ApiBasicController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -75,7 +69,7 @@ class ApiBasicController extends AbstractController {
         $apiBasicEntity = new ApiBasic();
         
         $form = $this->createForm(ApiBasicFormType::class, $apiBasicEntity, Array(
-            'validation_groups' => Array('apiBasic_create')
+            'validation_groups' => Array("apiBasic_create")
         ));
         $form->handleRequest($request);
         
@@ -84,9 +78,7 @@ class ApiBasicController extends AbstractController {
                 $this->entityManager->persist($apiBasicEntity);
                 $this->entityManager->flush();
                 
-                $this->apiBasicDatabase("update", $apiBasicEntity->getId(), $form->get("databasePassword")->getData());
-                
-                $this->helper->writeLog("{$this->helper->getPathSrc()}/files/microservice/api/basic", $apiBasicEntity->getName(), "createAction()");
+                $this->query->updateApiBasicDatabase("aes", $apiBasicEntity->getId(), "database_password", $form->get("databasePassword")->getData());
                 
                 $this->response['values']['id'] = $apiBasicEntity->getId();
                 
@@ -136,9 +128,7 @@ class ApiBasicController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -146,23 +136,48 @@ class ApiBasicController extends AbstractController {
         
         $this->session->set("apiBasicProfileId", 0);
         
-        $rows = $this->selectAllApiBasicDatabase(true);
+        $apiBasicRows = $this->query->selectAllApiBasicDatabase(true);
         
         $form = $this->createForm(ApiBasicSelectFormType::class, null, Array(
-            'validation_groups' => Array('apiBasic_select'),
-            'choicesId' => array_column($rows, "id", "name")
+            'validation_groups' => Array("apiBasic_select"),
+            'id' => array_column($apiBasicRows, "id", "name")
         ));
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                return $this->ajax->response(Array(
-                    'urlLocale' => $this->urlLocale,
-                    'urlCurrentPageId' => $this->urlCurrentPageId,
-                    'urlExtra' => $this->urlExtra,
-                    'response' => $this->response
-                ));
+            if ($form->isSubmitted() == true && $form->isValid() == true) {
+                $id = $form->get("id")->getData() == null ? 0 : $form->get("id")->getData();
+                
+                $apiBasicEntity = $this->entityManager->getRepository("App\Entity\ApiBasic")->find($id);
+
+                if ($apiBasicEntity != null) {
+                    $this->session->set("apiBasicProfileId", $apiBasicEntity->getId());
+
+                    $formSub = $this->createForm(ApiBasicFormType::class, $apiBasicEntity, Array(
+                        'validation_groups' => Array("apiBasic_profile")
+                    ));
+                    $formSub->handleRequest($request);
+                    
+                    $this->response['render'] = $this->renderView("@templateRoot/microservice/api/basic/profile.html.twig", Array(
+                        'urlLocale' => $this->urlLocale,
+                        'urlCurrentPageId' => $this->urlCurrentPageId,
+                        'urlExtra' => $this->urlExtra,
+                        'response' => $this->response,
+                        'form' => $formSub->createView()
+                    ));
+                }
             }
+            else {
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("apiBasicController_3");
+                $this->response['errors'] = $this->ajax->errors($form);
+            }
+            
+            return $this->ajax->response(Array(
+                'urlLocale' => $this->urlLocale,
+                'urlCurrentPageId' => $this->urlCurrentPageId,
+                'urlExtra' => $this->urlExtra,
+                'response' => $this->response
+            ));
         }
         
         return Array(
@@ -196,74 +211,7 @@ class ApiBasicController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
-        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
-        
-        if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                $id = $request->get("id") == null ? 0 : $request->get("id");
-                
-                $apiBasicEntity = $this->entityManager->getRepository("App\Entity\ApiBasic")->find($id);
-
-                if ($apiBasicEntity != null) {
-                    $this->session->set("apiBasicProfileId", $id);
-
-                    $form = $this->createForm(ApiBasicFormType::class, $apiBasicEntity, Array(
-                        'validation_groups' => Array('apiBasic_profile')
-                    ));
-                    $form->handleRequest($request);
-                    
-                    $this->response['render'] = $this->renderView("@templateRoot/microservice/api/basic/profile.html.twig", Array(
-                        'urlLocale' => $this->urlLocale,
-                        'urlCurrentPageId' => $this->urlCurrentPageId,
-                        'urlExtra' => $this->urlExtra,
-                        'response' => $this->response,
-                        'form' => $form->createView()
-                    ));
-                }
-                else
-                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("apiBasicController_3");
-            }
-        }
-        
-        return $this->ajax->response(Array(
-            'urlLocale' => $this->urlLocale,
-            'urlCurrentPageId' => $this->urlCurrentPageId,
-            'urlExtra' => $this->urlExtra,
-            'response' => $this->response
-        ));
-    }
-    
-    /**
-    * @Route(
-    *   name = "cp_apiBasic_profile_save",
-    *   path = "/cp_apiBasic_profile_save/{_locale}/{urlCurrentPageId}/{urlExtra}",
-    *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
-    *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
-    *	methods={"POST"}
-    * )
-    * @Template("@templateRoot/microservice/api/basic/profile.html.twig")
-    */
-    public function profileSaveAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->entityManager = $this->getDoctrine()->getManager();
-        
-        $this->response = Array();
-        
-        $this->helper = new Helper($this->container, $this->entityManager, $translator);
-        $this->query = $this->helper->getQuery();
-        $this->ajax = new Ajax($this->helper);
-        
-        $this->session = $this->helper->getSession();
-        
-        // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -271,30 +219,19 @@ class ApiBasicController extends AbstractController {
         
         $apiBasicEntity = $this->entityManager->getRepository("App\Entity\ApiBasic")->find($this->session->get("apiBasicProfileId"));
         $nameOld = $apiBasicEntity->getName();
-        $databasePasswordOld = $apiBasicEntity->getDatabasePassword();
         
         $form = $this->createForm(ApiBasicFormType::class, $apiBasicEntity, Array(
-            'validation_groups' => Array('apiBasic_profile')
+            'validation_groups' => Array("apiBasic_profile"),
+            'databasePassword' => $apiBasicEntity->getDatabasePassword()
         ));
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                $databasePassword = "";
-                
-                if ($form->get("databaseUsername")->getData() == null)
-                    $apiBasicEntity->setDatabasePassword(null);
-                else {
-                    if ($form->get("databasePassword")->getData() == null)
-                        $apiBasicEntity->setDatabasePassword($databasePasswordOld);
-                    else
-                        $databasePassword = $form->get("databasePassword")->getData();
-                }
-                
                 $this->entityManager->persist($apiBasicEntity);
                 $this->entityManager->flush();
                 
-                $this->apiBasicDatabase("update", $apiBasicEntity->getId(), $databasePassword);
+                $this->query->updateApiBasicDatabase("aes", $apiBasicEntity->getId(), "database_password", $form->get("databasePassword")->getData());
                 
                 $logPathOld = "{$this->helper->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $nameOld) . ".log";
                 $logPathNew = "{$this->helper->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $apiBasicEntity->getName()) . ".log";
@@ -348,9 +285,7 @@ class ApiBasicController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -367,7 +302,7 @@ class ApiBasicController extends AbstractController {
                         $this->entityManager->remove($apiBasicEntity);
                         $this->entityManager->flush();
                         
-                        $this->apiBasicRequestDatabase("delete", $id);
+                        $this->query->deleteApiBasicRequestDatabase($id);
                         
                         $this->response['values']['id'] = $id;
 
@@ -398,6 +333,53 @@ class ApiBasicController extends AbstractController {
     
     /**
     * @Route(
+    *   name = "cp_apiBasic_clearPassword",
+    *   path = "/cp_apiBasic_clearPassword/{_locale}/{urlCurrentPageId}/{urlExtra}",
+    *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
+    *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
+    *	methods={"POST"}
+    * )
+    */
+    public function clearPasswordAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
+        $this->entityManager = $this->getDoctrine()->getManager();
+        
+        $this->response = Array();
+        
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        
+        $this->session = $this->helper->getSession();
+        
+        // Logic
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        
+        if ($request->isMethod("POST") == true && $checkUserRole == true) {
+            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
+                if ($request->get("inputName") == "form_apiBasic[databasePassword]") {
+                    $this->query->updateApiBasicDatabase("clear", $this->session->get("apiBasicProfileId"), "database_password", null);
+                    
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("apiBasicController_17");
+                }
+                else
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("apiBasicController_18");
+            }
+        }
+        
+        return $this->ajax->response(Array(
+            'urlLocale' => $this->urlLocale,
+            'urlCurrentPageId' => $this->urlCurrentPageId,
+            'urlExtra' => $this->urlExtra,
+            'response' => $this->response
+        ));
+    }
+    
+    /**
+    * @Route(
     *   name = "cp_apiBasic_log",
     *   path = "/cp_apiBasic_log/{_locale}/{urlCurrentPageId}/{urlExtra}",
     *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
@@ -417,9 +399,7 @@ class ApiBasicController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -428,10 +408,12 @@ class ApiBasicController extends AbstractController {
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "log") {
-                    $row = $this->selectApiBasicDatabase($this->session->get("apiBasicProfileId"), false);
+                    $apiBasicRow = $this->query->selectApiBasicDatabase($this->session->get("apiBasicProfileId"), false);
                     
-                    $logPath = "{$this->helper->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $row['name']) . ".log";
+                    $logPath = "{$this->helper->getPathSrc()}/files/microservice/api/basic/" . str_replace(" ", "_", $apiBasicRow['name']) . ".log";
+                    
                     $fileReadTail = $this->helper->fileReadTail($logPath, "500");
+                    
                     $this->response['values']['log'] = "<pre class=\"microservice_api_log\">" . implode("\r\n", $fileReadTail) . "</pre>";
                 }
             }
@@ -466,9 +448,7 @@ class ApiBasicController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -537,9 +517,7 @@ class ApiBasicController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -548,12 +526,11 @@ class ApiBasicController extends AbstractController {
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "csv") {
-                    $this->apiBasicRow = $this->selectApiBasicDatabase($this->session->get("apiBasicProfileId"), true);
-                    $apiBasicDatabaseRow = $this->apiBasicDatabase("select", $this->apiBasicRow['id'], $this->apiBasicRow['database_password']);
+                    $apiBasicRow = $this->query->selectApiBasicDatabase($this->session->get("apiBasicProfileId"), true);
                     
-                    $lockPath = "{$this->helper->getPathLock()}/{$this->apiBasicRow['name']}_lock";
+                    $createProcessLock = $this->helper->createProcessLock($apiBasicRow['name']);
                     
-                    if (file_exists($lockPath) == false) {
+                    if ($createProcessLock == true) {
                         $path = "{$this->helper->getPathSrc()}/files/microservice/api/basic";
                         
                         $this->uploadChunk->setSettings(Array(
@@ -566,19 +543,15 @@ class ApiBasicController extends AbstractController {
                         $this->response['uploadChunk']['processFile'] = $uploadChunkProcessFile;
                         
                         if (isset($uploadChunkProcessFile['status']) == true && $uploadChunkProcessFile['status'] == "complete") {
-                            $this->response = $this->helper->responseProcessLock($this->response, $this->apiBasicRow['name']);
-                            
                             $this->helper->closeAjaxRequest($this->response, true);
                             
-                            $totalLineCsv = $this->toolExcel->totalLineCsv("$path/{$uploadChunkProcessFile['fileName']}", ",") - 1;
-                            
-                            $this->helper->createProcessLock($lockPath, $totalLineCsv);
-                            
-                            $readCsv = $this->toolExcel->readCsv("$path/{$uploadChunkProcessFile['fileName']}", ",", $apiBasicDatabaseRow, $this);
+                            $readCsv = $this->toolExcel->readCsv("$path/{$uploadChunkProcessFile['fileName']}", ",", Array(), $this);
                             
                             if ($readCsv == true) {
                                 //...
                             }
+                            
+                            $this->helper->removeProcessLock();
                         }
                     }
                     else
@@ -595,27 +568,22 @@ class ApiBasicController extends AbstractController {
         ));
     }
     
-    public function readCsvCallback($index, $cell, $extra) {
+    public function readCsvCallback($index, $cell) {
         if ($index == 0) {
-            $this->apiBasicRow = $this->selectApiBasicDatabase($this->session->get("apiBasicProfileId"), true);
+            $apiBasicRow = $this->query->selectApiBasicDatabase($this->session->get("apiBasicProfileId"), true);
             
-            //...$cell
+            //$cell
         }
         else if ($index > 0) {
             $parameters = Array();
             
-            //...$cell
+            //$cell
             
-            $databaseExternal = $this->databaseExternal("test", $parameters, $this->apiBasicRow, $extra);
-            
-            if ($databaseExternal != false)
-                $this->helper->populateProcessLock($index);
-            else
-                $this->response['errorCode'] = 100;
+            $this->databaseExternal("test", $parameters, $apiBasicRow);
         }
         
         if (isset($this->response['errorCode']) == true && $this->response['errorCode'] != 0) {
-            $name = "{$this->apiBasicRow['name']}_csv";
+            $name = "{$apiBasicRow['name']}_csv";
             
             $this->helper->writeLog("{$this->helper->getPathSrc()}/files/microservice/api/basic", $name, "readCsvCallback() =>", $this->response);
             
@@ -649,9 +617,7 @@ class ApiBasicController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -667,8 +633,6 @@ class ApiBasicController extends AbstractController {
                     $this->toolExcel->setPath($downloadPath);
                     $this->toolExcel->setName($downloadName);
                     
-                    $this->session->set("downloadName", $this->toolExcel->getName());
-                    
                     $this->toolExcel->createSheet("Point");
                     
                     $elements = Array(
@@ -678,10 +642,10 @@ class ApiBasicController extends AbstractController {
                         )
                     );
                     
-                    $rows = $this->selectAllApiBasicRequestDetailDatabase("requestTestAction", $request->get("dateStart"), $request->get("dateEnd"));
+                    $apiBasicRequestDetailRows = $this->query->selectAllApiBasicRequestDetailDatabase("requestTestAction", $request->get("dateStart"), $request->get("dateEnd"));
                     
-                    if ($rows != false && count($rows) > 0) {
-                        foreach ($rows as $key => $value) {
+                    if ($apiBasicRequestDetailRows != false && count($apiBasicRequestDetailRows) > 0) {
+                        foreach ($apiBasicRequestDetailRows as $key => $value) {
                             if (trim($value['data']) !== "false") {
                                 $data = json_decode($value['data']);
                                 
@@ -699,7 +663,7 @@ class ApiBasicController extends AbstractController {
 
                         $result = $this->toolExcel->save();
                         
-                        if ($result == true && file_exists("{$downloadPath}/{$this->session->get("downloadName")}") == true) {
+                        if ($result == true && file_exists("{$downloadPath}/{$this->toolExcel->getName()}") == true) {
                             $url = "{$this->helper->getUrlRoot()}/files/microservice/api/basic";
                             
                             $this->response['values']['url'] = "{$url}/{$this->toolExcel->getName()}";
@@ -709,13 +673,6 @@ class ApiBasicController extends AbstractController {
                     }
                     else
                         $this->response['messages']['error'] = $this->helper->getTranslator()->trans("download_2");
-                }
-                else if ($request->get("event") == "download_delete") {
-                    unlink("{$downloadPath}/{$this->session->get("downloadName")}");
-                    
-                    $this->session->remove("downloadName");
-                    
-                    $this->response['messages']['log'] = $this->helper->getTranslator()->trans("download_3");
                 }
             }
         }
@@ -752,20 +709,19 @@ class ApiBasicController extends AbstractController {
             else
                 $parameters = $request->request->all();
             
-            $this->parameters = $parameters;
-            
-            $errorCode = $this->errorCode("requestControl", $this->parameters);
+            $errorCode = $this->errorCode("requestControl", $parameters);
             
             if ($errorCode == false) {
-                if (isset($this->parameters['event']) == true && $this->parameters['event'] == "requestCheck") {
+                if (isset($parameters['event']) == true && $parameters['event'] == "requestCheck") {
                     $microserviceApiRow = $this->query->selectMicroserviceApiDatabase(1);
-                    $this->apiBasicRow = $this->selectApiBasicDatabase($this->parameters['tokenName'], true);
-
+                    
                     if ($microserviceApiRow != false) {
-                        if ($this->apiBasicRow != false) {
-                            $ipSplit = preg_split("/\r\n|\r|\n/", $this->apiBasicRow['ip']);
+                        $apiBasicRow = $this->query->selectApiBasicDatabase($parameters['tokenName'], true);
+                        
+                        if ($apiBasicRow != false) {
+                            $ipSplit = preg_split("/\r\n|\r|\n/", $apiBasicRow['ip']);
 
-                            if (isset($this->apiBasicRow['ip']) == true && in_array($_SERVER['REMOTE_ADDR'], $ipSplit) == false)
+                            if (isset($apiBasicRow['ip']) == true && in_array($_SERVER['REMOTE_ADDR'], $ipSplit) == false)
                                 $this->response['messages']['error'] = $this->helper->getTranslator()->trans("apiBasicController_13");
                             else
                                 $this->response['messages']['success'] = $this->helper->getTranslator()->trans("apiBasicController_8");
@@ -819,44 +775,33 @@ class ApiBasicController extends AbstractController {
             else
                 $parameters = $request->request->all();
             
-            $this->parameters = $parameters;
-            
-            $errorCode = $this->errorCode("requestControl", $this->parameters);
+            $errorCode = $this->errorCode("requestControl", $parameters);
             
             if ($errorCode == false) {
-                if (isset($this->parameters['event']) == true && $this->parameters['event'] == "requestTest") {
+                if (isset($parameters['event']) == true && $parameters['event'] == "requestTest") {
                     $microserviceApiRow = $this->query->selectMicroserviceApiDatabase(1);
-                    $this->apiBasicRow = $this->selectApiBasicDatabase($this->parameters['tokenName'], true);
-                    $apiBasicDatabaseRow = $this->apiBasicDatabase("select", $this->apiBasicRow['id'], $this->apiBasicRow['database_password']);
+                    
+                    $apiBasicRow = $this->query->selectApiBasicDatabase($parameters['tokenName'], true);
+                    
+                    $postFields = Array();
                     
                     if ($microserviceApiRow != false) {
-                        if ($this->apiBasicRow != false) {
-                            $ipSplit = preg_split("/\r\n|\r|\n/", $this->apiBasicRow['ip']);
+                        if ($apiBasicRow != false) {
+                            $ipSplit = preg_split("/\r\n|\r|\n/", $apiBasicRow['ip']);
                             
-                            if (isset($this->apiBasicRow['ip']) == true && in_array($_SERVER['REMOTE_ADDR'], $ipSplit) == false)
+                            if (isset($apiBasicRow['ip']) == true && in_array($_SERVER['REMOTE_ADDR'], $ipSplit) == false)
                                 $this->response['messages']['error'] = $this->helper->getTranslator()->trans("apiBasicController_13");
                             else {
-                                $postFields = Array();
-                                
-                                if ($this->apiBasicRow['url_callback'] != "") {
-                                    $urlCallback = $this->urlCallback($this->parameters, $this->apiBasicRow);
+                                if ($apiBasicRow['url_callback'] != "") {
+                                    $urlCallback = $this->urlCallback($parameters, $apiBasicRow);
                                     
                                     if ($urlCallback == true)
                                         $this->response['messages']['success'] = $this->helper->getTranslator()->trans("apiBasicController_10");
-                                    else
-                                        $this->response['errorCode'] = 100;
                                 }
 
-                                if ($this->apiBasicRow['database_ip'] != "" && $this->apiBasicRow['database_name'] != "" && $this->apiBasicRow['database_username'] != "" && $this->apiBasicRow['database_password'] != "") {
-                                    $databaseExternal = $this->databaseExternal("test", $this->parameters, $this->apiBasicRow, $apiBasicDatabaseRow);
-                                    
-                                    if ($databaseExternal != false)
-                                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("apiBasicController_10");
-                                    else
-                                        $this->response['errorCode'] = 100;
-                                }
+                                $databaseExternal = $this->databaseExternal("test", $parameters, $apiBasicRow);
                                 
-                                if ($this->apiBasicRow['url_callback'] == "" && ($this->apiBasicRow['database_ip'] == "" || $this->apiBasicRow['database_name'] == "" || $this->apiBasicRow['database_username'] == "" || $this->apiBasicRow['database_password'] == ""))
+                                if ($databaseExternal != false)
                                     $this->response['messages']['success'] = $this->helper->getTranslator()->trans("apiBasicController_10");
                             }
                         }
@@ -866,13 +811,13 @@ class ApiBasicController extends AbstractController {
                     else
                         $this->response['messages']['error'] = $this->helper->getTranslator()->trans("apiBasicController_9");
                     
-                    if ($this->apiBasicRow != false) {
-                        $this->saveRequest($this->apiBasicRow['id'], $name, "apiBasic -> $name");
-
+                    if ($apiBasicRow != false) {
+                        $this->saveRequest($apiBasicRow, $name, "apiBasic -> {$name}");
+                        
                         $this->saveRequestDetail($name, $postFields, $this->response['errorCode']);
-
+                        
                         if ((isset($this->response['errorCode']) == true && $this->response['errorCode'] != 0) || isset($this->response['messages']['error']) == true)
-                            $this->helper->writeLog("{$this->helper->getPathSrc()}/files/microservice/api/basic", $this->apiBasicRow['name'], "requestTestAction() =>", $this->response);
+                            $this->helper->writeLog("{$this->helper->getPathSrc()}/files/microservice/api/basic", $apiBasicRow['name'], "requestTestAction() =>", $this->response);
                     }
                 }
                 else
@@ -893,253 +838,37 @@ class ApiBasicController extends AbstractController {
     }
     
     // Functions private
-    private function apiBasicDatabase($type, $id, $databasePassword) {
-        if ($id > 0 && $databasePassword != "") {
-            $settingRow = $this->helper->getSettingRow();
-            
-            if ($type == "update") {
-                $query = $this->helper->getConnection()->prepare("UPDATE IGNORE microservice_apiBasic
-                                                                    SET database_password = AES_ENCRYPT(:databasePassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
-                                                                    WHERE id = :id");
-                
-                $query->bindValue(":databasePassword", $databasePassword);
-                $query->bindValue(":id", $id);
-                
-                return $query->execute();
-            }
-            else if ($type == "select") {
-                $query = $this->helper->getConnection()->prepare("SELECT AES_DECRYPT(:databasePassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS database_password
-                                                                        FROM microservice_apiBasic
-                                                                    WHERE id = :id");
-                
-                $query->bindValue(":databasePassword", $databasePassword);
-                $query->bindValue(":id", $id);
-                
-                $query->execute();
-                
-                return $query->fetch();
-            }
-        }
-        
-        return false;
-    }
-    
-    private function apiBasicRequestDatabase($type, $apiId, $name = "", $row = null) {
-        if ($type == "insert") {
-            $query = $this->helper->getConnection()->prepare("INSERT INTO microservice_apiBasic_request (
-                                                                    api_id,
-                                                                    name,
-                                                                    date,
-                                                                    ip
-                                                                )
-                                                                VALUES (
-                                                                    :apiId,
-                                                                    :name,
-                                                                    :date,
-                                                                    :ip
-                                                                );");
-            
-            $query->bindValue(":apiId", $apiId);
-            $query->bindValue(":name", $name);
-            $query->bindValue(":date", date("Y-m-d H:i:s"));
-            $query->bindValue(":ip", $_SERVER['REMOTE_ADDR']);
-        }
-        else if ($type == "update") {
-            $query = $this->helper->getConnection()->prepare("UPDATE microservice_apiBasic_request
-                                                                SET count = :count
-                                                                WHERE api_id = :apiId
-                                                                AND name = :name
-                                                                AND date LIKE :date");
-            
-            $query->bindValue(":count", $row['count'] + 1);
-            $query->bindValue(":apiId", $apiId);
-            $query->bindValue(":name", $name);
-            $query->bindValue(":date", "%" . date("Y-m-d") . "%");
-        }
-        else if ($type == "delete") {
-            $query = $this->helper->getConnection()->prepare("DELETE FROM microservice_apiBasic_request
-                                                                WHERE api_id = :apiId");
-            
-            $query->bindValue(":apiId", $apiId);
-        }
-        
-        return $query->execute();
-    }
-    
-    private function selectApiBasicDatabase($value, $onlyActive) {
-        $connection = $this->entityManager->getConnection();
-        
-        if (is_numeric($value) == true) {
-            if ($onlyActive == true) {
-                $query = $connection->prepare("SELECT * FROM microservice_apiBasic
-                                                WHERE id = :id
-                                                AND active = :active
-                                                ORDER by name ASC");
-                
-                $query->bindValue(":active", 1);
-            }
-            else {
-                $query = $connection->prepare("SELECT * FROM microservice_apiBasic
-                                                WHERE id = :id
-                                                ORDER by name ASC");
-            }
-            
-            $query->bindValue(":id", $value);
-        }
-        else {
-            if ($onlyActive == true) {
-                $query = $connection->prepare("SELECT * FROM microservice_apiBasic
-                                                WHERE token_name = :tokenName
-                                                AND active = :active
-                                                ORDER by name ASC");
-                
-                $query->bindValue(":active", 1);
-            }
-            else {
-                $query = $connection->prepare("SELECT * FROM microservice_apiBasic
-                                                WHERE token_name = :tokenName
-                                                ORDER by name ASC");
-            }
-            
-            $query->bindValue(":tokenName", $value);
-        }
-        
-        $query->execute();
-        
-        return $query->fetch();
-    }
-    
-    private function selectAllApiBasicDatabase($onlyActive = false) {
-        $connection = $this->entityManager->getConnection();
-        
-        if ($onlyActive == false) {
-            $query = $connection->prepare("SELECT * FROM microservice_apiBasic
-                                            WHERE active = :active
-                                            ORDER by name ASC");
-
-            $query->bindValue(":active", 1);
-        }
-        else
-            $query = $connection->prepare("SELECT * FROM microservice_apiBasic
-                                            ORDER by name ASC");
-        
-        $query->execute();
-        
-        return $query->fetchAll();
-    }
-    
-    private function selectApiBasicRequestDatabase($apiId, $name) {
-        $connection = $this->entityManager->getConnection();
-        
-        $query = $connection->prepare("SELECT * FROM microservice_apiBasic_request
-                                        WHERE api_id = :apiId
-                                        AND name = :name
-                                        AND date LIKE :date
-                                        ORDER by name ASC");
-        
-        $query->bindValue(":apiId", $apiId);
-        $query->bindValue(":name", $name);
-        $query->bindValue(":date", "%" . date("Y-m-d") . "%");
-        
-        $query->execute();
-        
-        return $query->fetch();
-    }
-    
-    private function selectAllApiBasicRequestDatabase($apiId, $name) {
-        $connection = $this->entityManager->getConnection();
-        
-        $query = $connection->prepare("SELECT * FROM microservice_apiBasic_request
-                                        WHERE api_id = :apiId
-                                        AND name = :name
-                                        AND date LIKE :date
-                                        ORDER by name ASC");
-        
-        $query->bindValue(":apiId", $apiId);
-        $query->bindValue(":name", $name);
-        $query->bindValue(":date", "%{$this->session->get("apiBasicGraphPeriod_year")}-{$this->session->get("apiBasicGraphPeriod_month")}%");
-        
-        $query->execute();
-        
-        return $query->fetchAll();
-    }
-    
-    private function selectAllApiBasicRequestDetailDatabase($name, $dateStart, $dateEnd) {
-        $connection = $this->entityManager->getConnection();
-        
-        if ($dateStart == "" && $dateEnd == "")
-            return false;
-        else if ($dateStart != "" && $dateEnd == "") {
-            $query = $connection->prepare("SELECT * FROM microservice_apiBasic_request_detail
-                                            WHERE name = :name AND DATE(date) >= :dateStart
-                                            ORDER by name ASC");
-            
-            $query->bindValue(":dateStart", $dateStart);
-        }
-        else if ($dateStart == "" && $dateEnd != "") {
-            $query = $connection->prepare("SELECT * FROM microservice_apiBasic_request_detail
-                                            WHERE name = :name AND DATE(date) <= :dateEnd
-                                            ORDER by name ASC");
-            
-            $query->bindValue(":dateEnd", $dateEnd);
-        }
-        else if ($dateStart != "" && $dateEnd != "") {
-            $query = $connection->prepare("SELECT * FROM microservice_apiBasic_request_detail
-                                            WHERE name = :name AND DATE(date) >= :dateStart AND DATE(date) <= :dateEnd
-                                            ORDER by name ASC");
-            
-            $query->bindValue(":dateStart", $dateStart);
-            $query->bindValue(":dateEnd", $dateEnd);
-        }
-        
-        $query->bindValue(":name", $name);
-        
-        $query->execute();
-        
-        return $query->fetchAll();
-    }
-    
     private function graphLogic($labels, $tag, $color) {
-        $requestRows = $this->selectAllApiBasicRequestDatabase($this->session->get("apiBasicProfileId"), $tag);
+        $apiBasicRequestRows = $this->query->selectAllApiBasicRequestDatabase($this->session->get("apiBasicProfileId"), $tag, $this->session->get("apiBasicGraphPeriod_year"), $this->session->get("apiBasicGraphPeriod_month"));
         
-        $elementNames = Array();
-        $elementItems = Array();
-        $count = 0;
+        $elementNames = array_fill(0, 31, "");
+        $elementCounts = array_fill(0, 31, "");
         
         foreach ($labels as $key => $value) {
-            if (isset($requestRows[$count]) == true) {
-                $dateExplode = explode(" ", $requestRows[$count]['date']);
-                $date = $dateExplode[0];
+            $dateFormat = $this->helper->dateFormat("{$this->session->get("apiBasicGraphPeriod_year")}-{$this->session->get("apiBasicGraphPeriod_month")}-{$value}", false);
+            
+            foreach ($apiBasicRequestRows as $keySub => $valueSub) {
+                $dateExplode = explode(" ", $valueSub['date']);
                 
-                $dateA = new \DateTime("{$this->session->get("apiBasicGraphPeriod_year")}-{$this->session->get("apiBasicGraphPeriod_month")}-{$labels[$key]}");
-                $dateB = new \DateTime($date);
+                $dateA = new \DateTime($dateFormat);
+                $dateB = new \DateTime($dateExplode[0]);
                 
                 if (date_diff($dateA, $dateB)->y == 0 && date_diff($dateA, $dateB)->m == 0 && date_diff($dateA, $dateB)->d == 0) {
-                    $elementNames[] = $requestRows[$count]['name'];
-                    $elementItems[] = $requestRows[$count]['count'];
-                    
-                    $count ++;
+                    $elementNames[$key] = $valueSub['name'];
+                    $elementCounts[$key] = intval($elementCounts[$key]) + intval($valueSub['count']);
                 }
-                else {
-                    $elementNames[] = "";
-                    $elementItems[] = "";
-                }
-            }
-            else {
-                $elementNames[] = "";
-                $elementItems[] = "";
             }
         }
         
         return Array(
             "name" => $elementNames,
-            "items" => $elementItems,
+            "items" => $elementCounts,
             "color" => $color
         );
     }
     
     private function createSelectPeriodYearHtml($request) {
-        $periodMin = new \DateTime("2017/01/01");
+        $periodMin = new \DateTime("2019/01/01");
         $periodMax = new \DateTime(date("Y/01/01"));
         
         $difference = date_diff($periodMin, $periodMax)->y;
@@ -1274,32 +1003,37 @@ class ApiBasicController extends AbstractController {
         return false;
     }
     
-    private function databaseExternal($type, $parameters, $row, $extra) {
+    private function databaseExternal($type, $parameters, $row) {
         $response = false;
         
-        if ($row['database_ip'] != "" && $row['database_name'] != "" && $row['database_username'] != "" && $extra['database_password'] != "") {
+        if ($row['database_ip'] != "" && $row['database_name'] != "" && $row['database_username'] != "" && $row['database_password_decrypt'] != "") {
             $checkHost = $this->helper->checkHost($row['database_ip']);
             
             if ($checkHost == false)
                 return $response;
             
             try {
-                $pdo = new \PDO("mysql:host={$row['database_ip']};dbname={$row['database_name']};charset=utf8", $row['database_username'], $extra['database_password']);
+                $pdo = new \PDO("mysql:host={$row['database_ip']};dbname={$row['database_name']};charset=utf8", $row['database_username'], $row['database_password_decrypt']);
             }
             catch(\PDOException $error) {
                 $pdo = false;
+                
+                $this->response['messages']['error'] = $error;
             }
             
             if ($pdo != false) {
                 if ($type == "test") {
                     //...
+                    
+                    $response = true;
                 }
             }
             
-            if ($response == false || $pdo == false)
+            if ($response == false) {
                 $this->response['messages']['errorCode'] = 10;
-            
-            $this->helper->writeLog("{$this->helper->getPathSrc()}/files/microservice/api/basic", $row['name'], "databaseExternal() =>", $this->response);
+                
+                $this->helper->writeLog("{$this->helper->getPathSrc()}/files/microservice/api/basic", $row['name'], "databaseExternal() =>", $this->response);
+            }
             
             unset($pdo);
         }
@@ -1307,43 +1041,24 @@ class ApiBasicController extends AbstractController {
         return $response;
     }
     
-    private function saveRequest($id, $name, $message) {
-        $requestRow = $this->selectApiBasicRequestDatabase($id, $name);
+    private function saveRequest($row, $name, $message) {
+        $apiBasicRequestRow = $this->query->selectApiBasicRequestDatabase($row['id'], $name);
         
-        if ($requestRow == false)
-            $this->apiBasicRequestDatabase("insert", $id, $name);
+        if ($apiBasicRequestRow == false)
+            $this->query->insertApiBasicRequestDatabase($row['id'], $name);
         else
-            $this->apiBasicRequestDatabase("update", $id, $name, $requestRow);
+            $this->query->updateApiBasicRequestDatabase($row['id'], $name, $apiBasicRequestRow['count']);
         
-        if ($this->apiBasicRow['slack_active'] == true)
-            $this->helper->sendMessageToSlackRoom("api_basic", date("Y-m-d H:i:s") . " - IP[{$_SERVER['REMOTE_ADDR']}] - Message: $message");
+        if ($row['slack_active'] == true)
+            $this->helper->sendMessageToSlackRoom("api_basic", "{$this->helper->dateFormat()} - IP[{$_SERVER['REMOTE_ADDR']}] - Message: {$message}");
         
-        if ($this->apiBasicRow['line_active'] == true)
-            $this->helper->sendMessageToLineChatMultiple("api_basic", date("Y-m-d H:i:s") . " - IP[{$_SERVER['REMOTE_ADDR']}] - Message: $message");
+        if ($row['line_active'] == true)
+            $this->helper->sendMessageToLineChatMultiple("api_basic", "{$this->helper->dateFormat()} - IP[{$_SERVER['REMOTE_ADDR']}] - Message: {$message}");
     }
     
     private function saveRequestDetail($name, $data, $errorCode) {
-        if ($name == "requestTestAction") {
-            $data['errorCode'] = $errorCode;
-            
-            $json = json_encode($data);
-            
-            $query = $this->helper->getConnection()->prepare("INSERT INTO microservice_apiBasic_request_detail (
-                                                                    name,
-                                                                    date,
-                                                                    data
-                                                                )
-                                                                VALUES (
-                                                                    :name,
-                                                                    :date,
-                                                                    :data
-                                                                );");
-            
-            $query->bindValue(":name", $name);
-            $query->bindValue(":date", date("Y-m-d H:i:s"));
-            $query->bindValue(":data", $json);
-            
-            $query->execute();
-        }
+        $data['errorCode'] = $errorCode;
+        
+        $this->query->insertApiBasicRequestDetailDatabase($name, json_encode($data));
     }
 }

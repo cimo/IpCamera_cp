@@ -3,7 +3,6 @@ namespace App;
 
 class Config {
     // Vars
-    private $databaseConnectionFields;
     private $protocol;
     private $pathRoot;
     private $urlRoot;
@@ -12,10 +11,6 @@ class Config {
     private $name;
     
     // Properties
-    public function getDatabaseConnectionFields() {
-        return $this->databaseConnectionFields;
-    }
-    
     public function getProtocol() {
         return $this->protocol;
     }
@@ -42,11 +37,6 @@ class Config {
     
     // Functions public
     public function __construct() {
-        $this->databaseConnectionFields = Array("", "", "", Array(
-            \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
-            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
-        ));
         $this->protocol = isset($_SERVER['HTTPS']) == true ? "https://" : "http://";
         $this->pathRoot = "/path_root";
         $this->urlRoot = "/path_public";

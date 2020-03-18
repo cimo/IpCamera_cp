@@ -21,8 +21,8 @@ class SettingFormType extends AbstractType {
             'data_class' => "App\Entity\Setting",
             'csrf_protection' => true,
             'validation_groups' => null,
-            'choicesTemplate' => null,
-            'choicesLanguage' => null
+            'template' => null,
+            'language' => null
         ));
     }
     
@@ -30,7 +30,7 @@ class SettingFormType extends AbstractType {
         $builder->add("template", ChoiceType::class, Array(
             'required' => true,
             'placeholder' => "settingFormType_1",
-            'choices' => $options['choicesTemplate'],
+            'choices' => $options['template'],
         ))
         ->add("templateColumn", ChoiceType::class, Array(
             'required' => true,
@@ -70,7 +70,7 @@ class SettingFormType extends AbstractType {
         ->add("language", ChoiceType::class, Array(
             'required' => true,
             'placeholder' => "settingFormType_11",
-            'choices' => $options['choicesLanguage'],
+            'choices' => $options['language'],
             'data' => $options['data']->getLanguage()
         ))
         ->add("emailAdmin", TextType::class, Array(
@@ -196,8 +196,18 @@ class SettingFormType extends AbstractType {
             'required' => true,
             'label' => "settingFormType_32"
         ))
+        ->add("serverRoot", TextType::class, Array(
+            'required' => true,
+            'label' => "settingFormType_33",
+            'data' => $_SERVER['DOCUMENT_ROOT']
+        ))
+        ->add("serverHost", TextType::class, Array(
+            'required' => true,
+            'label' => "settingFormType_34",
+            'data' => $_SERVER['HTTP_HOST']
+        ))
         ->add("submit", SubmitType::class, Array(
-            'label' => "settingFormType_33"
+            'label' => "settingFormType_35"
         ));
         
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $formEvent) {

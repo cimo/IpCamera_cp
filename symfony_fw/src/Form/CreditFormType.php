@@ -14,7 +14,7 @@ class CreditFormType extends AbstractType {
     
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(Array(
-            'data_class' => "App\Form\Model\CreditModel",
+            'data_class' => "App\Entity\User",
             'csrf_protection' => true,
             'validation_groups' => null
         ));

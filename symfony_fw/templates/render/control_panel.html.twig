@@ -77,31 +77,6 @@
                     <p>{% trans %}controlPanelPayment_1{% endtrans %}</p>
 
                     {{-render(controller("App\\Controller\\ControlPanel\\PaymentController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
-                    
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/Payment" ~ javascriptMinify)}}"></script>
-                    <script nonce="{{php_session.xssProtectionValue}}">
-                        "use strict";
-                        
-                        const controlPanelPayment = new ControlPanelPayment();
-                        
-                        window.addEventListener("load", (event) => {
-                            controlPanelPayment.action();
-                            controlPanelPayment.changeView();
-                        }, false);
-                        
-                        window.addEventListener("resize", (event) => {
-                            controlPanelPayment.changeView();
-                        }, false);
-                        
-                        window.addEventListener("orientationchange", (event) => {
-                            controlPanelPayment.changeView();
-                        }, false);
-                        
-                        window.textPayment = {
-                            'label_1': "{{"controlPanelPayment_2"|trans}}",
-                            'label_2': "{{"controlPanelPayment_3"|trans}}"
-                        };
-                    </script>
                 {% endif %}
             {% elseif urlExtra == "cp_page" or urlExtra == "cp_page_create" or urlExtra == "cp_page_select" %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
@@ -116,33 +91,6 @@
                     {% elseif urlExtra == "cp_page_select" %}
                         {{-render(controller("App\\Controller\\ControlPanel\\PageController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
-                    
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/Page" ~ javascriptMinify)}}"></script>
-                    <script nonce="{{php_session.xssProtectionValue}}">
-                        "use strict";
-                        
-                        const controlPanelPage = new ControlPanelPage();
-                        
-                        window.addEventListener("load", (event) => {
-                            controlPanelPage.action();
-                            controlPanelPage.changeView();
-                        }, false);
-                        
-                        window.addEventListener("resize", (event) => {
-                            controlPanelPage.changeView();
-                        }, false);
-                        
-                        window.addEventListener("orientationchange", (event) => {
-                            controlPanelPage.changeView();
-                        }, false);
-
-                        window.textPage = {
-                            'label_1': "{{"controlPanelPage_2"|trans}}",
-                            'label_2': "{{"controlPanelPage_3"|trans}}",
-                            'label_3': "{{"controlPanelPage_4"|trans}}",
-                            'label_4': "{{"controlPanelPage_5"|trans}}"
-                        };
-                    </script>
                 {% endif %}
             {% elseif urlExtra == "cp_user" or urlExtra == "cp_user_create" or urlExtra == "cp_user_select" %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
@@ -157,31 +105,6 @@
                     {% elseif urlExtra == "cp_user_select" %}
                         {{-render(controller("App\\Controller\\ControlPanel\\UserController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
-                    
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/User" ~ javascriptMinify)}}"></script>
-                    <script nonce="{{php_session.xssProtectionValue}}">
-                        "use strict";
-                        
-                        const controlPanelUser = new ControlPanelUser();
-                        
-                        window.addEventListener("load", (event) => {
-                            controlPanelUser.action();
-                            controlPanelUser.changeView();
-                        }, false);
-                        
-                        window.addEventListener("resize", (event) => {
-                            controlPanelUser.changeView();
-                        }, false);
-                        
-                        window.addEventListener("orientationchange", (event) => {
-                            controlPanelUser.changeView();
-                        }, false);
-
-                        window.textUser = {
-                            'label_1': "{{"controlPanelUser_2"|trans}}",
-                            'label_2': "{{"controlPanelUser_3"|trans}}"
-                        };
-                    </script>
                 {% endif %}
             {% elseif urlExtra == "cp_module" or urlExtra == "cp_module_create" or urlExtra == "cp_module_select" %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
@@ -196,31 +119,6 @@
                     {% elseif urlExtra == "cp_module_select" %}
                         {{-render(controller("App\\Controller\\ControlPanel\\ModuleController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
-                    
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/Module" ~ javascriptMinify)}}"></script>
-                    <script nonce="{{php_session.xssProtectionValue}}">
-                        "use strict";
-                        
-                        const controlPanelModule = new ControlPanelModule();
-                        
-                        window.addEventListener("load", (event) => {
-                            controlPanelModule.action();
-                            controlPanelModule.changeView();
-                        }, false);
-                        
-                        window.addEventListener("resize", (event) => {
-                            controlPanelModule.changeView();
-                        }, false);
-                        
-                        window.addEventListener("orientationchange", (event) => {
-                            controlPanelModule.changeView();
-                        }, false);
-
-                        window.textModule = {
-                            'label_1': "{{"controlPanelModule_2"|trans}}",
-                            'label_2': "{{"controlPanelModule_3"|trans}}"
-                        };
-                    </script>
                 {% endif %}
             {% elseif urlExtra == "cp_role" or urlExtra == "cp_role_create" or urlExtra == "cp_role_select" %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
@@ -229,103 +127,30 @@
                         <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_role_create"})}}">{% trans %}controlPanel_1{% endtrans %}</a>
                         <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_role_select"})}}">{% trans %}controlPanel_2{% endtrans %}</a>
                     </div>
-
+                    
                     {% if urlExtra == "cp_role_create" %}
                         {{-render(controller("App\\Controller\\ControlPanel\\RoleUserController::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% elseif urlExtra == "cp_role_select" %}
                         {{-render(controller("App\\Controller\\ControlPanel\\RoleUserController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
-                    
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/RoleUser" ~ javascriptMinify)}}"></script>
-                    <script nonce="{{php_session.xssProtectionValue}}">
-                        "use strict";
-                        
-                        const controlPanelRoleUser = new ControlPanelRoleUser();
-                        
-                        window.addEventListener("load", (event) => {
-                            controlPanelRoleUser.action();
-                            controlPanelRoleUser.changeView();
-                        }, false);
-                        
-                        window.addEventListener("resize", (event) => {
-                            controlPanelRoleUser.changeView();
-                        }, false);
-                        
-                        window.addEventListener("orientationchange", (event) => {
-                            controlPanelRoleUser.changeView();
-                        }, false);
-
-                        window.textRole = {
-                            'label_1': "{{"controlPanelRole_2"|trans}}",
-                            'label_2': "{{"controlPanelRole_3"|trans}}"
-                        };
-                    </script>
                 {% endif %}
             {% elseif urlExtra == "cp_setting" %}
                 {% if is_granted("ROLE_ADMIN") == true %}
                     <p>{% trans %}controlPanelSetting_1{% endtrans %}</p>
 
                     {{-render(controller("App\\Controller\\ControlPanel\\SettingController::saveAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
-                    
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/Setting" ~ javascriptMinify)}}"></script>
-                    <script nonce="{{php_session.xssProtectionValue}}">
-                        "use strict";
-                        
-                        const controlPanelSetting = new ControlPanelSetting();
-                        
-                        window.addEventListener("load", (event) => {
-                            controlPanelSetting.action();
-                        }, false);
-                        
-                        window.textSetting = {
-                            'label_1': "{{"controlPanelSetting_2"|trans}}",
-                            'label_2': "{{"controlPanelSetting_3"|trans}}",
-                            'label_3': "{{"settingController_10"|trans}}",
-                            'label_4': "{{"settingController_11"|trans}}"
-                        };
-                    </script>
                 {% endif %}
             {% elseif urlExtra == "cp_setting_slack_iw" %}
                 {% if is_granted("ROLE_ADMIN") == true %}
                     <p>{% trans %}controlPanelSettingSlack_1{% endtrans %}</p>
 
                     {{-render(controller("App\\Controller\\ControlPanel\\SettingSlackIwController::renderAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
-                    
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/SettingSlackIw" ~ javascriptMinify)}}"></script>
-                    <script nonce="{{php_session.xssProtectionValue}}">
-                        "use strict";
-                        
-                        const controlPanelSettingSlackIw = new ControlPanelSettingSlackIw();
-                        
-                        window.addEventListener("load", (event) => {
-                            controlPanelSettingSlackIw.action();
-                        }, false);
-                        
-                        window.textSettingSlackIw = {
-                            'label_1': "{{"controlPanelSettingSlack_2"|trans}}"
-                        };
-                    </script>
                 {% endif %}
             {% elseif urlExtra == "cp_setting_line" %}
                 {% if is_granted("ROLE_ADMIN") == true %}
                     <p>{% trans %}controlPanelSettingLine_1{% endtrans %}</p>
 
                     {{-render(controller("App\\Controller\\ControlPanel\\SettingLinePushController::renderAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
-                    
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/SettingLinePush" ~ javascriptMinify)}}"></script>
-                    <script nonce="{{php_session.xssProtectionValue}}">
-                        "use strict";
-                        
-                        const controlPanelSettingLinePush = new ControlPanelSettingLinePush();
-                        
-                        window.addEventListener("load", (event) => {
-                            controlPanelSettingLinePush.action();
-                        }, false);
-                        
-                        window.textSettingLinePush = {
-                            'label_1': "{{"controlPanelSettingLine_2"|trans}}"
-                        };
-                    </script>
                 {% endif %}
             {% elseif urlExtra == "cp_microservice_deploy" or urlExtra == "cp_microservice_deploy_create" or "cp_microservice_deploy_select" in urlExtra %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
@@ -342,32 +167,6 @@
                     {% elseif urlExtra == "cp_microservice_deploy_select" %}
                         {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceDeployController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
-                    
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceDeploy" ~ javascriptMinify)}}"></script>
-                    <script nonce="{{php_session.xssProtectionValue}}">
-                        "use strict";
-                        
-                        const controlPanelMicroserviceDeploy = new ControlPanelMicroserviceDeploy();
-                        
-                        window.addEventListener("load", (event) => {
-                            controlPanelMicroserviceDeploy.action();
-                            controlPanelMicroserviceDeploy.changeView();
-                        }, false);
-                        
-                        window.addEventListener("resize", (event) => {
-                            controlPanelMicroserviceDeploy.changeView();
-                        }, false);
-                        
-                        window.addEventListener("orientationchange", (event) => {
-                            controlPanelMicroserviceDeploy.changeView();
-                        }, false);
-
-                        window.textMicroserviceDeploy = {
-                            'label_1': "{{"controlPanelMicroserviceDeploy_2"|trans}}",
-                            'label_2': "{{"controlPanelMicroserviceDeploy_3"|trans}}",
-                            'label_3': "{{"controlPanelMicroserviceDeploy_4"|trans}}"
-                        };
-                    </script>
                 {% endif %}
             {% elseif urlExtra == "cp_microservice_api" or urlExtra == "cp_microservice_api_create" or "cp_microservice_api_profile" in urlExtra %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
@@ -381,26 +180,8 @@
                     {% elseif urlExtra == "cp_microservice_api_create" %}
                         {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceApiController::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% elseif "cp_microservice_api_profile" in urlExtra %}
-                        {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceApiController::profileSaveAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                        {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceApiController::profileAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
-                    
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceApi" ~ javascriptMinify)}}"></script>
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/ApiBasic" ~ javascriptMinify)}}"></script>
-                    <script nonce="{{php_session.xssProtectionValue}}">
-                        "use strict";
-                        
-                        const controlPanelMicroserviceApi = new ControlPanelMicroserviceApi();
-                        const controlPanelApiBasic = new ControlPanelApiBasic();
-                        
-                        window.addEventListener("load", (event) => {
-                            controlPanelMicroserviceApi.action();
-                            controlPanelApiBasic.action();
-                        }, false);
-                        
-                        window.textApiBasic = {
-                            'label_1': "{{"apiBasic_1"|trans}}"
-                        };
-                    </script>
                 {% endif %}
             {% elseif urlExtra == "cp_microservice_unit_test" or urlExtra == "cp_microservice_unit_test_create" or "cp_microservice_unit_test_select" in urlExtra %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
@@ -437,31 +218,6 @@
                     {% elseif urlExtra == "cp_microservice_unit_test_select" %}
                         {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceUnitTestController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
-                    
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceUnitTest" ~ javascriptMinify)}}"></script>
-                    <script nonce="{{php_session.xssProtectionValue}}">
-                        "use strict";
-                        
-                        const controlPanelMicroserviceUnitTest = new ControlPanelMicroserviceUnitTest();
-                        
-                        window.addEventListener("load", (event) => {
-                            controlPanelMicroserviceUnitTest.action();
-                            controlPanelMicroserviceUnitTest.changeView();
-                        }, false);
-                        
-                        window.addEventListener("resize", (event) => {
-                            controlPanelMicroserviceUnitTest.changeView();
-                        }, false);
-                        
-                        window.addEventListener("orientationchange", (event) => {
-                            controlPanelMicroserviceUnitTest.changeView();
-                        }, false);
-
-                        window.textMicroserviceUnitTest = {
-                            'label_1': "{{"controlPanelMicroserviceUnitTest_3"|trans}}",
-                            'label_2': "{{"controlPanelMicroserviceUnitTest_4"|trans}}"
-                        };
-                    </script>
                 {% endif %}
             {% elseif urlExtra == "cp_microservice_selenium" %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
@@ -493,8 +249,7 @@
                     "   www-data ALL = NOPASSWD: /home/cimo/www/project/uebusaito/root/symfony_fw/src/files/microservice/selenium/server_start.sh\n"~
                     "   www-data ALL = NOPASSWD: /home/cimo/www/project/uebusaito/root/symfony_fw/src/files/microservice/selenium/server_stop.sh\n"~
                     "Save, close the file and write on server terminal:\n"~
-                    "   sudo chmod +x /home/cimo/www/project/uebusaito/root/symfony_fw/src/files/microservice/selenium/server_start.sh\n"~
-                    "   sudo chmod +x /home/cimo/www/project/uebusaito/root/symfony_fw/src/files/microservice/selenium/server_stop.sh" %}
+                    "   sudo find /home/cimo/www/project/uebusaito/root/symfony_fw -name \"*.sh\" -exec chmod 774 {} \;" %}
                     
                     <pre class="square_code">{{textA}}</pre>
                     
@@ -507,21 +262,6 @@
                     <pre class="square_code">{{textB}}</pre>
                     
                     {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceSeleniumController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
-                    
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceSelenium" ~ javascriptMinify)}}"></script>
-                    <script nonce="{{php_session.xssProtectionValue}}">
-                        "use strict";
-                        
-                        const controlPanelMicroserviceSelenium = new ControlPanelMicroserviceSelenium();
-                        
-                        window.addEventListener("load", (event) => {
-                            controlPanelMicroserviceSelenium.action();
-                        }, false);
-
-                        window.textMicroserviceSelenium = {
-                            'label_1': "{{"controlPanelMicroserviceSelenium_4"|trans}}"
-                        };
-                    </script>
                 {% endif %}
             {% elseif urlExtra == "cp_microservice_cron" or urlExtra == "cp_microservice_cron_create" or "cp_microservice_cron_select" in urlExtra %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
@@ -539,10 +279,10 @@
                     "|   |   |   At months [1-12]\n"~
                     "|   |   |   |   At days of the Week [Numeric, 0-6]\n"~
                     "|   |   |   |   |\n"~
-                    "*   *   *   *   *   /symfony_fw/public/files/microservice/cron/file_name\n\n"~
+                    "*   *   *   *   *   /symfony_fw/src/files/microservice/cron/job.txt\n\n"~
                     "*/X is for repeat every X\n\n"~
                     "Start on reboot:\n"~
-                    "@reboot /symfony_fw/public/files/microservice/cron/file_name" %}
+                    "@reboot /symfony_fw/src/files/microservice/cron/job.txt" %}
                     
                     <pre class="square_code">{{text}}</pre>
                     
@@ -551,31 +291,6 @@
                     {% elseif urlExtra == "cp_microservice_cron_select" %}
                         {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceCronController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
-                    
-                    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceCron" ~ javascriptMinify)}}"></script>
-                    <script nonce="{{php_session.xssProtectionValue}}">
-                        "use strict";
-                        
-                        const controlPanelMicroserviceCron = new ControlPanelMicroserviceCron();
-                        
-                        window.addEventListener("load", (event) => {
-                            controlPanelMicroserviceCron.action();
-                            controlPanelMicroserviceCron.changeView();
-                        }, false);
-                        
-                        window.addEventListener("resize", (event) => {
-                            controlPanelMicroserviceCron.changeView();
-                        }, false);
-                        
-                        window.addEventListener("orientationchange", (event) => {
-                            controlPanelMicroserviceCron.changeView();
-                        }, false);
-
-                        window.textMicroserviceCron = {
-                            'label_1': "{{"controlPanelMicroserviceCron_3"|trans}}",
-                            'label_2': "{{"controlPanelMicroserviceCron_4"|trans}}"
-                        };
-                    </script>
                 {% endif %}
             {% endif %}
             
@@ -589,81 +304,251 @@
 {% endblock %}
 
 {% block scriptContainer %}
+    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/Payment" ~ javascriptMinify)}}"></script>
+    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/Page" ~ javascriptMinify)}}"></script>
+    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/User" ~ javascriptMinify)}}"></script>
+    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/Module" ~ javascriptMinify)}}"></script>
+    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/RoleUser" ~ javascriptMinify)}}"></script>
+    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/Setting" ~ javascriptMinify)}}"></script>
+    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/SettingSlackIw" ~ javascriptMinify)}}"></script>
+    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/SettingLinePush" ~ javascriptMinify)}}"></script>
+    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceDeploy" ~ javascriptMinify)}}"></script>
+    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceApi" ~ javascriptMinify)}}"></script>
+    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/ApiBasic" ~ javascriptMinify)}}"></script>
+    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceUnitTest" ~ javascriptMinify)}}"></script>
+    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceSelenium" ~ javascriptMinify)}}"></script>
+    <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceCron" ~ javascriptMinify)}}"></script>
+    
     <script nonce="{{php_session.xssProtectionValue}}">
         "use strict";
         
-        window.cpUrl = {
-            'cpPaymentUserSelect': "{{path("cp_payment_user_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpPaymentSelect': "{{path("cp_payment_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpPaymentProfile': "{{path("cp_payment_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpPaymentDelete': "{{path("cp_payment_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpPageCreate': "{{path("cp_page_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpPageSelect': "{{path("cp_page_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpPageProfile': "{{path("cp_page_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpPageProfileSort': "{{path("cp_page_profile_sort", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpPageProfileSave': "{{path("cp_page_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpPageDelete': "{{path("cp_page_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpUserCreate': "{{path("cp_user_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpUserSelect': "{{path("cp_user_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpUserProfile': "{{path("cp_user_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpUserProfileSave': "{{path("cp_user_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpUserAttemptLoginReset': "{{path("cp_user_attemptLoginReset", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpUserDelete': "{{path("cp_user_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpModuleCreate': "{{path("cp_module_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpModuleSelect': "{{path("cp_module_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpModuleProfile': "{{path("cp_module_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpModuleProfileSort': "{{path("cp_module_profile_sort", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpModuleProfileSave': "{{path("cp_module_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpModuleDelete': "{{path("cp_module_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpRoleUserCreate': "{{path("cp_roleUser_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpRoleUserSelect': "{{path("cp_roleUser_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpRoleUserProfile': "{{path("cp_roleUser_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpRoleUserProfileSave': "{{path("cp_roleUser_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpRoleUserDelete': "{{path("cp_roleUser_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpSettingSave': "{{path("cp_setting_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpSettingLanguageManage': "{{path("cp_setting_language_manage", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpSettingSlackIwRender': "{{path("cp_setting_slack_iw_render", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpSettingSlackIwDelete': "{{path("cp_setting_slack_iw_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpSettingSlackIwReset': "{{path("cp_setting_slack_iw_reset", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpSettingLinePushRender': "{{path("cp_setting_line_push_render", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpSettingLinePushDelete': "{{path("cp_setting_line_push_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpSettingLinePushReset': "{{path("cp_setting_line_push_reset", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceDeployCreate': "{{path("cp_microservice_deploy_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceDeploySelect': "{{path("cp_microservice_deploy_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceDeployProfile': "{{path("cp_microservice_deploy_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceDeployProfileSave': "{{path("cp_microservice_deploy_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceDeployExecute': "{{path("cp_microservice_deploy_execute", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceDeployDelete': "{{path("cp_microservice_deploy_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceApiCreate': "{{path("cp_microservice_api_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceApiProfileSave': "{{path("cp_microservice_api_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpApiBasicCreate': "{{path("cp_apiBasic_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpApiBasicSelect': "{{path("cp_apiBasic_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpApiBasicProfile': "{{path("cp_apiBasic_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpApiBasicProfileSave': "{{path("cp_apiBasic_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpApiBasicDelete': "{{path("cp_apiBasic_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpApiBasicLog': "{{path("cp_apiBasic_log", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpApiBasicGraph': "{{path("cp_apiBasic_graph", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpApiBasicCsv': "{{path("cp_apiBasic_csv", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpApiBasicDownloadDetail': "{{path("cp_apiBasic_download_detail", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceUnitTestCreate': "{{path("cp_microservice_unit_test_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceUnitTestSelect': "{{path("cp_microservice_unit_test_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceUnitTestProfile': "{{path("cp_microservice_unit_test_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceUnitTestProfileSave': "{{path("cp_microservice_unit_test_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceUnitTestDelete': "{{path("cp_microservice_unit_test_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceSeleniumSelect': "{{path("cp_microservice_selenium_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceSeleniumProfile': "{{path("cp_microservice_selenium_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceSeleniumTest': "{{path("cp_microservice_selenium_test", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceSeleniumDelete': "{{path("cp_microservice_selenium_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceSeleniumUpload': "{{path("cp_microservice_selenium_upload", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceCronCreate': "{{path("cp_microservice_cron_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceCronSelect': "{{path("cp_microservice_cron_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceCronProfile': "{{path("cp_microservice_cron_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceCronProfileSave': "{{path("cp_microservice_cron_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}",
-            'cpMicroserviceCronDelete': "{{path("cp_microservice_cron_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}"
+        $(document).ready(() => {
+            // Payment
+            let controlPanelPayment = new ControlPanelPayment();
+            controlPanelPayment.action();
+            controlPanelPayment.changeView();
+            
+            // Page
+            let controlPanelPage = new ControlPanelPage();
+            controlPanelPage.action();
+            controlPanelPage.changeView();
+            
+            // User
+            let controlPanelUser = new ControlPanelUser();
+            controlPanelUser.action();
+            controlPanelUser.changeView();
+            
+            // Module
+            let controlPanelModule = new ControlPanelModule();
+            controlPanelModule.action();
+            controlPanelModule.changeView();
+            
+            // RoleUser
+            let controlPanelRoleUser = new ControlPanelRoleUser();
+            controlPanelRoleUser.action();
+            controlPanelRoleUser.changeView();
+            
+            // Setting
+            let controlPanelSetting = new ControlPanelSetting();
+            controlPanelSetting.action();
+            
+            // SettingSlackIw
+            let controlPanelSettingSlackIw = new ControlPanelSettingSlackIw();
+            controlPanelSettingSlackIw.action();
+            
+            // SettingLinePush
+            let controlPanelSettingLinePush = new ControlPanelSettingLinePush();
+            controlPanelSettingLinePush.action();
+            
+            // MicroserviceDeploy
+            let controlPanelMicroserviceDeploy = new ControlPanelMicroserviceDeploy();
+            controlPanelMicroserviceDeploy.action();
+            controlPanelMicroserviceDeploy.changeView();
+            
+            // MicroserviceApi - ApiBasic
+            let controlPanelMicroserviceApi = new ControlPanelMicroserviceApi();
+            controlPanelMicroserviceApi.action();
+            
+            let controlPanelApiBasic = new ControlPanelApiBasic();
+            controlPanelApiBasic.action();
+            
+            // MicroserviceUnitTest
+            let controlPanelMicroserviceUnitTest = new ControlPanelMicroserviceUnitTest();
+            controlPanelMicroserviceUnitTest.action();
+            controlPanelMicroserviceUnitTest.changeView();
+            
+            // MicroserviceSelenium
+            let controlPanelMicroserviceSelenium = new ControlPanelMicroserviceSelenium();
+            controlPanelMicroserviceSelenium.action();
+            
+            // MicroserviceCron
+            let controlPanelMicroserviceCron = new ControlPanelMicroserviceCron();
+            controlPanelMicroserviceCron.action();
+            controlPanelMicroserviceCron.changeView();
+            
+            $(window).on("resize", "", (event) => {
+                controlPanelPayment.changeView();
+                
+                controlPanelPage.changeView();
+                
+                controlPanelUser.changeView();
+                
+                controlPanelModule.changeView();
+                
+                controlPanelRoleUser.changeView();
+                
+                controlPanelMicroserviceUnitTest.changeView();
+                
+                controlPanelMicroserviceCron.changeView();
+            });
+
+            $(window).on("orientationchange", "", (event) => {
+                controlPanelPayment.changeView();
+                
+                controlPanelPage.changeView();
+                
+                controlPanelUser.changeView();
+                
+                controlPanelModule.changeView();
+                
+                controlPanelRoleUser.changeView();
+                
+                controlPanelMicroserviceUnitTest.changeView();
+                
+                controlPanelMicroserviceCron.changeView();
+            });
+        });
+        
+        window.textPayment = {
+            'label_1': "{{"controlPanelPayment_2"|trans}}",
+            'label_2': "{{"controlPanelPayment_3"|trans}}"
         };
         
-        $.extend(window.url, cpUrl);
+        window.textPage = {
+            'label_1': "{{"controlPanelPage_2"|trans}}",
+            'label_2': "{{"controlPanelPage_3"|trans}}",
+            'label_3': "{{"controlPanelPage_4"|trans}}",
+            'label_4': "{{"controlPanelPage_5"|trans}}"
+        };
+        
+        window.textUser = {
+            'label_1': "{{"controlPanelUser_2"|trans}}",
+            'label_2': "{{"controlPanelUser_3"|trans}}"
+        };
+        
+        window.textModule = {
+            'label_1': "{{"controlPanelModule_2"|trans}}",
+            'label_2': "{{"controlPanelModule_3"|trans}}"
+        };
+        
+        window.textRole = {
+            'label_1': "{{"controlPanelRole_2"|trans}}",
+            'label_2': "{{"controlPanelRole_3"|trans}}"
+        };
+        
+        window.textSetting = {
+            'label_1': "{{"controlPanelSetting_2"|trans}}",
+            'label_2': "{{"controlPanelSetting_3"|trans}}",
+            'label_3': "{{"settingController_10"|trans}}",
+            'label_4': "{{"settingController_11"|trans}}"
+        };
+        
+        window.textSettingSlackIw = {
+            'label_1': "{{"controlPanelSettingSlack_2"|trans}}"
+        };
+        
+        window.textSettingLinePush = {
+            'label_1': "{{"controlPanelSettingLine_2"|trans}}"
+        };
+        
+        window.textMicroserviceDeploy = {
+            'label_1': "{{"controlPanelMicroserviceDeploy_2"|trans}}",
+            'label_2': "{{"controlPanelMicroserviceDeploy_3"|trans}}",
+            'label_3': "{{"controlPanelMicroserviceDeploy_4"|trans}}",
+            'label_4': "{{"controlPanelMicroserviceDeploy_5"|trans}}"
+        };
+        
+        window.textApiBasic = {
+            'label_1': "{{"controlPanelMicroserviceApi_2"|trans}}",
+            'label_2': "{{"controlPanelMicroserviceApi_3"|trans}}"
+        };
+        
+        window.textMicroserviceUnitTest = {
+            'label_1': "{{"controlPanelMicroserviceUnitTest_3"|trans}}",
+            'label_2': "{{"controlPanelMicroserviceUnitTest_4"|trans}}"
+        };
+        
+        window.textMicroserviceSelenium = {
+            'label_1': "{{"controlPanelMicroserviceSelenium_4"|trans}}"
+        };
+        
+        window.textMicroserviceCron = {
+            'label_1': "{{"controlPanelMicroserviceCron_3"|trans}}",
+            'label_2': "{{"controlPanelMicroserviceCron_4"|trans}}"
+        };
+        
+        window.url['cpPaymentUserSelect'] = "{{path("cp_payment_user_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpPaymentSelect'] = "{{path("cp_payment_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpPaymentDelete'] = "{{path("cp_payment_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpPageCreate'] = "{{path("cp_page_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpPageSelect'] = "{{path("cp_page_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpPageProfile'] = "{{path("cp_page_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpPageProfileSort'] = "{{path("cp_page_profile_sort", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpPageDelete'] = "{{path("cp_page_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpUserCreate'] = "{{path("cp_user_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpUserSelect'] = "{{path("cp_user_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpUserProfile'] = "{{path("cp_user_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpUserAttemptLoginReset'] = "{{path("cp_user_attemptLoginReset", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpUserDelete'] = "{{path("cp_user_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpModuleCreate'] = "{{path("cp_module_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpModuleSelect'] = "{{path("cp_module_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpModuleProfileSort'] = "{{path("cp_module_profile_sort", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpModuleProfile'] = "{{path("cp_module_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpModuleDelete'] = "{{path("cp_module_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpRoleUserCreate'] = "{{path("cp_roleUser_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpRoleUserSelect'] = "{{path("cp_roleUser_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpRoleUserProfile'] = "{{path("cp_roleUser_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpRoleUserDelete'] = "{{path("cp_roleUser_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpSettingSave'] = "{{path("cp_setting_save", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpSettingLanguageManage'] = "{{path("cp_setting_language_manage", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpSettingSlackIwRender'] = "{{path("cp_setting_slack_iw_render", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpSettingSlackIwDelete'] = "{{path("cp_setting_slack_iw_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpSettingSlackIwReset'] = "{{path("cp_setting_slack_iw_reset", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpSettingLinePushRender'] = "{{path("cp_setting_line_push_render", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpSettingLinePushDelete'] = "{{path("cp_setting_line_push_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpSettingLinePushReset'] = "{{path("cp_setting_line_push_reset", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceDeployCreate'] = "{{path("cp_microservice_deploy_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceDeploySelect'] = "{{path("cp_microservice_deploy_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceDeployProfile'] = "{{path("cp_microservice_deploy_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceDeployExecute'] = "{{path("cp_microservice_deploy_execute", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceDeployDelete'] = "{{path("cp_microservice_deploy_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceDeployClearPassword'] = "{{path("cp_microservice_deploy_clearPassword", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceApiCreate'] = "{{path("cp_microservice_api_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceApiProfile'] = "{{path("cp_microservice_api_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpApiBasicCreate'] = "{{path("cp_apiBasic_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpApiBasicSelect'] = "{{path("cp_apiBasic_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpApiBasicProfile'] = "{{path("cp_apiBasic_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpApiBasicDelete'] = "{{path("cp_apiBasic_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpApiBasicClearPassword'] = "{{path("cp_apiBasic_clearPassword", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpApiBasicLog'] = "{{path("cp_apiBasic_log", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpApiBasicGraph'] = "{{path("cp_apiBasic_graph", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpApiBasicCsv'] = "{{path("cp_apiBasic_csv", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpApiBasicDownloadDetail'] = "{{path("cp_apiBasic_download_detail", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceUnitTestCreate'] = "{{path("cp_microservice_unit_test_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceUnitTestSelect'] = "{{path("cp_microservice_unit_test_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceUnitTestProfile'] = "{{path("cp_microservice_unit_test_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceUnitTestDelete'] = "{{path("cp_microservice_unit_test_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceSeleniumSelect'] = "{{path("cp_microservice_selenium_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceSeleniumTest'] = "{{path("cp_microservice_selenium_test", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceSeleniumDelete'] = "{{path("cp_microservice_selenium_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceSeleniumUpload'] = "{{path("cp_microservice_selenium_upload", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceCronCreate'] = "{{path("cp_microservice_cron_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceCronSelect'] = "{{path("cp_microservice_cron_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceCronProfile'] = "{{path("cp_microservice_cron_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+        window.url['cpMicroserviceCronDelete'] = "{{path("cp_microservice_cron_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
     </script>
+    
+    {{-include("@templateRoot/render/control_panel_script_custom.html.twig")-}}
 {% endblock %}
 
 {% macro menuControlPanel(urlLocale) %}

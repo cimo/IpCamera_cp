@@ -57,9 +57,7 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -70,7 +68,7 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->session->set("microserviceUnitTestProfileId", 0);
         
         $form = $this->createForm(MicroserviceUnitTestFormType::class, $microserviceUnitTestEntity, Array(
-            'validation_groups' => Array('microservice_unit_test_create')
+            'validation_groups' => Array("microservice_unit_test_create")
         ));
         $form->handleRequest($request);
         
@@ -128,9 +126,7 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -148,20 +144,52 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->response['values']['count'] = $tableAndPagination['count'];
         
         $form = $this->createForm(MicroserviceUnitTestSelectFormType::class, null, Array(
-            'validation_groups' => Array('microservice_unit_test_select'),
-            'choicesId' => array_column($microserviceUnitTestRows, "id", "name")
+            'validation_groups' => Array("microservice_unit_test_select"),
+            'id' => array_column($microserviceUnitTestRows, "id", "name")
         ));
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                return $this->ajax->response(Array(
-                    'urlLocale' => $this->urlLocale,
-                    'urlCurrentPageId' => $this->urlCurrentPageId,
-                    'urlExtra' => $this->urlExtra,
-                    'response' => $this->response
-                ));
+            $id = 0;
+            
+            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true)
+                $id = $request->get("id");
+            else if ($form->isSubmitted() == true && $form->isValid() == true)
+                $id = $form->get("id")->getData();
+            
+            if ($request->get("event") != "refresh" && $request->get("event") != "tableAndPagination") {
+                $microserviceUnitTestEntity = $this->entityManager->getRepository("App\Entity\MicroserviceUnitTest")->find($id);
+
+                if ($microserviceUnitTestEntity != null) {
+                    $this->session->set("microserviceUnitTestProfileId", $microserviceUnitTestEntity->getId());
+
+                    $formSub = $this->createForm(MicroserviceUnitTestFormType::class, $microserviceUnitTestEntity, Array(
+                        'validation_groups' => Array("microservice_unit_test_profile")
+                    ));
+                    $formSub->handleRequest($request);
+
+                    $this->response['values']['id'] = $this->session->get("microserviceUnitTestProfileId");
+
+                    $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/microservice_unit_test_profile.html.twig", Array(
+                        'urlLocale' => $this->urlLocale,
+                        'urlCurrentPageId' => $this->urlCurrentPageId,
+                        'urlExtra' => $this->urlExtra,
+                        'response' => $this->response,
+                        'form' => $formSub->createView()
+                    ));
+                }
+                else {
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_3");
+                    $this->response['errors'] = $this->ajax->errors($form);
+                }
             }
+            
+            return $this->ajax->response(Array(
+                'urlLocale' => $this->urlLocale,
+                'urlCurrentPageId' => $this->urlCurrentPageId,
+                'urlExtra' => $this->urlExtra,
+                'response' => $this->response
+            ));
         }
         
         return Array(
@@ -195,76 +223,7 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
-        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
-        
-        if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                $id = $request->get("id") == null ? 0 : $request->get("id");
-                
-                $microserviceUnitTestEntity = $this->entityManager->getRepository("App\Entity\MicroserviceUnitTest")->find($id);
-
-                if ($microserviceUnitTestEntity != null) {
-                    $this->session->set("microserviceUnitTestProfileId", $id);
-
-                    $form = $this->createForm(MicroserviceUnitTestFormType::class, $microserviceUnitTestEntity, Array(
-                        'validation_groups' => Array('microservice_unit_test_profile')
-                    ));
-                    $form->handleRequest($request);
-
-                    $this->response['values']['id'] = $this->session->get("microserviceUnitTestProfileId");
-
-                    $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/microservice_unit_test_profile.html.twig", Array(
-                        'urlLocale' => $this->urlLocale,
-                        'urlCurrentPageId' => $this->urlCurrentPageId,
-                        'urlExtra' => $this->urlExtra,
-                        'response' => $this->response,
-                        'form' => $form->createView()
-                    ));
-                }
-                else
-                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_3");
-            }
-        }
-        
-        return $this->ajax->response(Array(
-            'urlLocale' => $this->urlLocale,
-            'urlCurrentPageId' => $this->urlCurrentPageId,
-            'urlExtra' => $this->urlExtra,
-            'response' => $this->response
-        ));
-    }
-    
-    /**
-    * @Route(
-    *   name = "cp_microservice_unit_test_profile_save",
-    *   path = "/cp_microservice_unit_test_profile_save/{_locale}/{urlCurrentPageId}/{urlExtra}",
-    *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
-    *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
-    *	methods={"POST"}
-    * )
-    * @Template("@templateRoot/render/control_panel/microservice_unit_test_profile.html.twig")
-    */
-    public function profileSaveAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->entityManager = $this->getDoctrine()->getManager();
-        
-        $this->response = Array();
-        
-        $this->helper = new Helper($this->container, $this->entityManager, $translator);
-        $this->query = $this->helper->getQuery();
-        $this->ajax = new Ajax($this->helper);
-        
-        $this->session = $this->helper->getSession();
-        
-        // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -273,7 +232,7 @@ class MicroserviceUnitTestController extends AbstractController {
         $microserviceUnitTestEntity = $this->entityManager->getRepository("App\Entity\MicroserviceUnitTest")->find($this->session->get("microserviceUnitTestProfileId"));
         
         $form = $this->createForm(MicroserviceUnitTestFormType::class, $microserviceUnitTestEntity, Array(
-            'validation_groups' => Array('microservice_unit_test_profile')
+            'validation_groups' => Array("microservice_unit_test_profile")
         ));
         $form->handleRequest($request);
         
@@ -330,9 +289,7 @@ class MicroserviceUnitTestController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -345,7 +302,7 @@ class MicroserviceUnitTestController extends AbstractController {
                     
                     $microserviceUnitTestEntity = $this->entityManager->getRepository("App\Entity\MicroserviceUnitTest")->find($id);
                     
-                    $microserviceUnitTestDatabase = $this->microserviceUnitTestDatabase("delete", $id);
+                    $microserviceUnitTestDatabase = $this->query->deleteMicroserviceUnitTestDatabase("one", $id);
                     
                     if ($microserviceUnitTestDatabase == true) {
                         unlink("{$this->helper->getPathPublic()}/files/microservice/unit_test/run/{$microserviceUnitTestEntity->getName()}.html");
@@ -356,7 +313,7 @@ class MicroserviceUnitTestController extends AbstractController {
                     }
                 }
                 else if ($request->get("event") == "deleteAll") {
-                    $microserviceUnitTestDatabase = $this->microserviceUnitTestDatabase("deleteAll");
+                    $microserviceUnitTestDatabase = $this->query->deleteMicroserviceUnitTestDatabase("all");
 
                     if ($microserviceUnitTestDatabase == true) {
                         $this->helper->removeDirRecursive("{$this->helper->getPathPublic()}/files/microservice/unit_test/run", false);
@@ -420,22 +377,6 @@ class MicroserviceUnitTestController extends AbstractController {
         }
         
         return $listHtml;
-    }
-    
-    private function microserviceUnitTestDatabase($type, $id = null) {
-        if ($type == "delete") {
-            $query = $this->helper->getConnection()->prepare("DELETE FROM microservice_unit_test
-                                                                WHERE id = :id");
-            
-            $query->bindValue(":id", $id);
-            
-            return $query->execute();
-        }
-        else if ($type == "deleteAll") {
-            $query = $this->helper->getConnection()->prepare("DELETE FROM microservice_unit_test");
-            
-            return $query->execute();
-        }
     }
     
     private function createFile($microserviceUnitTestEntity) {

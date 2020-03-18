@@ -24,7 +24,7 @@ class PageFormType extends AbstractType {
             'validation_groups' => null,
             'urlLocale' => null,
             'pageRow' => null,
-            'choicesParent' => null
+            'parent' => null
         ));
     }
     
@@ -41,7 +41,7 @@ class PageFormType extends AbstractType {
         ->add("parent", ChoiceType::class, Array(
             'required' => false,
             'placeholder' => "pageFormType_2",
-            'choices' => $options['choicesParent']
+            'choices' => $options['parent']
         ))
         ->add("title", TextType::class, Array(
             'required' => false,

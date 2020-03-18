@@ -15,7 +15,7 @@
             {% endfor %}
         </p>
         <p><b>{% trans %}authentication_3{% endtrans %}</b></p>
-        <p>{{response.values.dateLastLogin[0]}} [{{response.values.dateLastLogin[1]}}]</p>
+        <p>{{response.values.dateLastLogin}}</p>
         <div class="button_container">
             <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': 1, 'urlExtra': "myPage"})}}" type="button">{% trans %}authentication_4{% endtrans %}</a>
             <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("authentication_exit_check", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" type="button">{% trans %}authentication_5{% endtrans %}</a>

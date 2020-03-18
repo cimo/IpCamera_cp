@@ -14,10 +14,10 @@ class PaymentUserSelectFormType extends AbstractType {
     
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(Array(
-            'data_class' => "App\Form\Model\PaymentUserSelectModel",
+            'data_class' => "App\Entity\Payment",
             'csrf_protection' => true,
             'validation_groups' => null,
-            'choicesId' => null,
+            'userId' => null,
             'paymentUserId' => null
         ));
     }
@@ -26,7 +26,7 @@ class PaymentUserSelectFormType extends AbstractType {
         $builder->add("userId", ChoiceType::class, Array(
             'required' => true,
             'placeholder' => "paymentUserSelectFormType_1",
-            'choices' => $options['choicesId'],
+            'choices' => $options['userId'],
             'data' => $options['paymentUserId'],
         ))
         ->add("submit", SubmitType::class, Array(

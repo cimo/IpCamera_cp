@@ -56,7 +56,7 @@
     <div id="myPage_payment_select_mobile" class="display_mobile">
         {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
 
-        <form id="form_myPage_payment_select_mobile" action="{{path("myPage_payment_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+        <form id="form_myPage_payment_select_mobile" action="{{path("myPage_payment_select", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
             {{form_row(form.id)}}
 
             {{form_widget(form._token)}}

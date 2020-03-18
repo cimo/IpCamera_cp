@@ -1,6 +1,6 @@
 "use strict";
 
-/* global helper, ajax, popupEasy, widgetDatePicker, materialDesign */
+/* global helper, ajax, materialDesign, popupEasy, widgetDatePicker */
 
 class ControlPanelUser {
     // Properties
@@ -51,9 +51,9 @@ class ControlPanelUser {
             if (this.selectId >= 0) {
                 $("#cp_user_select_result_desktop").find(".checkbox_column input[type='checkbox']").prop("checked", false);
 
-                let id = $("#cp_user_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
+                let ids = $("#cp_user_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
 
-                $.each(id, (key, value) => {
+                $.each(ids, (key, value) => {
                     if ($.trim($(value).text()) === String(this.selectId))
                         $(value).parents("tr").find(".checkbox_column input").prop("checked", true);
                 });
@@ -73,8 +73,8 @@ class ControlPanelUser {
     
     // Function private
     _selectDesktop = () => {
-        const tableAndPagination = new TableAndPagination();
-        tableAndPagination.setButtonsStatus = "show";
+        let tableAndPagination = new TableAndPagination();
+        tableAndPagination.setButtonStatus = "show";
         tableAndPagination.create(window.url.cpUserSelect, "#cp_user_select_result_desktop", true);
         tableAndPagination.search();
         tableAndPagination.pagination();
@@ -98,6 +98,8 @@ class ControlPanelUser {
                     ajax.reply(xhr, "");
                     
                     tableAndPagination.populate(xhr);
+                    
+                    $("#cp_user_select_result").html("");
                 },
                 null,
                 null
@@ -105,7 +107,7 @@ class ControlPanelUser {
         });
         
         $(document).on("click", "#cp_user_select_result_desktop .delete_all", (event) => {
-            popupEasy.create(
+            popupEasy.show(
                 window.text.index_5,
                 window.textUser.label_2,
                 () => {
@@ -124,12 +126,11 @@ class ControlPanelUser {
                         null,
                         (xhr) => {
                             ajax.reply(xhr, "");
-
-                            $.each($("#cp_user_select_result_desktop").find("table .id_column"), (key, value) => {
-                                let id = $.trim($(value).parents("tr").find(".id_column").text());
-                                
-                                if (id > 1)
-                                    $(value).parents("tr").remove();
+                            
+                            let ids = $("#cp_user_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
+                                $(value).parents("tr").remove();
                             });
                             
                             $("#cp_user_select_result").html("");
@@ -152,7 +153,7 @@ class ControlPanelUser {
 
             ajax.send(
                 true,
-                window.url.cpUserProfile,
+                window.url.cpUserSelect,
                 "post",
                 {
                     'event': "result",
@@ -167,7 +168,9 @@ class ControlPanelUser {
                     $("#cp_user_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -182,12 +185,12 @@ class ControlPanelUser {
     _selectMobile = () => {
         $(document).on("submit", "#form_cp_user_select_mobile", (event) => {
             event.preventDefault();
-
+            
             ajax.send(
                 true,
                 $(event.currentTarget).prop("action"),
                 $(event.currentTarget).prop("method"),
-                helper.serializeJson($(event.currentTarget)),
+                $(event.currentTarget).serialize(),
                 "json",
                 false,
                 true,
@@ -196,7 +199,9 @@ class ControlPanelUser {
                     $("#cp_user_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -208,9 +213,7 @@ class ControlPanelUser {
         });
     }
     
-    _profile = (xhr, tag) => {
-        ajax.reply(xhr, tag);
-        
+    _profile = (xhr) => {
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
             this.selectSended = true;
             
@@ -219,7 +222,7 @@ class ControlPanelUser {
             helper.wordTag("#user_roleUserId", "#form_user_roleUserId");
             
             widgetDatePicker.setInputFill = ".widget_datePicker_input";
-            widgetDatePicker.action();
+            widgetDatePicker.create();
             
             materialDesign.refresh();
 
@@ -242,7 +245,7 @@ class ControlPanelUser {
                         if (xhr.response.messages.success !== undefined) {
                             $("#cp_user_select_result").html("");
                             
-                            $("#cp_user_select_result_desktop .refresh").click();
+                            $("#cp_user_select_result_desktop").find(".refresh").click();
                         }
                     },
                     null,
@@ -278,13 +281,15 @@ class ControlPanelUser {
             });
             
             $("#cp_user_delete").on("click", "", (event) => {
-               this._deleteElement(null);
+               this._deleteElement();
             });
         }
     }
     
     _deleteElement = (id) => {
-        popupEasy.create(
+        let idValue = id === undefined ? null : id;
+        
+        popupEasy.show(
             window.text.index_5,
             window.textUser.label_1,
             () => {
@@ -294,7 +299,7 @@ class ControlPanelUser {
                     "post",
                     {
                         'event': "delete",
-                        'id': id,
+                        'id': idValue,
                         'token': window.session.token
                     },
                     "json",
@@ -306,7 +311,9 @@ class ControlPanelUser {
                         ajax.reply(xhr, "");
                         
                         if (xhr.response.messages.success !== undefined) {
-                            $.each($("#cp_user_select_result_desktop").find("table .id_column"), (key, value) => {
+                            let ids = $("#cp_user_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 if (xhr.response.values.id === $.trim($(value).text()))
                                     $(value).parents("tr").remove();
                             });

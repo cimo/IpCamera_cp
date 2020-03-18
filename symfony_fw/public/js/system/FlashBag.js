@@ -5,24 +5,34 @@
 class FlashBag {
     // Properties
     set setElement(value) {
-        this.element = value;
+        this.snackbarMdc = value;
     }
     
     // Functions public
     constructor() {
-        this.element = null;
+        this.snackbarMdc = null;
+        
+        this.interval = null;
     }
     
     show = (message) => {
+        clearInterval(this.interval);
+        
         let snackbarDataObj = {
             message: message,
             actionText: window.text.index_7,
             actionHandler: () => {}
         };
         
-        this.element.show(snackbarDataObj);
+        this.snackbarMdc.show(snackbarDataObj);
         
-        $("#flashBag").find(".mdc-snackbar__action-button").removeAttr("aria-hidden");
+        this.interval = setInterval(() => {
+            if ($("#flashBag").attr("aria-hidden") !== "true" || $("#flashBag").hasClass("mdc-snackbar mdc-snackbar--active") === true) {
+                $("#flashBag").find(".mdc-snackbar__action-button").click();
+                
+                clearInterval(this.interval);
+            }
+        }, 3000);
     }
     
     sessionActivity = () => {

@@ -14,11 +14,10 @@ class ModuleSelectFormType extends AbstractType {
     
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(Array(
-            'data_class' => "App\Form\Model\ModuleSelectModel",
+            'data_class' => "App\Entity\Module",
             'csrf_protection' => true,
-            'csrf_token_id' => "intention",
             'validation_groups' => null,
-            'choicesId' => null
+            'id' => null
         ));
     }
     
@@ -26,7 +25,7 @@ class ModuleSelectFormType extends AbstractType {
         $builder->add("id", ChoiceType::class, Array(
             'required' => true,
             'placeholder' => "moduleSelectFormType_1",
-            'choices' => $options['choicesId']
+            'choices' => $options['id']
         ))
         ->add("submit", SubmitType::class, Array(
             'label' => "moduleSelectFormType_2"

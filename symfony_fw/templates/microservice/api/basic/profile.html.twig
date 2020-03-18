@@ -13,13 +13,13 @@
     <div id="upload_chunk_apiBasic_csv_container">
         {{-include("@templateRoot/include/upload_chunk.html.twig", {'label': "apiBasicProfile_4"|trans})-}}
     </div>
-    <div>
-        <button id="download_detail_button" class="mdc-fab" type="button" aria-label="label">
+    <div id="download_detail_container">
+        <button class="mdc-fab" type="button" aria-label="label">
             <span class="mdc-fab__icon"><img src="{{asset("images/templates/" ~ settingRow['template'] ~ "/excel.svg")}}" alt="excel.svg"/></span>
         </button>
-        <p class="download_detail_text">{% trans %}apiBasicProfile_5{% endtrans %}</p>
+        <p>{% trans %}apiBasicProfile_5{% endtrans %}</p>
     </div>
-    <div class="download_detail_command">
+    <div id="download_detail_command">
         <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon mdc-text-field--dense">
             <input class="mdc-text-field__input widget_datePicker_input" type="text" value="" autocomplete="off" aria-label="label" name="download_date_start"/>
             <i class="material-icons mdc-text-field__icon" tabindex="0" role="button">date_range</i>
@@ -47,27 +47,24 @@
         </button>
     </div>
 </div>
-<form id="form_cp_apiBasic_profile" action="{{path("cp_apiBasic_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+<form id="form_cp_apiBasic_profile" action="{{path("cp_apiBasic_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
     {{form_row(form.name, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
     {{form_row(form.tokenName, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
-
+    
     <p class="info_field">{% trans %}apiBasicFormType_3_i{% endtrans %}</p>
     {{form_row(form.ip, {'dense': "", 'styleType': "outlinedTrailing"})}}
-
+    
     {{form_row(form.urlCallback, {'dense': "", 'styleType': "outlinedTrailing"})}}
     {{form_row(form.databaseIp, {'dense': "", 'styleType': "outlinedTrailing"})}}
     {{form_row(form.databaseName, {'dense': "", 'styleType': "outlinedTrailing"})}}
-
-    <p class="info_field">{% trans %}apiBasicFormType_7_i{% endtrans %}</p>
     {{form_row(form.databaseUsername, {'dense': "", 'styleType': "outlinedTrailing"})}}
-
-    {{form_row(form.databasePassword, {'dense': "", 'styleType': "outlinedTrailing"})}}
+    {{form_row(form.databasePassword, {'dense': "", 'styleType': "outlinedTrailing", 'resettable': ""})}}
     {{form_row(form.active)}}
     {{form_row(form.slackActive)}}
     {{form_row(form.lineActive)}}
-
+    
     {{form_widget(form._token)}}
-
+    
     {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
 </form>
 

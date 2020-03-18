@@ -120,7 +120,7 @@ class ToolExcel {
         return $index;
     }
     
-    public function readCsv($path, $separator, $extras, $self = null) {
+    public function readCsv($path, $separator, $extras = Array(), $self = null) {
         $result = false;
         
         if (file_exists($path) == true) {
@@ -131,7 +131,7 @@ class ToolExcel {
                     if ($self == null)
                         $result = $this->populateSheet($index, $cell, $extras);
                     else
-                        $result = $self->readCsvCallback($index, $cell, $extras);
+                        $result = $self->readCsvCallback($index, $cell);
                     
                     if ($result == false)
                         break;
@@ -153,7 +153,7 @@ class ToolExcel {
         $id = $count + 3;
         
         $relationship = "<Relationship Id=\"rId{$id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet\" Target=\"worksheets/{$this->worksheetName}\"/>{workbookRelationshipSheet}";
-        $name = "<sheet name=\"$label\" sheetId=\"$id\" r:id=\"rId{$id}\"/>{workbookSheetName}";
+        $name = "<sheet name=\"{$label}\" sheetId=\"{$id}\" r:id=\"rId{$id}\"/>{workbookSheetName}";
         $contentType = "<Override PartName=\"/xl/worksheets/{$this->worksheetName}\" ContentType=\"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml\"/>{ContentTypeSheet}";
         $worksheet = "<worksheet xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" mc:Ignorable=\"x14ac\" xmlns:x14ac=\"http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac\"><sheetData></sheetData></worksheet>";
         
@@ -188,7 +188,7 @@ class ToolExcel {
         $worksheet = false;
         
         foreach ($this->fileElements as $key => $value) {
-            $newValue = "<?xml version=\"1.0\" encoding=\"{$this->encoding}\" standalone=\"yes\"?>$value";
+            $newValue = "<?xml version=\"1.0\" encoding=\"{$this->encoding}\" standalone=\"yes\"?>{$value}";
             
             if ($key == "xl/_rels/workbook.xml.rels")
                 $newValue = str_replace("{workbookRelationshipSheet}", "", $newValue);
@@ -201,10 +201,10 @@ class ToolExcel {
                 
                 foreach($this->sheets as $keySub => $valueSub) {
                     $tmp = "<worksheet xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" mc:Ignorable=\"x14ac\" xmlns:x14ac=\"http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac\">"
-                            . "<sheetData>" . $this->sheetData[$valueSub] . "</sheetData>"
+                            . "<sheetData>{$this->sheetData[$valueSub]}</sheetData>"
                         . "</worksheet>";
                     
-                    $zipArchive->addFromString('xl/worksheets/' . $valueSub, $tmp);
+                    $zipArchive->addFromString("xl/worksheets/{$valueSub}", $tmp);
                 }
             }
             
@@ -240,7 +240,7 @@ class ToolExcel {
                     else
                         $newValue = htmlspecialchars($value);
                     
-                    $result .= "<c s=\"1\" t=\"inlineStr\"><is><t>$newValue</t></is></c>";
+                    $result .= "<c s=\"1\" t=\"inlineStr\"><is><t>{$newValue}</t></is></c>";
                 }
             }
             
@@ -260,7 +260,7 @@ class ToolExcel {
                         else
                             $newValue = htmlspecialchars($value);
                         
-                        $result .= "<c t=\"inlineStr\"><is><t>$newValue</t></is></c>";
+                        $result .= "<c t=\"inlineStr\"><is><t>{$newValue}</t></is></c>";
                     }
                 }
                 
@@ -282,7 +282,7 @@ class ToolExcel {
                     else
                         $newValue = htmlspecialchars($value);
                     
-                    $result .= "<c t=\"inlineStr\"><is><t>$newValue</t></is></c>";
+                    $result .= "<c t=\"inlineStr\"><is><t>{$newValue}</t></is></c>";
                 }
             }
             

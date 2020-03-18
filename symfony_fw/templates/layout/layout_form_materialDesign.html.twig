@@ -1,5 +1,3 @@
-{# Widgets #}
-
 {%- block form_widget -%}
     {% if compound %}
         {{- block('form_widget_compound') -}}
@@ -11,15 +9,14 @@
 {%- block form_widget_simple -%}
     {%- set type = type|default('text') -%}
     {%- if type == 'range' or type == 'color' -%}
-        {# Attribute "required" is not supported #}
         {%- set required = false -%}
     {%- endif -%}
     {%- if type == 'password' and data != "" -%}
         {%- set isPassword = true -%}
     {%- endif -%}
-    {# cimo + #}
+    
     {% if styleType is defined and styleType == "box" %}
-        <div class="mdc-text-field mdc-text-field--box{% if icon is defined %} mdc-text-field--with-leading-icon{% endif %}{% if dense is defined %} mdc-text-field--dense{% endif %}">
+        <div class="mdc-text-field mdc-text-field--box{% if icon is defined %} mdc-text-field--with-leading-icon{% endif %}{% if dense is defined %} mdc-text-field--dense{% endif %} {% if resettable is defined %}input_password{% endif %}">
             {%- if icon is defined -%}
                 <i class="material-icons mdc-text-field__icon" {% if iconTab is defined %}tabindex="0"{% endif %} role="button">{{icon}}</i>
             {%- endif -%}
@@ -31,7 +28,7 @@
             <div class="mdc-line-ripple"></div>
         </div>
     {% elseif styleType is defined and styleType == "boxTrailing" %}
-        <div class="mdc-text-field mdc-text-field--box{% if icon is defined %} mdc-text-field--with-trailing-icon{% endif %}{% if dense is defined %} mdc-text-field--dense{% endif %}">
+        <div class="mdc-text-field mdc-text-field--box{% if icon is defined %} mdc-text-field--with-trailing-icon{% endif %}{% if dense is defined %} mdc-text-field--dense{% endif %} {% if resettable is defined %}input_password{% endif %}">
             <input class="mdc-text-field__input" type="{{type}}" {{ block('widget_attributes') }} {% if value is defined %}value="{{value}}"{% endif %} autocomplete="off" aria-label="label" {% if isPassword is defined %}placeholder="******"{% endif %}/>
             
             {{- form_label(form) -}}
@@ -43,7 +40,7 @@
             <div class="mdc-line-ripple"></div>
         </div>
     {% elseif styleType is defined and styleType == "outlined" %}
-        <div class="mdc-text-field mdc-text-field--outlined{% if icon is defined %} mdc-text-field--with-leading-icon{% endif %}{% if dense is defined %} mdc-text-field--dense{% endif %}">
+        <div class="mdc-text-field mdc-text-field--outlined{% if icon is defined %} mdc-text-field--with-leading-icon{% endif %}{% if dense is defined %} mdc-text-field--dense{% endif %} {% if resettable is defined %}input_password{% endif %}">
             {%- if icon is defined -%}
                 <i class="material-icons mdc-text-field__icon" {% if iconTab is defined %}tabindex="0"{% endif %} role="button">{{icon}}</i>
             {%- endif -%}
@@ -61,7 +58,7 @@
             <div class="mdc-notched-outline__idle"></div>
         </div>
     {% elseif styleType is defined and styleType == "outlinedTrailing" %}
-        <div class="mdc-text-field mdc-text-field--outlined{% if icon is defined %} mdc-text-field--with-trailing-icon{% endif %}{% if dense is defined %} mdc-text-field--dense{% endif %}">
+        <div class="mdc-text-field mdc-text-field--outlined{% if icon is defined %} mdc-text-field--with-trailing-icon{% endif %}{% if dense is defined %} mdc-text-field--dense{% endif %} {% if resettable is defined %}input_password{% endif %}">
             {%- if icon is defined -%}
                 <i class="material-icons mdc-text-field__icon" {% if iconTab is defined %}tabindex="0"{% endif %} role="button">{{icon}}</i>
             {%- endif -%}
@@ -79,7 +76,7 @@
             <div class="mdc-notched-outline__idle"></div>
         </div>
     {% elseif styleType is defined and styleType == "basic" %}
-        <div class="mdc-text-field mdc-text-field__basic{% if dense is defined %} mdc-text-field--dense{% endif %}">
+        <div class="mdc-text-field mdc-text-field__basic{% if dense is defined %} mdc-text-field--dense{% endif %} {% if resettable is defined %}input_password{% endif %}">
             {%- if icon is defined -%}
                 <i class="material-icons mdc-text-field__icon" {% if iconTab is defined %}tabindex="0"{% endif %} role="button">{{icon}}</i>
             {%- endif -%}
@@ -91,7 +88,7 @@
             <div class="mdc-line-ripple"></div>
         </div>
     {% elseif styleType is defined and styleType == "basicTrailing" %}
-        <div class="mdc-text-field mdc-text-field__basicTrailing{% if dense is defined %} mdc-text-field--dense{% endif %}">
+        <div class="mdc-text-field mdc-text-field__basicTrailing{% if dense is defined %} mdc-text-field--dense{% endif %} {% if resettable is defined %}input_password{% endif %}">
             <input class="mdc-text-field__input" type="{{type}}" {{ block('widget_attributes') }} {% if value is defined %}value="{{value}}"{% endif %} autocomplete="off" aria-label="label" {% if isPassword is defined %}placeholder="******"{% endif %}/>
             
             {{- form_label(form) -}}
@@ -109,13 +106,17 @@
         </div>
     {% endif %}
     
+    {% if resettable is defined %}
+        <button class="mdc-button mdc-button--dense mdc-button--raised button_password" type="button">
+            <span>{% trans %}layout_1{% endtrans %}</span>
+        </button>
+    {% endif %}
+    
     {% if type != "hidden" %}
         <p class="mdc-text-field-helper-text" aria-hidden="true"></p>
     {% else %}
         <input type="{{type}}" {{block('widget_attributes')}} {% if value is defined %}value="{{ value }}"{% endif %} autocomplete="off"/>
     {% endif %}
-    {# cimo - #}
-    {#<input type="{{ type }}" {{ block('widget_attributes') }} {% if value is defined %}value="{{ value }}" {% endif %}/>#}
 {%- endblock form_widget_simple -%}
 
 {%- block form_widget_compound -%}
@@ -148,9 +149,6 @@
 {%- endblock collection_widget -%}
 
 {%- block textarea_widget -%}
-    {# cimo - #}
-    {#<textarea {{ block('widget_attributes') }}>{{ value }}</textarea>#}
-    {# cimo + #}
     <div class="mdc-text-field mdc-text-field--textarea">
         <textarea class="mdc-text-field__input" {{ block('widget_attributes') }} autocomplete="off" aria-label="label">{{ value }}</textarea>
         <label class="mdc-floating-label">{% if label is defined %}{{translation_domain is same as(false) ? label : label|trans({}, translation_domain)}}{% endif %}</label>
@@ -179,7 +177,6 @@
     {%- if required and placeholder is none and not placeholder_in_choices and not multiple and (attr.size is not defined or attr.size <= 1) -%}
         {% set required = false %}
     {%- endif -%}
-    {# cimo : #}
     <div class="mdc-select{% if styleType is defined %} {{styleType}}{% endif %}">
         <select class="mdc-select__native-control" {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %} aria-label="label">
             {%- if firstOption is defined and firstOption == "empty" -%}
@@ -208,14 +205,12 @@
                 {{- block('choice_widget_options') -}}
             </optgroup>
         {%- else -%}
-            {# cimo : #}
             <option value="{{choice.value}}"{% if choice.attr %}{% with { attr: choice.attr } %}{{ block('attributes') }}{% endwith %}{% endif %}{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ choice_translation_domain is same as(false) ? choice.label : choice.label|trans({}, choice_translation_domain) }}</option>
         {%- endif -%}
     {% endfor %}
 {%- endblock choice_widget_options -%}
 
 {%- block checkbox_widget -%}
-    {# cimo + #}
     <div class="mdc-form-field">
         <div class="mdc-checkbox">
             <input class="mdc-checkbox__native-control" type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} aria-label="label"/>
@@ -228,13 +223,9 @@
         </div>
         <label>{{ translation_domain is same as(false) ? label : label|trans({}, translation_domain) }}</label>
     </div>
-    
-    {# cimo - #}
-    {#<input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}/>#}
 {%- endblock checkbox_widget -%}
 
 {%- block radio_widget -%}
-    {# cimo + #}
     <div class="mdc-form-field">
         <div class="mdc-radio">
             <input class="mdc-radio__native-control" type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} aria-label="label"/>
@@ -245,8 +236,6 @@
         </div>
         <label>{{ translation_domain is same as(false) ? label : label|trans({}, translation_domain) }}</label>
     </div>
-    {# cimo - #}
-    {#<input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}/>#}
 {%- endblock radio_widget -%}
 
 {%- block datetime_widget -%}
@@ -323,7 +312,6 @@
 {%- endblock dateinterval_widget -%}
 
 {%- block number_widget -%}
-    {# type="number" doesn't work with floats #}
     {%- set type = type|default('text') -%}
     {{ block('form_widget_simple') }}
 {%- endblock number_widget -%}
@@ -332,11 +320,6 @@
     {%- set type = type|default('number') -%}
     {{ block('form_widget_simple') }}
 {%- endblock integer_widget -%}
-
-{# cimo - #}
-{#%- block money_widget -%}
-    {{ money_pattern|form_encode_currency(block('form_widget_simple')) }}
-{%- endblock money_widget -%#}
 
 {%- block url_widget -%}
     {%- set type = type|default('url') -%}
@@ -386,15 +369,13 @@
             {% set label = name|humanize %}
         {%- endif -%}
     {%- endif -%}
-    {# cimo + #}
+    
     <button class="mdc-button{% if dense is defined %} mdc-button--dense{% endif %}{% if raised is defined %} mdc-button--raised{% endif %}" type="{{ type|default('') }}" {{ block('button_attributes') }}>
         {%- if icon is defined -%}
             <i class="material-icons mdc-button__icon">{{icon}}</i>
         {%- endif -%}
         {{ translation_domain is same as(false) ? label : label|trans({}, translation_domain) }}
     </button>
-    {# cimo - #}
-    {#<button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ translation_domain is same as(false) ? label : label|trans({}, translation_domain) }}</button>#}
 {%- endblock button_widget -%}
 
 {%- block submit_widget -%}
@@ -417,9 +398,6 @@
     {{ block('form_widget_simple') }}
 {%- endblock color_widget -%}
 
-{# Labels #}
-
-{# cimo : #}
 {%- block form_label -%}
     {% if label is not same as(false) -%}
         {% if not compound -%}
@@ -450,45 +428,17 @@
 
 {%- block button_label -%}{%- endblock -%}
 
-{# Help #}
-
-{# cimo - #}
-{#% block form_help -%}
-    {%- if help != "" -%}
-        <p id="{{ id }}_help" class="help-text">
-            {%- if translation_domain is same as(false) -%}
-                {{- help -}}
-            {%- else -%}
-                {{- help|trans({}, translation_domain) -}}
-            {%- endif -%}
-        </p>
-    {%- endif -%}
-{%- endblock form_help %#}
-
-{# Rows #}
-
 {%- block repeated_row -%}
-    {#
-    No need to render the errors here, as all errors are mapped
-    to the first child (see RepeatedTypeValidatorExtension).
-    #}
     {{- block('form_rows') -}}
 {%- endblock repeated_row -%}
 
 {%- block form_row -%}
     {%- set widget_attr = {} -%}
-    {# cimo - #}
-    {#%- if help != "" -%}
-        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
-    {%- endif -%#}
-    {# cimo : #}
     {% set attributeId = attr['id'] | default('') %}
     {% set attributeClass = attr['class'] | default('') %}
     <div id="{{attributeId}}" class="form_row {{attributeClass}}">
-        {#{- form_label(form) -}#}
         {{- form_errors(form) -}}
         {{- form_widget(form, widget_attr) -}}
-        {#{- form_help(form) -}#}
     </div>
 {%- endblock form_row -%}
 
@@ -501,8 +451,6 @@
 {%- block hidden_row -%}
     {{ form_widget(form) }}
 {%- endblock hidden_row -%}
-
-{# Misc #}
 
 {%- block form -%}
     {{ form_start(form) }}
@@ -563,8 +511,6 @@
     {% endif -%}
 {% endblock form_rest %}
 
-{# Support #}
-
 {%- block form_rows -%}
     {% for child in form %}
         {{- form_row(child) -}}
@@ -572,7 +518,6 @@
 {%- endblock form_rows -%}
 
 {%- block widget_attributes -%}
-    {# cimo : #}
     id="{{id}}" name="{{ full_name }}"
     {%- if disabled %} disabled="disabled"{% endif -%}
     {%- if required %} required="required"{% endif -%}
@@ -585,7 +530,6 @@
 {%- endblock widget_attribute_container -%}
 
 {%- block button_attributes -%}
-    {# cimo : #}
     id="{{id}}" name="{{full_name}}"{% if disabled %} disabled="disabled"{% endif -%}
     {{ block('attributes') }}
 {%- endblock button_attributes -%}

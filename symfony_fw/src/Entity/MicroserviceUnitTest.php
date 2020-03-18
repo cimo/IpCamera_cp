@@ -38,6 +38,10 @@ class MicroserviceUnitTest {
     private $active = false;
     
     // Properties
+    public function setId($value) {
+        $this->id = $value;
+    }
+    
     public function setName($value) {
         $this->name = $value;
     }

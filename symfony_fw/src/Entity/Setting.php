@@ -138,14 +138,28 @@ class Setting {
     /**
      * @ORM\Column(name="javascript_minify", type="boolean", columnDefinition="tinyint(1) NOT NULL DEFAULT 0")
      */
-    private $javascriptMinify = 0;
+    private $javascriptMinify = false;
     
     /**
      * @ORM\Column(name="server_user", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT 'cimo'")
      */
-    private $serverUser = 0;
+    private $serverUser = "cimo";
+    
+    /**
+     * @ORM\Column(name="server_root", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT '/home/cimo/www'")
+     */
+    private $serverRoot = "/home/cimo/www";
+    
+    /**
+     * @ORM\Column(name="server_host", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT 'lsv2.machine.local'")
+     */
+    private $serverHost = "lsv2.machine.local";
     
     // Properties
+    public function setId($value) {
+        $this->id = $value;
+    }
+    
     public function setTemplate($value) {
         $this->template = $value;
     }
@@ -248,6 +262,14 @@ class Setting {
     
     public function setServerUser($value) {
         $this->serverUser = $value;
+    }
+    
+    public function setServerRoot($value) {
+        $this->serverRoot = $value;
+    }
+    
+    public function setServerHost($value) {
+        $this->serverHost = $value;
     }
     
     // ---
@@ -358,5 +380,13 @@ class Setting {
     
     public function getServerUser() {
         return $this->serverUser;
+    }
+    
+    public function getServerRoot() {
+        return $this->serverRoot;
+    }
+    
+    public function getServerHost() {
+        return $this->serverHost;
     }
 }

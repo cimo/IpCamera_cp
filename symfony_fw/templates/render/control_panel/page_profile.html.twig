@@ -4,14 +4,14 @@
 
 <div class="mdc-typography--caption page_detail">
     <p><i class="material-icons md-14">pets</i> <span class="mdc-theme--on-surface">{% trans %}pageProfile_2{% endtrans %}</span>{{response.values.userCreate}}</p>
-    <p><i class="material-icons md-14">calendar_today</i> <span class="mdc-theme--on-surface">{% trans %}pageProfile_3{% endtrans %}</span>{{response.values.dateCreate[0]}} [{{response.values.dateCreate[1]}}]</p>
+    <p><i class="material-icons md-14">calendar_today</i> <span class="mdc-theme--on-surface">{% trans %}pageProfile_3{% endtrans %}</span>{{response.values.dateCreate}}</p>
     <p><i class="material-icons md-14">pets</i> <span class="mdc-theme--on-surface">{% trans %}pageProfile_4{% endtrans %}</span>{{response.values.userModify}}</p>
-    <p><i class="material-icons md-14">calendar_today</i> <span class="mdc-theme--on-surface">{% trans %}pageProfile_5{% endtrans %}</span>{{response.values.dateModify[0]}} [{{response.values.dateModify[1]}}]</p>
+    <p><i class="material-icons md-14">calendar_today</i> <span class="mdc-theme--on-surface">{% trans %}pageProfile_5{% endtrans %}</span>{{response.values.dateModify}}</p>
 </div>
 
 {{-render(controller("App\\Controller\\LanguageController::pageAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
 
-<form id="form_cp_page_profile" action="{{path("cp_page_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+<form id="form_cp_page_profile" action="{{path("cp_page_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
     {{form_row(form.language)}}
     {{form_row(form.alias, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
     {{form_row(form.parent, {'dense': "", 'firstOption': "empty"})}}

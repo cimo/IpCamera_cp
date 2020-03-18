@@ -57,9 +57,7 @@ class MicroserviceDeployController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -68,14 +66,14 @@ class MicroserviceDeployController extends AbstractController {
         $microserviceDeployRows = $this->query->selectAllMicroserviceDeployDatabase();
 
         $form = $this->createForm(MicroserviceDeploySelectFormType::class, null, Array(
-            'validation_groups' => Array('microservice_deploy_render'),
-            'choicesId' => array_column($microserviceDeployRows, "id", "name")
+            'validation_groups' => Array("microservice_deploy_render"),
+            'id' => array_column($microserviceDeployRows, "id", "name")
         ));
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase($form->get("id")->getData());
+                $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase("normal", $form->get("id")->getData());
                 
                 $this->response['values']['renderHtml'] = $this->createRenderHtml($microserviceDeployRow);
             }
@@ -123,9 +121,7 @@ class MicroserviceDeployController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -136,21 +132,20 @@ class MicroserviceDeployController extends AbstractController {
         $this->session->set("microserviceDeployProfileId", 0);
         
         $form = $this->createForm(MicroserviceDeployFormType::class, $microserviceDeployEntity, Array(
-            'validation_groups' => Array('microservice_deploy_create')
+            'validation_groups' => Array("microservice_deploy_create")
         ));
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                $microserviceDeployEntity = $this->fileUpload($form, $microserviceDeployEntity);
-                
-                $microserviceDeployEntity->setActive(true);
+                $this->fileUpload($form, $microserviceDeployEntity);
                 
                 $this->entityManager->persist($microserviceDeployEntity);
                 $this->entityManager->flush();
                 
-                $this->microserviceDeployDatabase("update", $microserviceDeployEntity->getId(), $form->get("sshPassword")->getData(), $form->get("keyPrivatePassword")->getData(), $form->get("gitCloneUrlPassword")->getData());
-
+                $this->query->updateMicroserviceDeployDatabase("aes", $microserviceDeployEntity->getId(), "ssh_password", $form->get("sshPassword")->getData());
+                $this->query->updateMicroserviceDeployDatabase("aes", $microserviceDeployEntity->getId(), "key_private_password", $form->get("keyPrivatePassword")->getData());
+                
                 $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceDeployController_2");
             }
             else {
@@ -198,9 +193,7 @@ class MicroserviceDeployController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -218,20 +211,52 @@ class MicroserviceDeployController extends AbstractController {
         $this->response['values']['count'] = $tableAndPagination['count'];
         
         $form = $this->createForm(MicroserviceDeploySelectFormType::class, null, Array(
-            'validation_groups' => Array('microservice_deploy_select'),
-            'choicesId' => array_column($microserviceDeployRows, "id", "name")
+            'validation_groups' => Array("microservice_deploy_select"),
+            'id' => array_column($microserviceDeployRows, "id", "name")
         ));
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                return $this->ajax->response(Array(
-                    'urlLocale' => $this->urlLocale,
-                    'urlCurrentPageId' => $this->urlCurrentPageId,
-                    'urlExtra' => $this->urlExtra,
-                    'response' => $this->response
-                ));
+            $id = 0;
+            
+            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true)
+                $id = $request->get("id");
+            else if ($form->isSubmitted() == true && $form->isValid() == true)
+                $id = $form->get("id")->getData();
+            
+            if ($request->get("event") != "refresh" && $request->get("event") != "tableAndPagination") {
+                $microserviceDeployEntity = $this->entityManager->getRepository("App\Entity\MicroserviceDeploy")->find($id);
+
+                if ($microserviceDeployEntity != null) {
+                    $this->session->set("microserviceDeployProfileId", $microserviceDeployEntity->getId());
+
+                    $formSub = $this->createForm(MicroserviceDeployFormType::class, $microserviceDeployEntity, Array(
+                        'validation_groups' => Array("microservice_deploy_profile")
+                    ));
+                    $formSub->handleRequest($request);
+
+                    $this->response['values']['id'] = $this->session->get("microserviceDeployProfileId");
+
+                    $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/microservice_deploy_profile.html.twig", Array(
+                        'urlLocale' => $this->urlLocale,
+                        'urlCurrentPageId' => $this->urlCurrentPageId,
+                        'urlExtra' => $this->urlExtra,
+                        'response' => $this->response,
+                        'form' => $formSub->createView()
+                    ));
+                }
+                else {
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_4");
+                    $this->response['errors'] = $this->ajax->errors($form);
+                }
             }
+            
+            return $this->ajax->response(Array(
+                'urlLocale' => $this->urlLocale,
+                'urlCurrentPageId' => $this->urlCurrentPageId,
+                'urlExtra' => $this->urlExtra,
+                'response' => $this->response
+            ));
         }
         
         return Array(
@@ -265,133 +290,32 @@ class MicroserviceDeployController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
-        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
-        
-        if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                $id = $request->get("id") == null ? 0 : $request->get("id");
-                
-                $microserviceDeployEntity = $this->entityManager->getRepository("App\Entity\MicroserviceDeploy")->find($id);
-                
-                if ($microserviceDeployEntity != null) {
-                    $this->session->set("microserviceDeployProfileId", $id);
-
-                    $form = $this->createForm(MicroserviceDeployFormType::class, $microserviceDeployEntity, Array(
-                        'validation_groups' => Array('microservice_deploy_profile')
-                    ));
-                    $form->handleRequest($request);
-                    
-                    $this->response['values']['id'] = $this->session->get("microserviceDeployProfileId");
-
-                    $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/microservice_deploy_profile.html.twig", Array(
-                        'urlLocale' => $this->urlLocale,
-                        'urlCurrentPageId' => $this->urlCurrentPageId,
-                        'urlExtra' => $this->urlExtra,
-                        'response' => $this->response,
-                        'form' => $form->createView()
-                    ));
-                }
-                else
-                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_4");
-            }
-        }
-        
-        return $this->ajax->response(Array(
-            'urlLocale' => $this->urlLocale,
-            'urlCurrentPageId' => $this->urlCurrentPageId,
-            'urlExtra' => $this->urlExtra,
-            'response' => $this->response
-        ));
-    }
-    
-    /**
-    * @Route(
-    *   name = "cp_microservice_deploy_profile_save",
-    *   path = "/cp_microservice_deploy_profile_save/{_locale}/{urlCurrentPageId}/{urlExtra}",
-    *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
-    *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
-    *	methods={"POST"}
-    * )
-    * @Template("@templateRoot/render/control_panel/microservice_deploy_profile.html.twig")
-    */
-    public function profileSaveAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->entityManager = $this->getDoctrine()->getManager();
-        
-        $this->response = Array();
-        
-        $this->helper = new Helper($this->container, $this->entityManager, $translator);
-        $this->query = $this->helper->getQuery();
-        $this->ajax = new Ajax($this->helper);
-        
-        $this->session = $this->helper->getSession();
-        
-        // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
         $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
         $microserviceDeployEntity = $this->entityManager->getRepository("App\Entity\MicroserviceDeploy")->find($this->session->get("microserviceDeployProfileId"));
-        $sshPasswordOld = $microserviceDeployEntity->getSshPassword();
-        $keyPrivatePasswordOld = $microserviceDeployEntity->getKeyPrivatePassword();
-        $gitCloneUrlPasswordOld = $microserviceDeployEntity->getGitCloneUrlPassword();
         
         $form = $this->createForm(MicroserviceDeployFormType::class, $microserviceDeployEntity, Array(
-            'validation_groups' => Array('microservice_deploy_profile')
+            'validation_groups' => Array("microservice_deploy_profile"),
+            'sshPassword' => $microserviceDeployEntity->getSshPassword(),
+            'keyPrivatePassword' => $microserviceDeployEntity->getKeyPrivatePassword(),
+            'gitCloneUrlPassword' => $microserviceDeployEntity->getGitCloneUrlPassword()
         ));
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                $microserviceDeployEntity = $this->fileUpload($form, $microserviceDeployEntity);
-                
-                $sshPassword = "";
-                
-                if ($form->get("sshUsername")->getData() == null)
-                    $microserviceDeployEntity->setSshPassword(null);
-                else {
-                    if ($form->get("sshPassword")->getData() == null)
-                        $microserviceDeployEntity->setSshPassword($sshPasswordOld);
-                    else
-                        $sshPassword = $form->get("sshPassword")->getData();
-                }
-                
-                $keyPrivatePassword = "";
-                
-                if ($form->get("keyPrivate")->getData() == null)
-                    $microserviceDeployEntity->setKeyPrivatePassword(null);
-                else {
-                    if ($form->get("keyPrivatePassword")->getData() == null)
-                        $microserviceDeployEntity->setKeyPrivatePassword($keyPrivatePasswordOld);
-                    else
-                        $keyPrivatePassword = $form->get("keyPrivatePassword")->getData();
-                }
-                
-                $gitCloneUrlPassword = "";
-                
-                if ($form->get("gitCloneUrlUsername")->getData() == null)
-                    $microserviceDeployEntity->setGitCloneUrlPassword(null);
-                else {
-                    if ($form->get("gitCloneUrlPassword")->getData() == null)
-                        $microserviceDeployEntity->setGitCloneUrlPassword($gitCloneUrlPasswordOld);
-                    else
-                        $gitCloneUrlPassword = $form->get("gitCloneUrlPassword")->getData();
-                }
+                $this->fileUpload($form, $microserviceDeployEntity);
                 
                 $this->entityManager->persist($microserviceDeployEntity);
                 $this->entityManager->flush();
                 
-                $this->microserviceDeployDatabase("update", $microserviceDeployEntity->getId(), $sshPassword, $keyPrivatePassword, $gitCloneUrlPassword);
-
+                $this->query->updateMicroserviceDeployDatabase("aes", $microserviceDeployEntity->getId(), "ssh_password", $form->get("sshPassword")->getData());
+                $this->query->updateMicroserviceDeployDatabase("aes", $microserviceDeployEntity->getId(), "key_private_password", $form->get("keyPrivatePassword")->getData());
+                
                 $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceDeployController_5");
             }
             else {
@@ -437,9 +361,7 @@ class MicroserviceDeployController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -450,7 +372,7 @@ class MicroserviceDeployController extends AbstractController {
                 if ($request->get("action") == "clone" || $request->get("action") == "reset" || ($request->get("action") == "pull" && $request->get("branchName") != "")) {
                     $id = $request->get("id") == null ? 0 : $request->get("id");
                     
-                    $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase($id);
+                    $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase("normal", $id);
                     
                     $sshConnection = $this->sshConnection($microserviceDeployRow, $request);
                     
@@ -500,9 +422,7 @@ class MicroserviceDeployController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -513,7 +433,7 @@ class MicroserviceDeployController extends AbstractController {
                 if ($request->get("event") == "delete") {
                     $id = $request->get("id") == null ? $this->session->get("microserviceDeployProfileId") : $request->get("id");
 
-                    $microserviceDeployDatabase = $this->microserviceDeployDatabase("delete", $id);
+                    $microserviceDeployDatabase = $this->query->deleteMicroserviceDeployDatabase("one", $id);
 
                     if ($microserviceDeployDatabase == true) {
                         $this->response['values']['id'] = $id;
@@ -522,7 +442,7 @@ class MicroserviceDeployController extends AbstractController {
                     }
                 }
                 else if ($request->get("event") == "deleteAll") {
-                    $microserviceDeployDatabase = $this->microserviceDeployDatabase("deleteAll");
+                    $microserviceDeployDatabase = $this->query->deleteMicroserviceDeployDatabase("all");
 
                     if ($microserviceDeployDatabase == true)
                         $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceDeployController_11");
@@ -545,6 +465,63 @@ class MicroserviceDeployController extends AbstractController {
             'urlExtra' => $this->urlExtra,
             'response' => $this->response
         );
+    }
+    
+    /**
+    * @Route(
+    *   name = "cp_microservice_deploy_clearPassword",
+    *   path = "/cp_microservice_deploy_clearPassword/{_locale}/{urlCurrentPageId}/{urlExtra}",
+    *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
+    *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
+    *	methods={"POST"}
+    * )
+    */
+    public function clearPasswordAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
+        $this->entityManager = $this->getDoctrine()->getManager();
+        
+        $this->response = Array();
+        
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        
+        $this->session = $this->helper->getSession();
+        
+        // Logic
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+        
+        if ($request->isMethod("POST") == true && $checkUserRole == true) {
+            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
+                $reset = false;
+                
+                if ($request->get("inputName") == "form_microservice_deploy[sshPassword]") {
+                    $reset = true;
+                    
+                    $this->query->updateMicroserviceDeployDatabase("clear", $this->session->get("microserviceDeployProfileId"), "ssh_password", null);
+                }
+                else if ($request->get("inputName") == "form_microservice_deploy[keyPrivatePassword]") {
+                    $reset = true;
+                    
+                    $this->query->updateMicroserviceDeployDatabase("clear", $this->session->get("microserviceDeployProfileId"), "key_private_password", null);
+                }
+                
+                if ($reset == true)
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceDeployController_19");
+                else
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_20");
+            }
+        }
+        
+        return $this->ajax->response(Array(
+            'urlLocale' => $this->urlLocale,
+            'urlCurrentPageId' => $this->urlCurrentPageId,
+            'urlExtra' => $this->urlExtra,
+            'response' => $this->response
+        ));
     }
     
     // Functions private
@@ -776,135 +753,55 @@ class MicroserviceDeployController extends AbstractController {
         return $listHtml;
     }
     
-    private function microserviceDeployDatabase($type, $id = 0, $sshPassword = "", $keyPrivatePassword = "", $gitCloneUrlPassword = "") {
-        if ($type == "delete") {
-            $query = $this->helper->getConnection()->prepare("DELETE FROM microservice_deploy
-                                                                WHERE id = :id");
-            
-            $query->bindValue(":id", $id);
-
-            return $query->execute();
-        }
-        else if ($type == "deleteAll") {
-            $query = $this->helper->getConnection()->prepare("DELETE FROM microservice_deploy");
-
-            return $query->execute();
-        }
-        
-        if ($id > 0) {
-            $settingRow = $this->helper->getSettingRow();
-            
-            if ($type == "select") {
-                $query = $this->helper->getConnection()->prepare("SELECT AES_DECRYPT(:sshPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS ssh_password,
-                                                                        AES_DECRYPT(:keyPrivatePassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS key_private_password,
-                                                                        AES_DECRYPT(:gitCloneUrlPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS git_clone_url_password
-                                                                        FROM microservice_deploy
-                                                                    WHERE id = :id
-                                                                    ORDER by name ASC");
-                
-                $query->bindValue(":sshPassword", $sshPassword);
-                $query->bindValue(":keyPrivatePassword", $keyPrivatePassword);
-                $query->bindValue(":gitCloneUrlPassword", $gitCloneUrlPassword);
-                $query->bindValue(":id", $id);
-                
-                $query->execute();
-                
-                return $query->fetch();
-            }
-            else if ($type == "update") {
-                if ($sshPassword != "") {
-                    $query = $this->helper->getConnection()->prepare("UPDATE IGNORE microservice_deploy
-                                                                        SET ssh_password = AES_ENCRYPT(:sshPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
-                                                                        WHERE id = :id");
-
-                    $query->bindValue(":sshPassword", $sshPassword);
-                    $query->bindValue(":id", $id);
-
-                    $query->execute();
-                }
-
-                if ($keyPrivatePassword != "") {
-                    $query = $this->helper->getConnection()->prepare("UPDATE IGNORE microservice_deploy
-                                                                        SET key_private_password = AES_ENCRYPT(:keyPrivatePassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
-                                                                        WHERE id = :id");
-
-                    $query->bindValue(":keyPrivatePassword", $keyPrivatePassword);
-                    $query->bindValue(":id", $id);
-
-                    $query->execute();
-                }
-                
-                if ($gitCloneUrlPassword != "") {
-                    $query = $this->helper->getConnection()->prepare("UPDATE IGNORE microservice_deploy
-                                                                        SET git_clone_url_password = AES_ENCRYPT(:gitCloneUrlPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
-                                                                        WHERE id = :id");
-
-                    $query->bindValue(":gitCloneUrlPassword", $gitCloneUrlPassword);
-                    $query->bindValue(":id", $id);
-
-                    $query->execute();
-                }
-                
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
     private function fileUpload($form, $entity) {
-        $row = $this->query->selectMicroserviceDeployDatabase($this->session->get("microserviceDeployProfileId"));
+        $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase("normal", $this->session->get("microserviceDeployProfileId"));
         
-        $pathKeyPublic = $this->helper->getPathSrc() . "/files/microservice/deploy";
-        $pathKeyPrivate = $this->helper->getPathSrc() . "/files/microservice/deploy";
+        $pathKeyPublic = "{$this->helper->getPathSrc()}/files/microservice/deploy";
+        $pathKeyPrivate = "{$this->helper->getPathSrc()}/files/microservice/deploy";
 
         $keyPublic = $entity->getKeyPublic();
         $keyPrivate = $entity->getKeyPrivate();
 
         // Remove key public
-        if (isset($row['key_public']) == true) {
-            if ($form->get("removeKeyPublic")->getData() == true || ($keyPublic != null && $keyPublic != $row['key_public'])) {
-                if ($row['key_public'] != "" && file_exists("$pathKeyPublic/{$row['key_public']}") == true)
-                    unlink("$pathKeyPublic/{$row['key_public']}");
-
-                $entity->setKeyPublic("");
-            }
-            else if ($row['key_public'] != "")
-                $entity->setKeyPublic($row['key_public']);
+        if ($form->get("removeKeyPublic")->getData() == true || ($keyPublic != null && $keyPublic != $microserviceDeployRow['key_public'])) {
+            if ($microserviceDeployRow['key_public'] != "" && file_exists("$pathKeyPublic/{$microserviceDeployRow['key_public']}") == true)
+                unlink("$pathKeyPublic/{$microserviceDeployRow['key_public']}");
+            
+            $entity->setKeyPublic(null);
         }
-
+        else if ($microserviceDeployRow['key_public'] != "")
+            $entity->setKeyPublic($microserviceDeployRow['key_public']);
+        
         // Upload key public
         if ($keyPublic != null && $form->get("removeKeyPublic")->getData() == false) {
             $fileName = $keyPublic->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
             $newName = uniqid() . ".$extension";
             $keyPublic->move($pathKeyPublic, $newName);
+            
             $entity->setKeyPublic($newName);
         }
 
         // Remove key private
-        if (isset($row['key_private']) == true) {
-            if ($form->get("removeKeyPrivate")->getData() == true || ($keyPrivate != null && $keyPrivate != $row['key_private'])) {
-                if ($row['key_private'] != "" && file_exists("$pathKeyPrivate/{$row['key_private']}") == true)
-                    unlink("$pathKeyPrivate/{$row['key_private']}");
-
-                $entity->setKeyPrivate("");
-                $entity->setKeyPrivatePassword("");
-            }
-            else if ($row['key_public'] != "")
-                $entity->setKeyPrivate($row['key_private']);
+        if ($form->get("removeKeyPrivate")->getData() == true || ($keyPrivate != null && $keyPrivate != $microserviceDeployRow['key_private'])) {
+            if ($microserviceDeployRow['key_private'] != "" && file_exists("$pathKeyPrivate/{$microserviceDeployRow['key_private']}") == true)
+                unlink("$pathKeyPrivate/{$microserviceDeployRow['key_private']}");
+            
+            $entity->setKeyPrivate(null);
+            $entity->setKeyPrivatePassword(null);
         }
-
+        else if ($microserviceDeployRow['key_public'] != "")
+            $entity->setKeyPrivate($microserviceDeployRow['key_private']);
+        
         // Upload key private
         if ($keyPrivate != null && $form->get("removeKeyPrivate")->getData() == false) {
             $fileName = $keyPrivate->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
             $newName = uniqid() . ".$extension";
             $keyPrivate->move($pathKeyPrivate, $newName);
+            
             $entity->setKeyPrivate($newName);
         }
-        
-        return $entity;
     }
     
     private function sshConnection($row, $request) {
@@ -923,7 +820,7 @@ class MicroserviceDeployController extends AbstractController {
             
             $sudo = "sudo";
             
-            $microserviceDeployRow = $this->microserviceDeployDatabase("select", $row['id'], $row['ssh_password'], $row['key_private_password'], $row['git_clone_url_password']);
+            $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase("aes", $row['id'], $row['ssh_password'], $row['key_private_password'], $row['git_clone_url_password']);
             
             if ($row['key_public'] == null || $row['key_private'] == null) {
                 $auth = @ssh2_auth_password($connection, $row['ssh_username'], $microserviceDeployRow['ssh_password']);
@@ -968,9 +865,9 @@ class MicroserviceDeployController extends AbstractController {
                     );
                 }
                 
-                $rowCommandSplit = preg_split("/\r\n|\r|\n/", base64_decode($row['command']));
+                $rowSplit = preg_split("/\r\n|\r|\n/", base64_decode($row['command']));
                 
-                foreach ($rowCommandSplit as $key => $value) {
+                foreach ($rowSplit as $key => $value) {
                     $commands[] = $value;
                 }
                 

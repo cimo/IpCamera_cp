@@ -51,8 +51,8 @@ class Captcha {
         $sessionCaptcha = $this->session->get("captcha");
         
         if ($captchaEnabled == false || ($captchaEnabled == true && $sessionCaptcha != null && $sessionCaptcha == $captcha))
-            return true;
+            return Array(true, "");
         
-        return false;
+        return Array(false, $this->helper->getTranslator()->trans("captcha_1"));
     }
 }

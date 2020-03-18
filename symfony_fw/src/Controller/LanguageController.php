@@ -53,9 +53,7 @@ class LanguageController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -111,16 +109,14 @@ class LanguageController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
         $settingRow = $this->helper->getSettingRow();
         
         $form = $this->createForm(LanguageFormType::class, null, Array(
-            'validation_groups' => Array('language_code')
+            'validation_groups' => Array("language_code")
         ));
         $form->handleRequest($request);
         
@@ -133,10 +129,10 @@ class LanguageController extends AbstractController {
         
         if ($request->isMethod("POST") == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                $codePage = $form->get("codePage")->getData();
-                $pageRow = $this->query->selectPageDatabase($codePage, $this->session->get("pageProfileId"), true);
+                $code = $form->get("code")->getData();
+                $pageRow = $this->query->selectPageDatabase($code, $this->session->get("pageProfileId"), true);
                 
-                $this->response['values']['codePage'] = $codePage;
+                $this->response['values']['code'] = $code;
                 $this->response['values']['pageTitle'] = $pageRow['title'];
                 $this->response['values']['pageArgument'] = html_entity_decode($pageRow['argument'], ENT_QUOTES, "UTF-8");
                 $this->response['values']['pageMenuName'] = $pageRow['menu_name'];

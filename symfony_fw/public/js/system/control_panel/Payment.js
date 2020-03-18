@@ -1,6 +1,6 @@
 "use strict";
 
-/* global helper, ajax, popupEasy, materialDesign */
+/* global helper, ajax, materialDesign, popupEasy */
 
 class ControlPanelPayment {
     // Properties
@@ -32,15 +32,15 @@ class ControlPanelPayment {
                     $("#cp_payment_select_result").html("");
                 },
                 (xhr) => {
-                    $("#cp_payment_select_result_desktop").find(".refresh").click();
+                    ajax.reply(xhr, `#${event.target.id}`);
                     
-                    $("#form_payment_select_id").find("option").not(":eq(0)").remove();
+                    $("#form_payment_select_id").find("option").remove();
                     
                     $.each(xhr.response.values.paymentRows, (key, value) => {
                         $("#form_payment_select_id").append("<option value=\"" + value + "\">" + key + "</>");
                     });
                     
-                    ajax.reply(xhr, `#${event.target.id}`);
+                    $("#cp_payment_select_result_desktop").find(".refresh").click();
                 },
                 null,
                 null
@@ -69,9 +69,9 @@ class ControlPanelPayment {
             if (this.selectId >= 0) {
                 $("#cp_payment_select_result_desktop").find(".checkbox_column input[type='checkbox']").prop("checked", false);
                 
-                let id = $("#cp_payment_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
+                let ids = $("#cp_payment_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
                 
-                $.each(id, (key, value) => {
+                $.each(ids, (key, value) => {
                     if ($.trim($(value).text()) === String(this.selectId))
                         $(value).parents("tr").find(".checkbox_column input").prop("checked", true);
                 });
@@ -91,8 +91,8 @@ class ControlPanelPayment {
     
     // Function private
     _selectDesktop = () => {
-        const tableAndPagination = new TableAndPagination();
-        tableAndPagination.setButtonsStatus = "show";
+        let tableAndPagination = new TableAndPagination();
+        tableAndPagination.setButtonStatus = "show";
         tableAndPagination.create(window.url.cpPaymentSelect, "#cp_payment_select_result_desktop", true);
         tableAndPagination.search();
         tableAndPagination.pagination();
@@ -119,6 +119,8 @@ class ControlPanelPayment {
                     
                     if ($("#cp_payment_select_result_desktop").parents(".accordion").hasClass("accordion_active") === false)
                         $(".button_accordion").eq(1).click();
+                    
+                    $("#cp_payment_select_result").html("");
                 },
                 null,
                 null
@@ -126,7 +128,7 @@ class ControlPanelPayment {
         });
         
         $(document).on("click", "#cp_payment_select_result_desktop .delete_all", (event) => {
-            popupEasy.create(
+            popupEasy.show(
                 window.text.index_5,
                 window.textPayment.label_2,
                 () => {
@@ -145,8 +147,10 @@ class ControlPanelPayment {
                         null,
                         (xhr) => {
                             ajax.reply(xhr, "");
-
-                            $.each($("#cp_payment_select_result_desktop").find("table .id_column"), (key, value) => {
+                            
+                            let ids = $("#cp_payment_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 $(value).parents("tr").remove();
                             });
                             
@@ -170,7 +174,7 @@ class ControlPanelPayment {
             
             ajax.send(
                 true,
-                window.url.cpPaymentProfile,
+                window.url.cpPaymentSelect,
                 "post",
                 {
                     'event': "result",
@@ -185,7 +189,9 @@ class ControlPanelPayment {
                     $("#cp_payment_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -205,7 +211,7 @@ class ControlPanelPayment {
                 true,
                 $(event.currentTarget).prop("action"),
                 $(event.currentTarget).prop("method"),
-                helper.serializeJson($(event.currentTarget)),
+                $(event.currentTarget).serialize(),
                 "json",
                 false,
                 true,
@@ -214,7 +220,9 @@ class ControlPanelPayment {
                     $("#cp_payment_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -226,9 +234,7 @@ class ControlPanelPayment {
         });
     }
     
-    _profile = (xhr, tag) => {
-        ajax.reply(xhr, tag);
-        
+    _profile = (xhr) => {
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
             this.selectSended = true;
             
@@ -237,13 +243,15 @@ class ControlPanelPayment {
             materialDesign.refresh();
             
             $("#cp_payment_delete").on("click", "", (event) => {
-               this._deleteElement(null);
+               this._deleteElement();
             });
         }
     }
     
     _deleteElement = (id) => {
-        popupEasy.create(
+        let idValue = id === undefined ? null : id;
+        
+        popupEasy.show(
             window.text.index_5,
             window.textPayment.label_1,
             () => {
@@ -253,7 +261,7 @@ class ControlPanelPayment {
                     "post",
                     {
                         'event': "delete",
-                        'id': id,
+                        'id': idValue,
                         'token': window.session.token
                     },
                     "json",
@@ -265,7 +273,9 @@ class ControlPanelPayment {
                         ajax.reply(xhr, "");
                         
                         if (xhr.response.messages.success !== undefined) {
-                            $.each($("#cp_payment_select_result_desktop").find("table .id_column"), (key, value) => {
+                            let ids = $("#cp_payment_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 if (xhr.response.values.id === $.trim($(value).text()))
                                     $(value).parents("tr").remove();
                             });
@@ -286,7 +296,9 @@ class ControlPanelPayment {
     
     _selectChangeClear = () => {
         $("#cp_payment_select_result_desktop").find("tbody").html("");
-        $("#form_payment_select_id").find("option").not(":eq(0)").remove();
+        
+        $("#form_payment_select_id").find("option").remove();
+        
         $("#cp_payment_select_result").html("");
     }
 }

@@ -1,14 +1,12 @@
 "use strict";
 
-/* global helper, ajax, language, popupEasy, wysiwyg, materialDesign */
+/* global helper, ajax, materialDesign, language, popupEasy, wysiwyg */
 
 class ControlPanelPage {
     // Properties
     get getProfileFocus() {
         return this.profileFocus;
     }
-    
-    // ---
     
     set setProfileFocus(value) {
         this.profileFocus = value;
@@ -80,9 +78,9 @@ class ControlPanelPage {
             if (this.selectId >= 0) {
                 $("#cp_page_select_result_desktop").find(".checkbox_column input[type='checkbox']").prop("checked", false);
 
-                let id = $("#cp_page_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
+                let ids = $("#cp_page_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
 
-                $.each(id, (key, value) => {
+                $.each(ids, (key, value) => {
                     if ($.trim($(value).text()) === String(this.selectId))
                         $(value).parents("tr").find(".checkbox_column input").prop("checked", true);
                 });
@@ -99,13 +97,13 @@ class ControlPanelPage {
                 $("#form_cp_page_select_mobile").find("select option[value='" + this.selectId + "']").prop("selected", true);
         }
         
-        this._rankInMenu();
+        helper.sortableElement("#page_rankMenuSort", "#form_page_rankMenuSort");
     }
     
     // Function private
     _selectDesktop = () => {
-        const tableAndPagination = new TableAndPagination();
-        tableAndPagination.setButtonsStatus = "show";
+        let tableAndPagination = new TableAndPagination();
+        tableAndPagination.setButtonStatus = "show";
         tableAndPagination.create(window.url.cpPageSelect, "#cp_page_select_result_desktop", true);
         tableAndPagination.search();
         tableAndPagination.pagination();
@@ -129,6 +127,8 @@ class ControlPanelPage {
                     ajax.reply(xhr, "");
                     
                     tableAndPagination.populate(xhr);
+                    
+                    $("#cp_page_select_result").html("");
                 },
                 null,
                 null
@@ -136,7 +136,7 @@ class ControlPanelPage {
         });
         
         $(document).on("click", "#cp_page_select_result_desktop .delete_all", (event) => {
-            popupEasy.create(
+            popupEasy.show(
                 window.text.index_5,
                 window.textPage.label_2,
                 () => {
@@ -155,8 +155,10 @@ class ControlPanelPage {
                         null,
                         (xhr) => {
                             ajax.reply(xhr, "");
-
-                            $.each($("#cp_page_select_result_desktop").find("table .id_column"), (key, value) => {
+                            
+                            let ids = $("#cp_page_select_result_desktop").find("table .id_column");
+                            
+                            $.each(ids, (key, value) => {
                                 let id = $.trim($(value).parents("tr").find(".id_column").text());
                                 
                                 if (id > 5)
@@ -183,7 +185,7 @@ class ControlPanelPage {
 
             ajax.send(
                 true,
-                window.url.cpPageProfile,
+                window.url.cpPageSelect,
                 "post",
                 {
                     'event': "result",
@@ -198,7 +200,9 @@ class ControlPanelPage {
                     $("#cp_page_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -218,7 +222,7 @@ class ControlPanelPage {
                 true,
                 $(event.currentTarget).prop("action"),
                 $(event.currentTarget).prop("method"),
-                helper.serializeJson($(event.currentTarget)),
+                $(event.currentTarget).serialize(),
                 "json",
                 false,
                 true,
@@ -227,7 +231,9 @@ class ControlPanelPage {
                     $("#cp_page_select_result").html("");
                 },
                 (xhr) => {
-                    this._profile(xhr, `#${event.currentTarget.id}`);
+                    ajax.reply(xhr, `#${event.currentTarget.id}`);
+                    
+                    this._profile(xhr);
                 },
                 null,
                 null
@@ -239,17 +245,15 @@ class ControlPanelPage {
         });
     }
     
-    _profile = (xhr, tag) => {
-        ajax.reply(xhr, tag);
-        
+    _profile = (xhr) => {
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
             this.selectSended = true;
             
             $("#cp_page_select_result").html(xhr.response.render);
             
-            this._rankInMenu();
-
-            language.page();
+            this._rankInMenu(xhr);
+            
+            language.action();
             
             wysiwyg.create("#form_page_argument", $("#form_cp_page_profile").find("input[type='submit']"));
             
@@ -271,6 +275,7 @@ class ControlPanelPage {
             $("#form_cp_page_profile").find(".wysiwyg").on("mouseover", "", (event) => {
                 iframeMouseOver = true;
             });
+            
             $("#form_cp_page_profile").find(".wysiwyg").on("mouseout", "", (event) => {
                 iframeMouseOver = false;
             });
@@ -322,15 +327,19 @@ class ControlPanelPage {
             });
             
             $("#cp_page_delete").on("click", "", (event) => {
-               this._deleteElement(null);
+               this._deleteElement();
             });
         }
     }
     
-    _rankInMenu = () => {
-        helper.sortableElement("#page_rankMenuSort", "#form_page_rankMenuSort");
+    _rankInMenu = (xhr) => {
+        if (xhr !== undefined) {
+            $("#page_rankMenuSort").find(".sort_result").html(xhr.response.values.pageSortListHtml);
+
+            helper.sortableElement("#page_rankMenuSort", "#form_page_rankMenuSort");
+        }
         
-        $("#form_page_parent").off("change").on("change", "", (event) => {
+        $("#form_page_parent").on("change", "", (event) => {
             ajax.send(
                 true,
                 window.url.cpPageProfileSort,
@@ -350,7 +359,7 @@ class ControlPanelPage {
                     
                     if (xhr.response.values.pageSortListHtml !== undefined) {
                         $("#page_rankMenuSort").find(".sort_result").html(xhr.response.values.pageSortListHtml);
-
+                        
                         helper.sortableElement("#page_rankMenuSort", "#form_page_rankMenuSort");
                     }
                 },
@@ -361,7 +370,9 @@ class ControlPanelPage {
     }
     
     _deleteElement = (id) => {
-        popupEasy.create(
+        let idValue = id === undefined ? null : id;
+        
+        popupEasy.show(
             window.text.index_5,
             window.textPage.label_1,
             () => {
@@ -371,7 +382,7 @@ class ControlPanelPage {
                     "post",
                     {
                         'event': "delete",
-                        'id': id,
+                        'id': idValue,
                         'token': window.session.token
                     },
                     "json",
@@ -383,7 +394,7 @@ class ControlPanelPage {
                         ajax.reply(xhr, "");
                         
                         if (xhr.response.values.text !== undefined && xhr.response.values.button !== undefined && xhr.response.values.pageSelectHtml !== undefined) {
-                            popupEasy.create(
+                            popupEasy.show(
                                 window.text.index_5,
                                 xhr.response.values.text + xhr.response.values.button + xhr.response.values.pageSelectHtml
                             );
@@ -395,7 +406,7 @@ class ControlPanelPage {
                                     "post",
                                     {
                                         'event': "parentAll",
-                                        'id': id,
+                                        'id': idValue,
                                         'token': window.session.token
                                     },
                                     "json",
@@ -412,7 +423,7 @@ class ControlPanelPage {
                                     null
                                 );
                             });
-
+                            
                             $("#cp_page_delete_parent_new").on("change", "", (event) => {
                                 ajax.send(
                                     true,
@@ -420,7 +431,7 @@ class ControlPanelPage {
                                     "post",
                                     {
                                         'event': "parentNew",
-                                        'id': id,
+                                        'id': idValue,
                                         'parentNew': $(event.target).find("select").val(),
                                         'token': window.session.token
                                     },
@@ -452,7 +463,7 @@ class ControlPanelPage {
     }
     
     _saveDraft = (type) => {
-        popupEasy.create(
+        popupEasy.show(
             window.text.index_5,
             window.textPage.label_3,
             () => {
@@ -469,7 +480,7 @@ class ControlPanelPage {
     }
     
    _publishDraft = () => {
-        popupEasy.create(
+        popupEasy.show(
             window.text.index_5,
             window.textPage.label_4,
             () => {
@@ -508,7 +519,9 @@ class ControlPanelPage {
     
     _deleteResponse = (xhr) => {
         if (xhr.response.messages.success !== undefined) {
-            $.each($("#cp_page_select_result_desktop").find("table .id_column"), (key, value) => {
+            let ids = $("#cp_page_select_result_desktop").find("table .id_column");
+            
+            $.each(ids, (key, value) => {
                 if (xhr.response.values.id !== undefined && xhr.response.values.id === $.trim($(value).text()) ||
                         xhr.response.values.removedId !== undefined && $.inArray($.trim($(value).text()), xhr.response.values.removedId) !== -1)
                     $(value).parents("tr").remove();

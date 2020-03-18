@@ -42,7 +42,6 @@
         <link href="{{asset("css/system/" ~ settingRow['template'] ~ ".css")}}" rel="stylesheet"/>
         <link href="{{asset("css/system/animation.css")}}" rel="stylesheet"/>
         <link href="{{asset("css/system/loader.css")}}" rel="stylesheet"/>
-        <link href="{{asset("css/system/process_lock.css")}}" rel="stylesheet"/>
         <link href="{{asset("css/system/captcha.css")}}" rel="stylesheet"/>
         <link href="{{asset("css/system/table_and_pagination.css")}}" rel="stylesheet"/>
         <link href="{{asset("css/system/upload_chunk.css")}}" rel="stylesheet"/>
@@ -96,7 +95,6 @@
             };
             
             window.url = {
-                'processLockListener': "{{response.url.root}}/listener/processLockListener.php",
                 'root': "{{response.url.root}}",
                 'rootRender': "{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
                 'languageText': "{{path("language_text", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
@@ -112,7 +110,6 @@
                 'myPageProfileCredit': "{{path("myPage_profile_credit", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
                 'myPageProfileCreditPayPal': "{{path("myPage_profile_credit_payPal", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
                 'myPagePaymentSelect': "{{path("myPage_payment_select", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
-                'myPagePaymentProfile': "{{path("myPage_payment_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
                 'myPagePaymentDelete': "{{path("myPage_payment_delete", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
                 'pageCommentRender': "{{path("pageComment_render", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
                 'pageCommentSave': "{{path("pageComment_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
@@ -134,7 +131,8 @@
                 'index_8': "{{"index_8"|trans}}",
                 'index_9': "{{"index_9"|trans}}",
                 'index_10': "{{"index_10"|trans}}",
-                'index_11': "{{"index_11"|trans}}"
+                'index_11': "{{"index_11"|trans}}",
+                'index_12': "{{"index_12"|trans}}"
             };
             
             window.textWidgetDatePicker = {
@@ -157,7 +155,6 @@
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Loader" ~ javascriptMinify)}}"></script>
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/FlashBag" ~ javascriptMinify)}}"></script>
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/PopupEasy" ~ javascriptMinify)}}"></script>
-        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/ProcessLock" ~ javascriptMinify)}}"></script>
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Search" ~ javascriptMinify)}}"></script>
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/TableAndPagination" ~ javascriptMinify)}}"></script>
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Captcha" ~ javascriptMinify)}}"></script>
@@ -170,12 +167,11 @@
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Registration" ~ javascriptMinify)}}"></script>
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/RecoverPassword" ~ javascriptMinify)}}"></script>
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/MenuUser" ~ javascriptMinify)}}"></script>
-        
-        {% block scriptContainer %}{% endblock %}
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Index" ~ javascriptMinify)}}"></script>
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Index_custom" ~ javascriptMinify)}}"></script>
         
         {{-include("@templateRoot/layout/layout_site_custom_bottom.html.twig")-}}
         
-        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Index" ~ javascriptMinify)}}"></script>
-        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/Index_custom" ~ javascriptMinify)}}"></script>
+        {% block scriptContainer %}{% endblock %}
     </body>
 </html>

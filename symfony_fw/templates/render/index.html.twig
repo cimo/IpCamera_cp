@@ -42,7 +42,7 @@
 {% block columnLeftContainer %}
     {% if (settingRow['website_active'] == true or is_granted("IS_AUTHENTICATED_FULLY") == true) and urlExtra != "maintenance_authentication" and app.request.get("error") is null and urlExtra != "user_login" %}
         <div class="sortable_column">
-            {% for key, value in response.module.left %}
+            {% for key, value in response.module.leftRows %}
                 {% if value.active == true %}
                     {{-render(controller("App\\Controller\\" ~ value.controller_name, {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                 {% endif %}
@@ -63,7 +63,7 @@
             </div>
         {% elseif (settingRow['website_active'] == true or is_granted("IS_AUTHENTICATED_FULLY") == true) and urlExtra != "maintenance_authentication" %}
             <div class="sortable_column">
-                {% for key, value in response.module.center %}
+                {% for key, value in response.module.centerRows %}
                     {% if value.active == true %}
                         {{-render(controller("App\\Controller\\" ~ value.controller_name, {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
@@ -80,7 +80,7 @@
 {% block columnRightContainer %}
     {% if (settingRow['website_active'] == true or is_granted("IS_AUTHENTICATED_FULLY") == true) and urlExtra != "maintenance_authentication" and app.request.get("error") is null and urlExtra != "user_login" %}
         <div class="sortable_column">
-            {% for key, value in response.module.right %}
+            {% for key, value in response.module.rightRows %}
                 {% if value.active == true %}
                     {{-render(controller("App\\Controller\\" ~ value.controller_name, {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                 {% endif %}

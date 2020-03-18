@@ -33,26 +33,28 @@ class Chaato {
         this.canvasHeight = 0;
         this.context = null;
         
-        this.labelSpace = 0;
+        this.labelSpace = "";
+        
+        let tmpItemMax = [];
         
         this.itemMax = 0;
-        this.itemMaxKey = -1;
+        this.itemMaxKey = 0;
         this.itemSpace = 0;
         this.itemPrevious = [];
         this.listItems = [];
         
-        this.circleRange = 2;
+        this.circleRange = 0;
         
-        this.backgroundType = "grid";
+        this.backgroundType = "";
         
         this.animationCount = 0;
-        this.animationSpeed = 0.50;
+        this.animationSpeed = 0;
         
         this.mousePosition = {};
         
-        this.padding = 30;
-        this.translate = [95, 20];
-        this.scale = [0.91, 0.88];
+        this.padding = 0;
+        this.translate = [];
+        this.scale = [];
     }
     
     create = (json) => {
@@ -68,15 +70,32 @@ class Chaato {
         let tmpItemMax = [];
         
         $.each(this.jsonResult.elements, (key, value) => {
-            tmpItemMax[key] = Math.max.apply(null, this.jsonResult.elements[key].items);
+            tmpItemMax[key] = Math.max.apply(Math, this.jsonResult.elements[key].items);
         });
         
-        this.itemMax = Math.max.apply(null, tmpItemMax);
+        this.itemMax = Math.max.apply(Math, tmpItemMax);
         this.itemMaxKey = this._indexMajorElement(tmpItemMax);
         this.itemSpace = Math.floor(this.canvasHeight / this.jsonResult.elements[this.itemMaxKey].items.length) - 1;
+        this.itemPrevious = [];
+        this.listItems = [];
+        
+        this.circleRange = 2;
+        
+        this.backgroundType = "grid"; // grid - lineX - lineY
+        
+        this.animationCount = 0;
+        this.animationSpeed = 0.50;
+        
+        this.mousePosition = {};
+        
+        this.padding = 30;
+        this.translate = [95, 20];
+        this.scale = [0.91, 0.88];
         
         this._render();
-        
+    }
+    
+    action = () => {
         $(this.canvas).on("mousemove", "", (event) => {
             this.mousePosition = this._findMousePosition("canvas", event);
             

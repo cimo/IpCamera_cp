@@ -5,8 +5,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ModuleRepository")
  * @ORM\Table(name="module", options={"collate"="utf8_unicode_ci", "charset"="utf8", "engine"="InnoDB"})
+ * @ORM\Entity(repositoryClass="App\Repository\ModuleRepository")
  * @UniqueEntity(fields={"name"}, groups={"module_create", "module_profile"})
  */
 class Module {
@@ -56,6 +56,10 @@ class Module {
     private $active = false;
 
     // Properties
+    public function setId($value) {
+        $this->id = $value;
+    }
+    
     public function setPosition($value) {
         $this->position = $value;
     }

@@ -60,9 +60,7 @@ class PageController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -75,22 +73,22 @@ class PageController extends AbstractController {
         $pageRows = $this->query->selectAllPageDatabase($this->urlLocale);
         
         $form = $this->createForm(PageFormType::class, $pageEntity, Array(
-            'validation_groups' => Array('page_create'),
+            'validation_groups' => Array("page_create"),
             'urlLocale' => $this->urlLocale,
             'pageRow' => $this->query->selectPageDatabase($this->urlLocale, $pageEntity->getId()),
-            'choicesParent' => array_flip($this->helper->createPageList($pageRows, true))
+            'parent' => array_flip($this->helper->createPageList($pageRows, true))
         ));
         $form->handleRequest($request);
         
-        $pageParentRows = array_column($this->query->selectAllPageParentDatabase($form->get("parent")->getData()), "alias", "id");
+        $parentPageRows = array_column($this->query->selectAllParentPageDatabase($form->get("parent")->getData()), "alias", "id");
         
         $this->response['values']['userRoleSelectHtml'] = $this->helper->createUserRoleSelectHtml("form_page_roleUserId_select", "pageController_1", true);
-        $this->response['values']['pageSortListHtml'] = $this->helper->createPageSortListHtml($pageParentRows);
+        $this->response['values']['pageSortListHtml'] = $this->helper->createPageSortListHtml($parentPageRows);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
                 $pageEntity->setUserCreate($this->getUser()->getUsername());
-                $pageEntity->setDateCreate(date("Y-m-d H:i:s"));
+                $pageEntity->setDateCreate($this->helper->dateFormat());
                 
                 if ($form->get("event")->getData() == "save_draft_create") {
                     $pageEntity->setAlias("{$form->get("alias")->getData()}_[draft]");
@@ -100,10 +98,10 @@ class PageController extends AbstractController {
                 $this->entityManager->persist($pageEntity);
                 $this->entityManager->flush();
                 
-                $pageDatabase = $this->pageDatabase("insert", $this->urlLocale, $pageEntity->getId(), $form);
+                $pageDatabase = $this->query->insertPageDatabase($this->urlLocale, $form);
                 
                 if ($pageDatabase == true) {
-                    $this->updateRankInMenuDatabase($form->get("rankMenuSort")->getData(), $pageEntity->getId());
+                    $this->query->updateRankInMenuPageDatabase($pageEntity->getId(), $form->get("rankMenuSort")->getData());
                     
                     if ($form->get("event")->getData() == "save_draft_create")
                         $this->response['messages']['success'] = $this->helper->getTranslator()->trans("pageController_16");
@@ -156,9 +154,7 @@ class PageController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -178,20 +174,66 @@ class PageController extends AbstractController {
         $this->response['values']['count'] = $tableAndPagination['count'];
         
         $form = $this->createForm(PageSelectFormType::class, null, Array(
-            'validation_groups' => Array('page_select'),
-            'choicesId' => array_flip($this->helper->createPageList($pageRows, true))
+            'validation_groups' => Array("page_select"),
+            'id' => array_flip($this->helper->createPageList($pageRows, true))
         ));
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                return $this->ajax->response(Array(
-                    'urlLocale' => $this->urlLocale,
-                    'urlCurrentPageId' => $this->urlCurrentPageId,
-                    'urlExtra' => $this->urlExtra,
-                    'response' => $this->response
-                ));
+            $id = 0;
+            
+            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true)
+                $id = $request->get("id");
+            else if ($form->isSubmitted() == true && $form->isValid() == true)
+                $id = $form->get("id")->getData();
+            
+            if ($request->get("event") != "refresh" && $request->get("event") != "tableAndPagination") {
+                $pageEntity = $this->entityManager->getRepository("App\Entity\Page")->find($id);
+                
+                if ($pageEntity != null) {
+                    $this->session->set("pageProfileId", $pageEntity->getId());
+                    
+                    $pageRows = $this->query->selectAllPageDatabase($this->urlLocale, null, true);
+                    
+                    $formSub = $this->createForm(PageFormType::class, $pageEntity, Array(
+                        'validation_groups' => Array("page_profile"),
+                        'urlLocale' => $this->urlLocale,
+                        'pageRow' => $this->query->selectPageDatabase($this->urlLocale, $pageEntity->getId(), true),
+                        'parent' => array_flip($this->helper->createPageList($pageRows, true))
+                    ));
+                    $formSub->handleRequest($request);
+
+                    $parentPageRows = array_column($this->query->selectAllParentPageDatabase($formSub->get("parent")->getData(), true), "alias", "id");
+                    
+                    $this->response['values']['pageId'] = $this->session->get("pageProfileId");
+                    $this->response['values']['userRoleSelectHtml'] = $this->helper->createUserRoleSelectHtml("form_page_roleUserId_select", "pageController_1", true);
+                    $this->response['values']['pageSortListHtml'] = $this->helper->createPageSortListHtml($parentPageRows, true);
+                    $this->response['values']['userCreate'] = $pageEntity->getUserCreate();
+                    $this->response['values']['dateCreate'] = $this->helper->dateFormat($pageEntity->getDateCreate());
+                    $this->response['values']['userModify'] = $pageEntity->getUserModify();
+                    $this->response['values']['dateModify'] = $this->helper->dateFormat($pageEntity->getDateModify());
+                    $this->response['values']['draft'] = $pageEntity->getDraft();
+
+                    $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/page_profile.html.twig", Array(
+                        'urlLocale' => $this->urlLocale,
+                        'urlCurrentPageId' => $this->urlCurrentPageId,
+                        'urlExtra' => $this->urlExtra,
+                        'response' => $this->response,
+                        'form' => $formSub->createView()
+                    ));
+                }
+                else {
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("pageController_4");
+                    $this->response['errors'] = $this->ajax->errors($form);
+                }
             }
+            
+            return $this->ajax->response(Array(
+                'urlLocale' => $this->urlLocale,
+                'urlCurrentPageId' => $this->urlCurrentPageId,
+                'urlExtra' => $this->urlExtra,
+                'response' => $this->response
+            ));
         }
         
         return Array(
@@ -225,167 +267,28 @@ class PageController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
         $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
-        
-        if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                $id = $request->get("id") == null ? 0 : $request->get("id");
-                
-                $pageEntity = $this->entityManager->getRepository("App\Entity\Page")->find($id);
-                
-                if ($pageEntity != null) {
-                    $this->session->set("pageProfileId", $pageEntity->getId());
-                    
-                    $pageRows = $this->query->selectAllPageDatabase($this->urlLocale, null, true);
-                    
-                    $form = $this->createForm(PageFormType::class, $pageEntity, Array(
-                        'validation_groups' => Array('page_profile'),
-                        'urlLocale' => $this->urlLocale,
-                        'pageRow' => $this->query->selectPageDatabase($this->urlLocale, $pageEntity->getId(), true),
-                        'choicesParent' => array_flip($this->helper->createPageList($pageRows, true))
-                    ));
-                    $form->handleRequest($request);
-
-                    $pageParentRows = array_column($this->query->selectAllPageParentDatabase($form->get("parent")->getData(), true), "alias", "id");
-                    
-                    $this->response['values']['pageId'] = $this->session->get("pageProfileId");
-                    $this->response['values']['userRoleSelectHtml'] = $this->helper->createUserRoleSelectHtml("form_page_roleUserId_select", "pageController_1", true);
-                    $this->response['values']['pageSortListHtml'] = $this->helper->createPageSortListHtml($pageParentRows, true);
-                    $this->response['values']['userCreate'] = $pageEntity->getUserCreate();
-                    $this->response['values']['dateCreate'] = $this->helper->dateFormat($pageEntity->getDateCreate());
-                    $this->response['values']['userModify'] = $pageEntity->getUserModify();
-                    $this->response['values']['dateModify'] = $this->helper->dateFormat($pageEntity->getDateModify());
-                    $this->response['values']['draft'] = $pageEntity->getDraft();
-
-                    $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/page_profile.html.twig", Array(
-                        'urlLocale' => $this->urlLocale,
-                        'urlCurrentPageId' => $this->urlCurrentPageId,
-                        'urlExtra' => $this->urlExtra,
-                        'response' => $this->response,
-                        'form' => $form->createView()
-                    ));
-                }
-                else
-                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("pageController_4");
-            }
-        }
-        
-        return $this->ajax->response(Array(
-            'urlLocale' => $this->urlLocale,
-            'urlCurrentPageId' => $this->urlCurrentPageId,
-            'urlExtra' => $this->urlExtra,
-            'response' => $this->response
-        ));
-    }
-    
-    /**
-    * @Route(
-    *   name = "cp_page_profile_sort",
-    *   path = "/cp_page_profile_sort/{_locale}/{urlCurrentPageId}/{urlExtra}",
-    *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
-    *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
-    *	methods={"POST"}
-    * )
-    * @Template("@templateRoot/render/control_panel/page_profile.html.twig")
-    */
-    public function profileSortAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->entityManager = $this->getDoctrine()->getManager();
-        
-        $this->response = Array();
-        
-        $this->helper = new Helper($this->container, $this->entityManager, $translator);
-        $this->query = $this->helper->getQuery();
-        $this->ajax = new Ajax($this->helper);
-        
-        $this->session = $this->helper->getSession();
-        
-        // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
-        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
-        
-        if ($request->isMethod("POST") == true && $checkUserRole == true) {
-            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                $id = $request->get("id") == null ? 0 : $request->get("id");
-                
-                $rows = array_column($this->query->selectAllPageParentDatabase($id, true), "alias", "id");
-                
-                $sessionPageProfileId = $this->session->get("pageProfileId");
-                
-                if ($sessionPageProfileId > 0) {
-                    $pageEntity = $this->entityManager->getRepository("App\Entity\Page")->find($sessionPageProfileId);
-                    
-                    $rows[$pageEntity->getId()] = $pageEntity->getAlias();
-                }
-                
-                $this->response['values']['pageSortListHtml'] = $this->helper->createPageSortListHtml($rows, true);
-            } 
-        }
-        
-        return $this->ajax->response(Array(
-            'urlLocale' => $this->urlLocale,
-            'urlCurrentPageId' => $this->urlCurrentPageId,
-            'urlExtra' => $this->urlExtra,
-            'response' => $this->response
-        ));
-    }
-    
-    /**
-    * @Route(
-    *   name = "cp_page_profile_save",
-    *   path = "/cp_page_profile_save/{_locale}/{urlCurrentPageId}/{urlExtra}",
-    *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
-    *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
-    *	methods={"POST"}
-    * )
-    * @Template("@templateRoot/render/control_panel/page_profile.html.twig")
-    */
-    public function profileSaveAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
-        $this->entityManager = $this->getDoctrine()->getManager();
-        
-        $this->response = Array();
-        
-        $this->helper = new Helper($this->container, $this->entityManager, $translator);
-        $this->query = $this->helper->getQuery();
-        $this->ajax = new Ajax($this->helper);
-        
-        $this->session = $this->helper->getSession();
-        
-        // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
-        $this->urlCurrentPageId = $urlCurrentPageId;
-        $this->urlExtra = $urlExtra;
-        
-        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
-        
-        $pageEntity = $this->entityManager->getRepository("App\Entity\Page")->find($this->session->get("pageProfileId"));
         
         $pageRows = $this->query->selectAllPageDatabase($this->urlLocale, null, true);
         
+        $pageEntity = $this->entityManager->getRepository("App\Entity\Page")->find($this->session->get("pageProfileId"));
+        
         $form = $this->createForm(PageFormType::class, $pageEntity, Array(
-            'validation_groups' => Array('page_profile'),
+            'validation_groups' => Array("page_profile"),
             'urlLocale' => $this->urlLocale,
             'pageRow' => $this->query->selectPageDatabase($this->urlLocale, $pageEntity->getId(), true),
-            'choicesParent' => array_flip($this->helper->createPageList($pageRows, true))
+            'parent' => array_flip($this->helper->createPageList($pageRows, true))
         ));
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
                 if ($form->get("event")->getData() == "save_draft_modify") {
-                    $pageDatabase = $this->pageDatabase("save_draft_modify", $this->urlLocale, $pageEntity->getId(), $form);
+                    $pageDatabase = $this->query->draftPageDatabase("save", $this->urlLocale, $this->getUser(), $pageEntity->getId(), $form);
                     
                     if ($pageDatabase == true) {
                         $this->response['values']['id'] = $pageEntity->getId();
@@ -396,7 +299,7 @@ class PageController extends AbstractController {
                         $this->response['messages']['error'] = $this->helper->getTranslator()->trans("pageController_17");
                 }
                 else if ($form->get("event")->getData() == "publish_draft") {
-                    $pageDatabase = $this->pageDatabase("publish_draft", $this->urlLocale, $pageEntity->getId(), null);
+                    $pageDatabase = $this->query->draftPageDatabase("publish", $this->urlLocale, $this->getUser(), $pageEntity->getId(), null);
                     
                     if ($pageDatabase == true) {
                         $this->response['values']['id'] = $pageEntity->getId();
@@ -408,16 +311,16 @@ class PageController extends AbstractController {
                 }
                 else {
                     $pageEntity->setUserModify($this->getUser()->getUsername());
-                    $pageEntity->setDateModify(date("Y-m-d H:i:s"));
-
+                    $pageEntity->setDateModify($this->helper->dateFormat());
+                    
                     $this->entityManager->persist($pageEntity);
                     $this->entityManager->flush();
-
-                    $pageDatabase = $this->pageDatabase("update", null, $pageEntity->getId(), $form);
-
+                    
+                    $pageDatabase = $this->query->updatePageDatabase($form, $pageEntity->getId());
+                    
                     if ($pageDatabase == true) {
-                        $this->updateRankInMenuDatabase($form->get("rankMenuSort")->getData(), $pageEntity->getId());
-
+                        $this->query->updateRankInMenuPageDatabase($pageEntity->getId(), $form->get("rankMenuSort")->getData());
+                        
                         $this->response['messages']['success'] = $this->helper->getTranslator()->trans("pageController_5");
                     }
                 }
@@ -446,6 +349,60 @@ class PageController extends AbstractController {
     
     /**
     * @Route(
+    *   name = "cp_page_profile_sort",
+    *   path = "/cp_page_profile_sort/{_locale}/{urlCurrentPageId}/{urlExtra}",
+    *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
+    *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
+    *	methods={"POST"}
+    * )
+    * @Template("@templateRoot/render/control_panel/page_profile.html.twig")
+    */
+    public function profileSortAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
+        $this->entityManager = $this->getDoctrine()->getManager();
+        
+        $this->response = Array();
+        
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+        
+        $this->session = $this->helper->getSession();
+        
+        // Logic
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+        
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MODERATOR"), $this->getUser());
+        
+        if ($request->isMethod("POST") == true && $checkUserRole == true) {
+            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
+                $id = $request->get("id") == null ? 0 : $request->get("id");
+                
+                $parentPageRows = array_column($this->query->selectAllParentPageDatabase($id, true), "alias", "id");
+                
+                $sessionPageProfileId = $this->session->get("pageProfileId");
+                
+                if ($sessionPageProfileId > 0) {
+                    $pageEntity = $this->entityManager->getRepository("App\Entity\Page")->find($sessionPageProfileId);
+                    
+                    $parentPageRows[$pageEntity->getId()] = $pageEntity->getAlias();
+                }
+                
+                $this->response['values']['pageSortListHtml'] = $this->helper->createPageSortListHtml($parentPageRows, true);
+            } 
+        }
+        
+        return $this->ajax->response(Array(
+            'urlLocale' => $this->urlLocale,
+            'urlCurrentPageId' => $this->urlCurrentPageId,
+            'urlExtra' => $this->urlExtra,
+            'response' => $this->response
+        ));
+    }
+    
+    /**
+    * @Route(
     *   name = "cp_page_delete",
     *   path = "/cp_page_delete/{_locale}/{urlCurrentPageId}/{urlExtra}",
     *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
@@ -466,9 +423,7 @@ class PageController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -479,10 +434,10 @@ class PageController extends AbstractController {
                 if ($request->get("event") == "delete") {
                     $id = $request->get("id") == null ? $this->session->get("pageProfileId") : $request->get("id");
 
-                    $pageChildrenRows = $this->query->selectAllPageChildrenDatabase($id, true);
+                    $childrenPageRows = $this->query->selectAllChildrenPageDatabase($id, true);
 
-                    if ($pageChildrenRows == false) {
-                        $pageDatabase = $this->pageDatabase("delete", null, $id, null);
+                    if ($childrenPageRows == false) {
+                        $pageDatabase = $this->query->deletePageDatabase("one", $id);
 
                         if ($pageDatabase == true) {
                             $this->response['values']['id'] = $id;
@@ -501,7 +456,7 @@ class PageController extends AbstractController {
                     }
                 }
                 else if ($request->get("event") == "deleteAll") {
-                    $pageDatabase = $this->pageDatabase("deleteAll", null, null, null);
+                    $pageDatabase = $this->query->deletePageDatabase("all");
 
                     if ($pageDatabase == true)
                         $this->response['messages']['success'] = $this->helper->getTranslator()->trans("pageController_11");
@@ -511,11 +466,11 @@ class PageController extends AbstractController {
 
                     $this->removedId = Array();
 
-                    $this->removePageChildrenDatabase($id);
+                    $this->removePageChildren($id);
 
                     array_unshift($this->removedId, $id);
 
-                    $pageDatabase = $this->pageDatabase("delete", null, $id, null);
+                    $pageDatabase = $this->query->deletePageDatabase("one", $id);
 
                     if ($pageDatabase == true) {
                         $this->response['values']['removedId'] = $this->removedId;
@@ -526,9 +481,9 @@ class PageController extends AbstractController {
                 else if ($request->get("event") == "parentNew") {
                     $id = $request->get("id") == null ? $this->session->get("pageProfileId") : $request->get("id");
 
-                    $this->updatePageChildrenDatabase($id, $request->get("parentNew"));
+                    $this->query->updateChildrenPageDatabase($id, $request->get("parentNew"));
 
-                    $pageDatabase = $this->pageDatabase("delete", null, $id, null);
+                    $pageDatabase = $this->query->deletePageDatabase("one", $id);
 
                     if ($pageDatabase == true) {
                         $this->response['values']['id'] = $id;
@@ -610,305 +565,15 @@ class PageController extends AbstractController {
         return $this->listHtml;
     }
     
-    private function removePageChildrenDatabase($id) {
-        $pageChildrenRows = $this->query->selectAllPageChildrenDatabase($id, true);
+    private function removePageChildren($id) {
+        $childrenPageRows = $this->query->selectAllChildrenPageDatabase($id, true);
         
-        for ($a = 0; $a < count($pageChildrenRows); $a ++) {
-            $this->removedId[] = $pageChildrenRows[$a]['id'];
+        for ($a = 0; $a < count($childrenPageRows); $a ++) {
+            $this->removedId[] = $childrenPageRows[$a]['id'];
                     
-            $this->removePageChildrenDatabase($pageChildrenRows[$a]['id']);
+            $this->removePageChildren($childrenPageRows[$a]['id']);
         }
         
-        $this->pageDatabase("delete", null, $id, null);
-    }
-    
-    private function updatePageChildrenDatabase($id, $parentNew) {
-        $query = $this->helper->getConnection()->prepare("UPDATE page
-                                                            SET parent = :parentNew
-                                                            WHERE parent = :id");
-        
-        $query->bindValue(":parentNew", $parentNew);
-        $query->bindValue(":id", $id);
-        
-        $query->execute();
-    }
-    
-    private function updateRankInMenuDatabase($rankMenuSort, $pageId) {
-        $rankMenuSortExplode = explode(",", $rankMenuSort);
-        array_pop($rankMenuSortExplode);
-        
-        foreach ($rankMenuSortExplode as $key => $value) {
-            if (empty($value) == true)
-                $value = $pageId;
-
-            $query = $this->helper->getConnection()->prepare("UPDATE page
-                                                                SET rank_in_menu = :rankInMenu
-                                                                WHERE id = :id");
-
-            $query->bindValue(":rankInMenu", $key + 1);
-            $query->bindValue(":id", $value);
-
-            $query->execute();
-        }
-    }
-    
-    private function pageDatabase($type, $urlLocale, $id, $form) {
-        if ($type == "insert") {
-            $query = $this->helper->getConnection()->prepare("INSERT INTO page_title (
-                                                                    page_title.$urlLocale
-                                                                )
-                                                                VALUES (
-                                                                    :title
-                                                                );
-                                                                INSERT INTO page_argument (
-                                                                    page_argument.$urlLocale
-                                                                )
-                                                                VALUES (
-                                                                    :argument
-                                                                );
-                                                                INSERT INTO page_menu_name (
-                                                                    page_menu_name.$urlLocale
-                                                                )
-                                                                VALUES (
-                                                                    :menuName
-                                                                );");
-            
-            $query->bindValue(":title", $form->get("title")->getData());
-            
-            $argumentHtmlEntities = htmlentities($form->get("argument")->getData(), ENT_QUOTES, "UTF-8");
-            $query->bindValue(":argument", $argumentHtmlEntities);
-            
-            $query->bindValue(":menuName", $form->get("menuName")->getData());
-            
-            return $query->execute();
-        }
-        else if ($type == "update") {
-            $language = $form->get("language")->getData();
-            
-            $pageRow = $this->query->selectPageDatabase($language, $id, true);
-            
-            $alias = str_replace("_draft", "", $form->get("alias")->getData());
-            $alias = $pageRow['draft'] > 0 ? "{$alias}_[draft]" : $alias;
-            
-            $query = $this->helper->getConnection()->prepare("UPDATE page, page_title, page_argument, page_menu_name
-                                                                SET page.alias = :alias,
-                                                                    page_title.$language = :title,
-                                                                    page_argument.$language = :argument,
-                                                                    page_menu_name.$language = :menuName
-                                                                WHERE page.id = :id
-                                                                AND page_title.id = :id
-                                                                AND page_argument.id = :id
-                                                                AND page_menu_name.id = :id");
-            
-            $query->bindValue(":alias", $alias);
-            
-            $query->bindValue(":title", $form->get("title")->getData());
-            
-            $argumentHtmlEntities = htmlentities($form->get("argument")->getData(), ENT_QUOTES, "UTF-8");
-            $query->bindValue(":argument", $argumentHtmlEntities);
-            
-            $query->bindValue(":menuName", $form->get("menuName")->getData());
-            
-            $query->bindValue(":id", $id);
-            
-            return $query->execute();
-        }
-        else if ($type == "delete") {
-            $query = $this->helper->getConnection()->prepare("DELETE FROM page WHERE id > :idExclude AND id = :id;
-                                                                DELETE FROM page_title WHERE id > :idExclude AND id = :id;
-                                                                DELETE FROM page_argument WHERE id > :idExclude AND id = :id;
-                                                                DELETE FROM page_menu_name WHERE id > :idExclude AND id = :id;
-                                                                DELETE FROM page_comment WHERE id > :idExclude AND id = :id;");
-            
-            $query->bindValue(":idExclude", 5);
-            $query->bindValue(":id", $id);
-            
-            return $query->execute();
-        }
-        else if ($type == "deleteAll") {
-            $query = $this->helper->getConnection()->prepare("DELETE FROM page WHERE id > :idExclude;
-                                                                DELETE FROM page_title WHERE id > :idExclude;
-                                                                DELETE FROM page_argument WHERE id > :idExclude;
-                                                                DELETE FROM page_menu_name WHERE id > :idExclude;
-                                                                DELETE FROM page_comment WHERE id > :idExclude;");
-            
-            $query->bindValue(":idExclude", 5);
-            
-            return $query->execute();
-        }
-        else if ($type == "save_draft_modify") {
-            $alias = "{$form->get("alias")->getData()}_[draft]";
-            
-            $pageRows = $this->query->selectAllPageDatabase($urlLocale, null, true);
-            
-            foreach ($pageRows as $key => $value) {
-                if (isset($value['alias']) == true) {
-                    if ($alias == $value['alias'])
-                        return false;
-                }
-            }
-            
-            $query = $this->helper->getConnection()->prepare("INSERT INTO page (
-                                                                    alias,
-                                                                    parent,
-                                                                    controller_action,
-                                                                    role_user_id,
-                                                                    protected,
-                                                                    show_in_menu,
-                                                                    rank_in_menu,
-                                                                    comment,
-                                                                    only_parent,
-                                                                    only_link,
-                                                                    link,
-                                                                    user_create,
-                                                                    date_create,
-                                                                    user_modify,
-                                                                    date_modify,
-                                                                    meta_description,
-                                                                    meta_keywords,
-                                                                    meta_robots,
-                                                                    draft
-                                                                )
-                                                                SELECT 
-                                                                    :alias,
-                                                                    :parent,
-                                                                    :controllerAction,
-                                                                    :roleUserId,
-                                                                    :protected,
-                                                                    :showInMenu,
-                                                                    rank_in_menu,
-                                                                    :comment,
-                                                                    :onlyParent,
-                                                                    :onlyLink,
-                                                                    :link,
-                                                                    user_create,
-                                                                    date_create,
-                                                                    :userModify,
-                                                                    :dateModify,
-                                                                    :metaDescription,
-                                                                    :metaKeywords,
-                                                                    :metaRobots,
-                                                                    :id
-                                                                FROM 
-                                                                    page
-                                                                WHERE 
-                                                                    id = :id");
-            
-            $query->bindValue(":alias", $alias);
-            $query->bindValue(":parent", $form->get("parent")->getData());
-            $query->bindValue(":controllerAction", $form->get("controllerAction")->getData());
-            $query->bindValue(":roleUserId", $form->get("roleUserId")->getData());
-            $query->bindValue(":protected", $form->get("protected")->getData());
-            $query->bindValue(":showInMenu", $form->get("showInMenu")->getData());
-            $query->bindValue(":comment", $form->get("comment")->getData());
-            $query->bindValue(":onlyParent", $form->get("onlyParent")->getData());
-            $query->bindValue(":onlyLink", $form->get("onlyLink")->getData());
-            $query->bindValue(":link", $form->get("link")->getData());
-            $query->bindValue(":userModify", $this->getUser()->getUsername());
-            $query->bindValue(":dateModify", date("Y-m-d H:i:s"));
-            $query->bindValue(":metaDescription", $form->get("metaDescription")->getData());
-            $query->bindValue(":metaKeywords", $form->get("metaKeywords")->getData());
-            $query->bindValue(":metaRobots", $form->get("metaRobots")->getData());
-            $query->bindValue(":id", $id);
-
-            $query->execute();
-            
-            $languageRows = $this->query->selectAllLanguageDatabase();
-            
-            $title = "";
-            $argument = "";
-            $menuName = "";
-            $code = "";
-            
-            foreach($languageRows as $key => $value) {
-                $title .= "page_title.{$value['code']},";
-                $argument .= "page_argument.{$value['code']},";
-                $menuName .= "page_menu_name.{$value['code']},";
-                $code .= "{$value['code']},";
-            }
-            
-            $title = substr($title, 0, -1);
-            $argument = substr($argument, 0, -1);
-            $menuName = substr($menuName, 0, -1);
-            $code = substr($code, 0, -1);
-            
-            $query = $this->helper->getConnection()->prepare("INSERT INTO page_title (
-                                                                    {$title}
-                                                                )
-                                                                SELECT
-                                                                    {$code}
-                                                                FROM
-                                                                    page_title
-                                                                WHERE
-                                                                    id = :id;
-                                                                INSERT INTO page_argument (
-                                                                    {$argument}
-                                                                )
-                                                                SELECT
-                                                                    {$code}
-                                                                FROM
-                                                                    page_argument
-                                                                WHERE
-                                                                    id = :id;
-                                                                INSERT INTO page_menu_name (
-                                                                    {$menuName}
-                                                                )
-                                                                SELECT
-                                                                    {$code}
-                                                                FROM
-                                                                    page_menu_name
-                                                                WHERE
-                                                                    id = :id;");
-
-            $query->bindValue(":id", $id);
-
-            return $query->execute();
-        }
-        else if ($type == "publish_draft") {
-            $pageRow = $this->query->selectPageDatabase($urlLocale, $id, true);
-            
-            $alias = str_replace("_[draft]", "", $pageRow['alias']);
-            
-            if ($pageRow['draft'] > 0) {
-                $query = $this->helper->getConnection()->prepare("DELETE FROM page WHERE id > :idExclude AND id = :id;
-                                                                    DELETE FROM page_title WHERE id > :idExclude AND id = :id;
-                                                                    DELETE FROM page_argument WHERE id > :idExclude AND id = :id;
-                                                                    DELETE FROM page_menu_name WHERE id > :idExclude AND id = :id;");
-
-                $query->bindValue(":idExclude", 5);
-                $query->bindValue(":id", $pageRow['draft']);
-
-                $query->execute();
-                
-                $query = $this->helper->getConnection()->prepare("UPDATE page, page_title, page_argument, page_menu_name
-                                                                    SET page.id = :newId,
-                                                                        page.alias = :alias,
-                                                                        page.draft = :draft,
-                                                                        page_title.id = :newId,
-                                                                        page_argument.id = :newId,
-                                                                        page_menu_name.id = :newId
-                                                                    WHERE page.id = :id 
-                                                                    AND page_title.id = :id
-                                                                    AND page_argument.id = :id
-                                                                    AND page_menu_name.id = :id");
-
-                $query->bindValue(":newId", $pageRow['draft']);
-                $query->bindValue(":alias", $alias);
-                $query->bindValue(":draft", 0);
-                $query->bindValue(":id", $id);
-            }
-            else {
-                $query = $this->helper->getConnection()->prepare("UPDATE page
-                                                                    SET alias = :alias,
-                                                                        draft = :draft
-                                                                    WHERE id = :id");
-                
-                $query->bindValue(":alias", $alias);
-                $query->bindValue(":draft", 0);
-                $query->bindValue(":id", $id);
-            }
-            
-            return $query->execute();
-        }
+        $this->query->deletePageDatabase("one", $id);
     }
 }

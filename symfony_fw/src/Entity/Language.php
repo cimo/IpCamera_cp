@@ -28,9 +28,13 @@ class Language {
     /**
      * @ORM\Column(name="active", type="boolean", columnDefinition="tinyint(1) NOT NULL DEFAULT 0")
      */
-    private $active = 0;
+    private $active = false;
     
     // Properties
+    public function setId($value) {
+        $this->id = $value;
+    }
+    
     public function setCode($value) {
         $this->code = $value;
     }

@@ -8,13 +8,16 @@ date.day: d-m-Y
 date.time: H:i:s
 
 # Entity
-"entity.user.password": "Need min 8 max 20 character."
+"entity.user.password": "Need min 8 max 50 character."
 "entity.user.username": "Need min 4 max 20 character (Only . is allowed)."
+
+# Layout
+"layout_1": "Clear"
 
 # Index
 "index_1": "WEBSITE CURRENTLY"
 "index_2": "UNDER MAINTENANCE"
-"index_3": "Copyright © 2019 - Reinvent software."
+"index_3": "Copyright © 2020 - Reinvent software."
 "index_4": "All rights reserved."
 "index_5": "Warning!"
 "index_6": "Ok"
@@ -97,8 +100,8 @@ date.time: H:i:s
 
 # Password
 "passwordFormType_1": "Password old"
-"passwordFormType_2": "Password new"
-"passwordFormType_3": "Password new confirm"
+"passwordFormType_2": "Password"
+"passwordFormType_3": "Password confirm"
 "passwordFormType_4": "Send"
 
 # Recover password
@@ -108,11 +111,13 @@ date.time: H:i:s
 "recoverPasswordFormType_1": "Email"
 "recoverPasswordFormType_2": "Send"
 
-"recoverPasswordController_1": "Recover completed. Check your email for the instructions."
-"recoverPasswordController_2": "No user found with this email!"
-"recoverPasswordController_3": "Recover not completed!"
-"recoverPasswordController_4": "Change password completed."
-"recoverPasswordController_5": "Change password not completed!"
+"recoverPasswordController_1": "Recover password"
+"recoverPasswordController_2": "Click on this link for reset your password:"
+"recoverPasswordController_3": "Recover completed. Check your email for the instructions."
+"recoverPasswordController_4": "No user found with this email!"
+"recoverPasswordController_5": "Recover not completed!"
+"recoverPasswordController_6": "Change password completed."
+"recoverPasswordController_7": "Change password not completed!"
 
 # Forgot password
 "forgotPasswordFormType_1": "Password"
@@ -137,13 +142,9 @@ date.time: H:i:s
 "authenticationFomType_3": "Remember me"
 "authenticationFomType_4": "Login"
 
-"authenticationListener_1": "Your level does not allow the access."
-"authenticationListener_2": "Insert username and password."
-"authenticationListener_3": "Your account is locked."
-"authenticationListener_4": "Bad credentials."
-"authenticationListener_5": "Attempt: "
-"authenticationListener_6a": "A lot attempts, wait "
-"authenticationListener_6b": " minutes before retrying."
+# Authentication listener
+"authenticationListener_1": "Insert username."
+"authenticationListener_2": "Insert password."
 
 # Page view
 "pageView_1": "Created from: "
@@ -220,10 +221,7 @@ date.time: H:i:s
 "classUploadChunk_10": "File not uploaded!"
 
 # Process lock
-"process_lock_1": "Please don't close this window and wait..."
-"process_lock_2": "Error listener!"
-"process_lock_3": "Completed. Now you can close this window."
-"process_lock_4": "Process in progress, please try later."
+"process_lock_1": "Process in progress, please try later."
 
 # Captcha
 "captcha_1": "Chaptcha code incorrect!"
@@ -260,13 +258,17 @@ date.time: H:i:s
 "error_1": "Error: "
 
 # Helper
-"classHelper_1": "Old password doesn't match!"
-"classHelper_2": "New password and New confirm password doesn't match!"
-"classHelper_3": "Password and Confirm password doesn't match!"
-"classHelper_4": "This page"
-"classHelper_5": "This module"
-"classHelper_6": "User profile data changed, please login again."
-"classHelper_7": "Session time is over, please login again."
+"classHelper_1": "Password old doesn't match!"
+"classHelper_2": "Password and Password confirm doesn't match!"
+"classHelper_3": "This page"
+"classHelper_4": "This module"
+"classHelper_5": "User profile data changed, please login again."
+"classHelper_6": "Session time is over, please login again."
+"classHelper_7a": "A lot attempts, wait "
+"classHelper_7b": " minutes before retrying."
+"classHelper_8": "Attempt: "
+"classHelper_9": "This user not exists."
+"classHelper_10": "Your account is locked."
 
 # Control panel
 "controlPanel_1": "Create"
@@ -326,8 +328,11 @@ date.time: H:i:s
 "controlPanelMicroserviceDeploy_2": "Really delete this module?"
 "controlPanelMicroserviceDeploy_3": "Really delete all modules?"
 "controlPanelMicroserviceDeploy_4": "Are you sure to execute the command?"
+"controlPanelMicroserviceDeploy_5": "Really clear this password?"
 
 "controlPanelMicroserviceApi_1": "Api section."
+"controlPanelMicroserviceApi_2": "Really delete this apiBasic?"
+"controlPanelMicroserviceApi_3": "Really clear this password?"
 
 "controlPanelMicroserviceUnitTest_1": "Unit test section."
 "controlPanelMicroserviceUnitTest_2": "Insert iframe code in your page and script code on bottom of your page:"
@@ -343,17 +348,6 @@ date.time: H:i:s
 "controlPanelMicroserviceCron_2": "Time:"
 "controlPanelMicroserviceCron_3": "Really delete this cron?"
 "controlPanelMicroserviceCron_4": "Really delete all cron?"
-
-# IpCamera
-"controlPanelMenuIpCamera_1": "Ip camera"
-"controlPanelMenuIpCamera_2": "Device"
-"controlPanelMenuIpCamera_3": "File"
-
-"controlPanelPageIpCamera_1": "IpCamera device section."
-"controlPanelPageIpCamera_2": "Really delete this device?"
-"controlPanelPageIpCamera_3": "Really delete all devices?"
-"controlPanelPageIpCamera_4": "Really delete this file?"
-"controlPanelPageIpCamera_5": "Really delete all files?"
 
 # Payment
 "paymentUserSelect_1": "Payments user selection form"
@@ -635,7 +629,7 @@ date.time: H:i:s
 "setting_3": "Column type"
 "setting_4": "System"
 "setting_5": "..."
-"setting_6": "Lanuage management"
+"setting_6": "Language management"
 "setting_7": "Code"
 "setting_8": "Date"
 "setting_9": "Active"
@@ -678,7 +672,9 @@ date.time: H:i:s
 "settingFormType_30": "Paypal credit amount"
 "settingFormType_31": "Javascript minify"
 "settingFormType_32": "Server user"
-"settingFormType_33": "Send"
+"settingFormType_33": "Server root"
+"settingFormType_34": "Server host"
+"settingFormType_35": "Send"
 
 "settingController_1": "Roles maintenance"
 "settingController_2": "Protocol value has changed, please login again (if you have changed from https to http you need close and to open browser for to do login)."
@@ -772,7 +768,6 @@ date.time: H:i:s
 "microserviceDeployFormType_1": "Name"
 "microserviceDeployFormType_2": "Description"
 "microserviceDeployFormType_3": "System user"
-"microserviceDeployFormType_4_i": "If you remove 'Ssh username' you clean 'Ssh password' too."
 "microserviceDeployFormType_4": "Ssh username"
 "microserviceDeployFormType_5": "Ssh password"
 "microserviceDeployFormType_6": "Key public"
@@ -785,7 +780,6 @@ date.time: H:i:s
 "microserviceDeployFormType_13": "Git user name"
 "microserviceDeployFormType_14_i": "Without https:// (is setted by default)."
 "microserviceDeployFormType_14": "Git clone url"
-"microserviceDeployFormType_15_i": "If you remove 'Git clone url username' you clean 'Git clone url password' too."
 "microserviceDeployFormType_15": "Git clone url username"
 "microserviceDeployFormType_16": "Git clone url password"
 "microserviceDeployFormType_17": "Git clone path"
@@ -821,6 +815,8 @@ date.time: H:i:s
 "microserviceDeployController_16": "No"
 "microserviceDeployController_17": "Yes"
 "microserviceDeployController_18": "Ssh connection problem!"
+"microserviceDeployController_19": "Password cleared."
+"microserviceDeployController_20": "Password not cleared!"
 
 # Microservice api
 "microserviceApi_1": "Profile"
@@ -835,7 +831,7 @@ date.time: H:i:s
 "microserviceApiProfile_1": "Back"
 "microserviceApiProfile_2": "Api profile form"
 "microserviceApiProfile_3": "..."
-"microserviceApiProfile_4": "There is no controller!"
+"microserviceApiProfile_4": "Api controller are not present!"
 
 "microserviceApiFormType_1": "Name"
 "microserviceApiFormType_2": "Controller"
@@ -853,8 +849,6 @@ date.time: H:i:s
 "microserviceApiController_4": "Api update not completed!"
 
 # ApiBasic
-"apiBasic_1": "Really delete this apiBasic?"
-
 "apiBasicCreate_1": "ApiBasic create form"
 "apiBasicCreate_2": "..."
 
@@ -880,7 +874,6 @@ date.time: H:i:s
 "apiBasicFormType_4": "Url callback"
 "apiBasicFormType_5": "Database ip"
 "apiBasicFormType_6": "Database name"
-"apiBasicFormType_7_i": "If you remove 'Database username' you clean 'Database password' too."
 "apiBasicFormType_7": "Database username"
 "apiBasicFormType_8": "Database password"
 "apiBasicFormType_9": "Active"
@@ -909,6 +902,8 @@ date.time: H:i:s
 "apiBasicController_14": "Year"
 "apiBasicController_15": "Month"
 "apiBasicController_16": "ApiBasic problem with curl."
+"apiBasicController_17": "Password cleared."
+"apiBasicController_18": "Password not cleared!"
 
 # Microservice unit test
 "microserviceUnitTestCreate_1": "Unit test create form"
@@ -1022,6 +1017,16 @@ date.time: H:i:s
 "microserviceCronController_10": "Yes"
 
 # IpCamera
+"controlPanelMenuIpCamera_1": "Ip camera"
+"controlPanelMenuIpCamera_2": "Device"
+"controlPanelMenuIpCamera_3": "File"
+
+"controlPanelPageIpCamera_1": "IpCamera device section."
+"controlPanelPageIpCamera_2": "Really delete this device?"
+"controlPanelPageIpCamera_3": "Really delete all devices?"
+"controlPanelPageIpCamera_4": "Really delete this file?"
+"controlPanelPageIpCamera_5": "Really delete all files?"
+
 "ipCameraCreate_1": "Device create form"
 "ipCameraCreate_2": "..."
 
@@ -1048,9 +1053,8 @@ date.time: H:i:s
 "ipCameraFormType_7": "Detection active"
 "ipCameraFormType_8": "No"
 "ipCameraFormType_9": "Yes"
-"ipCameraFormType_10": "Detection pid"
-"ipCameraFormType_11": "Active"
-"ipCameraFormType_12": "Send"
+"ipCameraFormType_10": "Active"
+"ipCameraFormType_11": "Send"
 
 "ipCameraSelectFormType_1": "Name"
 "ipCameraSelectFormType_2": "Select"

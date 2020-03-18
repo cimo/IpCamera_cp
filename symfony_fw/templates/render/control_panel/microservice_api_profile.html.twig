@@ -8,7 +8,7 @@
     <fieldset>
         <legend>{% trans %}microserviceApiProfile_2{% endtrans %}</legend>
         <p>{% trans %}microserviceApiProfile_3{% endtrans %}</p>
-        <form id="form_cp_microservice_api_profile" action="{{path("cp_microservice_api_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+        <form id="form_cp_microservice_api_profile" action="{{path("cp_microservice_api_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
             <div class="upload_container">
                 <img class="avatar" src="{{response.logo}}" alt="Logo"/>
                 <div class="input">

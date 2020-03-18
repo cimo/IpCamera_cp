@@ -5,7 +5,11 @@
 $(document).ready(() => {
     //...
     
-    $(window).resize(() => {
+    $(window).on("resize", "", (event) => {
+        //...
+    });
+    
+    $(window).on("orientationchange", "", (event) => {
         //...
     });
 });

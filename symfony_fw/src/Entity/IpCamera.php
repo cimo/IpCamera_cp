@@ -55,19 +55,18 @@ class IpCamera {
     /**
      * @ORM\Column(name="detection_active", type="integer", columnDefinition="tinyint(1) NOT NULL DEFAULT 0")
      */
-    private $detectionActive = 0;
-    
-    /**
-     * @ORM\Column(name="detection_pid", type="string", nullable=true, columnDefinition="varchar(4)")
-     */
-    private $detectionPid = "0";
+    private $detectionActive = false;
     
     /**
      * @ORM\Column(name="active", type="integer", columnDefinition="tinyint(1) NOT NULL DEFAULT 0")
      */
-    private $active = 0;
+    private $active = false;
     
     // Properties
+    public function setId($value) {
+        $this->id = $value;
+    }
+    
     public function setName($value) {
         $this->name = $value;
     }
@@ -98,10 +97,6 @@ class IpCamera {
     
     public function setDetectionActive($value) {
         $this->detectionActive = $value;
-    }
-    
-    public function setDetectionPid($value) {
-        $this->detectionPid = $value;
     }
     
     public function setActive($value) {
@@ -144,10 +139,6 @@ class IpCamera {
     
     public function getDetectionActive() {
         return $this->detectionActive;
-    }
-    
-    public function getDetectionPid() {
-        return $this->detectionPid;
     }
     
     public function getActive() {

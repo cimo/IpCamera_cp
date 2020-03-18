@@ -13,14 +13,14 @@ class LanguageFormType extends AbstractType {
     
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(Array(
-            'data_class' => "App\Form\Model\LanguageModel",
+            'data_class' => "App\Entity\Language",
             'csrf_protection' => true,
             'validation_groups' => null
         ));
     }
     
     public function buildForm(FormBuilderInterface $builder, Array $options) {
-        $builder->add("codePage", HiddenType::class, Array(
+        $builder->add("code", HiddenType::class, Array(
             'required' => true
         ));
     }

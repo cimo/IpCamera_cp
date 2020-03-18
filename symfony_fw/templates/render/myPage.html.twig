@@ -29,10 +29,13 @@
 <script nonce="{{php_session.xssProtectionValue}}">
     "use strict";
     
-    const myPageProfile = new MyPageProfile();
-    const myPagePayment = new MyPagePayment();
+    let myPageProfile = null;
+    let myPagePayment = null;
     
     window.addEventListener("load", (event) => {
+        myPageProfile = new MyPageProfile();
+        myPagePayment = new MyPagePayment();
+        
         myPageProfile.action();
         
         myPagePayment.action();

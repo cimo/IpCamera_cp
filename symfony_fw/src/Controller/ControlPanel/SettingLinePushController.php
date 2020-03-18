@@ -58,9 +58,7 @@ class SettingLinePushController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -83,7 +81,7 @@ class SettingLinePushController extends AbstractController {
         $this->tableAndPaginationResult($settingLinePushEntity);
         
         $form = $this->createForm(SettingLinePushFormType::class, $settingLinePushEntity, Array(
-            'validation_groups' => Array('setting_line_push')
+            'validation_groups' => Array("setting_line_push")
         ));
         $form->handleRequest($request);
         
@@ -127,10 +125,10 @@ class SettingLinePushController extends AbstractController {
                 
                 $this->tableAndPaginationResult($settingLinePushEntity);
                 
-                $pushUserRows = $this->query->selectAllSettingLinePushUserDatabase("allPushName", $linePushNameOld);
+                $settingLinePushUserRows = $this->query->selectAllSettingLinePushUserDatabase("allPushName", $linePushNameOld);
                 
-                foreach ($pushUserRows as $key => $value) {
-                    $this->linePushUserDatabase("update", Array(
+                foreach ($settingLinePushUserRows as $key => $value) {
+                    $this->query->updateLinePushUserDatabase(Array(
                         $settingLinePushEntity->getName(),
                         $value['user_id'],
                         "",
@@ -185,9 +183,7 @@ class SettingLinePushController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -204,7 +200,7 @@ class SettingLinePushController extends AbstractController {
                         if ($this->session->get("settingLinePushProfileId") != null)
                             $this->session->remove("settingLinePushProfileId");
                         
-                        $this->linePushUserDatabase("delete", $settingLinePushEntity->getName());
+                        $this->query->deleteLinePushUserDatabase($settingLinePushEntity->getName());
                         
                         $this->entityManager->remove($settingLinePushEntity);
                         $this->entityManager->flush();
@@ -259,9 +255,7 @@ class SettingLinePushController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -337,9 +331,9 @@ class SettingLinePushController extends AbstractController {
                     $messageTextExplode = explode("/", $message['text']);
                     
                     if (count($messageTextExplode) == 2) {
-                        $pushRow = $this->query->selectSettingLinePushDatabase($messageTextExplode[0]);
+                        $settingLinePushRow = $this->query->selectSettingLinePushDatabase($messageTextExplode[0]);
                         
-                        if ($pushRow != false)
+                        if ($settingLinePushRow != false)
                             $pushName = trim($messageTextExplode[0]);
                         
                         if (filter_var($messageTextExplode[1], FILTER_VALIDATE_EMAIL) !== false)
@@ -347,21 +341,21 @@ class SettingLinePushController extends AbstractController {
                     }
                 }
                 
-                $pushUserRow = $this->query->selectSettingLinePushUserDatabase("userId", $source['userId']);
+                $settingLinePushUserRow = $this->query->selectSettingLinePushUserDatabase("userId", $source['userId']);
                 
-                if ($type == "follow" && $pushUserRow == false) {
-                    $this->linePushUserDatabase("insert", Array(
+                if ($type == "follow" && $settingLinePushUserRow == false) {
+                    $this->query->insertLinePushUserDatabase(Array(
                         "",
                         $source['userId'],
                         "",
                         0
                     ));
                 }
-                else if ($type == "message" && $pushUserRow != false) {
+                else if ($type == "message" && $settingLinePushUserRow != false) {
                     //$userRow = $this->query->selectUserDatabase($pushEmail);
                     
                     //if ($userRow != false) {
-                        $this->linePushUserDatabase("update", Array(
+                        $this->query->updateLinePushUserDatabase(Array(
                             $pushName,
                             $source['userId'],
                             $pushEmail,
@@ -369,8 +363,8 @@ class SettingLinePushController extends AbstractController {
                         ));
                     //}
                 }
-                else if ($type == "unfollow" && $pushUserRow != false) {
-                    $this->linePushUserDatabase("update", Array(
+                else if ($type == "unfollow" && $settingLinePushUserRow != false) {
+                    $this->query->updateLinePushUserDatabase(Array(
                         "",
                         $source['userId'],
                         "",
@@ -401,9 +395,9 @@ class SettingLinePushController extends AbstractController {
         if ($settingLinePushEntity != null)
             $name = $settingLinePushEntity->getName();
         
-        $pushUserRows = $this->query->selectAllSettingLinePushUserDatabase("allPushName", $name);
+        $settingLinePushUserRows = $this->query->selectAllSettingLinePushUserDatabase("allPushName", $name);
         
-        $tableAndPagination = $this->tableAndPagination->request($pushUserRows, 20, "pushUser", false);
+        $tableAndPagination = $this->tableAndPagination->request($settingLinePushUserRows, 20, "pushUser", false);
 
         $this->response['values']['search'] = $tableAndPagination['search'];
         $this->response['values']['pagination'] = $tableAndPagination['pagination'];
@@ -412,69 +406,9 @@ class SettingLinePushController extends AbstractController {
     }
     
     private function settingLinePushList() {
-        $rows = $this->query->selectAllSettingLinePushDatabase();
+        $settingLinePushRows = $this->query->selectAllSettingLinePushDatabase();
         
-        $this->response['values']['wordTagListHtml'] = $this->helper->createWordTagListHtml($rows);
-    }
-    
-    private function linePushUserDatabase($type, $elements) {
-        if ($type == "insert") {
-            $query = $this->helper->getConnection()->prepare("INSERT INTO setting_line_push_user (
-                                                                    push_name,
-                                                                    user_id,
-                                                                    email,
-                                                                    active
-                                                                )
-                                                                VALUES (
-                                                                    :pushName,
-                                                                    :userId,
-                                                                    :email,
-                                                                    :active
-                                                                );");
-            
-            $query->bindValue(":pushName", $elements[0]);
-            $query->bindValue(":userId", $elements[1]);
-            $query->bindValue(":email", $elements[2]);
-            $query->bindValue(":active", $elements[3]);
-        }
-        else if ($type == "update") {
-            if ($elements[0] != "" && $elements[1] != "" && $elements[2] != "") {
-                $query = $this->helper->getConnection()->prepare("UPDATE setting_line_push_user
-                                                                    SET push_name = :pushName,
-                                                                        email = :email,
-                                                                        active = :active
-                                                                    WHERE user_id = :userId");
-
-                $query->bindValue(":pushName", $elements[0]);
-                $query->bindValue(":email", $elements[2]);
-                $query->bindValue(":active", $elements[3]);
-                $query->bindValue(":userId", $elements[1]);
-            }
-            else if ($elements[0] != "" && $elements[1] != "" && $elements[2] == "") {
-                $query = $this->helper->getConnection()->prepare("UPDATE setting_line_push_user
-                                                                    SET push_name = :pushName
-                                                                    WHERE user_id = :userId");
-
-                $query->bindValue(":pushName", $elements[0]);
-                $query->bindValue(":userId", $elements[1]);
-            }
-            else if ($elements[0] == "" && $elements[1] != "" && $elements[2] == "") {
-                $query = $this->helper->getConnection()->prepare("UPDATE setting_line_push_user
-                                                                    SET active = :active
-                                                                    WHERE user_id = :userId");
-                
-                $query->bindValue(":active", $elements[3]);
-                $query->bindValue(":userId", $elements[1]);
-            }
-        }
-        else if ($type == "delete") {
-            $query = $this->helper->getConnection()->prepare("DELETE FROM setting_line_push_user
-                                                                WHERE push_name = :pushName");
-            
-            $query->bindValue(":pushName", $elements);
-        }
-        
-        return $query->execute();
+        $this->response['values']['wordTagListHtml'] = $this->helper->createWordTagListHtml($settingLinePushRows);
     }
     
     private function createListHtml($elements) {

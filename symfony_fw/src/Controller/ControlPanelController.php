@@ -54,9 +54,7 @@ class ControlPanelController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -64,9 +62,9 @@ class ControlPanelController extends AbstractController {
         
         $this->response['url']['root'] = $this->helper->getUrlRoot();
         
-        $this->response['module']['left'] = $this->query->selectAllModuleDatabase(null, "left");
-        $this->response['module']['center'] = $this->query->selectAllModuleDatabase(null, "center");
-        $this->response['module']['right'] = $this->query->selectAllModuleDatabase(null, "right");
+        $this->response['module']['leftRows'] = $this->query->selectAllModuleDatabase(0, "left");
+        $this->response['module']['centerRows'] = $this->query->selectAllModuleDatabase(0, "center");
+        $this->response['module']['rightRows'] = $this->query->selectAllModuleDatabase(0, "right");
         
         $this->response['output']['phpinfo'] = $this->parsePhpinfo();
         
@@ -78,7 +76,6 @@ class ControlPanelController extends AbstractController {
             ));
         }
         
-        // Logic
         return Array(
             'urlLocale' => $this->urlLocale,
             'urlCurrentPageId' => $this->urlCurrentPageId,
@@ -107,7 +104,7 @@ class ControlPanelController extends AbstractController {
         $pB = "/$pA\s*$pA\s*$pA/";
         $pC = "/$pA\s*$pA/";
         
-        for ($a = 1; $a < $countTitle; $a++) {
+        for ($a = 1; $a < $countTitle; $a ++) {
             preg_match("/<h2[^>]*>([^<]+)<\/h2>/", $title[$a], $matchesA);
                     
             if (count($matchesA) > 0) {
@@ -119,7 +116,7 @@ class ControlPanelController extends AbstractController {
                     preg_match($pC, $value, $matchesC);
                             
                     if (count($matchesB) > 0)
-                        $rows[$name][trim($matchesB[1])] = array(trim($matchesB[2]), trim($matchesB[3]));
+                        $rows[$name][trim($matchesB[1])] = Array(trim($matchesB[2]), trim($matchesB[3]));
                     else if (count($matchesC) > 0)
                         $rows[$name][trim($matchesC[1])] = trim($matchesC[2]);
                 }

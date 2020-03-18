@@ -71,6 +71,10 @@ class Payment {
     private $statusDelete = false;
     
     // Properties
+    public function setId($value) {
+        $this->id = $value;
+    }
+    
     public function setUserId($value) {
         $this->userId = $value;
     }

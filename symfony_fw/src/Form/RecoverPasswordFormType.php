@@ -14,7 +14,7 @@ class RecoverPasswordFormType extends AbstractType {
     
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(Array(
-            'data_class' => "App\Form\Model\RecoverPasswordModel",
+            'data_class' => "App\Entity\User",
             'csrf_protection' => true,
             'validation_groups' => null
         ));

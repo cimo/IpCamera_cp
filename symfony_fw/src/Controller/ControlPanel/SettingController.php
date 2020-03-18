@@ -53,9 +53,7 @@ class SettingController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -69,9 +67,9 @@ class SettingController extends AbstractController {
         $languageCustomData = $this->languageCustomData();
         
         $form = $this->createForm(SettingFormType::class, $settingEntity, Array(
-            'validation_groups' => Array('setting'),
-            'choicesTemplate' => $this->helper->createTemplateList(),
-            'choicesLanguage' => array_column($languageCustomData, "value", "text")
+            'validation_groups' => Array("setting"),
+            'template' => $this->helper->createTemplateList(),
+            'language' => array_column($languageCustomData, "value", "text")
         ));
         $form->handleRequest($request);
         
@@ -80,7 +78,7 @@ class SettingController extends AbstractController {
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
                 if ($form->get("templateColumn")->getData() != $templateColumn)
-                    $this->moduleDatabase($form->get("templateColumn")->getData());
+                    $this->query->updateModuleDatabase($form->get("templateColumn")->getData());
                 
                 $this->entityManager->persist($settingEntity);
                 $this->entityManager->flush();
@@ -141,9 +139,7 @@ class SettingController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -180,16 +176,16 @@ class SettingController extends AbstractController {
                         $settingDatabase = false;
                         
                         if ($request->get("event") == "createLanguage")
-                            $settingDatabase = $this->settingDatabase("insertLanguage", $code, $date, $active);
-                        else if ($request->get("event") == "modifyLanguage" && ($code !== $settingRow['language'] || $code === $settingRow['language'] && $active == 1))
-                            $settingDatabase = $this->settingDatabase("updateLanguage", $code, $date, $active);
+                            $settingDatabase = $this->query->insertLanguageDatabase("text", $code, $date, $active);
+                        else if ($request->get("event") == "modifyLanguage" && ($code != $settingRow['language'] || $code == $settingRow['language'] && $active == 1))
+                            $settingDatabase = $this->query->updateLanguageDatabase($date, $active, $code);
                         
                         if ($settingDatabase == true) {
                             if ($request->get("event") == "createLanguage") {
-                                touch("{$this->helper->getPathRoot()}/translations/messages.$code.yml");
-
-                                $this->settingDatabase("insertLanguageInPage", $code);
-
+                                touch("{$this->helper->getPathRoot()}/translations/messages.{$code}.yml");
+                                
+                                $this->query->insertLanguageDatabase("page", $code);
+                                
                                 $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingController_5");
                             }
                             else if ($request->get("event") == "modifyLanguage") {
@@ -209,12 +205,12 @@ class SettingController extends AbstractController {
                     $code = $request->get("code");
                     
                     if ($code !== $settingRow['language']) {
-                        $settingDatabase = $this->settingDatabase("deleteLanguage", $code);
+                        $settingDatabase = $this->query->deleteLanguageDatabase("text", $code);
 
                         if ($settingDatabase == true) {
                             unlink("{$this->helper->getPathRoot()}/translations/messages.$code.yml");
 
-                            $this->settingDatabase("deleteLanguageInPage", $code);
+                            $this->query->deleteLanguageDatabase("page", $code);
                             
                             if ($code == $request->getLocale())
                                 $this->response['values']['url'] = $this->redirectOnModifySelected($settingRow);
@@ -255,154 +251,10 @@ class SettingController extends AbstractController {
             $active = $value['active'] == 1 ? $this->helper->getTranslator()->trans("settingController_10") : $this->helper->getTranslator()->trans("settingController_11");
             
             $customData[$key]['value'] = $value['code'];
-            $customData[$key]['text'] = "{$value['code']} | {$value['date']} | $active";
+            $customData[$key]['text'] = "{$value['code']} | {$value['date']} | {$active}";
         }
         
         return $customData;
-    }
-    
-    private function moduleDatabase($templateColumn) {
-        if ($templateColumn == 1) {
-            $query = $this->helper->getConnection()->prepare("UPDATE module
-                                                                SET position_tmp = :positionTmp,
-                                                                    position = :position
-                                                                WHERE position_tmp = :position");
-            
-            
-            $query->bindValue(":positionTmp", "");
-            $query->bindValue(":position", "right");
-            
-            $query->execute();
-            
-            $query->bindValue(":positionTmp", "");
-            $query->bindValue(":position", "left");
-            
-            $query->execute();
-        }
-        else if ($templateColumn == 2 || $templateColumn == 3 || $templateColumn == 4) {
-            $query = $this->helper->getConnection()->prepare("UPDATE module
-                                                                SET position_tmp = :positionTmp,
-                                                                    position = :position
-                                                                WHERE position = :positionTmp");
-            
-            if ($templateColumn == 2) {
-                $query->bindValue(":positionTmp", "right");
-                $query->bindValue(":position", "center");
-                
-                $query->execute();
-                
-                $query = $this->helper->getConnection()->prepare("UPDATE module
-                                                                    SET position_tmp = :positionTmp,
-                                                                        position = :position
-                                                                    WHERE position_tmp = :position");
-                
-                $query->bindValue(":positionTmp", "");
-                $query->bindValue(":position", "left");
-                
-                $query->execute();
-            }
-            else if ($templateColumn == 3) {
-                $query->bindValue(":positionTmp", "left");
-                $query->bindValue(":position", "center");
-                
-                $query->execute();
-                
-                $query = $this->helper->getConnection()->prepare("UPDATE module
-                                                                    SET position_tmp = :positionTmp,
-                                                                        position = :position
-                                                                    WHERE position_tmp = :position");
-                
-                $query->bindValue(":positionTmp", "");
-                $query->bindValue(":position", "right");
-                
-                $query->execute();
-            }
-            else if ($templateColumn == 4) {
-                $query->bindValue(":positionTmp", "right");
-                $query->bindValue(":position", "center");
-
-                $query->execute();
-                
-                $query->bindValue(":positionTmp", "left");
-                $query->bindValue(":position", "center");
-                
-                $query->execute();
-            }
-        }
-        
-        $this->updateModuleRankInColumn("left");
-        $this->updateModuleRankInColumn("center");
-        $this->updateModuleRankInColumn("right");
-    }
-    
-    private function updateModuleRankInColumn($position) {
-        $moduleRows = $this->query->selectAllModuleDatabase(null, $position);
-        
-        foreach($moduleRows as $key => $value) {
-            $query = $this->helper->getConnection()->prepare("UPDATE module
-                                                                SET rank_in_column = :rankInColumn
-                                                                WHERE id = :id");
-            
-            $query->bindValue(":rankInColumn", $key + 1);
-            $query->bindValue(":id", $value['id']);
-            
-            $query->execute();
-        }
-    }
-    
-    private function settingDatabase($type, $code, $date = null, $active = 0) {
-        if ($type == "insertLanguage") {
-            $query = $this->helper->getConnection()->prepare("INSERT INTO language (code, date, active)
-                                                                VALUES (:code, :date, :active)");
-            
-            $query->bindValue(":code", $code);
-            $query->bindValue(":date", $date);
-            $query->bindValue(":active", $active);
-            
-            return $query->execute();
-        }
-        else if ($type == "updateLanguage") {
-            $query = $this->helper->getConnection()->prepare("UPDATE language
-                                                                SET date = :date,
-                                                                    active = :active
-                                                                WHERE code = :code");
-            
-            $query->bindValue(":date", $date);
-            $query->bindValue(":active", $active);
-            $query->bindValue(":code", $code);
-            
-            return $query->execute();
-        }
-        else if ($type == "deleteLanguage") {
-            $query = $this->helper->getConnection()->prepare("DELETE FROM language
-                                                                WHERE code = :code");
-            
-            $query->bindValue(":code", $code);
-
-            return $query->execute();
-        }
-        else if ($type == "insertLanguageInPage") {
-            $codeTmp = is_string($code) == true ? $code : "";
-            $codeTmp = strlen($codeTmp) == true ? $codeTmp : "";
-            $codeTmp = ctype_alpha($codeTmp) == true ? $codeTmp : "";
-            
-            $query = $this->helper->getConnection()->prepare("ALTER TABLE page_title ADD $codeTmp VARCHAR(255) DEFAULT '';
-                                                                ALTER TABLE page_argument ADD $codeTmp LONGTEXT;
-                                                                ALTER TABLE page_menu_name ADD $codeTmp VARCHAR(255) NOT NULL DEFAULT '-';");
-            
-            $query->execute();
-        }
-        else if ($type == "deleteLanguageInPage") {
-            $codeTmp = is_string($code) == true ? $code : "";
-            $codeTmp = strlen($codeTmp) == true ? $codeTmp : "";
-            $codeTmp = ctype_alpha($codeTmp) == true ? $codeTmp : "";
-            
-            $query = $this->helper->getConnection()->prepare("ALTER TABLE page_title DROP $codeTmp;
-                                                                ALTER TABLE page_argument DROP $codeTmp;
-                                                                ALTER TABLE page_menu_name DROP $codeTmp;");
-            
-            $query->execute();
-        }
     }
     
     private function redirectOnModifySelected($settingRow) {

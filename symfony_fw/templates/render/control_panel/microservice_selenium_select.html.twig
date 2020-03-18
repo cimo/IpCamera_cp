@@ -5,7 +5,7 @@
         {{-include("@templateRoot/include/upload_chunk.html.twig", {'label': "microserviceSeleniumSelect_3"|trans})-}}
     </div>
     <div id="cp_microservice_selenium_select_desktop" class="display_desktop">
-        <div id="cp_microservice_selenium_select_result_table">
+        <div id="cp_microservice_selenium_select_result_desktop">
             
             {{-include("@templateRoot/include/table_and_pagination.html.twig")-}}
             
@@ -44,7 +44,7 @@
     <div id="cp_microservice_selenium_select_mobile" class="display_mobile">
         {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
         
-        <form id="form_cp_microservice_selenium_select_mobile" action="{{path("cp_microservice_selenium_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+        <form id="form_cp_microservice_selenium_select_mobile" action="{{path("cp_microservice_selenium_select", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
             {{form_row(form.id)}}
             {{form_row(form.name)}}
 

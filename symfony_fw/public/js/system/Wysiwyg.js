@@ -9,6 +9,14 @@ class Wysiwyg {
     constructor() {
         this.containerTag = "";
         
+        this.wysiwyg = null;
+        
+        this.rowAdd = null;
+        this.rowRemove = null;
+        
+        this.columnAdd = null;
+        this.columnRemove = null;
+        
         this.iframeBody = null;
         this.iframeContent = null;
         
@@ -18,19 +26,19 @@ class Wysiwyg {
         this.historyRestore = false;
     }
     
-    create = (containerTagValue, saveElement) => {
+    create = (containerTag, saveElement) => {
         let timeoutEvent = setTimeout(() => {
             clearTimeout(timeoutEvent);
             
-            this.containerTag = containerTagValue;
+            this.containerTag = containerTag;
 
             $(this.containerTag).parent().css("margin", "0");
             $(this.containerTag).parent().hide();
-
+            
             $(saveElement).click(() => {
-                this.fillField("source");
+                this._fillField("source");
             });
-
+            
             this._iframe();
         }, 100);
     }
@@ -40,7 +48,7 @@ class Wysiwyg {
     }
     
     save = () => {
-        this.fillField("source");
+        this._fillField("source");
     }
     
     // Functions private
@@ -98,28 +106,28 @@ class Wysiwyg {
             
             $(this.iframeBody).prop("contenteditable", "true");
             
-            $(this.iframeBody).off("click").on("click", "a", (event) => {
+            $(this.iframeBody).on("click", "a", (event) => {
                 event.preventDefault();
             });
             
             this.iframeContent.execCommand("defaultParagraphSeparator", false, "div");
             
-            this.fillField("load");
+            this._fillField("load");
             
-            this.toolbarEvent();
+            this._toolbarEvent();
             
-            this.editorEvent();
+            this._editorEvent();
         }
     }
     
-    fillField = (type) => {
+    _fillField = (type) => {
         if (type === "load") {
             if ($(this.iframeBody).length > 0) {
                 $(this.iframeBody).html($(this.containerTag).val());
                 
                 $(".wysiwyg").find(".source").text($(this.containerTag).val());
                 
-                this.historyLoad($(this.containerTag).val());
+                this._historyLoad($(this.containerTag).val());
             }
         }
         else if (type === "source") {
@@ -139,8 +147,8 @@ class Wysiwyg {
         }
     }
     
-    toolbarEvent = () => {
-        $(".wysiwyg").find(".toolbar .mdc-fab").off("click").on("click", "", (event) => {
+    _toolbarEvent = () => {
+        $(".wysiwyg").find(".toolbar .mdc-fab").on("click", "", (event) => {
             event.preventDefault();
             
             let target = $(event.target).parent().hasClass("mdc-fab") === true ? $(event.target).parent() : $(event.target);
@@ -148,52 +156,52 @@ class Wysiwyg {
             let command = target.find("span").data("command");
             
             if (command === "source")
-                this.source();
+                this._source();
             else if (command === "foreColor" || command === "backColor")
-                this.executeCommand(command, target.next().val());
+                this._executeCommand(command, target.next().val());
             else
-                this.executeCommand(command);
+                this._executeCommand(command);
         });
         
-        $(".wysiwyg").find(".mdc-select .mdc-select__native-control").off("change").on("change", "", (event) => {
+        $(".wysiwyg").find(".mdc-select .mdc-select__native-control").on("change", "", (event) => {
             event.preventDefault();
             
             let command = $(event.target).data("command");
             
             if (command === "formatBlock" || command === "fontSize")
-                this.executeCommand(command, $(event.target).val());
+                this._executeCommand(command, $(event.target).val());
         });
     }
     
-    source = () => {
+    _source = () => {
         let show = $(".wysiwyg").find(".source").css("display") === "none" ? true : false;
 
         if (show === true) {
-            this.fillField("source");
+            this._fillField("source");
             
             $(".wysiwyg").find(".editor").hide();
             $(".wysiwyg").find(".source").show();
         }
         else {
-            this.fillField("editor");
+            this._fillField("editor");
             
             $(".wysiwyg").find(".source").hide();
             $(".wysiwyg").find(".editor").show();
         }
     }
     
-    executeCommand = (command, fieldValue) => {
+    _executeCommand = (command, fieldValue) => {
         if (command === "undo")
-            this.historyUndo();
+            this._historyUndo();
         else if (command === "redo")
-            this.historyRedo();
+            this._historyRedo();
         else if (command === "foreColor" || command === "backColor" || command === "unlink" || command === "formatBlock" || command === "fontSize") {
             this.iframeContent.execCommand(command, false, fieldValue);
             
-            this.historySave();
+            this._historySave();
         }
         else if (command === "createLink") {
-            popupEasy.create(
+            popupEasy.show(
                 window.textWysiwyg.label_5,
                 `<div id="wysiwyg_popup">
                     <div class="mdc-text-field mdc-text-field__basic mdc-text-field--dense" style="width: 100%;">
@@ -208,12 +216,12 @@ class Wysiwyg {
                     
                     this.iframeContent.execCommand(command, false, value);
                     
-                    this.historySave();
+                    this._historySave();
                 }
             );
         }
         else if (command === "insertImage") {
-            popupEasy.create(
+            popupEasy.show(
                 window.textWysiwyg.label_7,
                 `<div id="wysiwyg_popup">
                     <div class="mdc-text-field mdc-text-field__basic mdc-text-field--dense" style="width: 100%;">
@@ -228,12 +236,12 @@ class Wysiwyg {
                     
                     this.iframeContent.execCommand(command, false, value);
                     
-                    this.historySave();
+                    this._historySave();
                 }
             );
         }
         else if (command === "custom_button_add") {
-            popupEasy.create(
+            popupEasy.show(
                 window.textWysiwyg.label_9,
                 `<div id="wysiwyg_popup">
                     <div class="mdc-text-field mdc-text-field__basic mdc-text-field--dense" style="width: 100%;">
@@ -260,14 +268,14 @@ class Wysiwyg {
                     else
                         html = `<a class="mdc-button mdc-button--dense mdc-button--raised" href="${link}" type="button" contenteditable="false">${label}</a>`;
                     
-                    this.addHtmlAtCaretPosition(html);
+                    this._addHtmlAtCaretPosition(html);
                     
-                    this.historySave();
+                    this._historySave();
                 }
             );
         }
         else if (command === "custom_table_add") {
-            popupEasy.create(
+            popupEasy.show(
                 window.textWysiwyg.label_12,
                 `<div id="wysiwyg_popup">
                     <div class="mdc-text-field mdc-text-field__basic mdc-text-field--dense" style="width: 100%;">
@@ -297,20 +305,20 @@ class Wysiwyg {
                         }
                     html += "</div>";
                     
-                    this.addHtmlAtCaretPosition(html);
+                    this._addHtmlAtCaretPosition(html);
                     
-                    this.historySave();
+                    this._historySave();
                 }
             );
         }
         else {
             this.iframeContent.execCommand(command, false, null);
             
-            this.historySave();
+            this._historySave();
         }
     }
     
-    historyUndo = () => {
+    _historyUndo = () => {
         if (this.historyPosition >= 0) {
             let element = this.history[-- this.historyPosition];
             
@@ -326,7 +334,7 @@ class Wysiwyg {
 	}
     }
     
-    historyRedo = () => {
+    _historyRedo = () => {
         if (this.historyPosition < (this.history.length - 1)) {
             let element = this.history[++ this.historyPosition];
             
@@ -336,10 +344,10 @@ class Wysiwyg {
 	}
     }
     
-    historySave = () => {
-        this.spaceAfterElement();
+    _historySave = () => {
+        this._spaceAfterElement();
         
-        this.removeDoubleSpace();
+        this._removeDoubleSpace();
         
         let html = $(this.iframeBody).html();
         
@@ -355,16 +363,16 @@ class Wysiwyg {
         }
     }
     
-    historyLoad = (content) => {
+    _historyLoad = (content) => {
         this.history.push(content);
         this.historyPosition = 0;
     }
     
-    editorEvent = () => {
+    _editorEvent = () => {
         $(this.iframeBody).on("click", "", (event) => {
             this.historyRestore = false;
             
-            let element = this.findElementAtCaretPosition();
+            let element = this._findElementAtCaretPosition();
             
             if ($(element).hasClass("mdc-layout-grid__cell") === false && $(element).parents(".mdc-layout-grid__cell").length === 0)
                 $(this.iframeBody).find(".mdc-layout-grid__cell").prop("contenteditable", false);
@@ -373,7 +381,7 @@ class Wysiwyg {
         $(this.iframeBody).on("dblclick", "", (event) => {
             this.historyRestore = false;
             
-            let element = this.findElementAtCaretPosition();
+            let element = this._findElementAtCaretPosition();
             
             if ($(element).parents(".mdc-layout-grid__cell").length > 0)
                 element = $(element).parents(".mdc-layout-grid__cell")[0];
@@ -389,12 +397,12 @@ class Wysiwyg {
         $(this.iframeBody).on("keydown", "", (event) => {
             if ((event.ctrlKey || event.metaKey === true)) {
                 if (event.shiftKey && event.keyCode === 90) {
-                    this.historyRedo();
+                    this._historyRedo();
                     
                     return false;
                 }
                 else if (event.keyCode === 90) {
-                    this.historyUndo();
+                    this._historyUndo();
                     
                     return false;
                 } 
@@ -402,7 +410,7 @@ class Wysiwyg {
         });
         
         $(this.iframeBody).on("keyup", "", (event) => {
-            this.historySave();
+            this._historySave();
         });
         
         $(this.iframeBody).contextmenu((event) => {
@@ -463,14 +471,14 @@ class Wysiwyg {
             }
             
             if (content !== "")
-                this.popupsetting(type, target, content);
+                this._popupsetting(type, target, content);
             
             return false;
         });
     }
     
-    popupsetting = (type, target, content) => {
-        popupEasy.create(
+    _popupsetting = (type, target, content) => {
+        popupEasy.show(
             window.textWysiwyg.label_15,
             `<div id=\"wysiwyg_popup\">${content}</div>`,
             () => {
@@ -482,12 +490,12 @@ class Wysiwyg {
                     target.prop("href", link);
                 }
                 
-                this.historySave();
+                this._historySave();
             }
         );
         
         if (type === "table") {
-            $("#row_add").off("click").on("click", "", (event) => {
+            $("#row_add").on("click", "", (event) => {
                 let columnNumber = target.parent().find(".mdc-layout-grid__cell").length;
                 
                 let html = "<div class=\"mdc-layout-grid__inner\" contenteditable=\"false\">";
@@ -500,17 +508,18 @@ class Wysiwyg {
                 
                 popupEasy.close();
                 
-                this.historySave();
+                this._historySave();
             });
-            $("#row_remove").off("click").on("click", "", (event) => {
+            
+            $("#row_remove").on("click", "", (event) => {
                 target.parent().remove();
                 
                 popupEasy.close();
                 
-                this.historySave();
+                this._historySave();
             });
             
-            $("#column_add").off("click").on("click", "", (event) => {
+            $("#column_add").on("click", "", (event) => {
                 let columnIndex = target.index();
                 
                 let html = "<div class=\"mdc-layout-grid__cell mdc-layout-grid__cell--span-2\" contenteditable=\"false\">&nbsp;</div>";
@@ -521,9 +530,10 @@ class Wysiwyg {
                 
                 popupEasy.close();
                 
-                this.historySave();
+                this._historySave();
             });
-            $("#column_remove").off("click").on("click", "", (event) => {
+            
+            $("#column_remove").on("click", "", (event) => {
                 let columnIndex = target.index();
                 
                 $.each(target.parents(".mdc-layout-grid").find(".mdc-layout-grid__inner"), (key, value) => {
@@ -538,12 +548,12 @@ class Wysiwyg {
                 
                 popupEasy.close();
                 
-                this.historySave();
+                this._historySave();
             });
         }
     }
     
-    findElementAtCaretPosition = () => {
+    _findElementAtCaretPosition = () => {
         let iframeDocument = window.frames[0].document;
         let selection = null;
         let containerNode = null;
@@ -565,7 +575,7 @@ class Wysiwyg {
         return containerNode;
     }
     
-    addHtmlAtCaretPosition = (html) => {
+    _addHtmlAtCaretPosition = (html) => {
         let iframeDocument = window.frames[0].document;
         let range = null;
         
@@ -608,7 +618,7 @@ class Wysiwyg {
         }
     }
     
-    spaceAfterElement = () => {
+    _spaceAfterElement = () => {
         let elements = $(this.iframeContent).find(".mdc-button, .mdc-layout-grid");
         
         $.each(elements, (key, value) => {
@@ -620,7 +630,7 @@ class Wysiwyg {
         });
     }
     
-    removeDoubleSpace = () => {
+    _removeDoubleSpace = () => {
         let elements = $(this.iframeContent).find("br");
         
         $.each(elements, (key, value) => {

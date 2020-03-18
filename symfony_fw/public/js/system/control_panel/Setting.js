@@ -1,6 +1,6 @@
 "use strict";
 
-/* global ajax, helper, popupEasy, materialDesign */
+/* global ajax, helper, materialDesign, popupEasy */
 
 class ControlPanelSetting {
     // Properties
@@ -117,7 +117,7 @@ class ControlPanelSetting {
             let currentCode = $("#language_text_container").find(".mdc-list-item[aria-disabled='true'] img").prop("class");
             
             if (code === currentCode) {
-                popupEasy.create(
+                popupEasy.show(
                     window.text.index_5,
                     window.textSetting.label_1,
                     () => {
@@ -130,7 +130,7 @@ class ControlPanelSetting {
         });
         
         $("#setting_language_manage_delete").on("click", "", (event) => {
-            popupEasy.create(
+            popupEasy.show(
                 window.text.index_5,
                 window.textSetting.label_2,
                 () => {

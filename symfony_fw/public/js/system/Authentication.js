@@ -28,7 +28,7 @@ class Authentication {
                     
                     if (xhr.response.messages !== undefined) {
                         if (xhr.response.values !== undefined && xhr.response.values.captchaReload === true)
-                            captcha.image();
+                            captcha.actionImage();
                     }
                     else
                         window.location.href = xhr.response.values.url;

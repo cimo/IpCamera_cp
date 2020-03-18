@@ -48,9 +48,7 @@ class MyPageProfileController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -84,9 +82,7 @@ class MyPageProfileController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -102,7 +98,7 @@ class MyPageProfileController extends AbstractController {
             $avatar = "{$this->helper->getUrlRoot()}/files/user/$usernameOld/{$this->getUser()->getImage()}";
         
         $form = $this->createForm(UserFormType::class, $this->getUser(), Array(
-            'validation_groups' => Array('profile')
+            'validation_groups' => Array("profile")
         ));
         
         if ($this->getUser()->getId() > 1)
@@ -118,15 +114,13 @@ class MyPageProfileController extends AbstractController {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
                 $this->fileUpload($form, $this->getUser());
                 
-                if ($form->has("username") == true) {
-                    if (file_exists("{$this->helper->getPathPublic()}/files/user/$usernameOld") == true)
-                        rename("{$this->helper->getPathPublic()}/files/user/$usernameOld", "{$this->helper->getPathPublic()}/files/user/{$form->get("username")->getData()}");
-                }
-                
                 $this->entityManager->persist($this->getUser());
                 $this->entityManager->flush();
-
+                
                 if ($form->has("username") == true && $form->get("username")->getData() != $usernameOld) {
+                    if (file_exists("{$this->helper->getPathPublic()}/files/user/$usernameOld") == true)
+                        rename("{$this->helper->getPathPublic()}/files/user/$usernameOld", "{$this->helper->getPathPublic()}/files/user/{$form->get("username")->getData()}");
+                    
                     $message = $this->helper->getTranslator()->trans("myPageProfileController_1");
                     
                     $this->session->set("userInform", $message);
@@ -184,27 +178,25 @@ class MyPageProfileController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
         $checkUserRole = $this->helper->checkUserRole(Array("ROLE_USER"), $this->getUser());
         
         $form = $this->createForm(PasswordFormType::class, null, Array(
-            'validation_groups' => Array('profile_password')
+            'validation_groups' => Array("profile_password")
         ));
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                $messagePassword = $this->helper->assignUserPassword("withOld", $this->getUser(), $form);
-
-                if ($messagePassword == "ok") {
+                $messagePassword = $this->helper->assignUserPassword($this->getUser(), $form);
+                
+                if ($messagePassword === true) {
                     $this->entityManager->persist($this->getUser());
                     $this->entityManager->flush();
-
+                    
                     $this->response['messages']['success'] = $this->helper->getTranslator()->trans("myPageProfileController_4");
                 }
                 else
@@ -254,9 +246,7 @@ class MyPageProfileController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -266,16 +256,20 @@ class MyPageProfileController extends AbstractController {
         
         if ($settingRow['credit'] == true) {
             $form = $this->createForm(CreditFormType::class, null, Array(
-                'validation_groups' => Array('profile_credit')
+                'validation_groups' => Array("profile_credit")
             ));
             $form->handleRequest($request);
 
-            $this->response['values']['currentCredit'] = $this->getUser() != null ? $this->getUser()->getCredit() : 0;
+            $this->response['values']['currentCredit'] = $this->getUser()->getCredit();
             $this->response['values']['payPalSandbox'] = $settingRow['payPal_sandbox'];
 
             if ($request->isMethod("POST") == true && $checkUserRole == true) {
-                if ($form->isSubmitted() == true && $form->isValid() == true)
-                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("myPageProfileController_6");
+                if ($form->isSubmitted() == true && $form->isValid() == true) {
+                    if ($this->getUser()->getCredit() > 0)
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("myPageProfileController_6");
+                    else
+                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("myPageProfileController_7");  
+                }
                 else {
                     $this->response['messages']['error'] = $this->helper->getTranslator()->trans("myPageProfileController_7");
                     $this->response['errors'] = $this->ajax->errors($form);
@@ -322,9 +316,7 @@ class MyPageProfileController extends AbstractController {
         $this->session = $this->helper->getSession();
         
         // Logic
-        $sessionLanguageTextCode = $this->session->get("languageTextCode");
-        
-        $this->urlLocale = $sessionLanguageTextCode != null ? $sessionLanguageTextCode : $_locale;
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
         
@@ -333,7 +325,7 @@ class MyPageProfileController extends AbstractController {
     
     // Functions private
     private function fileUpload($form, $user) {
-        $row = $this->query->selectUserDatabase($user->getId());
+        $userRow = $this->query->selectUserDatabase($user->getId());
         
         $pathImage = "{$this->helper->getPathPublic()}/files/user/{$this->getUser()->getUsername()}";
         
@@ -341,21 +333,21 @@ class MyPageProfileController extends AbstractController {
         
         // Remove image
         if ($form->get("removeImage")->getData() == true) {
-            if (file_exists("{$pathImage}/{$row['image']}") == true)
-                unlink("{$pathImage}/{$row['image']}");
+            if ($userRow['image'] != "" && file_exists("{$pathImage}/{$userRow['image']}") == true)
+                unlink("{$pathImage}/{$userRow['image']}");
             
-            $user->setImage("");
+            $user->setImage(null);
         }
+        else if ($userRow['image'] != "")
+            $user->setImage($userRow['image']);
         
         // Upload image
         if ($image != null && $form->get("removeImage")->getData() == false) {
-            if ($row['image'] != "" && file_exists("{$pathImage}/{$row['image']}") == true)
-                unlink("{$pathImage}/{$row['image']}");
-            
             $fileName = $image->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
             $newName = uniqid() . ".{$extension}";
             $image->move($pathImage, $newName);
+            
             $user->setImage($newName);
         }
     }

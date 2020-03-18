@@ -2,7 +2,7 @@
 namespace App\EventListener;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -30,7 +30,7 @@ class PayPalIpnListener {
     // Properties
     
     // Functions public
-    public function __construct(ContainerInterface $container, EntityManager $entityManager, Router $router, RequestStack $requestStack, TranslatorInterface $translator) {
+    public function __construct(ContainerInterface $container, EntityManagerInterface $entityManager, Router $router, RequestStack $requestStack, TranslatorInterface $translator) {
         $this->container = $container;
         $this->entityManager = $entityManager;
         $this->router = $router;
@@ -69,7 +69,7 @@ class PayPalIpnListener {
                         $payment->setAmount($payPalElements['mc_gross']);
                         $payment->setQuantity($payPalElements['quantity']);
 
-                        $this->updateCreditDatabase($payPalElements);
+                        $this->updateCredit($payPalElements);
                         
                         $this->entityManager->persist($payment);
                         $this->entityManager->flush();
@@ -84,19 +84,12 @@ class PayPalIpnListener {
     }
     
     // Functions private
-    private function updateCreditDatabase($payPalElements) {
+    private function updateCredit($payPalElements) {
         $userRow = $this->query->selectUserDatabase($payPalElements['custom']);
         
-        $id = $userRow['id'];
         $credit = $userRow['credit'] + $payPalElements['quantity'];
+        $id = $userRow['id'];
         
-        $query = $this->helper->getConnection()->prepare("UPDATE user
-                                                            SET credit = :credit
-                                                            WHERE id = :id");
-        
-        $query->bindValue(":credit", $credit);
-        $query->bindValue(":id", $id);
-        
-        $query->execute();
+        $this->query->updateUserDatabase("credit", $credit, $id);
     }
 }

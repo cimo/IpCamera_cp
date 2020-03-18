@@ -6,8 +6,12 @@
             padding-top: 55px !important;
             
             .form_row {
-                .mdc-text-field, .mdc-select {
+                .input_password {
                     width: 100% !important;
+                }
+                
+                .button_password {
+                    margin-bottom: 10px;
                 }
             }
         }
@@ -206,8 +210,18 @@ pre {
                 
                 width: 100%;
             }
+            
             .mdc-select {
                 margin-bottom: 10px;
+            }
+            
+            .input_password {
+                width: 85%;
+            }
+            
+            .button_password {
+                display: inline-block;
+                vertical-align: super;
             }
         }
     }
@@ -364,23 +378,6 @@ pre {
     
     input {
         display: none;
-    }
-}
-
-.download_detail_text {
-    display: inline-block;
-}
-
-.download_detail_command {
-    display: none;
-    border: 1px dotted $mdc-theme-on-surface;
-    padding: 10px;
-    width: 50%;
-    margin-top: 10px;
-    
-    button {
-        display: block;
-        margin-bottom: 14px;
     }
 }
 
@@ -790,37 +787,22 @@ pre {
     }
 }
 
-#form_microservice_deploy_command {
-    height: 200px;
+#download_detail_container {
+    p {
+        display: inline-block;
+    }
 }
 
-#form_microservice_unit_test_code {
-    width: 100%;
-    height: 500px;
-    overflow-y: scroll;
-}
-
-#form_cp_setting_save {
-    .template_column {
-        margin-bottom: 10px;
-        
-        p {
-            margin: 0;
-        }
-        
-        &> div {
-            display: inline-block;
-            margin-left: 35px;
-            
-            .mdc-form-field {
-                vertical-align: top;
-            }
-            
-            img {
-                margin-left: 10px;
-                display: block;
-            }
-        }
+#download_detail_command {
+    display: none;
+    border: 1px dotted $mdc-theme-on-surface;
+    padding: 10px;
+    width: 50%;
+    margin-top: 10px;
+    
+    button {
+        display: block;
+        margin-bottom: 14px;
     }
 }
 
@@ -838,7 +820,7 @@ pre {
 
 #setting_language_manage_container {
     display: none;
-    background-color: $mdc-theme-on-surface;
+    border: 1px dotted $mdc-theme-on-surface;
     padding: 10px;
     
     &> p {
@@ -886,6 +868,40 @@ pre {
         .mdc-list-item__meta {
             cursor: pointer;
             z-index: 100;
+        }
+    }
+}
+
+#form_microservice_deploy_command {
+    height: 200px;
+}
+
+#form_microservice_unit_test_code {
+    width: 100%;
+    height: 500px;
+    overflow-y: scroll;
+}
+
+#form_cp_setting_save {
+    .template_column {
+        margin-bottom: 10px;
+        
+        p {
+            margin: 0;
+        }
+        
+        &> div {
+            display: inline-block;
+            margin-left: 35px;
+            
+            .mdc-form-field {
+                vertical-align: top;
+            }
+            
+            img {
+                margin-left: 10px;
+                display: block;
+            }
         }
     }
 }

@@ -10,7 +10,7 @@ class Search {
     }
     
     action = () => {
-        const tableAndPagination = new TableAndPagination();
+        let tableAndPagination = new TableAndPagination();
         tableAndPagination.create(window.url.searchRender, "#search_result", false);
         tableAndPagination.search();
         tableAndPagination.pagination();

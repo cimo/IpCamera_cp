@@ -16,9 +16,8 @@ class MicroserviceDeploySelectFormType extends AbstractType {
         $resolver->setDefaults(Array(
             'data_class' => "App\Entity\MicroserviceDeploy",
             'csrf_protection' => true,
-            'csrf_token_id' => "intention",
             'validation_groups' => null,
-            'choicesId' => null
+            'id' => null
         ));
     }
     
@@ -26,7 +25,7 @@ class MicroserviceDeploySelectFormType extends AbstractType {
         $builder->add("id", ChoiceType::class, Array(
             'required' => true,
             'placeholder' => "microserviceDeploySelectFormType_1",
-            'choices' => $options['choicesId']
+            'choices' => $options['id']
         ))
         ->add("submit", SubmitType::class, Array(
             'label' => "microserviceDeploySelectFormType_2"

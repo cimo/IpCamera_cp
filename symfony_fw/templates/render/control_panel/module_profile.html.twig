@@ -1,7 +1,7 @@
 {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
 
 <h2 class="mdc-typography--headline6">{% trans %}moduleProfile_1{% endtrans %}</h2>
-<form id="form_cp_module_profile" action="{{path("cp_module_profile_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+<form id="form_cp_module_profile" action="{{path("cp_module_profile", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
     {{form_row(form.position)}}
 
     <div id="module_rankColumnSort" class="sort_container">

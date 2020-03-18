@@ -489,13 +489,21 @@ class Helper {
         window.history.replaceState("", "", window.location.pathname + result);
     }
     
-    createCookie = (name, values, expire, domain, secure) => {
-        let secureValue = secure === true ? "Secure;" : "";
-        
+    createCookie = (name, value, expire, domain, secure) => {
         if (domain !== "")
             domain = `domain=${domain};`;
         
-        document.cookie = `${name}=${JSON.stringify(values)};expires=${expire};${domain}path=/;${secureValue}`;
+        let secureValue = secure === true ? "Secure;" : "";
+        
+        if (value === null)
+            value = 0;
+        
+        if (expire === 0)
+            expire = new Date(Date.now() + (10000 * 365 * 24 * 60 * 60));
+        else if (expire === -1)
+            expire = new Date(0);
+        
+        document.cookie = `${name}=${JSON.stringify(value)};expires=${expire};${domain}path=/;${secureValue}`;
     }
     
     readCookie = (name) => {
@@ -508,7 +516,7 @@ class Helper {
     
     removeCookie = (name) => {
         if (this.readCookie(name) !== null)
-            this.createCookie(name, null, "Thu, 01-Jan-1970 00:00:01 GMT", "", true);
+            this.createCookie(name, null, -1, "", true);
     }
     
     blockMultiTab = (active) => {
@@ -516,7 +524,7 @@ class Helper {
             let cookieValues = this.readCookie(window.session.name + "_blockMultiTab");
             
             if (cookieValues === null) {
-                this.createCookie(window.session.name + "_blockMultiTab", 1, "Fri, 31 Dec 9999 23:59:59 GMT", "", true);
+                this.createCookie(window.session.name + "_blockMultiTab", 1, 0, "", true);
                 
                 $(window).on("unload", "", (event) => {
                     this.removeCookie(window.session.name + "_blockMultiTab");

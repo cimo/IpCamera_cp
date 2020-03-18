@@ -10,14 +10,14 @@ class PageComment {
     }
     
     action = () => {
-        const tableAndPagination = new TableAndPagination();
+        let tableAndPagination = new TableAndPagination();
         tableAndPagination.create(window.url.pageCommentRender, "#pageComment_result", false);
         tableAndPagination.search();
         tableAndPagination.pagination();
         
         $("#form_pageComment").find(".button_reset").hide();
         
-        $("#form_pageComment_type").val("new");
+        $("#form_pageComment").val("new");
         
         $("#form_pageComment").on("submit", "", (event) => {
             event.preventDefault();
@@ -40,7 +40,7 @@ class PageComment {
             );
         });
         
-        $("#form_pageComment .button_reset").on("click", "", (event) => {
+        $("#form_pageComment").find(".button_reset").on("click", "", (event) => {
             $(event.target).hide();
             
             $("#form_pageComment_type").val("new");
