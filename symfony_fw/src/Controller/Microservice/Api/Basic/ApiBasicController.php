@@ -1009,33 +1009,32 @@ class ApiBasicController extends AbstractController {
         if ($row['database_ip'] != "" && $row['database_name'] != "" && $row['database_username'] != "" && $row['database_password_decrypt'] != "") {
             $checkHost = $this->helper->checkHost($row['database_ip']);
             
-            if ($checkHost == false)
-                return $response;
-            
-            try {
-                $pdo = new \PDO("mysql:host={$row['database_ip']};dbname={$row['database_name']};charset=utf8", $row['database_username'], $row['database_password_decrypt']);
-            }
-            catch(\PDOException $error) {
-                $pdo = false;
-                
-                $this->response['messages']['error'] = $error;
-            }
-            
-            if ($pdo != false) {
-                if ($type == "test") {
-                    //...
-                    
-                    $response = true;
+            if ($checkHost != false) {
+                try {
+                    $pdo = new \PDO("mysql:host={$row['database_ip']};dbname={$row['database_name']};charset=utf8", $row['database_username'], $row['database_password_decrypt']);
                 }
+                catch(\PDOException $error) {
+                    $pdo = false;
+
+                    $this->response['messages']['error'] = $error;
+                }
+
+                if ($pdo != false) {
+                    if ($type == "test") {
+                        //...
+
+                        $response = true;
+                    }
+                }
+                
+                unset($pdo);
             }
             
             if ($response == false) {
-                $this->response['messages']['errorCode'] = 10;
+                $this->response['errorCode'] = 10;
                 
                 $this->helper->writeLog("{$this->helper->getPathSrc()}/files/microservice/api/basic", $row['name'], "databaseExternal() =>", $this->response);
             }
-            
-            unset($pdo);
         }
         
         return $response;
