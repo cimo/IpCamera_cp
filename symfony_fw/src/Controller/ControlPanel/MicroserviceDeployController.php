@@ -145,6 +145,7 @@ class MicroserviceDeployController extends AbstractController {
                 
                 $this->query->updateMicroserviceDeployDatabase("aes", $microserviceDeployEntity->getId(), "ssh_password", $form->get("sshPassword")->getData());
                 $this->query->updateMicroserviceDeployDatabase("aes", $microserviceDeployEntity->getId(), "key_private_password", $form->get("keyPrivatePassword")->getData());
+                $this->query->updateMicroserviceDeployDatabase("aes", $microserviceDeployEntity->getId(), "git_clone_url_password", $form->get("gitCloneUrlPassword")->getData());
                 
                 $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceDeployController_2");
             }
@@ -317,6 +318,7 @@ class MicroserviceDeployController extends AbstractController {
                 
                 $this->query->updateMicroserviceDeployDatabase("aes", $microserviceDeployEntity->getId(), "ssh_password", $form->get("sshPassword")->getData());
                 $this->query->updateMicroserviceDeployDatabase("aes", $microserviceDeployEntity->getId(), "key_private_password", $form->get("keyPrivatePassword")->getData());
+                $this->query->updateMicroserviceDeployDatabase("aes", $microserviceDeployEntity->getId(), "git_clone_url_password", $form->get("gitCloneUrlPassword")->getData());
 
                 $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceDeployController_5");
             }
@@ -822,15 +824,15 @@ class MicroserviceDeployController extends AbstractController {
             
             $sudo = "sudo";
             
-            $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase("aes", $row['id'], $row['ssh_password'], $row['key_private_password'], $row['git_clone_url_password']);
+            $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase("aes", $row['id']);
             
             if ($row['key_public'] == null || $row['key_private'] == null) {
-                $auth = @ssh2_auth_password($connection, $row['ssh_username'], $microserviceDeployRow['ssh_password']);
+                $auth = @ssh2_auth_password($connection, $row['ssh_username'], $microserviceDeployRow['ssh_password_decrypt']);
                 
-                $sudo = "echo '{$microserviceDeployRow['ssh_password']}' | sudo -S";
+                $sudo = "echo '{$microserviceDeployRow['ssh_password_decrypt']}' | sudo -S";
             }
             else
-                $auth = @ssh2_auth_pubkey_file($connection, $row['system_user'], $pathKeyPublic, $pathKeyPrivate, $row['key_private_password']);
+                $auth = @ssh2_auth_pubkey_file($connection, $row['system_user'], $pathKeyPublic, $pathKeyPrivate, $row['key_private_password_decrypt']);
             
             if ($auth == false)
                 return false;
@@ -838,7 +840,7 @@ class MicroserviceDeployController extends AbstractController {
             if ($auth == true) {
                 $commands = Array();
 
-                $url = "https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password']}@{$row['git_clone_url']}";
+                $url = "https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password_decrypt']}@{$row['git_clone_url']}";
 
                 if ($request->get("action") == "clone") {
                     $commands = Array(

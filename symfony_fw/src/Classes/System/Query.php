@@ -1729,7 +1729,7 @@ class Query {
     }
     
     // Microservice deploy
-    public function selectMicroserviceDeployDatabase($type, $id, $sshPassword = "", $keyPrivatePassword = "", $gitCloneUrlPassword = "") {
+    public function selectMicroserviceDeployDatabase($type, $id) {
         if ($type == "normal") {
             $query = $this->connection->prepare("SELECT * FROM microservice_deploy
                                                     WHERE id = :id
@@ -1744,16 +1744,13 @@ class Query {
         else if ($type == "aes") {
             $settingRow = $this->selectSettingDatabase();
             
-            $query = $this->connection->prepare("SELECT AES_DECRYPT(:sshPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS ssh_password,
-                                                        AES_DECRYPT(:keyPrivatePassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS key_private_password,
-                                                        AES_DECRYPT(:gitCloneUrlPassword, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS git_clone_url_password
+            $query = $this->connection->prepare("SELECT AES_DECRYPT(ssh_password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS ssh_password_decrypt,
+                                                        AES_DECRYPT(key_private_password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS key_private_password_decrypt,
+                                                        AES_DECRYPT(git_clone_url_password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS git_clone_url_password_decrypt
                                                         FROM microservice_deploy
                                                     WHERE id = :id
                                                     ORDER by name ASC");
-            
-            $query->bindValue(":sshPassword", $sshPassword);
-            $query->bindValue(":keyPrivatePassword", $keyPrivatePassword);
-            $query->bindValue(":gitCloneUrlPassword", $gitCloneUrlPassword);
+
             $query->bindValue(":id", $id);
             
             $query->execute();
