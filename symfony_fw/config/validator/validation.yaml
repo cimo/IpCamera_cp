@@ -467,7 +467,7 @@ App\Entity\Page:
             - Regex:
                 groups: [page_create, page_profile]
                 htmlPattern: false
-                pattern: /^(https?:\/\/)(www).([a-zA-Z0-9\/._\-]+).([a-z]+)|[\-]$/
+                pattern: /^(https?:\/\/)([a-zA-Z0-9\/._\-]+).([a-z]+)|[\-]$/
         metaRobots:
             - Regex:
                 groups: [page_create, page_profile]
@@ -865,7 +865,7 @@ App\Entity\User:
             - Regex:
                 groups: [registration, profile, user_create, user_profile]
                 htmlPattern: false
-                pattern: /^(https?:\/\/)(www).([a-zA-Z0-9\/._\-]+).([a-z]+)$/
+                pattern: /^(https?:\/\/)([a-zA-Z0-9\/._\-]+).([a-z]+)$/
         state:
             - Regex:
                 groups: [registration, profile, user_create, user_profile]

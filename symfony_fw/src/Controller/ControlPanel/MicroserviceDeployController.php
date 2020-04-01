@@ -236,6 +236,8 @@ class MicroserviceDeployController extends AbstractController {
                     $formSub->handleRequest($request);
 
                     $this->response['values']['id'] = $this->session->get("microserviceDeployProfileId");
+                    $this->response['values']['keyPublicLabel'] = $microserviceDeployEntity->getKeyPublic();
+                    $this->response['values']['keyPrivateLabel'] = $microserviceDeployEntity->getKeyPrivate();
 
                     $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/microservice_deploy_profile.html.twig", Array(
                         'urlLocale' => $this->urlLocale,
@@ -315,7 +317,7 @@ class MicroserviceDeployController extends AbstractController {
                 
                 $this->query->updateMicroserviceDeployDatabase("aes", $microserviceDeployEntity->getId(), "ssh_password", $form->get("sshPassword")->getData());
                 $this->query->updateMicroserviceDeployDatabase("aes", $microserviceDeployEntity->getId(), "key_private_password", $form->get("keyPrivatePassword")->getData());
-                
+
                 $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceDeployController_5");
             }
             else {
@@ -835,30 +837,23 @@ class MicroserviceDeployController extends AbstractController {
             
             if ($auth == true) {
                 $commands = Array();
-                
+
+                $url = "https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password']}@{$row['git_clone_url']}";
+
                 if ($request->get("action") == "clone") {
                     $commands = Array(
-                        "{$sudo} git config --global core.mergeoptions --no-edit",
-                        "{$sudo} git config --global user.email '{$row['git_user_email']}'",
-                        "{$sudo} git config --global user.name '{$row['git_user_name']}'",
                         "cd {$row['git_clone_path']}",
-                        "{$sudo} -u {$row['user_git_script']} git clone https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password']}@{$row['git_clone_url']} {$row['git_clone_path']}"
+                        "{$sudo} -u {$row['user_git_script']} git clone {$url}"
                     );
                 }
                 else if ($request->get("action") == "pull") {
                     $commands = Array(
-                        "{$sudo} git config --global core.mergeoptions --no-edit",
-                        "{$sudo} git config --global user.email '{$row['git_user_email']}'",
-                        "{$sudo} git config --global user.name '{$row['git_user_name']}'",
                         "cd {$row['git_clone_path']}",
-                        "{$sudo} -u {$row['user_git_script']} git pull --no-edit https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password']}@{$row['git_clone_url']} {$request->get("branchName")}"
+                        "{$sudo} -u {$row['user_git_script']} git pull --no-edit {$url}"
                     );
                 }
                 else if ($request->get("action") == "reset") {
                     $commands = Array(
-                        "{$sudo} git config --global core.mergeoptions --no-edit",
-                        "{$sudo} git config --global user.email '{$row['git_user_email']}'",
-                        "{$sudo} git config --global user.name '{$row['git_user_name']}'",
                         "cd {$row['git_clone_path']}",
                         "{$sudo} -u {$row['user_git_script']} git fetch --all",
                         "{$sudo} -u {$row['user_git_script']} git reset --hard origin/master"

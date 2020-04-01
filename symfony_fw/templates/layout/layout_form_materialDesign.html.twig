@@ -180,7 +180,7 @@
     <div class="mdc-select{% if styleType is defined %} {{styleType}}{% endif %}">
         <select class="mdc-select__native-control" {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %} aria-label="label">
             {%- if firstOption is defined and firstOption == "empty" -%}
-                <option value="" {% if required and value is empty %}selected="selected"{% endif %}></option>
+                <option value="" {% if required and value == "" %}selected="selected"{% endif %}></option>
             {%- endif -%}
             {%- if preferred_choices|length > 0 -%}
                 {% set options = preferred_choices %}
@@ -357,7 +357,7 @@
 {%- endblock range_widget %}
 
 {%- block button_widget -%}
-    {%- if label is empty -%}
+    {%- if label == "" -%}
         {%- if label_format != "" -%}
             {% set label = label_format|replace({
                 '%name%': name,
@@ -406,7 +406,7 @@
         {% if required -%}
             {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' mdc-floating-label')|trim}) %}
         {%- endif -%}
-        {% if label is empty -%}
+        {% if label == "" -%}
             {%- if label_format != "" -%}
                 {% set label = label_format|replace({
                     '%name%': name,

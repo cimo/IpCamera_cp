@@ -74,6 +74,9 @@ class SettingController extends AbstractController {
         $form->handleRequest($request);
         
         $this->response['values']['userRoleSelectHtml'] = $this->helper->createUserRoleSelectHtml("form_setting_roleUserId_select", "settingController_1", true);
+
+        $this->response['values']['serverRoot'] = $_SERVER['DOCUMENT_ROOT'] != $settingEntity->getServerRoot() ? $_SERVER['DOCUMENT_ROOT'] : "";
+        $this->response['values']['serverHost'] = $_SERVER['HTTP_HOST'] != $settingEntity->getServerHost() ? $_SERVER['HTTP_HOST'] : "";
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {

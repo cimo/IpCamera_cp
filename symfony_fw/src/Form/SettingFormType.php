@@ -198,13 +198,11 @@ class SettingFormType extends AbstractType {
         ))
         ->add("serverRoot", TextType::class, Array(
             'required' => true,
-            'label' => "settingFormType_33",
-            'data' => $_SERVER['DOCUMENT_ROOT']
+            'label' => "settingFormType_33"
         ))
         ->add("serverHost", TextType::class, Array(
             'required' => true,
-            'label' => "settingFormType_34",
-            'data' => $_SERVER['HTTP_HOST']
+            'label' => "settingFormType_34"
         ))
         ->add("submit", SubmitType::class, Array(
             'label' => "settingFormType_35"

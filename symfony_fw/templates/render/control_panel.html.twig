@@ -51,7 +51,7 @@
 {% block columnCenterContainer %}
     {% if app.user %}
         <div class="sortable_column user_select_text">
-            {% if urlExtra is empty or urlExtra == "cp_sytem_info" %}
+            {% if urlExtra == "" or urlExtra == "cp_sytem_info" %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true %}
                     <ul class="mdc-list mdc-list--two-line mdc-list--avatar-list cp_system_info">
                         {% for key, value in response.output.phpinfo %}

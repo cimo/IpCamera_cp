@@ -15,10 +15,12 @@
         <div class="container">
             {{form_row(form.keyPublic, {'label': "microserviceDeployFormType_6"})}}
             {{form_row(form.removeKeyPublic)}}
+            <p>{{response.values.keyPublicLabel}}</p>
         </div>
         <div class="container">
             {{form_row(form.keyPrivate, {'label': "microserviceDeployFormType_8"})}}
             {{form_row(form.removeKeyPrivate)}}
+            <p>{{response.values.keyPrivateLabel}}</p>
         </div>
     </div>
 
@@ -29,7 +31,7 @@
 
     <p class="info_field">{% trans %}microserviceDeployFormType_14_i{% endtrans %}</p>
     {{form_row(form.gitCloneUrl, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
-    
+
     {{form_row(form.gitCloneUrlUsername, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
     {{form_row(form.gitCloneUrlPassword, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
     {{form_row(form.gitClonePath, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}

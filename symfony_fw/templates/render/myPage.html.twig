@@ -13,7 +13,7 @@
     <span class="mdc-tab-bar__indicator"></span>
 </nav>
 
-{% if urlExtra is empty or urlExtra == "myPage" or urlExtra == "mp_profile" %}
+{% if urlExtra == "" or urlExtra == "myPage" or urlExtra == "mp_profile" %}
     {{-render(controller("App\\Controller\\MyPage\\MyPageProfileController::profileAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
     {{-render(controller("App\\Controller\\MyPage\\MyPageProfileController::passwordAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
 

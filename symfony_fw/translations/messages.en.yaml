@@ -639,6 +639,7 @@ date.time: H:i:s
 "setting_13": "..."
 "setting_14": "Paypal"
 "setting_15": "..."
+"setting_16": "Db value do not match! Correct value is:"
 
 "settingFormType_1": "Template"
 "settingFormType_2": "Type 1"
@@ -778,7 +779,7 @@ date.time: H:i:s
 "microserviceDeployFormType_11": "Ip"
 "microserviceDeployFormType_12": "Git user email"
 "microserviceDeployFormType_13": "Git user name"
-"microserviceDeployFormType_14_i": "Without https:// (is setted by default)."
+"microserviceDeployFormType_14_i": "Without https:// (this is the default protocol)."
 "microserviceDeployFormType_14": "Git clone url"
 "microserviceDeployFormType_15": "Git clone url username"
 "microserviceDeployFormType_16": "Git clone url password"

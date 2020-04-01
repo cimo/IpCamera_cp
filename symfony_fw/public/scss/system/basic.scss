@@ -333,6 +333,13 @@ pre {
 .info_field {
     margin-bottom: 0;
 }
+.info_field_warning {
+    margin-bottom: 0;
+
+    span {
+        color: $warningTextColor;
+    }
+}
 
 .button_svg {
     height: 39px;
@@ -529,6 +536,10 @@ pre {
         
         .material_upload_label {
             margin: 0;
+        }
+
+        p {
+            margin: 5px 0 0 10px;
         }
     }
 }
