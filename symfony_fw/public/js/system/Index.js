@@ -41,7 +41,7 @@ $(document).ready(() => {
     widgetSearch = new WidgetSearch();
     wysiwyg = new Wysiwyg();
     
-    helper.checkMobile(true);
+    helper.checkMobile();
     helper.linkPreventDefault();
     helper.accordion("button");
     helper.menuRoot();

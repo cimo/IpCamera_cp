@@ -20,25 +20,12 @@ class PopupEasy {
         $(".mdc-dialog").find(".mdc-dialog__footer__button--cancel").text(window.text.index_7);
         
         materialDesign.refresh();
+
+        if (callbackOk !== undefined)
+            $(".mdc-dialog").find(".mdc-dialog__footer__button--accept").off("click").on("click", "", callbackOk);
         
-        let clickOk = null;
-        let clickCancel = null;
-        
-        if (callbackOk !== undefined) {
-            clickOk = () => {
-                callbackOk();
-            };
-            
-            $(".mdc-dialog").find(".mdc-dialog__footer__button--accept").off("click").on("click", "", clickOk);
-        }
-        
-        if (callbackCancel !== undefined) {
-            clickCancel = () => {
-                callbackCancel();
-            };
-            
-            $(".mdc-dialog").find(".mdc-dialog__footer__button--cancel").off("click").on("click", "", clickCancel);
-        }
+        if (callbackCancel !== undefined)
+            $(".mdc-dialog").find(".mdc-dialog__footer__button--cancel").off("click").on("click", "", callbackCancel);
         
         this.dialogMdc.show();
     }

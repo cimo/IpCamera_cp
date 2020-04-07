@@ -95,7 +95,7 @@ class Wysiwyg {
             }));
             $($(".wysiwyg").find(".editor").contents().find("head")[0]).append($("<link/>", {
                 rel: "stylesheet",
-                href: `${window.url.root}/css/system/" + window.setting.template + ".css`,
+                href: `${window.url.root}/css/system/${window.setting.template}.css`,
                 type: "text/css"
             }));
             

@@ -4,20 +4,11 @@
 
 class ControlPanelPage {
     // Properties
-    get getProfileFocus() {
-        return this.profileFocus;
-    }
-    
-    set setProfileFocus(value) {
-        this.profileFocus = value;
-    }
-    
+
     // Functions public
     constructor() {
         this.selectSended = false;
         this.selectId = -1;
-        
-        this.profileFocus = false;
     }
     
     action = () => {
@@ -66,8 +57,6 @@ class ControlPanelPage {
     }
     
     changeView = () => {
-        this.profileFocus = false;
-
         if (helper.checkWidthType() === "mobile") {
             if (this.selectSended === true) {
                 this.selectId = $("#form_cp_page_select_mobile").find("select option:selected").val();
@@ -265,10 +254,6 @@ class ControlPanelPage {
             
             materialDesign.refresh();
             
-            $("#form_cp_page_profile").find(".form_row input, .form_row textarea").on("focus", "", (event) => {
-                this.profileFocus = true;
-            });
-            
             // Iframe focus
             let iframeMouseOver = false;
             
@@ -278,11 +263,6 @@ class ControlPanelPage {
             
             $("#form_cp_page_profile").find(".wysiwyg").on("mouseout", "", (event) => {
                 iframeMouseOver = false;
-            });
-            
-            $(window).on("blur", "", (event) => {
-                if (iframeMouseOver === true)
-                    this.profileFocus = true;
             });
             
             $("#cp_page_saveDraft").on("click", "", (event) => {
@@ -312,8 +292,6 @@ class ControlPanelPage {
                         ajax.reply(xhr, `#${event.target.id}`);
                         
                         if (xhr.response.messages.success !== undefined) {
-                            this.profileFocus = false;
-                            
                             $("#form_page_event").val("");
                             
                             $("#cp_page_select_result").html("");

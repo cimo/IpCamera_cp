@@ -1,6 +1,6 @@
 "use strict";
 
-/* global ajax, popupEasy, wysiwyg, controlPanelPage */
+/* global ajax, popupEasy, wysiwyg */
 
 class Language {
     // Properties
@@ -75,23 +75,17 @@ class Language {
         $("#language_page_container").find("input[name='form_language[code]']").val(window.session.languageTextCode);
         
         $("#language_page_container").find(".mdc-chip").on("click", "", (event) => {
-            if (controlPanelPage.getProfileFocus === true) {
-                popupEasy.show(
-                    window.text.index_1,
-                    window.textLanguagePage.label_1,
-                    () => {
-                        this._formPageFlagSubmit(event);
-                    }
-                );
-            }
-            else
-                this._formPageFlagSubmit(event);
+            popupEasy.show(
+                window.text.index_1,
+                window.textLanguagePage.label_1,
+                () => {
+                    this._formPageFlagSubmit(event);
+                }
+            );
         });
     }
     
     _formPageFlagSubmit = (event) => {
-        controlPanelPage.setProfileFocus = false;
-        
         let target = $(event.target).parent().hasClass("mdc-chip") === true ? $(event.target).parent() : $(event.target);
         
         $("#language_page_container").children().removeClass("mdc-chip--selected");
