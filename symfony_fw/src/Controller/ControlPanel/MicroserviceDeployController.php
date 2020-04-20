@@ -373,7 +373,9 @@ class MicroserviceDeployController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                if ($request->get("action") == "clone" || $request->get("action") == "reset" || ($request->get("action") == "pull" && $request->get("branchName") != "")) {
+                if (($request->get("action") == "pull" && $request->get("branchName") == "") || ($request->get("action") == "reset" && $request->get("branchName") == ""))
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_9");
+                else {
                     $id = $request->get("id") == null ? 0 : $request->get("id");
                     
                     $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase("normal", $id);
@@ -381,7 +383,7 @@ class MicroserviceDeployController extends AbstractController {
                     $sshConnection = $this->sshConnection($microserviceDeployRow, $request);
                     
                     if ($sshConnection == false)
-                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_18");
+                        $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_19");
                     else {
                         $this->response['values']['sshConnection'] = $sshConnection;
                         
@@ -391,8 +393,6 @@ class MicroserviceDeployController extends AbstractController {
                             $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_8");
                     }
                 }
-                else
-                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_9");
             }
         }
         
@@ -514,9 +514,9 @@ class MicroserviceDeployController extends AbstractController {
                 }
                 
                 if ($reset == true)
-                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceDeployController_19");
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceDeployController_20");
                 else
-                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_20");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_21");
             }
         }
         
@@ -696,8 +696,7 @@ class MicroserviceDeployController extends AbstractController {
                 <span class=\"mdc-list-item__text\">
                     <div class=\"form_row\">
                         <div class=\"mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon mdc-text-field--dense\">
-                        <i class=\"material-icons mdc-text-field__icon\" role=\"button\">textsms</i>
-                        <input class=\"mdc-text-field__input\" type=\"text\" name=\"branchName\" required=\"required\" value=\"\" autocomplete=\"off\" aria-label=\"label\">
+                        <input class=\"mdc-text-field__input\" type=\"text\" name=\"branchName\" value=\"\" autocomplete=\"off\" aria-label=\"label\">
                         <label class=\"mdc-floating-label\">{$this->helper->getTranslator()->trans("microserviceDeployFormType_26")}</label>
                         <div class=\"mdc-notched-outline\">
                             <svg>
@@ -712,7 +711,8 @@ class MicroserviceDeployController extends AbstractController {
         </ul>
         <button class=\"mdc-button mdc-button--dense mdc-button--raised git_execute\" data-action=\"clone\" type=\"submit\">{$this->helper->getTranslator()->trans("microserviceDeployController_13")}</button>
         <button class=\"mdc-button mdc-button--dense mdc-button--raised git_execute\" data-action=\"pull\" type=\"submit\">{$this->helper->getTranslator()->trans("microserviceDeployController_14")}</button>
-        <button class=\"mdc-button mdc-button--dense mdc-button--raised git_execute\" data-action=\"reset\" type=\"submit\">{$this->helper->getTranslator()->trans("microserviceDeployController_15")}</button>";
+        <button class=\"mdc-button mdc-button--dense mdc-button--raised git_execute\" data-action=\"fetch\" type=\"submit\">{$this->helper->getTranslator()->trans("microserviceDeployController_15")}</button>
+        <button class=\"mdc-button mdc-button--dense mdc-button--raised git_execute\" data-action=\"reset\" type=\"submit\">{$this->helper->getTranslator()->trans("microserviceDeployController_16")}</button>";
         
         return $renderHtml;
     }
@@ -744,9 +744,9 @@ class MicroserviceDeployController extends AbstractController {
                 </td>
                 <td>";
                     if ($value['active'] == 0)
-                        $listHtml .= $this->helper->getTranslator()->trans("microserviceDeployController_16");
-                    else
                         $listHtml .= $this->helper->getTranslator()->trans("microserviceDeployController_17");
+                    else
+                        $listHtml .= $this->helper->getTranslator()->trans("microserviceDeployController_18");
                 $listHtml .= "</td>
                 <td class=\"horizontal_center\">
                     <button class=\"mdc-fab mdc-fab--mini cp_module_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
@@ -810,80 +810,80 @@ class MicroserviceDeployController extends AbstractController {
     
     private function sshConnection($row, $request) {
         $result = "";
-        
-        if ($request->get("action") == "clone" || $request->get("action") == "pull" || $request->get("action") == "reset") {
-            $pathKeyPublic = $this->helper->getPathSrc() . "/files/microservice/deploy/{$row['key_public']}";
-            $pathKeyPrivate = $this->helper->getPathSrc() . "/files/microservice/deploy/{$row['key_private']}";
-            
-            $connection = @ssh2_connect($row['ip'], 22);
-            
-            if ($connection == false)
-                return false;
-            
-            $auth = true;
-            
-            $sudo = "sudo";
-            
-            $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase("aes", $row['id']);
-            
-            if ($row['key_public'] == null || $row['key_private'] == null) {
-                $auth = @ssh2_auth_password($connection, $row['ssh_username'], $microserviceDeployRow['ssh_password_decrypt']);
-                
-                $sudo = "echo '{$microserviceDeployRow['ssh_password_decrypt']}' | sudo -S";
-            }
-            else
-                $auth = @ssh2_auth_pubkey_file($connection, $row['system_user'], $pathKeyPublic, $pathKeyPrivate, $row['key_private_password_decrypt']);
-            
-            if ($auth == false)
-                return false;
-            
-            if ($auth == true) {
-                $commands = Array();
 
-                $url = "https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password_decrypt']}@{$row['git_clone_url']}";
+        $pathKeyPublic = $this->helper->getPathSrc() . "/files/microservice/deploy/{$row['key_public']}";
+        $pathKeyPrivate = $this->helper->getPathSrc() . "/files/microservice/deploy/{$row['key_private']}";
 
-                if ($request->get("action") == "clone") {
-                    $commands = Array(
-                        "cd {$row['git_clone_path']}",
-                        "{$sudo} git clone {$url}"
-                    );
-                }
-                else if ($request->get("action") == "pull") {
-                    $commands = Array(
-                        "cd {$row['git_clone_path']}",
-                        "{$sudo} git pull --no-edit {$url}"
-                    );
-                }
-                else if ($request->get("action") == "reset") {
-                    $commands = Array(
-                        "cd {$row['git_clone_path']}",
-                        "{$sudo} git fetch --all",
-                        "{$sudo} git reset --hard origin/master"
-                    );
-                }
-                
-                $rowSplit = preg_split("/\r\n|\r|\n/", base64_decode($row['command']));
-                
-                foreach ($rowSplit as $key => $value) {
-                    $commands[] = $value;
-                }
-                
-                $stream = ssh2_exec($connection, implode(";", $commands));
-                
-                stream_set_blocking($stream, true);
-                
-                $err_stream = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
-                $dio_stream = ssh2_fetch_stream($stream, SSH2_STREAM_STDIO);
-                
-                stream_set_blocking($err_stream, true);
-                stream_set_blocking($dio_stream, true);
-                
-                $result .= stream_get_contents($err_stream) . "\r\n";
-                $result .= stream_get_contents($dio_stream) . "\r\n";
-                
-                fclose($stream);
-            }
+        $connection = @ssh2_connect($row['ip'], 22);
+
+        if ($connection == false)
+            return false;
+
+        $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase("aes", $row['id']);
+
+        if ($row['key_public'] == null || $row['key_private'] == null) {
+            $auth = @ssh2_auth_password($connection, $row['ssh_username'], $microserviceDeployRow['ssh_password_decrypt']);
+
+            $sudo = "echo '{$microserviceDeployRow['ssh_password_decrypt']}' | sudo -S";
         }
+        else {
+            $auth = @ssh2_auth_pubkey_file($connection, $row['system_user'], $pathKeyPublic, $pathKeyPrivate, $row['key_private_password_decrypt']);
+
+            $sudo = "sudo";
+        }
+
+        if ($auth == false)
+            return false;
+
+        $commands = Array();
+
+        $url = "https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password_decrypt']}@{$row['git_clone_url']}";
+
+        if ($request->get("action") == "clone") {
+            $commands = Array(
+                "cd {$row['git_clone_path']}",
+                "{$sudo} git clone {$url}"
+            );
+        }
+        else if ($request->get("action") == "pull" && $request->get("branchName") != "") {
+            $commands = Array(
+                "cd {$row['git_clone_path']}",
+                "{$sudo} git pull {$url} {$request->get("branchName")}"
+            );
+        }
+        else if ($request->get("action") == "fetch") {
+            $commands = Array(
+                "cd {$row['git_clone_path']}",
+                "{$sudo} git fetch --all"
+            );
+        }
+        else if ($request->get("action") == "reset" && $request->get("branchName") != "") {
+            $commands = Array(
+                "cd {$row['git_clone_path']}",
+                "{$sudo} git reset --hard {$request->get("branchName")}"
+            );
+        }
+
+        $rowSplit = preg_split("/\r\n|\r|\n/", base64_decode($row['command']));
+
+        foreach ($rowSplit as $key => $value) {
+            $commands[] = $value;
+        }
+
+        $stream = ssh2_exec($connection, implode(";", $commands));
+
+        stream_set_blocking($stream, true);
+
+        $err_stream = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
+        $dio_stream = ssh2_fetch_stream($stream, SSH2_STREAM_STDIO);
+
+        stream_set_blocking($err_stream, true);
+        stream_set_blocking($dio_stream, true);
+
+        $result .= stream_get_contents($err_stream) . "\r\n";
+        $result .= stream_get_contents($dio_stream) . "\r\n";
+
+        fclose($stream);
         
         return "<pre>$result</pre>";
     }
