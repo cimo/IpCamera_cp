@@ -1,6 +1,6 @@
 "use strict";
 
-/* global helper, materialDesign, popupEasy */
+/* global popupEasy */
 
 class Wysiwyg {
     // Properties
