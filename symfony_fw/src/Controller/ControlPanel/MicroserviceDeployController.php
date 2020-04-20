@@ -845,20 +845,20 @@ class MicroserviceDeployController extends AbstractController {
                 if ($request->get("action") == "clone") {
                     $commands = Array(
                         "cd {$row['git_clone_path']}",
-                        "{$sudo} -u {$row['user_git_script']} git clone {$url}"
+                        "{$sudo} git clone {$url}"
                     );
                 }
                 else if ($request->get("action") == "pull") {
                     $commands = Array(
                         "cd {$row['git_clone_path']}",
-                        "{$sudo} -u {$row['user_git_script']} git pull --no-edit {$url}"
+                        "{$sudo} git pull --no-edit {$url}"
                     );
                 }
                 else if ($request->get("action") == "reset") {
                     $commands = Array(
                         "cd {$row['git_clone_path']}",
-                        "{$sudo} -u {$row['user_git_script']} git fetch --all",
-                        "{$sudo} -u {$row['user_git_script']} git reset --hard origin/master"
+                        "{$sudo} git fetch --all",
+                        "{$sudo} git reset --hard origin/master"
                     );
                 }
                 
