@@ -839,13 +839,15 @@ class MicroserviceDeployController extends AbstractController {
 
         $url = "https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password_decrypt']}@{$row['git_clone_url']}";
 
+        $branchNameMatch = preg_match('/^[A-Za-z ]+$/', $request->get("branchName"));
+
         if ($request->get("action") == "clone") {
             $commands = Array(
                 "cd {$row['git_clone_path']}",
                 "{$sudo} git clone {$url}"
             );
         }
-        else if ($request->get("action") == "pull" && $request->get("branchName") != "") {
+        else if ($request->get("action") == "pull" && $branchNameMatch == true) {
             $commands = Array(
                 "cd {$row['git_clone_path']}",
                 "{$sudo} git pull {$url} {$request->get("branchName")}"
@@ -857,14 +859,17 @@ class MicroserviceDeployController extends AbstractController {
                 "{$sudo} git fetch --all"
             );
         }
-        else if ($request->get("action") == "reset" && $request->get("branchName") != "") {
+        else if ($request->get("action") == "reset" && $branchNameMatch == true) {
             $commands = Array(
                 "cd {$row['git_clone_path']}",
                 "{$sudo} git reset --hard {$request->get("branchName")}"
             );
         }
 
-        $rowSplit = preg_split("/\r\n|\r|\n/", base64_decode($row['command']));
+        if (count($commands) == 0)
+            return false;
+
+        $rowSplit = preg_split('/\r\n|\r|\n/', base64_decode($row['command']));
 
         foreach ($rowSplit as $key => $value) {
             $commands[] = $value;

@@ -95,7 +95,7 @@ class ControlPanelController extends AbstractController {
         $contents = preg_replace("/<th[^>]*>([^<]+)<\/th>/", '<info>\1</info>', $contents);
         $contents = preg_replace("/<td[^>]*>([^<]+)<\/td>/", '<info>\1</info>', $contents);
         
-        $title = preg_split("/(<h2[^>]*>[^<]+<\/h2>)/", $contents, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $title = preg_split('/(<h2[^>]*>[^<]+<\/h2>)/', $contents, -1, PREG_SPLIT_DELIM_CAPTURE);
         
         $rows = Array();
         $countTitle = count($title);
@@ -105,7 +105,7 @@ class ControlPanelController extends AbstractController {
         $pC = "/$pA\s*$pA/";
         
         for ($a = 1; $a < $countTitle; $a ++) {
-            preg_match("/<h2[^>]*>([^<]+)<\/h2>/", $title[$a], $matchesA);
+            preg_match('/<h2[^>]*>([^<]+)<\/h2>/', $title[$a], $matchesA);
                     
             if (count($matchesA) > 0) {
                 $name = trim($matchesA[1]);

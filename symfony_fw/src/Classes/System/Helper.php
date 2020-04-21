@@ -814,7 +814,7 @@ class Helper {
             if (is_object($value) == false)
                 $result[$key] = $value;
             else {
-                preg_match("#\[(.*?)\]#", $value->name, $matches);
+                preg_match('#\[(.*?)\]#', $value->name, $matches);
                 
                 $keyTmp = "";
                 

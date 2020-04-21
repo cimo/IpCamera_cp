@@ -719,7 +719,7 @@ class ApiBasicController extends AbstractController {
                         $apiBasicRow = $this->query->selectApiBasicDatabase($parameters['tokenName'], true);
                         
                         if ($apiBasicRow != false) {
-                            $ipSplit = preg_split("/\r\n|\r|\n/", $apiBasicRow['ip']);
+                            $ipSplit = preg_split('/\r\n|\r|\n/', $apiBasicRow['ip']);
 
                             if (isset($apiBasicRow['ip']) == true && in_array($_SERVER['REMOTE_ADDR'], $ipSplit) == false)
                                 $this->response['messages']['error'] = $this->helper->getTranslator()->trans("apiBasicController_13");
@@ -787,7 +787,7 @@ class ApiBasicController extends AbstractController {
                     
                     if ($microserviceApiRow != false) {
                         if ($apiBasicRow != false) {
-                            $ipSplit = preg_split("/\r\n|\r|\n/", $apiBasicRow['ip']);
+                            $ipSplit = preg_split('/\r\n|\r|\n/', $apiBasicRow['ip']);
                             
                             if (isset($apiBasicRow['ip']) == true && in_array($_SERVER['REMOTE_ADDR'], $ipSplit) == false)
                                 $this->response['messages']['error'] = $this->helper->getTranslator()->trans("apiBasicController_13");
