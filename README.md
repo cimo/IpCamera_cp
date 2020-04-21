@@ -17,3 +17,7 @@ WORK IN PROGRESS...
 | Uebusaito - https://github.com/cimo/Uebusaito |
 
 <b>By CIMO - https://reinventsoftware.org</b>
+
+Supported By:
+
+![Image of supporter](https://avatars0.githubusercontent.com/u/878437?s=200&v=4)
