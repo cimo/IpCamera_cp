@@ -303,7 +303,7 @@ class PaymentController extends AbstractController {
                     {$value['payer']}
                 </td>
                 <td>
-                    <button class=\"mdc-fab mdc-fab--mini cp_payment_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
+                    <button class=\"mdc-fab mdc-fab--mini cp_payment_delete icon_warning\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
                 </td>
             </tr>";
         }

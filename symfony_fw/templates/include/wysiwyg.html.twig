@@ -22,34 +22,6 @@
             </button>
             <input type="color"/>
         </div>
-        <div class="mdc-select select_format">
-            <select class="mdc-select__native-control" data-command="formatBlock">
-                <option value=""></option>
-                <option value="p">P</option>
-                <option value="h1">H1</option>
-                <option value="h2">H2</option>
-                <option value="h3">H3</option>
-                <option value="h4">H4</option>
-                <option value="h5">H5</option>
-                <option value="h6">H6</option>
-            </select>
-            <label class="mdc-floating-label mdc-floating-label--float-above">{{"wysiwyg_1"|trans}}</label>
-            <div class="mdc-line-ripple"></div>
-        </div>
-        <div class="mdc-select select_font">
-            <select class="mdc-select__native-control" data-command="fontSize">
-                <option value=""></option>
-                <option value="1">Size 1</option>
-                <option value="2">Size 2</option>
-                <option value="3">Size 3</option>
-                <option value="4">Size 4</option>
-                <option value="5">Size 5</option>
-                <option value="6">Size 6</option>
-                <option value="7">Size 7</option>
-            </select>
-            <label class="mdc-floating-label mdc-floating-label--float-above">{{"wysiwyg_2"|trans}}</label>
-            <div class="mdc-line-ripple"></div>
-        </div>
         <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
             <span class="mdc-fab__icon material-icons" data-command="bold">format_bold</span>
         </button>
@@ -99,6 +71,34 @@
         <button class="mdc-fab mdc-fab--mini" type="button" aria-label="label">
             <span class="mdc-fab__icon material-icons" data-command="custom_table_add">border_all</span>
         </button>
+        <div class="mdc-select select_format">
+            <select class="mdc-select__native-control" data-command="formatBlock">
+                <option value=""></option>
+                <option value="p">P</option>
+                <option value="h1">H1</option>
+                <option value="h2">H2</option>
+                <option value="h3">H3</option>
+                <option value="h4">H4</option>
+                <option value="h5">H5</option>
+                <option value="h6">H6</option>
+            </select>
+            <label class="mdc-floating-label mdc-floating-label--float-above">{{"wysiwyg_1"|trans}}</label>
+            <div class="mdc-line-ripple"></div>
+        </div>
+        <div class="mdc-select select_font">
+            <select class="mdc-select__native-control" data-command="fontSize">
+                <option value=""></option>
+                <option value="1">Size 1</option>
+                <option value="2">Size 2</option>
+                <option value="3">Size 3</option>
+                <option value="4">Size 4</option>
+                <option value="5">Size 5</option>
+                <option value="6">Size 6</option>
+                <option value="7">Size 7</option>
+            </select>
+            <label class="mdc-floating-label mdc-floating-label--float-above">{{"wysiwyg_2"|trans}}</label>
+            <div class="mdc-line-ripple"></div>
+        </div>
     </div>
     <iframe class="editor" src="about:blank"></iframe>
     <div class="source" contenteditable="true"></div>

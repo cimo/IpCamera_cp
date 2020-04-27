@@ -451,7 +451,7 @@ class PageController extends AbstractController {
                         $this->response['values']['pageId'] = $id;
                         $this->response['values']['parentId'] = $pageEntity->getParent();
                         $this->response['values']['text'] = "<p>" . $this->helper->getTranslator()->trans("pageController_8") . "</p>";
-                        $this->response['values']['button'] = "<button id=\"cp_page_delete_parent_all\" class=\"mdc-button mdc-button--dense mdc-button--raised mdc-theme--secondary-bg\" type=\"button\" style=\"display: block;\">" . $this->helper->getTranslator()->trans("pageController_9") . "</button>";
+                        $this->response['values']['button'] = "<button id=\"cp_page_delete_parent_all\" class=\"mdc-button mdc-button--dense mdc-button--raised button_warning\" type=\"button\" style=\"display: block;\">" . $this->helper->getTranslator()->trans("pageController_9") . "</button>";
                         $this->response['values']['pageSelectHtml'] = $this->helper->createPageSelectHtml($this->urlLocale, "cp_page_delete_parent_new", $this->helper->getTranslator()->trans("pageController_10"), true);
                     }
                 }
@@ -554,7 +554,7 @@ class PageController extends AbstractController {
                 $this->listHtml .= "</td>
                 <td>";
                     if ($value['id'] > 5)
-                        $this->listHtml .= "<button class=\"mdc-fab mdc-fab--mini cp_page_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>";
+                        $this->listHtml .= "<button class=\"mdc-fab mdc-fab--mini cp_page_delete icon_warning\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>";
                 $this->listHtml .= "</td>
             </tr>";
             

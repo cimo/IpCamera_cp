@@ -163,12 +163,12 @@ class WidgetDatePicker {
         
         $(".widget_datePicker").find(".day li span").on("mouseover", "", (event) => {
             if ($.trim($(event.target).text()) !== "")
-                $(event.target).addClass("mdc-theme--secondary-bg mdc-theme--on-secondary");
+                $(event.target).addClass("button_warning");
         });
         
         $(".widget_datePicker").find(".day li span").on("mouseout", "", (event) => {
             if ($.trim($(event.target).text()) !== "")
-                $(event.target).removeClass("mdc-theme--secondary-bg mdc-theme--on-secondary");
+                $(event.target).removeClass("button_warning");
         });
         
         $(".widget_datePicker").find(".day li span").on("click", "", (event) => {
@@ -249,7 +249,7 @@ class WidgetDatePicker {
             html = `<div class="mdc-theme--primary-bg mdc-theme--on-primary header">
                 <p>${this.currentYear}</p>
                 <div class="mdc-typography--headline6 text">${this.weekCurrentDay}, ${this.monthLabels[this.language][this.currentMonth]} ${this.currentDay}</div>
-                <button class="mdc-fab mdc-fab--mini cp_payment_delete" type="button" aria-label="label"><span class="mdc-fab__icon material-icons">close</span></button>
+                <button class="mdc-fab mdc-fab--mini cp_payment_delete icon_warning" type="button" aria-label="label"><span class="mdc-fab__icon material-icons">close</span></button>
             </div>`;
         }
         else
@@ -262,8 +262,8 @@ class WidgetDatePicker {
         this.yearMin = 1900;
         this.yearMax = new Date().getFullYear();
         
-        let html = "<div class=\"listYears\">\n\
-            <div class=\"mdc-list mdc-list--two-line mdc-list--avatar-list\">\n\
+        let html = "<div class=\"listYears\">\
+            <div class=\"mdc-list mdc-list--two-line mdc-list--avatar-list\">\
                 <ul>";
                     let count = 0;
 
@@ -277,8 +277,8 @@ class WidgetDatePicker {
 
                         count ++;
                     }
-                html += "</ul>\n\
-            </div>\n\
+                html += "</ul>\
+            </div>\
         </div>";
         
         return html;

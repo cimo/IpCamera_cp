@@ -167,6 +167,8 @@ class SearchController extends AbstractController {
                         
                         if (strlen($argument) > 200)
                             $listHtml .= substr($argument, 0, 200) . "...";
+                        else if (strlen($argument) == 0)
+                            $listHtml .= "...";
                         else
                             $listHtml .= $argument;
                     $listHtml .= "</span>

@@ -370,7 +370,7 @@ class RoleUserController extends AbstractController {
                 </td>";
                 $listHtml .= "<td class=\"horizontal_center\">";
                     if ($value['id'] > 4)
-                        $listHtml .= "<button class=\"mdc-fab mdc-fab--mini cp_roleUser_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>";
+                        $listHtml .= "<button class=\"mdc-fab mdc-fab--mini cp_roleUser_delete icon_warning\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>";
                 $listHtml .= "</td>
             </tr>";
         }

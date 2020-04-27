@@ -373,7 +373,7 @@ class MicroserviceCronController extends AbstractController {
                     {$value['last_execution']}
                 </td>
                 <td class=\"horizontal_center\">";
-                    $listHtml .= "<button class=\"mdc-fab mdc-fab--mini cp_microservice_cron_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
+                    $listHtml .= "<button class=\"mdc-fab mdc-fab--mini cp_microservice_cron_delete icon_warning\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
                 </td>
             </tr>";
         }

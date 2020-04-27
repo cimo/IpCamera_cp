@@ -101,10 +101,10 @@
             {{form_row(form.javascriptMinify)}}
             {{form_row(form.serverUser, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
 
-            {% if (response.values.serverRoot != "")%}<p class="info_field_warning"><span>{% trans %}setting_16{% endtrans %}</span> "{{response.values.serverRoot}}"</p>{% endif %}
+            {% if (response.values.serverRoot != "")%}<p class="info_field text_warning"><span>{% trans %}setting_16{% endtrans %}</span> "{{response.values.serverRoot}}"</p>{% endif %}
             {{form_row(form.serverRoot, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
 
-            {% if (response.values.serverHost != "")%}<p class="info_field_warning"><span>{% trans %}setting_16{% endtrans %}</span> "{{response.values.serverHost}}"</p>{% endif %}
+            {% if (response.values.serverHost != "")%}<p class="info_field text_warning"><span>{% trans %}setting_16{% endtrans %}</span> "{{response.values.serverHost}}"</p>{% endif %}
             {{form_row(form.serverHost, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
         </div>
     </fieldset>

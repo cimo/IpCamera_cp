@@ -427,7 +427,7 @@ class MicroserviceSeleniumController extends AbstractController {
                     {$value['name']}
                 </td>
                 <td class=\"horizontal_center\">
-                    <button class=\"mdc-fab mdc-fab--mini cp_microservice_selenium_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
+                    <button class=\"mdc-fab mdc-fab--mini cp_microservice_selenium_delete icon_warning\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
                 </td>
             </tr>";
         }

@@ -45,6 +45,15 @@
             display: none;
         }
     }
+
+    .logo_text_main_big {
+        width: 150px !important;
+        margin: 0px !important;
+
+        .style {
+            font-size: 16px !important;
+        }
+    }
 }
 @media(min-width: $widthDesktop) {
     .menu_root_container {
@@ -90,12 +99,13 @@
                         color: $menuRootTargetSpanTextColor;
                     }
                     
-                    &:hover, &.current {
+                    &:hover {
                         background-color: $menuRootTargetHoverBackgroundColor;
-                        
-                        &:not(.target_parent) {
-                            border-bottom: 2px solid $menuRootTargetParentBorderColor;
-                        }
+                    }
+
+                    &.current {
+                        background-color: $menuRootTargetHoverBackgroundColor;
+                        border-bottom: 2px solid $menuRootTargetParentBorderColor !important;
                     }
                 }
                 
@@ -107,7 +117,7 @@
                     position: absolute;
                     width: 200px;
                     top: $menuRootParentContentTop;
-                    box-shadow: $boxShadow;
+                    box-shadow: $boxShadowDown;
                     
                     .children_container {
                         display: block;
@@ -188,6 +198,16 @@ pre {
     width: 70px;
     margin: auto;
 }
+.logo_text_main_big {
+    width: 170px;
+    height: 26px;
+
+    .style {
+        fill: #ffffff;
+        font-size: 18px;
+        font-family: "Roboto Mono";
+    }
+}
 
 .main {
     .sortable_column {
@@ -237,6 +257,7 @@ pre {
     bottom: 0;
     width: 100%;
     height: $footerHeight;
+    box-shadow: $boxShadowUp;
     
     .icon {
         div {
@@ -333,12 +354,19 @@ pre {
 .info_field {
     margin-bottom: 0;
 }
-.info_field_warning {
-    margin-bottom: 0;
 
+.text_warning {
     span {
-        color: $warningTextColor;
+        color: $warningTextColor !important;
     }
+}
+.button_warning {
+    color: $warningButtonTextColor !important;
+    background-color: $warningButtonBackgroundColor !important;
+}
+.icon_warning {
+    color: $warningIconColor !important;
+    background-color: $warningIconBackgroundColor !important;
 }
 
 .button_svg {
@@ -566,7 +594,7 @@ pre {
 
 .mdc-top-app-bar {
     z-index: 1000;
-    box-shadow: $boxShadow;
+    box-shadow: $boxShadowDown;
     
     .mdc-top-app-bar__row {
         -webkit-transition: all 0.4s ease-out;
@@ -653,7 +681,7 @@ pre {
 .mdc-card {
     display: inline-block;
     background-color: $mdc-theme-background;
-    box-shadow: $boxShadow;
+    box-shadow: $boxShadowDown;
 
     .mdc-card__header {
         padding: 10px 10px 0 10px;

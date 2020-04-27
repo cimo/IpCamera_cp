@@ -12,7 +12,7 @@
                 <a class="material-icons mdc-top-app-bar__navigation-icon menu_root_mobile display_mobile" href="#">menu</a>
                 <div class="display_desktop">
                     <img class="logo_main_big" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/logo.svg")}}" alt="logo.svg"/>
-                    <span class="mdc-top-app-bar__title">{{websiteName}}</span>
+                    <svg class="logo_text_main_big"><text class="style" x="4" y="22">{{websiteName}}</text></svg>
                 </div>
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
@@ -26,7 +26,7 @@
                 <header class="mdc-drawer__header">
                     <div class="mdc-drawer__header-content">
                         <img class="logo_main_big" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/logo.svg")}}" alt="logo.svg"/>
-                        <span>{{websiteName}}</span>
+                        <svg class="logo_text_main_big"><text class="style" x="4" y="22">{{websiteName}}</text></svg>
                     </div>
                 </header>
                 {% if (settingRow['website_active'] == true or is_granted("IS_AUTHENTICATED_FULLY") == true) and urlExtra != "maintenance_authentication" and app.request.get("error") is null %}

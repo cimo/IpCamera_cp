@@ -371,7 +371,7 @@ class MicroserviceUnitTestController extends AbstractController {
                         $listHtml .= $this->helper->getTranslator()->trans("microserviceUnitTestController_10");
                 $listHtml .= "</td>
                 <td class=\"horizontal_center\">
-                    <button class=\"mdc-fab mdc-fab--mini cp_microservice_unit_test_delete\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
+                    <button class=\"mdc-fab mdc-fab--mini cp_microservice_unit_test_delete icon_warning\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
                 </td>
             </tr>";
         }

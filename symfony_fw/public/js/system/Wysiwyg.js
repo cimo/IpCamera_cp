@@ -55,21 +55,25 @@ class Wysiwyg {
     _iframe = () => {
         if ($(".wysiwyg").length > 0) {
             $(".wysiwyg").find(".editor").contents().find("head").append(
-                "<style>\n\
-                    html {\n\
-                        padding: 5px !important;\n\
-                        height: auto !important;\n\
-                    }\n\
-                    body div {\n\
-                        margin: 0;\n\
-                        min-height: 19px;\n\
-                    }\n\
-                    body .mdc-layout-grid {\n\
-                        padding: 0;\n\
-                    }\n\
-                    body .mdc-layout-grid .mdc-layout-grid__cell {\n\
-                        border: 1px solid #000000;\n\
-                    }\n\
+                "<style>\
+                    html {\
+                        padding: 5px !important;\
+                        height: auto !important;\
+                    }\
+                    body div {\
+                        margin: 0;\
+                        min-height: 19px;\
+                    }\
+                    body .mdc-layout-grid {\
+                        padding: 0;\
+                        margin: 10px 0 10px 0;\
+                    }\
+                    body .mdc-layout-grid .mdc-layout-grid__inner {\
+                        margin-bottom: 20px;\
+                    }\
+                    body .mdc-layout-grid .mdc-layout-grid__cell {\
+                        border: 1px solid #000000;\
+                    }\
                 </style>"
             );
             
@@ -341,11 +345,11 @@ class Wysiwyg {
             $(this.iframeBody).html(element);
             
             this.historyRestore = true;
-	}
+	    }
     }
     
     _historySave = () => {
-        this._spaceAfterElement();
+        //this._spaceAfterElement();
         
         this._removeDoubleSpace();
         
@@ -461,23 +465,23 @@ class Wysiwyg {
                 content = `<fieldset>
                     <legend>${window.textWysiwyg.label_16}</legend>
                     <button id="row_add" class="mdc-button mdc-button--dense mdc-button--raised" type="button">${window.textWysiwyg.label_17}</button>
-                    <button id="row_remove" class="mdc-button mdc-button--dense mdc-button--raised" type="button">${window.textWysiwyg.label_18}</button>
+                    <button id="row_remove" class="mdc-button mdc-button--dense mdc-button--raised button_warning" type="button">${window.textWysiwyg.label_18}</button>
                 </fieldset>
                 <fieldset>
                     <legend>${window.textWysiwyg.label_19}</legend>
                     <button id="column_add" class="mdc-button mdc-button--dense mdc-button--raised" type="button">${window.textWysiwyg.label_20}</button>
-                    <button id="column_remove" class="mdc-button mdc-button--dense mdc-button--raised" type="button">${window.textWysiwyg.label_21}</button>
+                    <button id="column_remove" class="mdc-button mdc-button--dense mdc-button--raised button_warning" type="button">${window.textWysiwyg.label_21}</button>
                 </fieldset>`;
             }
             
             if (content !== "")
-                this._popupsetting(type, target, content);
+                this._popupSetting(type, target, content);
             
             return false;
         });
     }
     
-    _popupsetting = (type, target, content) => {
+    _popupSetting = (type, target, content) => {
         popupEasy.show(
             window.textWysiwyg.label_15,
             `<div id=\"wysiwyg_popup\">${content}</div>`,
@@ -577,16 +581,18 @@ class Wysiwyg {
     
     _addHtmlAtCaretPosition = (html) => {
         let iframeDocument = window.frames[0].document;
+        let selection = null;
         let range = null;
         
         if (iframeDocument.getSelection()) {
             selection = iframeDocument.getSelection();
             
-            if (selection.getRangeAt() && selection.rangeCount()) {
+            if (selection.getRangeAt(0) && selection.rangeCount) {
                 let htmlElement = window.frames[0].document.createElement("div");
                 htmlElement.innerHTML = html;
                 
                 let fragment = window.frames[0].document.createDocumentFragment();
+                let node = null;
                 let lastNode = null;
                 
                 while ((node = htmlElement.firstChild)) {
