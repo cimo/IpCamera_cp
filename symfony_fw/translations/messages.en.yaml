@@ -255,7 +255,8 @@ date.time: H:i:s
 "widgetDatePicker_3": "Confirm"
 
 # Error
-"error_1": "Error: "
+"error_1": "Error:"
+"error_2": "Sorry, system cannot retrieve the page you were looking for."
 
 # Helper
 "classHelper_1": "Password old doesn't match!"
