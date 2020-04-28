@@ -501,7 +501,7 @@ class Helper {
         let secureValue = secure === true ? "Secure;" : "";
         
         if (value === null)
-            value = 0;
+            value = "";
         
         if (expire === 0)
             expire = new Date(Date.now() + (10000 * 365 * 24 * 60 * 60));
@@ -512,11 +512,9 @@ class Helper {
     }
     
     readCookie = (name) => {
-        let result = document.cookie.match(new RegExp(`${name}=([^;]+)`));
-        
-        result && (result = JSON.parse(result[1]));
-        
-        return result;
+        let result = document.cookie.match(`(^|;)?${name}=([^;]*)(;|$)`);
+
+        return result ? result[2] : null;
     }
     
     removeCookie = (name) => {
@@ -526,9 +524,9 @@ class Helper {
     
     blockMultiTab = (active) => {
         if (active === true) {
-            let cookieValues = this.readCookie(`${window.session.name}_blockMultiTab`);
-            
-            if (cookieValues === null) {
+            let cookieValue = this.readCookie(`${window.session.name}_blockMultiTab`);
+
+            if (cookieValue === null) {
                 this.createCookie(`${window.session.name}_blockMultiTab`, 1, 0, "", true);
                 
                 $(window).on("unload", "", (event) => {
@@ -542,10 +540,8 @@ class Helper {
                         "use strict";
                         
                         $(window).on("focus", "", (event) => {
-                            alert("${window.text.index_11}");
-                            window.close();
                             $(window).off("focus");
-                            document.cookie = "${window.session.name}_blockMultiTab=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+                            document.cookie = '${window.session.name}_blockMultiTab=""; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
                         });
                     </script>
                 `);

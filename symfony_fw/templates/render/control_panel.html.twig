@@ -586,11 +586,11 @@
             <span>{% trans %}controlPanel_11{% endtrans %}</span>
         </a>
         <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_setting_slack_iw"})}}">
-            <img class="material-icons" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/slack.png")}}" alt="slack.png"/>
+            <img class="material-icons icon_svg" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/slack.svg")}}" alt="slack.svg"/>
             <span>{% trans %}controlPanel_12{% endtrans %}</span>
         </a>
         <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_setting_line"})}}">
-            <img class="material-icons" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/line.png")}}" alt="line.png"/>
+            <img class="material-icons icon_svg" src="{{asset("images/templates/" ~ settingRow['template'] ~ "/line.svg")}}" alt="line.svg"/>
             <span>{% trans %}controlPanel_13{% endtrans %}</span>
         </a>
     {% endif %}

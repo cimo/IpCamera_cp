@@ -91,13 +91,15 @@ $mdc-layout-grid-column-width-phone: 72px;
 
 @import "helper_custom.scss";
 
-@mixin opacity($value) {
-    $msOpacity: $value * 100;
+.material-icons.md-14 {font-size: 14px !important;}
+.material-icons.primary {color: $mdc-theme-primary !important;}
+.material-icons.secondary {color: $mdc-theme-secondary !important;}
 
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$msOpacity})";
-    filter: alpha(opacity=$msOpacity);
-    opacity: $value;
-}
+.material-icons.md-dark {color: rgba(0, 0, 0, 0.70) !important;}
+.material-icons.md-dark.md-inactive {color: rgba(0, 0, 0, 0.3) !important;}
+
+.material-icons.md-light {color: rgba(255, 255, 255, 1) !important;}
+.material-icons.md-light.md-inactive {color: rgba(255, 255, 255, 0.3) !important;}
 
 @media(max-width: $widthMobile) {
     .display_desktop {
@@ -116,20 +118,12 @@ $mdc-layout-grid-column-width-phone: 72px;
     }
 }
 
-@-webkit-viewport {
-    width: device-width;
-}
-@-moz-viewport {
-    width: device-width;
-}
-@-ms-viewport {
-    width: device-width;
-}
-@-o-viewport {
-    width: device-width;
-}
-@viewport {
-    width: device-width;
+@mixin opacity($value) {
+    $msOpacity: $value * 100;
+
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$msOpacity})";
+    filter: alpha(opacity=$msOpacity);
+    opacity: $value;
 }
 
 @mixin user_select_none {
@@ -139,28 +133,31 @@ $mdc-layout-grid-column-width-phone: 72px;
     -ms-user-select: none;
     user-select: none;
 }
-.user_select_none {
+user_select_none {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
 }
+
 @mixin user_select_text {
-    -webkit-touch-callout: text;
     -webkit-user-select: text;
     -moz-user-select: text;
     -ms-user-select: text;
     user-select: text;
 }
 .user_select_text {
-    -webkit-touch-callout: text;
     -webkit-user-select: text;
     -moz-user-select: text;
     -ms-user-select: text;
     user-select: text;
 }
 
+@mixin user_touch_none {
+    -ms-touch-action: none;
+    touch-action: none;
+}
 .user_touch_none {
     -ms-touch-action: none;
     touch-action: none;
@@ -170,16 +167,6 @@ $mdc-layout-grid-column-width-phone: 72px;
     content: "";
     clear: both;
 }
-
-.material-icons.md-14 {font-size: 14px !important;}
-.material-icons.primary {color: $mdc-theme-primary !important;}
-.material-icons.secondary {color: $mdc-theme-secondary !important;}
-
-.material-icons.md-dark {color: rgba(0, 0, 0, 0.70) !important;}
-.material-icons.md-dark.md-inactive {color: rgba(0, 0, 0, 0.3) !important;}
-
-.material-icons.md-light {color: rgba(255, 255, 255, 1) !important;}
-.material-icons.md-light.md-inactive {color: rgba(255, 255, 255, 0.3) !important;}
 
 :root {
     --mdc-theme-primary: #{$mdc-theme-primary};
