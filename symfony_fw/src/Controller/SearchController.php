@@ -158,6 +158,15 @@ class SearchController extends AbstractController {
         $listHtml = "<ul class=\"mdc-list mdc-list--two-line mdc-list--avatar-list\">";
         
         foreach ($elements as $key => $value) {
+            $url = $this->get("router")->generate(
+                "root_render",
+                Array(
+                    '_locale' => $this->urlLocale,
+                    'urlCurrentPageId' => $value['id'],
+                    'urlExtra' => ""
+                )
+            );
+
             $listHtml .= "<li class=\"mdc-list-item\">
                 <span class=\"mdc-list-item__graphic material-icons\">receipt</span>
                 <span class=\"mdc-list-item__text\">
@@ -173,7 +182,7 @@ class SearchController extends AbstractController {
                             $listHtml .= $argument;
                     $listHtml .= "</span>
                 </span>
-                <a class=\"mdc-list-item__meta material-icons\" href=\"{$this->helper->getUrlRoot()}{$this->helper->getWebsiteFile()}/{$this->urlLocale}/{$value['id']}\">
+                <a class=\"mdc-list-item__meta material-icons\" href=\"{$url}\">
                     info
                 </a>
             </li>";

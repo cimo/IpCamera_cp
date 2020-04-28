@@ -603,6 +603,18 @@ pre {
     user-select: text;
 }
 
+.error_page {
+    p, a {
+        display: block;
+        text-align: center;
+    }
+
+    a {
+        margin: auto;
+        width: 200px;
+    }
+}
+
 .mdc-top-app-bar {
     z-index: 1000;
     box-shadow: $boxShadowDown;

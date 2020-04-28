@@ -93,7 +93,7 @@ class SettingController extends AbstractController {
                     
                     $this->response['messages']['info'] = $message;
                     
-                    return $this->helper->forceLogout($this->router);
+                    return $this->helper->forceLogout($this->get("router"));
                 }
                 else
                     $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingController_3");
@@ -261,7 +261,7 @@ class SettingController extends AbstractController {
     }
     
     private function redirectOnModifySelected($settingRow) {
-        $url = $this->get("router")->generate(
+        return $this->get("router")->generate(
             "root_render",
             Array(
                 '_locale' => $settingRow['language'],
@@ -269,7 +269,5 @@ class SettingController extends AbstractController {
                 'urlExtra' => ""
             )
         );
-        
-        return $url;
     }
 }

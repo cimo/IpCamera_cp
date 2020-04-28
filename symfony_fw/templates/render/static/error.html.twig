@@ -1,3 +1,5 @@
-<div>
-    <h1 class="mdc-typography--headline1">{% trans %}error_1{% endtrans %} {{app.request.get("error")}}</h1>
+<div class="error_page">
+    <p class="mdc-typography--headline1">{% trans %}error_1{% endtrans %} {{app.request.get("error")}}</p>
+    <p class="mdc-typography--headline3">{% trans %}error_2{% endtrans %}</p>
+    <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("root_render", {'_locale': urlLocale, 'urlCurrentPageId': 2, 'urlExtra': ""})}}" type="button">Home</a>
 </div>
