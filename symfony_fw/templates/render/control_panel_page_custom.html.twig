@@ -1,4 +1,4 @@
-{% if urlExtra == "cp_ipCamera" or urlExtra == "cp_ipCamera_create" or urlExtra == "cp_ipCamera_select" or urlExtra == "cp_ipCamera_file" %}
+{% if "cp_ipCamera" in urlExtra %}
     {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MODERATOR") == true or is_granted("ROLE_IPCAMERA") == true %}
         {% if urlExtra == "cp_ipCamera" or urlExtra == "cp_ipCamera_create" or urlExtra == "cp_ipCamera_select" %}
             <p>{% trans %}controlPanelPageIpCamera_1{% endtrans %}</p>

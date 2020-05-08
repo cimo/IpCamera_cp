@@ -91,7 +91,17 @@
                 'userInform': "{{php_session.userInform}}",
                 'languageTextCode': "{{php_session.languageTextCode}}",
                 'currentPageId': "{{php_session.currentPageId}}",
-                'xssProtectionValue': "{{php_session.xssProtectionValue}}"
+                'xssProtectionValue': "{{php_session.xssProtectionValue}}",
+                'sessionMaxIdleTime': "{{php_session.sessionMaxIdleTime}}"
+            };
+
+            window.setting = {
+                'widthMobile': 839,
+                'widthDesktop': 840,
+                'template': "{{settingRow['template']}}",
+                'language': "{{settingRow['language']}}",
+                'websiteActive': "{{settingRow['website_active']}}",
+                'blockMultitab': "{{settingRow['block_multitab']}}"
             };
             
             window.url = {
@@ -115,15 +125,7 @@
                 'pageCommentSave': "{{path("pageComment_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}",
                 'controlPanel': "{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': ""})}}"
             };
-            
-            window.setting = {
-                'widthMobile': 839,
-                'widthDesktop': 840,
-                'template': "{{settingRow['template']}}",
-                'language': "{{settingRow['language']}}",
-                'websiteActive': "{{settingRow['website_active']}}"
-            };
-            
+
             window.text = {
                 'index_5': "{{"index_5"|trans}}",
                 'index_6': "{{"index_6"|trans}}",

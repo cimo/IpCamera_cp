@@ -1,89 +1,89 @@
 @import "helper.scss";
 
 .loader_back {
-    display: none;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-color: $loaderBackBackgroundColor;
-    opacity: 0.7;
-    filter: alpha(opacity=70);
-    z-index: 1200;
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: $loaderBackBackgroundColor;
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+  z-index: 1200;
 }
 .loader {
-    display: none;
-    position: fixed;
-    top: 30%;
-    left: 50%;
-    margin-top: -25px;
-    margin-left: -25px;
-    z-index: 1201;
-    background-color: $loaderBackgroundColor;
-    border: 1px solid $loaderBorderColor;
-    border-radius: 50%;
-    width: $loaderWidth;
-    
-    &:before {
-        content: "";
-        display: block;
-        padding-top: 100%;
-    }
-    
-    .circular {
-        height: 100%;
-        transform-origin: center center;
-        width: 100%;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: auto;
+  display: none;
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  margin-top: -25px;
+  margin-left: -25px;
+  z-index: 1201;
+  background-color: $loaderBackgroundColor;
+  border: 1px solid $loaderBorderColor;
+  border-radius: 50%;
+  width: $loaderWidth;
 
-        animation: rotate 2s linear infinite;
-    }
-    
-    .path {
-        stroke-dasharray: 1, 200;
-        stroke-dashoffset: 0;
-        stroke-linecap: round;
+  &:before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+  }
 
-        animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
-    }
+  .circular {
+    height: 100%;
+    transform-origin: center center;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+
+    animation: rotate 2s linear infinite;
+  }
+
+  .path {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+
+    animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+  }
 }
 
 @keyframes rotate {
-    100% {
-        transform: rotate(360deg);
-    }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 @keyframes dash {
-    0% {
-        stroke-dasharray: 1, 200;
-        stroke-dashoffset: 0;
-    }
-    50% {
-        stroke-dasharray: 89, 200;
-        stroke-dashoffset: -35px;
-    }
-    100% {
-        stroke-dasharray: 89, 200;
-        stroke-dashoffset: -124px;
-    }
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
+  }
 }
 @keyframes color {
-    100%, 0% {
-        stroke: $loaderColor1;
-    }
-    40% {
-        stroke: $loaderColor2;
-    }
-    66% {
-        stroke: $loaderColor3;
-    }
-    80%, 90% {
-        stroke: $loaderColor4;
-    }
+  100%, 0% {
+    stroke: $loaderColor1;
+  }
+  40% {
+    stroke: $loaderColor2;
+  }
+  66% {
+    stroke: $loaderColor3;
+  }
+  80%, 90% {
+    stroke: $loaderColor4;
+  }
 }

@@ -77,7 +77,7 @@ class MicroserviceCronController extends AbstractController {
                 $this->entityManager->persist($microserviceCronEntity);
                 $this->entityManager->flush();
                 
-                $this->settingJob($microserviceCronEntity, false);
+                $this->settingJob($microserviceCronEntity);
                 
                 $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceCronController_1");
             }
@@ -243,7 +243,7 @@ class MicroserviceCronController extends AbstractController {
                 $this->entityManager->persist($microserviceCronEntity);
                 $this->entityManager->flush();
                 
-                $this->settingJob($microserviceCronEntity, false);
+                $this->settingJob($microserviceCronEntity);
                 
                 $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceCronController_4");
             }
@@ -301,10 +301,8 @@ class MicroserviceCronController extends AbstractController {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 if ($request->get("event") == "delete") {
                     $id = $request->get("id") == null ? $this->session->get("microserviceCronProfileId") : $request->get("id");
-                    
-                    $microserviceCronEntity = $this->entityManager->getRepository("App\Entity\MicroserviceCron")->find($id);
-                    
-                    $this->settingJob($microserviceCronEntity, true);
+
+                    $this->removeJob("one", $id);
                     
                     $microserviceCronDatabase = $this->query->deleteMicroserviceCronDatabase("one", $id);
                     
@@ -315,6 +313,8 @@ class MicroserviceCronController extends AbstractController {
                     }
                 }
                 else if ($request->get("event") == "deleteAll") {
+                    $this->removeJob("all");
+
                     $microserviceCronDatabase = $this->query->deleteMicroserviceCronDatabase("all");
 
                     if ($microserviceCronDatabase == true)
@@ -381,24 +381,45 @@ class MicroserviceCronController extends AbstractController {
         return $listHtml;
     }
     
-    private function settingJob($microserviceCronEntity, $remove) {
-        $pathCron = "{$this->helper->getPathSrc()}/files/microservice/cron";
+    private function settingJob($microserviceCronEntity) {
+        $path = "{$this->helper->getPathSrc()}/files/microservice/cron";
         
         $code = $microserviceCronEntity->getCode() != "" ? " && {$microserviceCronEntity->getCode()}" : "";
         
-        $command = "{$microserviceCronEntity->getTime()} (echo $(date){$code} && echo \"\" && php {$this->helper->getPathRoot()}/bin/console app:run-cron {$microserviceCronEntity->getId()}) >> {$pathCron}/{$microserviceCronEntity->getName()}.log";
+        $command = "{$microserviceCronEntity->getTime()} (echo $(date){$code} && echo \"\" && php {$this->helper->getPathRoot()}/bin/console app:run-cron {$microserviceCronEntity->getId()}) >> {$path}/{$microserviceCronEntity->getName()}.log";
         
         shell_exec("crontab -r");
         
-        $this->helper->fileSearchInside("{$pathCron}/job.txt", "{$microserviceCronEntity->getName()}.log", " ");
-        
-        if ($remove == false) {
-            if ($microserviceCronEntity->getActive() == true)
-                shell_exec("grep -qxF '{$command}' {$pathCron}/job.txt || echo '{$command}' >> {$pathCron}/job.txt");
+        $this->helper->fileSearchInside("{$path}/job.txt", "{$microserviceCronEntity->getName()}.log", " ");
+
+        if ($microserviceCronEntity->getActive() == true)
+            shell_exec("grep -qxF '{$command}' {$path}/job.txt || echo '{$command}' >> {$path}/job.txt");
+
+        shell_exec("crontab {$path}/job.txt");
+    }
+
+    private function removeJob($type, $id = 0) {
+        $path = "{$this->helper->getPathSrc()}/files/microservice/cron";
+
+        shell_exec("crontab -r");
+
+        if ($type == "one") {
+            $microserviceCronRow = $this->query->selectMicroserviceCronDatabase($id);
+
+            $this->helper->fileSearchInside("{$path}/job.txt", "{$microserviceCronRow['name']}.log", " ");
+
+            unlink("{$path}/{$microserviceCronRow['name']}.log");
         }
-        else
-            unlink("{$pathCron}/{$microserviceCronEntity->getName()}.log");
-        
-        shell_exec("crontab {$pathCron}/job.txt");
+        else if ($type == "all") {
+            $microserviceCronRows = $this->query->selectAllMicroserviceCronDatabase();
+
+            foreach ($microserviceCronRows as $key => $value) {
+                $this->helper->fileSearchInside("{$path}/job.txt", "{$value['name']}.log", " ");
+
+                unlink("{$path}/{$value['name']}.log");
+            }
+        }
+
+        shell_exec("crontab {$path}/job.txt");
     }
 }

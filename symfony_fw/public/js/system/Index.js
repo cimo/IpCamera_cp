@@ -46,7 +46,7 @@ $(document).ready(() => {
     helper.accordion("button");
     helper.menuRoot();
     helper.uploadFakeClick();
-    helper.blockMultiTab(true);
+    helper.blockMultiTab();
     helper.bodyProgress();
     
     materialDesign.button();

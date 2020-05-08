@@ -1,21 +1,21 @@
 @import "helper.scss";
 
 @media(max-width: $widthMobile) {
-    .upload_chunk {
-        width: 100% !important;
-    }
+  .upload_chunk {
+    width: 100% !important;
+  }
 }
 
 .upload_chunk {
-    margin: 10px 0 10px 0;
-    width: 50%;
-    
-    .mdc-linear-progress {
-        display: none;
-        margin: 10px 0;
-    }
-    
-    .controls {
-        display: none;
-    }
+  margin: 10px 0 10px 0;
+  width: 50%;
+
+  .mdc-linear-progress {
+    display: none;
+    margin: 10px 0;
+  }
+
+  .controls {
+    display: none;
+  }
 }

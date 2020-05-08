@@ -352,7 +352,9 @@ class Query {
     
     // Setting
     public function selectSettingDatabase() {
-        $query = $this->connection->prepare("SELECT * FROM setting
+        $query = $this->connection->prepare("SELECT *, AES_DECRYPT(server_ssh_password, UNHEX(SHA2(secret_passphrase, 512))) AS server_ssh_password_decrypt,
+                                                AES_DECRYPT(server_key_private_password, UNHEX(SHA2(secret_passphrase, 512))) AS server_key_private_password_decrypt
+                                                FROM setting
                                                 WHERE id = :id");
         
         $query->bindValue(":id", 1);
@@ -360,6 +362,33 @@ class Query {
         $query->execute();
         
         return $query->fetch();
+    }
+
+    public function updateSettingDatabase($type, $columnName, $value) {
+        if ($type == "aes") {
+            if ($value != null) {
+                $query = $this->connection->prepare("UPDATE IGNORE setting
+                                                        SET {$columnName} = AES_ENCRYPT(:{$columnName}, UNHEX(SHA2(secret_passphrase, 512)))
+                                                    WHERE id = :id");
+
+                $query->bindValue(":{$columnName}", $value);
+                $query->bindValue(":id", 1);
+
+                return $query->execute();
+            }
+        }
+        else if ($type == "clear") {
+            $query = $this->connection->prepare("UPDATE setting
+                                                    SET {$columnName} = :{$columnName}
+                                                WHERE id = :id");
+
+            $query->bindValue(":{$columnName}", $value);
+            $query->bindValue(":id", 1);
+
+            return $query->execute();
+        }
+
+        return false;
     }
     
     // Slack

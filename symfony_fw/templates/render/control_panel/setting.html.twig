@@ -2,26 +2,39 @@
 
 <form id="form_cp_setting_save" action="{{path("cp_setting_save", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
     <fieldset class="accordion_container">
-        <legend>{% trans %}setting_1{% endtrans %}</legend>
-        <p>{% trans %}setting_2{% endtrans %}</p>
-        <button class="mdc-button mdc-button--dense mdc-button--raised button_accordion" type="button">{% trans %}index_9{% endtrans %}</button>    
+        <legend>{% trans %}setting_17{% endtrans %}</legend>
+        <p>{% trans %}setting_18{% endtrans %}</p>
+        <button class="mdc-button mdc-button--dense mdc-button--raised button_accordion" type="button">{% trans %}index_9{% endtrans %}</button>
         <div class="accordion">
-            {{form_row(form.template)}}
+            {{form_row(form.serverUser, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
 
-            <div class="form_row template_column">
-                <p>{% trans %}setting_3{% endtrans %}</p>
-                {% for key, value in form.templateColumn %}
-                    <div>
-                        {{form_widget(value)}}
-                        <img src="{{asset("images/templates/" ~ settingRow['template'] ~ "/template_column_" ~ key ~ ".png")}}" alt="{{"template_column_" ~ key ~ ".png"}}"/>
-                    </div>
-                {% endfor %}
-                {{form_errors(form.templateColumn)}}
+            {% if (response.values.serverRoot != "")%}<p class="info_field text_warning"><span>{% trans %}setting_16{% endtrans %}</span> "{{response.values.serverRoot}}"</p>{% endif %}
+            {{form_row(form.serverRoot, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+
+            {% if (response.values.serverHost != "")%}<p class="info_field text_warning"><span>{% trans %}setting_16{% endtrans %}</span> "{{response.values.serverHost}}"</p>{% endif %}
+            {{form_row(form.serverHost, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+
+            {{form_row(form.serverIp, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+
+            <div>
+                {{form_row(form.serverSshUsername, {'dense': "", 'styleType': "outlinedTrailing"})}}
+                {{form_row(form.serverSshPassword, {'dense': "", 'styleType': "outlinedTrailing", 'resettable': ""})}}
             </div>
-            
-            {{form_row(form.pageDate)}}
-            {{form_row(form.pageComment)}}
-            {{form_row(form.pageCommentActive)}}
+
+            <div class="key_group">
+                <div class="container">
+                    {{form_row(form.serverKeyPublic)}}
+                    {{form_row(form.serverRemoveKeyPublic)}}
+                    <p>{{response.values.serverKeyPublicLabel}}</p>
+                </div>
+                <div class="container">
+                    {{form_row(form.serverKeyPrivate)}}
+                    {{form_row(form.serverRemoveKeyPrivate)}}
+                    <p>{{response.values.serverKeyPrivateLabel}}</p>
+                </div>
+            </div>
+
+            {{form_row(form.serverKeyPrivatePassword, {'dense': "", 'styleType': "outlinedTrailing", 'resettable': ""})}}
         </div>
     </fieldset>
     <fieldset class="accordion_container">
@@ -99,13 +112,30 @@
             {{form_row(form.useType)}}
             {{form_row(form.secretPassphrase, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
             {{form_row(form.javascriptMinify)}}
-            {{form_row(form.serverUser, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+            {{form_row(form.blockMultitab)}}
+        </div>
+    </fieldset>
+    <fieldset class="accordion_container">
+        <legend>{% trans %}setting_1{% endtrans %}</legend>
+        <p>{% trans %}setting_2{% endtrans %}</p>
+        <button class="mdc-button mdc-button--dense mdc-button--raised button_accordion" type="button">{% trans %}index_9{% endtrans %}</button>
+        <div class="accordion">
+            {{form_row(form.template)}}
 
-            {% if (response.values.serverRoot != "")%}<p class="info_field text_warning"><span>{% trans %}setting_16{% endtrans %}</span> "{{response.values.serverRoot}}"</p>{% endif %}
-            {{form_row(form.serverRoot, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+            <div class="form_row template_column">
+                <p>{% trans %}setting_3{% endtrans %}</p>
+                {% for key, value in form.templateColumn %}
+                    <div>
+                        {{form_widget(value)}}
+                        <img src="{{asset("images/templates/" ~ settingRow['template'] ~ "/template_column_" ~ key ~ ".png")}}" alt="{{"template_column_" ~ key ~ ".png"}}"/>
+                    </div>
+                {% endfor %}
+                {{form_errors(form.templateColumn)}}
+            </div>
 
-            {% if (response.values.serverHost != "")%}<p class="info_field text_warning"><span>{% trans %}setting_16{% endtrans %}</span> "{{response.values.serverHost}}"</p>{% endif %}
-            {{form_row(form.serverHost, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
+            {{form_row(form.pageDate)}}
+            {{form_row(form.pageComment)}}
+            {{form_row(form.pageCommentActive)}}
         </div>
     </fieldset>
     <fieldset class="accordion_container">

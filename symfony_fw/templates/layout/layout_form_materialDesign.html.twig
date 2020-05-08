@@ -150,6 +150,10 @@
 
 {%- block textarea_widget -%}
     <div class="mdc-text-field mdc-text-field--textarea">
+        {%- if icon is defined -%}
+            <i class="material-icons mdc-text-field__icon textarea_icon" {% if iconTab is defined %}tabindex="0"{% endif %} role="button">{{icon}}</i>
+        {%- endif -%}
+
         <textarea class="mdc-text-field__input" {{ block('widget_attributes') }} autocomplete="off" aria-label="label">{{ value }}</textarea>
         <label class="mdc-floating-label">{% if label is defined %}{{translation_domain is same as(false) ? label : label|trans({}, translation_domain)}}{% endif %}</label>
     </div>

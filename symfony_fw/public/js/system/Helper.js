@@ -143,11 +143,9 @@ class Helper {
     }
     
     objectToArray = (items) => {
-        let array = $.map(items, (elements) => {
+        return $.map(items, (elements) => {
             return elements;
         });
-        
-        return array;
     }
     
     isIntoView = (id) => {
@@ -494,66 +492,126 @@ class Helper {
         window.history.replaceState("", "", window.location.pathname + result);
     }
     
+    createLocalStorage = (name, value) => {
+        localStorage.setItem(name, JSON.stringify(value));
+    }
+
+    readLocalStorage = (name) => {
+        let elements = JSON.parse(localStorage.getItem(name));
+
+        if (elements == null || Number.isNaN(elements) === true)
+            elements = [];
+
+        return elements;
+    }
+
+    removeLocalStorage = (name) => {
+        localStorage.removeItem(name);
+    }
+
+    createSessionStorage = (name, value) => {
+        sessionStorage.setItem(name, value);
+    }
+
+    readSessionStorage = (name) => {
+        let elements = sessionStorage.getItem(name);
+
+        if (elements == null)
+            elements = [];
+
+        return elements;
+    }
+
+    removeSessionStorage = (name) => {
+        sessionStorage.removeItem(name);
+    }
+
     createCookie = (name, value, expire, domain, secure) => {
         if (domain !== "")
             domain = `domain=${domain};`;
-        
+
         let secureValue = secure === true ? "Secure;" : "";
-        
+
         if (value === null)
             value = "";
-        
+
         if (expire === 0)
             expire = new Date(Date.now() + (10000 * 365 * 24 * 60 * 60));
         else if (expire === -1)
             expire = new Date(0);
-        
+
         document.cookie = `${name}=${JSON.stringify(value)};expires=${expire};${domain}path=/;${secureValue}`;
     }
-    
+
     readCookie = (name) => {
         let result = document.cookie.match(`(^|;)?${name}=([^;]*)(;|$)`);
 
-        return result ? result[2] : null;
+        return result != null ? result[2] : result;
     }
-    
+
     removeCookie = (name) => {
         if (this.readCookie(name) !== null)
             this.createCookie(name, null, -1, "", true);
     }
     
-    blockMultiTab = (active) => {
-        if (active === true) {
-            let cookieValue = this.readCookie(`${window.session.name}_blockMultiTab`);
+    blockMultiTab = () => {
+        if (window.setting.blockMultitab == true) {
+            let tag = `${window.session.name}_blockMultiTab`;
 
-            if (cookieValue === null) {
-                this.createCookie(`${window.session.name}_blockMultiTab`, 1, 0, "", true);
-                
-                $(window).on("unload", "", (event) => {
-                    this.removeCookie(`${window.session.name}_blockMultiTab`);
+            $(window).on("load", "", (event) => {
+                let tabs = JSON.parse(localStorage.getItem(tag));
+
+                if (tabs == null)
+                    tabs = {'main': "", 'list': []};
+
+                let tabId = sessionStorage.getItem(tag);
+
+                if (tabId === null) {
+                    tabId = Math.random().toString(36).substr(2, 9);
+
+                    sessionStorage.setItem(tag, tabId.toString());
+                }
+
+                if (tabs.list.length === 0)
+                    tabs.main = tabId;
+
+                if ($.inArray(tabId, tabs.list) === -1)
+                    tabs.list.push(tabId);
+
+                if (tabs.list.length > 1 && tabs.main !== tabId) {
+                    $("body").find(".column_left_container").remove();
+                    $("body").find(".column_right_container").remove();
+                    $("body").find(".column_center_container").attr("class", "mdc-layout-grid__cell mdc-layout-grid__cell--span-12 mdc-layout-grid__cell--span-12-tablet column_center_container");
+                    $("body").find(".column_center_container .sortable_column").html(`<div class="error_page"><p class="mdc-typography--headline1">${window.text.index_11}</p></div>`);
+                }
+
+                localStorage.setItem(tag, JSON.stringify(tabs));
+            });
+
+            $(window).on("beforeunload", "", (event) => {
+                let tabs = JSON.parse(localStorage.getItem(tag));
+
+                let tabId = sessionStorage.getItem(tag);
+
+                $.each(tabs.list, (key, value) => {
+                    if (value === tabId)
+                        tabs.list.splice(key, 1);
                 });
-            }
-            else {
-                $("body").find(".mdc-layout-grid.main").html(`
-                    <h1 style="position: absolute; top: 20%; left: 0; right: 0; text-align: center;">${window.text.index_11}</h1>
-                    <script nonce="${window.session.xssProtectionValue}">
-                        "use strict";
-                        
-                        $(window).on("focus", "", (event) => {
-                            $(window).off("focus");
-                            document.cookie = '${window.session.name}_blockMultiTab=""; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-                        });
-                    </script>
-                `);
-            }
+
+                if (tabs.list.length === 0)
+                    tabs.main = "";
+
+                localStorage.setItem(tag, JSON.stringify(tabs));
+            });
         }
     }
-    
+
     // Functions private
     _populateSortableInput = (tagParent, tagInput) => {
         let idList = "";
+        let elements = $(tagParent).find(".sort_elemet_data");
 
-        $.each($(tagParent).find(".sort_elemet_data"), (key, value) => {
+        $.each(elements, (key, value) => {
             idList += $(value).attr("data-id") + ",";
         });
 

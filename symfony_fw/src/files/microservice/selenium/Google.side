@@ -1,0 +1,61 @@
+{
+  "id": "46eadea3-d5ec-477f-bedf-64ec40046582",
+  "version": "2.0",
+  "name": "Google",
+  "url": "https://www.google.com",
+  "tests": [{
+    "id": "8fb2c5db-c240-457d-8916-de33ad92f7df",
+    "name": "Search - reinventsoftware.org",
+    "commands": [{
+      "id": "c30b9e88-8f7a-45db-947b-dbf91ba47a3b",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "03cf76bd-17cd-4473-a0d4-f98b49c7b322",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1514x974",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "4fad2f3d-2a41-49a5-a036-8fa7efda0fc2",
+      "comment": "",
+      "command": "type",
+      "target": "name=q",
+      "targets": [
+        ["name=q", "name"],
+        ["css=.gLFyf", "css:finder"],
+        ["xpath=//input[@name='q']", "xpath:attributes"],
+        ["xpath=//form[@id='tsf']/div[2]/div/div/div/div[2]/input", "xpath:idRelative"],
+        ["xpath=//div[2]/input", "xpath:position"]
+      ],
+      "value": "reinventsoftware.org"
+    }, {
+      "id": "7f436acb-4640-4303-a96e-ba985ca37dac",
+      "comment": "",
+      "command": "sendKeys",
+      "target": "name=q",
+      "targets": [
+        ["name=q", "name"],
+        ["css=.gLFyf", "css:finder"],
+        ["xpath=//input[@name='q']", "xpath:attributes"],
+        ["xpath=//form[@id='tsf']/div[2]/div/div/div/div[2]/input", "xpath:idRelative"],
+        ["xpath=//div[2]/input", "xpath:position"]
+      ],
+      "value": "${KEY_ENTER}"
+    }]
+  }],
+  "suites": [{
+    "id": "66f68f3a-b920-4d06-ad9b-07412b932cae",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["8fb2c5db-c240-457d-8916-de33ad92f7df"]
+  }],
+  "urls": ["https://www.google.com/"],
+  "plugins": []
+}

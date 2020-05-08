@@ -3,32 +3,28 @@ namespace App\Classes\System;
 
 class UploadChunk {
     // Vars
-    private $response;
-    
     private $helper;
     
     private $settings;
     
     private $maxSize;
+
+    private $response;
     
     // Properties
     public function setSettings($value) {
-        $value['mimeType'][] = "application/octet-stream";
-        
-        $value['mimeType'] = array_unique($value['mimeType']);
-        
         $this->settings = $value;
     }
     
     // Functions public
     public function __construct($helper) {
-        $this->response = Array();
-        
         $this->helper = $helper;
-        
+
         $this->settings = Array();
         
         $this->maxSize = 0;
+
+        $this->response = Array();
     }
     
     public function processFile() {
@@ -56,7 +52,10 @@ class UploadChunk {
         else {
             if ($action == "start") {
                 $fileName = $_REQUEST['fileName'];
-                
+
+                if (isset($this->settings['replace']) == true && $this->settings['replace'] == true && file_exists("{$this->settings['path']}/{$fileName}") == true)
+                    unlink("{$this->settings['path']}/{$fileName}");
+
                 if (file_exists("{$this->settings['path']}/{$fileName}") == true) {
                     $this->response['status'] = "error";
                     $this->response['messages']['error'] = $this->helper->getTranslator()->trans("classUploadChunk_3");
@@ -69,14 +68,14 @@ class UploadChunk {
                 }
             }
             else if ($action == "send") {
+                $fileName = $_REQUEST['fileName'];
+
                 if (isset($_FILES["file"]) == true) {
-                    $fileName = $_REQUEST['fileName'];
-                    
                     $tmpName = $_FILES['file']['tmp_name'];
                     $mimeType = mime_content_type($tmpName);
                     $fileSize = $_FILES["file"]["size"];
                     $this->maxSize += $fileSize;
-                    
+
                     $check = true;
                     
                     if (isset($this->settings['chunkSize']) == true && $fileSize > $this->settings['chunkSize']) {
@@ -138,7 +137,6 @@ class UploadChunk {
                 }
             }
             else if ($action == "complete") {
-                $extension = "";
                 $fileName = $_REQUEST['fileName'];
                 
                 if (file_exists("{$this->settings['path']}/{$fileName}") == true) {

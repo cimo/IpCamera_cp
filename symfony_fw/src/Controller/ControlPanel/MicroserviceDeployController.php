@@ -381,7 +381,7 @@ class MicroserviceDeployController extends AbstractController {
                     $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase("normal", $id);
                     
                     $sshConnection = $this->sshConnection($microserviceDeployRow, $request);
-                    
+
                     if ($sshConnection == false)
                         $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_19");
                     else {
@@ -434,12 +434,19 @@ class MicroserviceDeployController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
+                $path = "{$this->helper->getPathSrc()}/files/microservice/deploy";
+
                 if ($request->get("event") == "delete") {
                     $id = $request->get("id") == null ? $this->session->get("microserviceDeployProfileId") : $request->get("id");
+
+                    $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase($id);
 
                     $microserviceDeployDatabase = $this->query->deleteMicroserviceDeployDatabase("one", $id);
 
                     if ($microserviceDeployDatabase == true) {
+                        unlink("{$path}/{$microserviceDeployRow['key_public']}");
+                        unlink("{$path}/{$microserviceDeployRow['key_private']}");
+
                         $this->response['values']['id'] = $id;
 
                         $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceDeployController_10");
@@ -448,8 +455,11 @@ class MicroserviceDeployController extends AbstractController {
                 else if ($request->get("event") == "deleteAll") {
                     $microserviceDeployDatabase = $this->query->deleteMicroserviceDeployDatabase("all");
 
-                    if ($microserviceDeployDatabase == true)
+                    if ($microserviceDeployDatabase == true) {
+                        $this->helper->removeDirRecursive($path, false);
+
                         $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceDeployController_11");
+                    }
                 }
                 else
                     $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceDeployController_12");
@@ -809,64 +819,64 @@ class MicroserviceDeployController extends AbstractController {
     }
     
     private function sshConnection($row, $request) {
-        $result = "";
-
-        $pathKeyPublic = $this->helper->getPathSrc() . "/files/microservice/deploy/{$row['key_public']}";
-        $pathKeyPrivate = $this->helper->getPathSrc() . "/files/microservice/deploy/{$row['key_private']}";
-
-        $connection = @ssh2_connect($row['ip'], 22);
-
-        if ($connection == false)
-            return false;
-
         $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase("aes", $row['id']);
 
         if ($row['key_public'] == null || $row['key_private'] == null) {
-            $auth = @ssh2_auth_password($connection, $row['ssh_username'], $microserviceDeployRow['ssh_password_decrypt']);
-
-            $sudo = "echo '{$microserviceDeployRow['ssh_password_decrypt']}' | sudo -S";
+            $sshConnection = $this->helper->sshConnection(
+                $row['ip'],
+                22,
+                $row['ssh_username'],
+                Array(
+                    $microserviceDeployRow['ssh_password_decrypt']
+                )
+            );
         }
         else {
-            $auth = @ssh2_auth_pubkey_file($connection, $row['system_user'], $pathKeyPublic, $pathKeyPrivate, $row['key_private_password_decrypt']);
+            $pathKeyPublic = "{$this->helper->getPathSrc()}/files/microservice/deploy/{$row['key_public']}";
+            $pathKeyPrivate = "{$this->helper->getPathSrc()}/files/microservice/deploy/{$row['key_private']}";
 
-            $sudo = "sudo";
+            $sshConnection =  $this->helper->sshConnection(
+                $row['ip'],
+                22,
+                $row['ssh_username'],
+                Array(
+                    $pathKeyPublic,
+                    $pathKeyPrivate,
+                    $microserviceDeployRow['key_private_password_decrypt']
+                )
+            );
         }
 
-        if ($auth == false)
-            return false;
-
         $commands = Array();
-
         $url = "https://{$row['git_clone_url_username']}:{$microserviceDeployRow['git_clone_url_password_decrypt']}@{$row['git_clone_url']}";
-
         $branchNameMatch = preg_match('/^[A-Za-z ]+$/', $request->get("branchName"));
 
         if ($request->get("action") == "clone") {
             $commands = Array(
                 "cd {$row['git_clone_path']}",
-                "{$sudo} git clone {$url}"
+                "git clone {$url}"
             );
         }
         else if ($request->get("action") == "pull" && $branchNameMatch == true) {
             $commands = Array(
                 "cd {$row['git_clone_path']}",
-                "{$sudo} git pull {$url} {$request->get("branchName")}"
+                "git pull {$url} {$request->get("branchName")}"
             );
         }
         else if ($request->get("action") == "fetch") {
             $commands = Array(
                 "cd {$row['git_clone_path']}",
-                "{$sudo} git fetch --all"
+                "git fetch --all"
             );
         }
         else if ($request->get("action") == "reset" && $branchNameMatch == true) {
             $commands = Array(
                 "cd {$row['git_clone_path']}",
-                "{$sudo} git reset --hard {$request->get("branchName")}"
+                "git reset --hard {$request->get("branchName")}"
             );
         }
 
-        if (count($commands) == 0)
+        if ($sshConnection == false || count($commands) == 0)
             return false;
 
         $rowSplit = preg_split('/\r\n|\r|\n/', base64_decode($row['command']));
@@ -875,21 +885,8 @@ class MicroserviceDeployController extends AbstractController {
             $commands[] = $value;
         }
 
-        $stream = ssh2_exec($connection, implode(";", $commands));
-
-        stream_set_blocking($stream, true);
-
-        $err_stream = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
-        $dio_stream = ssh2_fetch_stream($stream, SSH2_STREAM_STDIO);
-
-        stream_set_blocking($err_stream, true);
-        stream_set_blocking($dio_stream, true);
-
-        $result .= stream_get_contents($err_stream) . "\r\n";
-        $result .= stream_get_contents($dio_stream) . "\r\n";
-
-        fclose($stream);
+        $sshExecution = $this->helper->sshExecution($commands);
         
-        return "<pre>$result</pre>";
+        return "<pre>$sshExecution</pre>";
     }
 }

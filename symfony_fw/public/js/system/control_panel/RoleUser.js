@@ -138,7 +138,7 @@ class ControlPanelRoleUser {
                                     $(value).parents("tr").remove();
                             });
                             
-                            $("#cp_role_select_result").html("");
+                            $("#cp_roleUser_select_result").html("");
                         },
                         null,
                         null

@@ -2,6 +2,9 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
@@ -22,7 +25,9 @@ class SettingFormType extends AbstractType {
             'csrf_protection' => true,
             'validation_groups' => null,
             'template' => null,
-            'language' => null
+            'language' => null,
+            'serverSshPassword' => "",
+            'serverKeyPrivatePassword' => ""
         ));
     }
     
@@ -192,6 +197,14 @@ class SettingFormType extends AbstractType {
                 "settingFormType_8" => "1"
             )
         ))
+        ->add("blockMultitab", ChoiceType::class, Array(
+            'required' => true,
+            'placeholder' => "settingFormType_36",
+            'choices' => Array(
+                "settingFormType_7" => "0",
+                "settingFormType_8" => "1"
+            )
+        ))
         ->add("serverUser", TextType::class, Array(
             'required' => true,
             'label' => "settingFormType_32"
@@ -204,17 +217,69 @@ class SettingFormType extends AbstractType {
             'required' => true,
             'label' => "settingFormType_34"
         ))
+        ->add("serverIp", TextType::class, Array(
+            'required' => true,
+            'label' => "settingFormType_37"
+        ))
+        ->add("serverSshUsername", TextType::class, Array(
+            'required' => false,
+            'label' => "settingFormType_38"
+        ))
+        ->add("serverSshPassword", PasswordType::class, Array(
+            'required' => false,
+            'label' => "settingFormType_39"
+        ))
+        ->add("serverKeyPublic", FileType::class, Array(
+            'required' => false,
+            'label' => "settingFormType_40",
+            'data_class' => null
+        ))
+        ->add("serverRemoveKeyPublic", CheckboxType::class, Array(
+            'required' => false,
+            'label' => "settingFormType_41"
+        ))
+        ->add("serverKeyPrivate", FileType::class, Array(
+            'required' => false,
+            'label' => "settingFormType_42",
+            'data_class' => null
+        ))
+        ->add("serverRemoveKeyPrivate", CheckboxType::class, Array(
+            'required' => false,
+            'label' => "settingFormType_43"
+        ))
+        ->add("serverKeyPrivatePassword", PasswordType::class, Array(
+            'required' => false,
+            'label' => "settingFormType_44"
+        ))
         ->add("submit", SubmitType::class, Array(
             'label' => "settingFormType_35"
         ));
         
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $formEvent) {
             $data = $formEvent->getData();
-            
+
             $payPalCurrencyCode = strtoupper($data->getPayPalCurrencyCode());
             $data->setPayPalCurrencyCode($payPalCurrencyCode);
             
             $formEvent->setData($data);
+        });
+
+        $builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $formEvent) {
+            $data = $formEvent->getData();
+            $form = $formEvent->getForm();
+            $options = $form->getConfig()->getOptions();
+
+            if ($data->getServerSshPassword() == "")
+                $data->setServerSshPassword($options['serverSshPassword']);
+
+            if ($data->getServerKeyPrivatePassword() == "")
+                $data->setServerKeyPrivatePassword($options['serverKeyPrivatePassword']);
+
+            if ($data->getServerRemoveKeyPublic() == false)
+                $data->setServerRemoveKeyPublic("0");
+
+            if ($data->getServerRemoveKeyPrivate() == false)
+                $data->setServerRemoveKeyPrivate("0");
         });
     }
 }

@@ -52,6 +52,45 @@ class ControlPanelSetting {
                 null
             );
         });
+
+        $(".button_password").on("click", "", (event) => {
+            let target = $(event.target).parent().hasClass("mdc-button") === true ? $(event.target).parent() : $(event.target);
+
+            let inputName = $(target).prev().find("input[type='password']").prop("name");
+
+            popupEasy.show(
+                window.text.index_5,
+                window.textSetting.label_5,
+                () => {
+                    ajax.send(
+                        true,
+                        window.url.cpSettingClearPassword,
+                        "post",
+                        {
+                            'event': "clear",
+                            'inputName': inputName,
+                            'token': window.session.token
+                        },
+                        "json",
+                        false,
+                        true,
+                        "application/x-www-form-urlencoded; charset=UTF-8",
+                        null,
+                        (xhr) => {
+                            ajax.reply(xhr, "");
+
+                            if (xhr.response.messages.success !== undefined) {
+                                $(target).prev().find("input[type='password']").val("");
+                                $(target).prev().find("input[type='password']").attr("placeholder", "");
+                                $(target).prev().find(".mdc-floating-label").removeClass("mdc-floating-label--float-above");
+                            }
+                        },
+                        null,
+                        null
+                    );
+                }
+            );
+        });
     };
     
     // Function private

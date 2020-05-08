@@ -1,29 +1,29 @@
 @import "helper.scss";
 
 .graph_container {
-    position: relative;
+  position: relative;
 }
 
 .graph_container .canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 820px;
-    height: 420px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 820px;
+  height: 420px;
 }
 
 .graph_container .info {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: $mdc-theme-primary;
-    color: $mdc-theme-on-primary;
-    padding: 5px;
-    min-width: 200px;
-    z-index: 1;
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: $mdc-theme-primary;
+  color: $mdc-theme-on-primary;
+  padding: 5px;
+  min-width: 200px;
+  z-index: 1;
 }
 
 .graph_container .info p {
-    margin: 0;
+  margin: 0;
 }

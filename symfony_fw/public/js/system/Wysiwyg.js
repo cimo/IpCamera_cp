@@ -10,20 +10,15 @@ class Wysiwyg {
         this.containerTag = "";
         
         this.wysiwyg = null;
-        
-        this.rowAdd = null;
-        this.rowRemove = null;
-        
-        this.columnAdd = null;
-        this.columnRemove = null;
-        
+
         this.iframeBody = null;
         this.iframeContent = null;
+
+        this.currentTable = null;
         
         this.history = [];
         this.historyPosition = -1;
         this.historyLimit = 300;
-        this.historyRestore = false;
     }
     
     create = (containerTag, saveElement) => {
@@ -65,8 +60,20 @@ class Wysiwyg {
                         min-height: 19px;\
                     }\
                     body .mdc-layout-grid {\
+                        position: relative;\
                         padding: 0;\
                         margin: 10px 0 10px 0;\
+                    }\
+                    body .mdc-layout-grid .table_space_icon {\
+                        position: absolute;\
+                        display: none;\
+                        background: #000000;\
+                        width: 24px;\
+                        height: 24px;\
+                    }\
+                    body .mdc-layout-grid .table_space_icon i {\
+                        color: #ffffff;\
+                        cursor: pointer;\
                     }\
                     body .mdc-layout-grid .mdc-layout-grid__inner {\
                         margin-bottom: 20px;\
@@ -299,7 +306,11 @@ class Wysiwyg {
                     let rowNumber = $("#wysiwyg_popup").find(".row_number").val();
                     let columnNumber = $("#wysiwyg_popup").find(".column_number").val();
                     
-                    let html = "<div class=\"mdc-layout-grid\" contenteditable=\"false\">";
+                    let html = "<div class=\"mdc-layout-grid\" contenteditable=\"false\">\
+                        <div class=\"table_space_icon\">\
+                            <i class=\"material-icons mdc-list-item__graphic\">line_weight</i>\
+                        </div>";
+
                         for (let a = 0; a < rowNumber; a ++) {
                             html += "<div class=\"mdc-layout-grid__inner\" contenteditable=\"false\">";
                                 for (let b = 0; b < columnNumber; b ++) {
@@ -333,8 +344,6 @@ class Wysiwyg {
             }
             
             $(this.iframeBody).html(element);
-            
-            this.historyRestore = true;
 	}
     }
     
@@ -343,15 +352,11 @@ class Wysiwyg {
             let element = this.history[++ this.historyPosition];
             
             $(this.iframeBody).html(element);
-            
-            this.historyRestore = true;
 	    }
     }
     
     _historySave = () => {
-        //this._spaceAfterElement();
-        
-        this._removeDoubleSpace();
+        //this._removeDoubleSpace();
         
         let html = $(this.iframeBody).html();
         
@@ -374,8 +379,6 @@ class Wysiwyg {
     
     _editorEvent = () => {
         $(this.iframeBody).on("click", "", (event) => {
-            this.historyRestore = false;
-            
             let element = this._findElementAtCaretPosition();
             
             if ($(element).hasClass("mdc-layout-grid__cell") === false && $(element).parents(".mdc-layout-grid__cell").length === 0)
@@ -383,8 +386,6 @@ class Wysiwyg {
         });
         
         $(this.iframeBody).on("dblclick", "", (event) => {
-            this.historyRestore = false;
-            
             let element = this._findElementAtCaretPosition();
             
             if ($(element).parents(".mdc-layout-grid__cell").length > 0)
@@ -416,7 +417,32 @@ class Wysiwyg {
         $(this.iframeBody).on("keyup", "", (event) => {
             this._historySave();
         });
-        
+
+        $(this.iframeBody).on("mouseenter", ".mdc-layout-grid", (event) => {
+            if ($(event.target).hasClass("mdc-layout-grid__cell") === true) {
+                this.currentTable = $(event.target).parents(".mdc-layout-grid");
+
+                let tableSpaceIcon = this.currentTable.find(".table_space_icon");
+                tableSpaceIcon.css({'top': 22, 'left': 0});
+                tableSpaceIcon.show();
+            }
+        });
+
+        $(this.iframeBody).on("mouseleave", ".mdc-layout-grid", (event) => {
+            let tableSpaceIcon = $(event.target).parents(".mdc-layout-grid").find(".table_space_icon");
+            tableSpaceIcon.hide();
+
+            this.currentTable = null;
+        });
+
+        $(this.iframeBody).on("click", ".mdc-layout-grid .table_space_icon", () => {
+            if (this.currentTable !== null) {
+                this._spaceOnElement(this.currentTable);
+
+                this._historySave();
+            }
+        });
+
         $(this.iframeBody).contextmenu((event) => {
             let type = "";
             let target = null;
@@ -587,7 +613,7 @@ class Wysiwyg {
         if (iframeDocument.getSelection()) {
             selection = iframeDocument.getSelection();
             
-            if (selection.getRangeAt(0) && selection.rangeCount) {
+            if (selection.rangeCount > 0 && selection.getRangeAt(0)) {
                 let htmlElement = window.frames[0].document.createElement("div");
                 htmlElement.innerHTML = html;
                 
@@ -623,17 +649,17 @@ class Wysiwyg {
             }
         }
     }
-    
-    _spaceAfterElement = () => {
-        let elements = $(this.iframeContent).find(".mdc-button, .mdc-layout-grid");
-        
-        $.each(elements, (key, value) => {
-            if ($(value).prev("br").length === 0)
-                $(value).before("<br>");
-            
-            if ($(value).next("br").length === 0)
-                $(value).after("<br>");
-        });
+
+    _spaceOnElement = (element) => {
+        if ($(element).prev("br").length === 0)
+            $(element).before("<br><br>");
+        else
+            $(element).before("<br>");
+
+        if ($(element).next("br").length === 0)
+            $(element).after("<br><br>");
+        else
+            $(element).after("<br>");
     }
     
     _removeDoubleSpace = () => {

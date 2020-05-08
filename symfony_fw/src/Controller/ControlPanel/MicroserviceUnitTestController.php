@@ -297,15 +297,17 @@ class MicroserviceUnitTestController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
+                $path = "{$this->helper->getPathPublic()}/files/microservice/unit_test/run";
+
                 if ($request->get("event") == "delete") {
                     $id = $request->get("id") == null ? $this->session->get("microserviceUnitTestProfileId") : $request->get("id");
                     
-                    $microserviceUnitTestEntity = $this->entityManager->getRepository("App\Entity\MicroserviceUnitTest")->find($id);
-                    
+                    $microserviceUnitTestRow = $this->query->selectMicroserviceUnitTestDatabase($id);
+
                     $microserviceUnitTestDatabase = $this->query->deleteMicroserviceUnitTestDatabase("one", $id);
                     
                     if ($microserviceUnitTestDatabase == true) {
-                        unlink("{$this->helper->getPathPublic()}/files/microservice/unit_test/run/{$microserviceUnitTestEntity->getName()}.html");
+                        unlink("{$path}/{$microserviceUnitTestRow['name']}.html");
                         
                         $this->response['values']['id'] = $id;
                         
@@ -316,7 +318,7 @@ class MicroserviceUnitTestController extends AbstractController {
                     $microserviceUnitTestDatabase = $this->query->deleteMicroserviceUnitTestDatabase("all");
 
                     if ($microserviceUnitTestDatabase == true) {
-                        $this->helper->removeDirRecursive("{$this->helper->getPathPublic()}/files/microservice/unit_test/run", false);
+                        $this->helper->removeDirRecursive($path, false);
                         
                         $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_7");
                     }

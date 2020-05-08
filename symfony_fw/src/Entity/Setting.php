@@ -139,6 +139,11 @@ class Setting {
      * @ORM\Column(name="javascript_minify", type="boolean", columnDefinition="tinyint(1) NOT NULL DEFAULT 0")
      */
     private $javascriptMinify = false;
+
+    /**
+     * @ORM\Column(name="block_multitab", type="boolean", columnDefinition="tinyint(1) NOT NULL DEFAULT 0")
+     */
+    private $blockMultitab = true;
     
     /**
      * @ORM\Column(name="server_user", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT 'cimo'")
@@ -154,6 +159,42 @@ class Setting {
      * @ORM\Column(name="server_host", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT 'lsv2.machine.local'")
      */
     private $serverHost = "lsv2.machine.local";
+
+    /**
+     * @ORM\Column(name="server_ip", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT ''")
+     */
+    private $serverIp = "";
+
+    /**
+     * @ORM\Column(name="server_ssh_username", type="string", nullable=true, columnDefinition="varchar(255)")
+     */
+    private $serverSshUsername = "";
+
+    /**
+     * @ORM\Column(name="server_ssh_password", type="string", nullable=true, columnDefinition="blob")
+     */
+    private $serverSshPassword = "";
+
+    /**
+     * @ORM\Column(name="server_key_public", type="string", nullable=true, columnDefinition="varchar(255)")
+     */
+    private $serverKeyPublic = "";
+
+    // #
+    private $serverRemoveKeyPublic = false;
+
+    /**
+     * @ORM\Column(name="server_key_private", type="string", nullable=true, columnDefinition="varchar(255)")
+     */
+    private $serverKeyPrivate = "";
+
+    // #
+    private $serverRemoveKeyPrivate = false;
+
+    /**
+     * @ORM\Column(name="server_key_private_password", type="string", nullable=true, columnDefinition="blob")
+     */
+    private $serverKeyPrivatePassword = "";
     
     // Properties
     public function setId($value) {
@@ -259,6 +300,10 @@ class Setting {
     public function setJavascriptMinify($value) {
         $this->javascriptMinify = $value;
     }
+
+    public function setBlockMultitab($value) {
+        $this->blockMultitab = $value;
+    }
     
     public function setServerUser($value) {
         $this->serverUser = $value;
@@ -270,6 +315,38 @@ class Setting {
     
     public function setServerHost($value) {
         $this->serverHost = $value;
+    }
+
+    public function setServerIp($value) {
+        $this->serverIp = $value;
+    }
+
+    public function setServerSshUsername($value) {
+        $this->serverSshUsername = $value;
+    }
+
+    public function setServerSshPassword($value) {
+        $this->serverSshPassword = $value;
+    }
+
+    public function setServerKeyPublic($value) {
+        $this->serverKeyPublic = $value;
+    }
+
+    public function setServerRemoveKeyPublic($value) {
+        $this->serverRemoveKeyPublic = $value;
+    }
+
+    public function setServerKeyPrivate($value) {
+        $this->serverKeyPrivate = $value;
+    }
+
+    public function setServerRemoveKeyPrivate($value) {
+        $this->serverRemoveKeyPrivate = $value;
+    }
+
+    public function setServerKeyPrivatePassword($value) {
+        $this->serverKeyPrivatePassword = $value;
     }
     
     // ---
@@ -377,6 +454,10 @@ class Setting {
     public function getJavascriptMinify() {
         return $this->javascriptMinify;
     }
+
+    public function getBlockMultitab() {
+        return $this->blockMultitab;
+    }
     
     public function getServerUser() {
         return $this->serverUser;
@@ -388,5 +469,37 @@ class Setting {
     
     public function getServerHost() {
         return $this->serverHost;
+    }
+
+    public function getServerIp() {
+        return $this->serverIp;
+    }
+
+    public function getServerSshUsername() {
+        return $this->serverSshUsername;
+    }
+
+    public function getServerSshPassword() {
+        return $this->serverSshPassword;
+    }
+
+    public function getServerKeyPublic() {
+        return $this->serverKeyPublic;
+    }
+
+    public function getServerRemoveKeyPublic() {
+        return $this->serverRemoveKeyPublic;
+    }
+
+    public function getServerKeyPrivate() {
+        return $this->serverKeyPrivate;
+    }
+
+    public function getServerRemoveKeyPrivate() {
+        return $this->serverRemoveKeyPrivate;
+    }
+
+    public function getServerKeyPrivatePassword() {
+        return $this->serverKeyPrivatePassword;
     }
 }

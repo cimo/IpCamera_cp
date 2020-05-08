@@ -67,7 +67,7 @@ class MicroserviceSeleniumController extends AbstractController {
         $this->session->set("microserviceSeleniumProfileId", 0);
         $this->session->set("microserviceSeleniumProfileName", "");
         
-        $microserviceSeleniumFiles = $this->TestFiles();
+        $microserviceSeleniumFiles = $this->testFiles();
         
         $tableAndPagination = $this->tableAndPagination->request($microserviceSeleniumFiles, 20, "microservice_selenium", false);
         
@@ -163,18 +163,20 @@ class MicroserviceSeleniumController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
+                $path = "{$this->helper->getPathSrc()}/files/microservice/selenium";
+
                 if ($request->get("event") == "delete") {
                     $id = $request->get("id") == null ? $this->session->get("microserviceSeleniumProfileId") : $request->get("id");
                     $name = $request->get("name") == null ? $this->session->get("microserviceSeleniumProfileName") : $request->get("name");
                     
-                    unlink("{$this->helper->getPathSrc()}/files/microservice/selenium/{$name}");
+                    unlink("{$path}/{$name}");
                     
                     $this->response['values']['id'] = $id;
                     
                     $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceSeleniumController_2");
                 }
                 else if ($request->get("event") == "deleteAll") {
-                    $this->helper->removeDirRecursive("{$this->helper->getPathSrc()}/files/microservice/selenium", false);
+                    $this->helper->removeDirRecursive($path, false);
                     
                     $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceSeleniumController_3");
                 }
@@ -223,80 +225,70 @@ class MicroserviceSeleniumController extends AbstractController {
         $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
         $this->urlCurrentPageId = $urlCurrentPageId;
         $this->urlExtra = $urlExtra;
-        
-        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
-        
+
         $settingRow = $this->helper->getSettingRow();
         
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN"), $this->getUser());
+
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
                 $createProcessLock = $this->helper->createProcessLock("selenium");
                 
                 if ($createProcessLock == true) {
-                    $name = $request->get("name");
-                    $onlyName = preg_replace("/\\.[^.\\s]{3,4}$/", "", $name);
-
                     $path = "{$this->helper->getPathSrc()}/files/microservice/selenium";
-                    $pathResult = "{$this->helper->getPathSrc()}/files/microservice/selenium/{$onlyName}.json";
-
-                    $screen = "1280x720";
+                    $name = $request->get("name");
 
                     if (is_file("{$path}/{$name}") == true) {
-                        $browserExecuted = "";
-                        
+                        $screen = "1920x1080";
+                        $browserName = "";
+                        $browserOption = "";
+
                         if ($request->get("event") == "chrome") {
-                            $browser = "browserName=chrome goog:chromeOptions.args=[--headless,--nogpu,--window-size={$screen}]";
-
-                            $browserExecuted = "Chrome";
-
-                            shell_exec("sudo bash {$path}/server_start.sh {$settingRow['server_user']} {$screen} {$path} {$_SERVER['SERVER_ADDR']} 4444 >/dev/null 2>&1 & echo $!");
+                            $browserName = "Chrome";
+                            $browserOption = "browserName=chrome goog:chromeOptions.args=[--headless,--nogpu,--window-size={$screen}]";
                         }
                         else if ($request->get("event") == "firefox") {
-                            $browser = "browserName=firefox moz:firefoxOptions.args=[--headless,--nogpu,--window-size={$screen}]";
-
-                            $browserExecuted = "Firefox";
-
-                            shell_exec("sudo bash {$path}/server_start.sh root {$screen} {$path} {$_SERVER['SERVER_ADDR']} 4444 >/dev/null 2>&1 & echo $!");
-                        }
-                        
-                        sleep(3);
-                        
-                        $result = shell_exec("selenium-side-runner -s http://{$_SERVER['SERVER_ADDR']}:4444/wd/hub {$path}/{$name} -c {$browser} --output-directory={$path} 2>&1 & echo $?");
-
-                        if (is_file($pathResult) == true) {
-                            $content = json_decode(file_get_contents($pathResult), true);
-
-                            $result = $this->readResult($content, $result);
+                            $browserName = "Firefox";
+                            $browserOption = "browserName=firefox moz:firefoxOptions.args=[--headless,--nogpu,--window-size={$screen}]";
                         }
 
-                        $seleniumList = shell_exec("ps aux | pgrep -f selenium_server 2>&1 & echo $!");
-                        $seleniumListExplode = explode(PHP_EOL, $seleniumList);
+                        if ($settingRow['server_key_public'] == null || $settingRow['server_key_private'] == null) {
+                            $sshConnection = $this->helper->sshConnection(
+                                $settingRow['server_ip'],
+                                22,
+                                $settingRow['server_ssh_username'],
+                                Array(
+                                    $settingRow['server_ssh_password_decrypt']
+                                )
+                            );
+                        }
+                        else {
+                            $pathKeyPublic = "{$this->helper->getPathSrc()}/files/setting/{$settingRow['server_key_public']}";
+                            $pathKeyPrivate = "{$this->helper->getPathSrc()}/files/setting/{$settingRow['server_key_private']}";
 
-                        foreach ($seleniumListExplode as $key => $value) {
-                            $pid = intval($value);
-
-                            if ($pid != 0)
-                                shell_exec("sudo bash {$path}/server_stop.sh {$pid}");
+                            $sshConnection =  $this->helper->sshConnection(
+                                $settingRow['server_ip'],
+                                22,
+                                $settingRow['server_ssh_username'],
+                                Array(
+                                    $pathKeyPublic,
+                                    $pathKeyPrivate,
+                                    $settingRow['server_key_private_password_decrypt']
+                                )
+                            );
                         }
 
-                        $xvfbList = shell_exec("ps aux | pgrep -f xvfb 2>&1 & echo $!");
-                        $xvfbListExplode = explode(PHP_EOL, $xvfbList);
+                        if ($sshConnection == true) {
+                            $sshExecution = $this->helper->sshExecution("-u {$settingRow['server_user']} selenium-side-runner -c \"{$browserOption}\" {$path}/{$name}");
 
-                        foreach ($xvfbListExplode as $key => $value) {
-                            $pid = intval($value);
+                            $this->response['result'] = "{$browserName}\r\n\r\n{$sshExecution}";
 
-                            if ($pid != 0)
-                                shell_exec("sudo bash {$path}/server_stop.sh {$pid}");
+                            $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceSeleniumController_5");
                         }
-                        
-                        if (is_file($pathResult) == true)
-                            unlink($pathResult);
-                        
+                        else
+                            $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceSeleniumController_6");
+
                         $this->helper->removeProcessLock();
-                        
-                        $this->response['result'] = $browserExecuted . "\r\n" . $result;
-
-                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceSeleniumController_5");
                     }
                     else
                         $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceSeleniumController_6");
@@ -356,7 +348,8 @@ class MicroserviceSeleniumController extends AbstractController {
                     $this->uploadChunk->setSettings(Array(
                         'path' => "{$this->helper->getPathSrc()}/files/microservice/selenium",
                         'chunkSize' => 1048576,
-                        'mimeType' => Array("text/plain")
+                        'mimeType' => Array("text/plain"),
+                        'replace' => true
                     ));
                     $uploadChunkProcessFile = $this->uploadChunk->processFile();
                     
@@ -381,29 +374,29 @@ class MicroserviceSeleniumController extends AbstractController {
     // Functions private
     private function testFiles() {
         $result = Array();
-        
+
         $filePath = "{$this->helper->getPathSrc()}/files/microservice/selenium";
-        
+
         $scanDirElements = preg_grep("/^([^.])/", scandir($filePath));
-        
+
         $resultCount = 0;
-        
+
         if ($scanDirElements != false) {
             foreach ($scanDirElements as $key => $value) {
                 $extension = pathinfo($value, PATHINFO_EXTENSION);
-                
+
                 if ($value != "." && $value != ".." && $extension == "side") {
                     $result[$resultCount]['id'] = $resultCount + 1;
                     $result[$resultCount]['name'] = $value;
-                    
+
                     $resultCount ++;
                 }
             }
         }
-        
+
         return $result;
     }
-    
+
     private function createListHtml($elements) {
         $listHtml = "";
         
@@ -433,16 +426,5 @@ class MicroserviceSeleniumController extends AbstractController {
         }
         
         return $listHtml;
-    }
-    
-    private function readResult($content, &$result) {
-        foreach ($content as $key => $value) {
-            if (is_array($value) == true)
-                $this->readResult($value, $result);
-            else
-                $result .= "{$key} => {$value}\n";
-        }
-        
-        return $result;
     }
 }

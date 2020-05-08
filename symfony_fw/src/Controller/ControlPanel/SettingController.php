@@ -69,7 +69,9 @@ class SettingController extends AbstractController {
         $form = $this->createForm(SettingFormType::class, $settingEntity, Array(
             'validation_groups' => Array("setting"),
             'template' => $this->helper->createTemplateList(),
-            'language' => array_column($languageCustomData, "value", "text")
+            'language' => array_column($languageCustomData, "value", "text"),
+            'serverSshPassword' => $settingEntity->getServerSshPassword(),
+            'serverKeyPrivatePassword' => $settingEntity->getServerKeyPrivatePassword()
         ));
         $form->handleRequest($request);
         
@@ -77,14 +79,22 @@ class SettingController extends AbstractController {
 
         $this->response['values']['serverRoot'] = $_SERVER['DOCUMENT_ROOT'] != $settingEntity->getServerRoot() ? $_SERVER['DOCUMENT_ROOT'] : "";
         $this->response['values']['serverHost'] = $_SERVER['HTTP_HOST'] != $settingEntity->getServerHost() ? $_SERVER['HTTP_HOST'] : "";
-        
+
+        $this->response['values']['serverKeyPublicLabel'] = $settingEntity->getServerKeyPublic();
+        $this->response['values']['serverKeyPrivateLabel'] = $settingEntity->getServerKeyPrivate();
+
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
+                $this->fileUpload($form, $settingEntity);
+
                 if ($form->get("templateColumn")->getData() != $templateColumn)
                     $this->query->updateModuleDatabase($form->get("templateColumn")->getData());
                 
                 $this->entityManager->persist($settingEntity);
                 $this->entityManager->flush();
+
+                $this->query->updateSettingDatabase("aes", "server_ssh_password", $form->get("serverSshPassword")->getData());
+                $this->query->updateSettingDatabase("aes", "server_key_private_password", $form->get("serverKeyPrivatePassword")->getData());
                     
                 if ($form->get("https")->getData() != $https) {
                     $message = $this->helper->getTranslator()->trans("settingController_2");
@@ -119,7 +129,7 @@ class SettingController extends AbstractController {
             'form' => $form->createView()
         );
     }
-    
+
     /**
     * @Route(
     *   name = "cp_setting_language_manage",
@@ -193,7 +203,7 @@ class SettingController extends AbstractController {
                             }
                             else if ($request->get("event") == "modifyLanguage") {
                                 if ($code == $request->getLocale())
-                                    $this->response['values']['url'] = $this->redirectOnModifySelected($settingRow);
+                                    $this->response['values']['url'] = $this->redirectOnModify($settingRow);
                                 else
                                     $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingController_6");
                             }
@@ -216,7 +226,7 @@ class SettingController extends AbstractController {
                             $this->query->deleteLanguageDatabase("page", $code);
                             
                             if ($code == $request->getLocale())
-                                $this->response['values']['url'] = $this->redirectOnModifySelected($settingRow);
+                                $this->response['values']['url'] = $this->redirectOnModify($settingRow);
                             else
                                 $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingController_8");
                         }
@@ -243,6 +253,63 @@ class SettingController extends AbstractController {
             'response' => $this->response
         );
     }
+
+    /**
+     * @Route(
+     *   name = "cp_setting_clearPassword",
+     *   path = "/cp_setting_clearPassword/{_locale}/{urlCurrentPageId}/{urlExtra}",
+     *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
+     *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
+     *	methods={"POST"}
+     * )
+     */
+    public function clearPasswordAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
+        $this->entityManager = $this->getDoctrine()->getManager();
+
+        $this->response = Array();
+
+        $this->helper = new Helper($this->container, $this->entityManager, $translator);
+        $this->query = $this->helper->getQuery();
+        $this->ajax = new Ajax($this->helper);
+
+        $this->session = $this->helper->getSession();
+
+        // Logic
+        $this->urlLocale = $this->session->get("languageTextCode") == null ? $_locale : $this->session->get("languageTextCode");
+        $this->urlCurrentPageId = $urlCurrentPageId;
+        $this->urlExtra = $urlExtra;
+
+        $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
+
+        if ($request->isMethod("POST") == true && $checkUserRole == true) {
+            if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
+                $reset = false;
+
+                if ($request->get("inputName") == "form_setting[serverSshPassword]") {
+                    $reset = true;
+
+                    $this->query->updateSettingDatabase("clear", "server_ssh_password", null);
+                }
+                else if ($request->get("inputName") == "form_setting[serverKeyPrivatePassword]") {
+                    $reset = true;
+
+                    $this->query->updateSettingDatabase("clear", "server_key_private_password", null);
+                }
+
+                if ($reset == true)
+                    $this->response['messages']['success'] = $this->helper->getTranslator()->trans("settingController_12");
+                else
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("settingController_13");
+            }
+        }
+
+        return $this->ajax->response(Array(
+            'urlLocale' => $this->urlLocale,
+            'urlCurrentPageId' => $this->urlCurrentPageId,
+            'urlExtra' => $this->urlExtra,
+            'response' => $this->response
+        ));
+    }
     
     // Functions private
     private function languageCustomData() {
@@ -260,7 +327,7 @@ class SettingController extends AbstractController {
         return $customData;
     }
     
-    private function redirectOnModifySelected($settingRow) {
+    private function redirectOnModify($settingRow) {
         return $this->get("router")->generate(
             "root_render",
             Array(
@@ -269,5 +336,56 @@ class SettingController extends AbstractController {
                 'urlExtra' => ""
             )
         );
+    }
+
+    private function fileUpload($form, $entity) {
+        $settingRow = $this->query->selectSettingDatabase();
+
+        $pathKeyPublic = "{$this->helper->getPathSrc()}/files/setting";
+        $pathKeyPrivate = "{$this->helper->getPathSrc()}/files/setting";
+
+        $keyPublic = $entity->getServerKeyPublic();
+        $keyPrivate = $entity->getServerKeyPrivate();
+
+        // Remove key public
+        if ($form->get("serverRemoveKeyPublic")->getData() == true || ($keyPublic != null && $keyPublic != $settingRow['server_key_public'])) {
+            if ($settingRow['server_key_public'] != "" && file_exists("$pathKeyPublic/{$settingRow['server_key_public']}") == true)
+                unlink("$pathKeyPublic/{$settingRow['server_key_public']}");
+
+            $entity->setServerKeyPublic(null);
+        }
+        else if ($settingRow['server_key_public'] != "")
+            $entity->setServerKeyPublic($settingRow['server_key_public']);
+
+        // Upload key public
+        if ($keyPublic != null && $form->get("serverRemoveKeyPublic")->getData() == false) {
+            $fileName = $keyPublic->getClientOriginalName();
+            $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+            $newName = uniqid() . ".$extension";
+            $keyPublic->move($pathKeyPublic, $newName);
+
+            $entity->setServerKeyPublic($newName);
+        }
+
+        // Remove key private
+        if ($form->get("serverRemoveKeyPrivate")->getData() == true || ($keyPrivate != null && $keyPrivate != $settingRow['server_key_private'])) {
+            if ($settingRow['server_key_private'] != "" && file_exists("$pathKeyPrivate/{$settingRow['server_key_private']}") == true)
+                unlink("$pathKeyPrivate/{$settingRow['server_key_private']}");
+
+            $entity->setServerKeyPrivate(null);
+            $entity->setServerKeyPrivatePassword(null);
+        }
+        else if ($settingRow['server_key_public'] != "")
+            $entity->setServerKeyPrivate($settingRow['server_key_private']);
+
+        // Upload key private
+        if ($keyPrivate != null && $form->get("serverRemoveKeyPrivate")->getData() == false) {
+            $fileName = $keyPrivate->getClientOriginalName();
+            $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+            $newName = uniqid() . ".$extension";
+            $keyPrivate->move($pathKeyPrivate, $newName);
+
+            $entity->setServerKeyPrivate($newName);
+        }
     }
 }

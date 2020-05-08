@@ -1,50 +1,50 @@
 @import "helper.scss";
 
 @media(max-width: $widthMobile) {
-    .wysiwyg {
-        .toolbar {
-            .mdc-fab {
-                margin: 2px 0 2px 0;
-            }
-        }
+  .wysiwyg {
+    .toolbar {
+      .mdc-fab {
+        margin: 2px 0 2px 0;
+      }
     }
+  }
 }
 
 .wysiwyg {
-    position: relative;
+  position: relative;
+  margin-top: 10px;
+
+  .toolbar {
+    input, select {
+      display: inline-block;
+      position: relative;
+      top: -5px;
+    }
+
+    .icon_container {
+      display: inline-block;
+    }
+
+    .mdc-fab {
+      margin-bottom: 10px;
+    }
+  }
+
+  .editor {
+    border: 1px solid $mdc-theme-surface;
+    width: 100%;
+    height: 700px;
     margin-top: 10px;
-    
-    .toolbar {
-        input, select {
-            display: inline-block;
-            position: relative;
-            top: -5px;
-        }
-        
-        .icon_container {
-            display: inline-block;
-        }
-        
-        .mdc-fab {
-            margin-bottom: 10px;
-        }
-    }
-    
-    .editor {
-        border: 1px solid $mdc-theme-surface;
-        width: 100%;
-        height: 700px;
-        margin-top: 10px;
-    }
-    
-    .source {
-        display: none;
-        border: 1px solid;
-        height: 700px;
-        background-color: $codeBackgroundColor;
-        color: $codeTextColor;
-        padding: 5px;
-        overflow-y: scroll;
-        margin-top: 10px;
-    }
+  }
+
+  .source {
+    display: none;
+    border: 1px solid;
+    height: 700px;
+    background-color: $codeBackgroundColor;
+    color: $codeTextColor;
+    padding: 5px;
+    overflow-y: scroll;
+    margin-top: 10px;
+  }
 }

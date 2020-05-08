@@ -2,193 +2,194 @@
 
 /* Search */
 .widget_search {
-    color: $mdc-theme-on-primary;
-    font-size: 16px;
-    margin: 0;
-    display: flex;
-    align-self: flex-start;
-    width: 58%;
+  color: $mdc-theme-on-primary;
+  font-size: 16px;
+  margin: 0;
+  display: flex;
+  align-self: flex-start;
+  width: 58%;
+  position: absolute;
+  right: 130px;
+  height: 40px;
+
+  .button_open {
+    cursor: pointer;
     position: absolute;
-    right: 108px;
-    height: 40px;
-    
-    .button_open {
-        cursor: pointer;
-        position: absolute;
-        right: 0;
+    right: 0;
 
-        -webkit-transition: all 0.4s ease-out;
-        -moz-transition: all 0.4s ease-out;
-        -o-transition: all 0.4s ease-out;
-        transition: all 0.4s ease-out;
-    }
-    
-    &> div {
-        position: relative;
-        right: 48px;
-        width: 100%;
-        margin-left: 48px;
-        
-        input {
-            display: none;
-            border: none;
-            border-bottom: 1px solid $mdc-theme-on-primary;
-            font-size: 16px;
-            background: none;
-            color: $mdc-theme-on-primary;
-            position: relative;
-            width: 100%;
-            top: 14px;
+    -webkit-transition: all 0.4s ease-out;
+    -moz-transition: all 0.4s ease-out;
+    -o-transition: all 0.4s ease-out;
+    transition: all 0.4s ease-out;
+  }
 
-            &:focus {
-                outline: none;
-            }
-        }
+  & > div {
+    position: relative;
+    right: 48px;
+    width: 100%;
+    margin-left: 48px;
+
+    input {
+      display: none;
+      border: none;
+      border-bottom: 1px solid $mdc-theme-on-primary;
+      font-size: 16px;
+      background: none;
+      color: $mdc-theme-on-primary;
+      position: relative;
+      width: 100%;
+      top: 14px;
+      right: 8px;
+
+      &:focus {
+        outline: none;
+      }
     }
-    
-    .button_close {
-        display: none;
-        cursor: pointer;
-        position: absolute;
-        right: 0;
-    }
-    
-    .animate {
-        right: 100%;
-    }
-    
-    @media(max-width: $widthMiddle) {
-        right: 100px;
-    }
+  }
+
+  .button_close {
+    display: none;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+  }
+
+  .animate {
+    right: 100%;
+  }
+
+  @media(max-width: $widthMiddle) {
+    right: 120px;
+  }
 }
 
 /* Date picker */
 .widget_datePicker {
+  display: none;
+  position: fixed;
+  top: 5%;
+  left: 0;
+  right: 0;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 0;
+  border-radius: 2px;
+  border-top: none;
+  border-bottom: none;
+  width: 310px;
+  background-color: $mdc-theme-background;
+  z-index: 1201;
+
+  .header {
+    position: relative;
+    height: 55px;
+    padding: 20px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-left-radius: 0;
+
+    p {
+      margin: 0;
+      opacity: 0.7;
+      cursor: pointer;
+    }
+
+    .mdc-fab {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+  }
+
+  .listYears {
     display: none;
-    position: fixed;
-    top: 5%;
-    left: 0;
-    right: 0;
-    margin-right: auto;
-    margin-left: auto;
-    padding: 0px;
-    border-radius: 2px;
-    border-top: none;
-    border-bottom: none;
-    width: 310px;
-    background-color: $mdc-theme-background;
-    z-index: 1201;
-    
-    .header {
-        position: relative;
-        height: 55px;
-        padding: 20px;
-        border-top-left-radius: 2px;
-        border-top-right-radius: 2px;
-        border-bottom-left-radius: 0px;
-        
-        p {
-            margin: 0;
-            opacity: 0.7;
-            cursor: pointer;
-        }
-        
-        .mdc-fab {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-    }
-    
-    .listYears {
-        display: none;
-        height: 345px;
-        overflow-y: scroll;
-        
-        .mdc-list {
-            overflow: hidden;
-            padding: 0;
-            margin: 0;
-            
-            ul {
-                padding: 0;
-                margin: 0;
-                
-                .mdc-list-item {
-                    display: block;
-                    text-align: center;
-                    line-height: 42px;
-                    height: 42px;
-                }
-            }
-        }
-    }
-    
-    .month {
-        margin: 0;
+    height: 345px;
+    overflow-y: scroll;
+
+    .mdc-list {
+      overflow: hidden;
+      padding: 0;
+      margin: 0;
+
+      ul {
         padding: 0;
-        text-align: center;
-        height: 37px;
-        
-        div {
-            display: inline-block;
-        }
-        
-        .label {
-            width: 180px;
-        }
-        
-        .material-icons {
-            position: relative;
-            top: 8px;
-            width: 48px;
-            cursor: pointer;
-        }
-    }
-    
-    .week ul {
         margin: 0;
-        padding: 0;
-        text-align: center;
-        
-        li {
-            position: relative;
-            display: inline-block;
-            border-radius: 50%;
-            width: 42px;
-            height: 42px;
-            line-height: 42px;
-            opacity: 0.5;
-            font-size: 12px;
+
+        .mdc-list-item {
+          display: block;
+          text-align: center;
+          line-height: 42px;
+          height: 42px;
         }
+      }
     }
-    
-    .day ul {
-        margin: 0;
-        padding: 0;
-        text-align: center;
-        
-        li {
-            position: relative;
-            display: inline-block;
-            width: 42px;
-            height: 42px;
-            line-height: 42px;
-            font-size: 11px;
-            
-            span {
-                display: inline-block;
-                width: 32px;
-                height: 32px;
-                line-height: 32px;
-                cursor: pointer;
-                border-radius: 50%;
-            }
-        }
+  }
+
+  .month {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    height: 37px;
+
+    div {
+      display: inline-block;
     }
-    
-    .button {
-        text-align: right;
-        padding: 10px;
+
+    .label {
+      width: 180px;
     }
+
+    .material-icons {
+      position: relative;
+      top: 8px;
+      width: 48px;
+      cursor: pointer;
+    }
+  }
+
+  .week ul {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+
+    li {
+      position: relative;
+      display: inline-block;
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      line-height: 42px;
+      opacity: 0.5;
+      font-size: 12px;
+    }
+  }
+
+  .day ul {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+
+    li {
+      position: relative;
+      display: inline-block;
+      width: 42px;
+      height: 42px;
+      line-height: 42px;
+      font-size: 11px;
+
+      span {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        cursor: pointer;
+        border-radius: 50%;
+      }
+    }
+  }
+
+  .button {
+    text-align: right;
+    padding: 10px;
+  }
 }

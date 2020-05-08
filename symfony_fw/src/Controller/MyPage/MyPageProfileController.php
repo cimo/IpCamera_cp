@@ -92,7 +92,7 @@ class MyPageProfileController extends AbstractController {
         
         $usernameOld = $this->getUser()->getUsername();
         
-        $avatar = "{$this->helper->getUrlRoot()}/images/templates/{$settingRow['template']}/no_avatar.jpg";
+        $avatar = "{$this->helper->getUrlRoot()}/images/templates/{$settingRow['template']}/no_avatar.png";
         
         if ($this->getUser()->getImage() != "" && file_exists("{$this->helper->getPathPublic()}/files/user/$usernameOld/{$this->getUser()->getImage()}") == true)
             $avatar = "{$this->helper->getUrlRoot()}/files/user/$usernameOld/{$this->getUser()->getImage()}";

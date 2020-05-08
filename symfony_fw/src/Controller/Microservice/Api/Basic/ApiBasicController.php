@@ -299,6 +299,14 @@ class ApiBasicController extends AbstractController {
                     $apiBasicEntity = $this->entityManager->getRepository("App\Entity\ApiBasic")->find($id);
 
                     if ($apiBasicEntity != null) {
+                        $path = "{$this->helper->getPathSrc()}/files/microservice/api/basic/";
+                        $downloadPath = "{$this->helper->getPathPublic()}/files/microservice/api/basic";
+
+                        unlink("{$path}/{$apiBasicEntity->getName()}.log");
+                        unlink("{$path}/{$apiBasicEntity->getName()}_csv.log");
+
+                        $this->helper->removeDirRecursive($downloadPath, false);
+
                         $this->entityManager->remove($apiBasicEntity);
                         $this->entityManager->flush();
                         
@@ -569,9 +577,9 @@ class ApiBasicController extends AbstractController {
     }
     
     public function readCsvCallback($index, $cell) {
+        $apiBasicRow = $this->query->selectApiBasicDatabase($this->session->get("apiBasicProfileId"), true);
+
         if ($index == 0) {
-            $apiBasicRow = $this->query->selectApiBasicDatabase($this->session->get("apiBasicProfileId"), true);
-            
             //$cell
         }
         else if ($index > 0) {

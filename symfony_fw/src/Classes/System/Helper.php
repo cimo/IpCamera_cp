@@ -42,6 +42,9 @@ class Helper {
     
     private $websiteFile;
     private $websiteName;
+
+    private $sshConnection;
+    private $sshSudo;
     
     // Properties
     public function getAuthorizationChecker() {
@@ -132,7 +135,7 @@ class Helper {
         $this->translator = $translator;
         $this->passwordEncoder = $passwordEncoder;
         
-        $this->sessionMaxIdleTime = 3600;
+        $this->sessionMaxIdleTime = ini_get("session.gc_maxlifetime");
         
         $this->config = new Config();
         $this->query = new Query($this);
@@ -159,6 +162,9 @@ class Helper {
         
         $this->websiteFile = $this->config->getFile();
         $this->websiteName = $this->config->getName();
+
+        $this->sshConnection = false;
+        $this->sshSudo = "";
         
         $this->arrayColumnFix();
     }
@@ -844,12 +850,10 @@ class Helper {
         return $request;
     }
     
-    public function checkSessionOverTime($request, $router) {
+    public function checkSessionOver($request, $router) {
         $currentUser = $this->session->get("currentUser");
         
         if ($currentUser != null) {
-            $this->session->set("checkSessionOverTimeReload", false);
-            
             $timeElapsed = time() - intval($this->session->get("userOvertime"));
             $userOverRole = false;
             
@@ -1122,7 +1126,54 @@ class Helper {
         
         $this->session->remove("processLockPath");
     }
-    
+
+    public function sshConnection($ip, $port, $username, $options = Array()) {
+        $this->sshConnection = @ssh2_connect($ip, $port);
+
+        if ($this->sshConnection == false)
+            return false;
+
+        if (count($options) == 1) {
+            $auth = @ssh2_auth_password($this->sshConnection, $username, $options[0]);
+
+            $this->sshSudo = "echo '{$options[0]}' | sudo -S";
+        }
+        else if (count($options) > 1) {
+            $auth = @ssh2_auth_pubkey_file($this->sshConnection, $username, $options[0], $options[1], $options[2]);
+
+            $this->sshSudo = "sudo";
+        }
+        else
+            return false;
+
+        if ($auth == false)
+            return false;
+
+        return true;
+    }
+
+    public function sshExecution($command) {
+        if ($this->sshConnection == false || $this->sshSudo == "")
+            return false;
+
+        $stream = ssh2_exec($this->sshConnection, "{$this->sshSudo} {$command}");
+
+        stream_set_blocking($stream, true);
+
+        $err_stream = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
+        $dio_stream = ssh2_fetch_stream($stream, SSH2_STREAM_STDIO);
+
+        stream_set_blocking($err_stream, true);
+        stream_set_blocking($dio_stream, true);
+
+        $result = stream_get_contents($err_stream) . "\r\n";
+        $result .= stream_get_contents($dio_stream) . "\r\n";
+
+        fclose($stream);
+
+        return $result;
+    }
+
     // Functions private
     private function createPasswordEncoder($user, $password) {
         return $this->passwordEncoder->encodePassword($user, $password);

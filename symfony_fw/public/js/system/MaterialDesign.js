@@ -118,15 +118,14 @@ class MaterialDesign {
         $.each($(".mdc-text-field"), (key, value) => {
             this.mdcTextFields.push(new mdc.textField.MDCTextField.attachTo(value));
             this.mdcTextFields[key].layout();
-            
-            if ($(value).find(".mdc-text-field__input").attr('placeholder') === "******") {
+
+            if ($(value).find(".mdc-text-field__input").attr('placeholder') === "******")
                 $(value).find(".mdc-floating-label").addClass("mdc-floating-label--float-above mdc-floating-label_password");
-                
-                $(value).find(".mdc-text-field__input[placeholder='******']").on("blur", "", (event) => {
-                    $(value).find(".mdc-floating-label").addClass("mdc-floating-label--float-above mdc-floating-label_password");
-                    $(value).removeClass("mdc-text-field--invalid");
-                });
-            }
+
+            $(value).find(".mdc-text-field__input[placeholder='******']").off("blur").on("blur", "", (event) => {
+                $(value).find(".mdc-floating-label").addClass("mdc-floating-label--float-above mdc-floating-label_password");
+                $(value).removeClass("mdc-text-field--invalid");
+            });
         });
         
         /*$.each($(".mdc-text-field"), (key, value) => {

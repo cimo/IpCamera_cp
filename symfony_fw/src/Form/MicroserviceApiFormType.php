@@ -40,7 +40,7 @@ class MicroserviceApiFormType extends AbstractType {
         ))
         ->add("image", FileType::class, Array(
             'required' => false,
-            'label' => "microserviceApiFormType_4",
+            'label' => "",
             'data_class' => null
         ))
         ->add('removeImage', CheckboxType::class, Array(

@@ -9,17 +9,18 @@
             <input class="file" type="file" name="file" autocomplete="off" aria-label="label">
         </div>
     </div>
-    
-    {{-include("@templateRoot/include/progress_bar.html.twig")-}}
-    
-    <div class="controls">
-        <button class="mdc-button mdc-button--dense mdc-button--raised button_start" type="button">
-            <i class="material-icons mdc-button__icon">play_arrow</i>
-            <span>{% trans %}upload_chunk_1{% endtrans %}</span>
-        </button>
-        <button class="mdc-button mdc-button--dense mdc-button--raised button_stop" type="button" disabled="disabled">
-            <i class="material-icons mdc-button__icon">stop</i>
-            <span>{% trans %}upload_chunk_2{% endtrans %}</span>
-        </button>
+    <div class="container_element">
+        {{-include("@templateRoot/include/progress_bar.html.twig")-}}
+
+        <div class="controls">
+            <button class="mdc-button mdc-button--dense mdc-button--raised button_start" type="button">
+                <i class="material-icons mdc-button__icon">play_arrow</i>
+                <span>{% trans %}upload_chunk_1{% endtrans %}</span>
+            </button>
+            <button class="mdc-button mdc-button--dense mdc-button--raised button_stop" type="button" disabled="disabled">
+                <i class="material-icons mdc-button__icon">stop</i>
+                <span>{% trans %}upload_chunk_2{% endtrans %}</span>
+            </button>
+        </div>
     </div>
 </div>

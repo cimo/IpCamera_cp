@@ -50,8 +50,8 @@ class RequestListener {
         $this->helper->xssProtection();
         
         $request = $this->helper->checkLanguage($event->getRequest());
-        
-        $checkSessionOverTime = $this->helper->checkSessionOverTime($request, $this->router);
+
+        $checkSessionOver = $this->helper->checkSessionOver($request, $this->router);
         
         $urlCurrentPageId = 2;
         
@@ -63,7 +63,8 @@ class RequestListener {
             'userInform' => $this->session->get("userInform"),
             'languageTextCode' => $this->session->get("languageTextCode"),
             'currentPageId' => $urlCurrentPageId,
-            'xssProtectionValue' => $this->session->get("xssProtectionValue")
+            'xssProtectionValue' => $this->session->get("xssProtectionValue"),
+            'sessionMaxIdleTime' => $this->helper->getSessionMaxIdleTime()
         );
         
         $this->container->get("twig")->addGlobal("php_session", $phpSession);
@@ -76,8 +77,8 @@ class RequestListener {
         else
             $this->container->get("twig")->addGlobal("javascriptMinify", ".js");
         
-        if ($checkSessionOverTime != false)
-            $event->setResponse(new RedirectResponse($checkSessionOverTime));
+        if ($checkSessionOver != false)
+            $event->setResponse(new RedirectResponse($checkSessionOver));
         
         if ($this->settingRow['https'] == true) {
             if ($request->isSecure() == false) {

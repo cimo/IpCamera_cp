@@ -59,14 +59,16 @@ class UploadChunk {
     _ready = () => {
         if (this.file === null)
             return;
+
+        $(this.tagContainer).find(".container_element").addClass("container_style");
         
         $(this.tagContainer).find(".controls").show();
         
-        $(this.tagContainer).find(".controls .button_start").on("click", "", (event) => {
+        $(this.tagContainer).find(".controls .button_start").off("click").on("click", "", (event) => {
             this._start();
         });
         
-        $(this.tagContainer).find(".controls .button_stop").on("click", "", (event) => {
+        $(this.tagContainer).find(".controls .button_stop").off("click").on("click", "", (event) => {
             this._stop();
         });
     }
@@ -252,6 +254,8 @@ class UploadChunk {
         $(this.tagContainer).find(".controls .button_stop").attr("disabled", true);
         
         $(this.tagContainer).find(".controls").hide();
+
+        $(this.tagContainer).find(".container_element").removeClass("container_style");
         
         $(this.tagContainer).find(".material_upload label").text(this.inputLabel);
     }

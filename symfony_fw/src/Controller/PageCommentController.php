@@ -225,7 +225,7 @@ class PageCommentController extends AbstractController {
                 if ($userRow['image'] != null && file_exists("{$this->helper->getPathPublic()}/files/user/{$value['username']}/{$userRow['image']}") == true)
                     $listHtml .= "<img class=\"mdc-list-item__graphic\" src=\"{$this->helper->getUrlRoot()}/files/user/{$value['username']}/{$userRow['image']}\" aria-hidden=\"true\" alt=\"{$userRow['image']}\"/>";
                 else
-                    $listHtml .= "<img class=\"mdc-list-item__graphic\" src=\"{$this->helper->getUrlRoot()}/images/templates/{$settingRow['template']}/no_avatar.jpg\" aria-hidden=\"true\" alt=\"no_avatar.jpg\"/>";
+                    $listHtml .= "<img class=\"mdc-list-item__graphic\" src=\"{$this->helper->getUrlRoot()}/images/templates/{$settingRow['template']}/no_avatar.png\" aria-hidden=\"true\" alt=\"no_avatar.png\"/>";
                 
                 $detail = "";
                 
@@ -234,7 +234,7 @@ class PageCommentController extends AbstractController {
                 else
                     $detail = "{$this->helper->getTranslator()->trans("pageCommentController_8")} {$this->helper->dateFormat($value['date_modify'])}";
                 
-                $quoteAvatar = "<img class=\"quote_avatar\" src=\"{$this->helper->getUrlRoot()}/images/templates/{$settingRow['template']}/no_avatar.jpg\" alt=\"no_avatar.jpg\"/>";
+                $quoteAvatar = "<img class=\"quote_avatar\" src=\"{$this->helper->getUrlRoot()}/images/templates/{$settingRow['template']}/no_avatar.png\" alt=\"no_avatar.png\"/>";
                 
                 if ($userRow['image'] != null && file_exists("{$this->helper->getPathPublic()}/files/user/{$pageCommentRow['username']}/{$userRow['image']}") == true)
                     $quoteAvatar = "<img class=\"quote_avatar\" src=\"{$this->helper->getUrlRoot()}/files/user/{$pageCommentRow['username']}/{$userRow['image']}\" alt=\"{$userRow['image']}\"/>";

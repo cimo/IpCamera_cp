@@ -1,63 +1,63 @@
 @import "helper.scss";
 
 .tableAndPagination_container {
-    .button_container {
-        display: none;
+  .button_container {
+    display: none;
+  }
+
+  .update_loading {
+    display: none;
+    vertical-align: middle;
+
+    i {
+      font-size: 35px;
     }
-    
-    .update_loading {
-        display: none;
-        vertical-align: middle;
-        
-        i {
-            font-size: 35px;
-        }
-    }
-    
-    .previous, .text, .next {
-        display: inline-block;
-        vertical-align: middle;
-    }
+  }
+
+  .previous, .text, .next {
+    display: inline-block;
+    vertical-align: middle;
+  }
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    
-    thead {
-        tr {
-            th {
-                position: relative;
-                padding: 0 24px 0 24px;
-                text-align: center;
-                border-bottom: 2px solid $tableAndPaginationBorderColor;
-                cursor: pointer;
-                font-weight: normal;
+  width: 100%;
+  border-collapse: collapse;
 
-                i {
-                    top: 0;
-                    right: 0;
-                    position: absolute;
-                }
-            }
+  thead {
+    tr {
+      th {
+        position: relative;
+        padding: 0 24px 0 24px;
+        text-align: center;
+        border-bottom: 2px solid $tableAndPaginationBorderColor;
+        cursor: pointer;
+        font-weight: normal;
+
+        i {
+          top: 0;
+          right: 0;
+          position: absolute;
         }
+      }
     }
-    
-    tbody {
-        tr {
-            td {
-                text-align: center;
-                border-bottom: 1px solid $tableAndPaginationBorderColor;
-                padding: 5px;
-            }
-        }
-        tr:nth-child(even) {
-            background-color: $tableAndPaginationAlternateBackgroundColor1;
-            color: $tableAndPaginationAlternateTextColor1;
-        }
-        tr:nth-child(odd) {
-            background-color: $tableAndPaginationAlternateBackgroundColor2;
-            color: $tableAndPaginationAlternateTextColor2;
-        }
+  }
+
+  tbody {
+    tr {
+      td {
+        text-align: center;
+        border-bottom: 1px solid $tableAndPaginationBorderColor;
+        padding: 5px;
+      }
     }
+    tr:nth-child(even) {
+      background-color: $tableAndPaginationAlternateBackgroundColor1;
+      color: $tableAndPaginationAlternateTextColor1;
+    }
+    tr:nth-child(odd) {
+      background-color: $tableAndPaginationAlternateBackgroundColor2;
+      color: $tableAndPaginationAlternateTextColor2;
+    }
+  }
 }
