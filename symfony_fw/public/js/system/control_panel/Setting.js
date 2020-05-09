@@ -35,11 +35,11 @@ class ControlPanelSetting {
                 true,
                 $(event.target).prop("action"),
                 $(event.target).prop("method"),
-                $(event.target).serialize(),
+                new FormData(event.target),
                 "json",
                 false,
-                true,
-                "application/x-www-form-urlencoded; charset=UTF-8",
+                false,
+                false,
                 null,
                 (xhr) => {
                     ajax.reply(xhr, `#${event.target.id}`);
