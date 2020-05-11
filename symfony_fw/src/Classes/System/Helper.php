@@ -1152,22 +1152,27 @@ class Helper {
         return true;
     }
 
-    public function sshExecution($command) {
+    public function sshExecution($commands) {
         if ($this->sshConnection == false || $this->sshSudo == "")
             return false;
 
-        $stream = ssh2_exec($this->sshConnection, "{$this->sshSudo} {$command}");
+        $result = "";
+
+        $command = implode(";", $commands);
+        $command = str_replace("sudo ", "{$this->sshSudo} ", $command);
+
+        $stream = ssh2_exec($this->sshConnection, $command);
 
         stream_set_blocking($stream, true);
 
-        $err_stream = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
         $dio_stream = ssh2_fetch_stream($stream, SSH2_STREAM_STDIO);
+        $err_stream = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
 
-        stream_set_blocking($err_stream, true);
         stream_set_blocking($dio_stream, true);
+        stream_set_blocking($err_stream, true);
 
-        $result = stream_get_contents($err_stream) . "\r\n";
         $result .= stream_get_contents($dio_stream) . "\r\n";
+        $result .= stream_get_contents($err_stream) . "\r\n";
 
         fclose($stream);
 
