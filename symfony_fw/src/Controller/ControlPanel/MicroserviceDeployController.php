@@ -853,14 +853,15 @@ class MicroserviceDeployController extends AbstractController {
 
         if ($request->get("action") == "clone") {
             $commands = Array(
+                "sudo mkdir -p {$row['git_clone_path']}",
                 "cd {$row['git_clone_path']}",
-                "sudo git clone {$url}"
+                "sudo git clone {$url} ."
             );
         }
         else if ($request->get("action") == "pull" && $branchNameMatch == true) {
             $commands = Array(
                 "cd {$row['git_clone_path']}",
-                "sudo git pull {$request->get("branchName")}"
+                "sudo git pull {$url} {$request->get("branchName")}"
             );
         }
         else if ($request->get("action") == "fetch") {
@@ -872,7 +873,7 @@ class MicroserviceDeployController extends AbstractController {
         else if ($request->get("action") == "reset" && $branchNameMatch == true) {
             $commands = Array(
                 "cd {$row['git_clone_path']}",
-                "sudo git reset --hard {$request->get("branchName")}"
+                "sudo git reset --hard {$url} {$request->get("branchName")}"
             );
         }
 
