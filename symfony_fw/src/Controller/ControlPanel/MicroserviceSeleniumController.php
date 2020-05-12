@@ -252,7 +252,7 @@ class MicroserviceSeleniumController extends AbstractController {
                             $browserOption = "browserName=firefox moz:firefoxOptions.args=[--headless,--nogpu,--window-size={$screen}]";
                         }
 
-                        if ($settingRow['server_key_public'] == null || $settingRow['server_key_private'] == null) {
+                        if ($settingRow['server_key_public'] == null && $settingRow['server_key_private'] == null) {
                             $sshConnection = $this->helper->sshConnection(
                                 $settingRow['server_ip'],
                                 22,

@@ -1133,15 +1133,15 @@ class Helper {
         if ($this->sshConnection == false)
             return false;
 
-        if (count($options) == 1) {
-            $auth = @ssh2_auth_password($this->sshConnection, $username, $options[0]);
-
-            $this->sshSudo = "echo '{$options[0]}' | sudo -S";
-        }
-        else if (count($options) > 1) {
+        if (count($options) > 1) {
             $auth = @ssh2_auth_pubkey_file($this->sshConnection, $username, $options[0], $options[1], $options[2]);
 
             $this->sshSudo = "sudo";
+        }
+        else if (count($options) == 1) {
+            $auth = @ssh2_auth_password($this->sshConnection, $username, $options[0]);
+
+            $this->sshSudo = "echo '{$options[0]}' | sudo -S";
         }
         else
             return false;

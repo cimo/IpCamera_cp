@@ -821,7 +821,7 @@ class MicroserviceDeployController extends AbstractController {
     private function sshConnection($row, $request) {
         $microserviceDeployRow = $this->query->selectMicroserviceDeployDatabase("aes", $row['id']);
 
-        if ($row['key_public'] == null || $row['key_private'] == null) {
+        if ($row['key_public'] == null && $row['key_private'] == null) {
             $sshConnection = $this->helper->sshConnection(
                 $row['ip'],
                 22,

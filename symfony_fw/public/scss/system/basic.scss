@@ -47,9 +47,6 @@
   }
 
   .logo_text_main_big {
-    width: 150px !important;
-    margin: 0 !important;
-
     .style {
       font-size: 16px !important;
     }
@@ -806,22 +803,14 @@ pre {
   padding: 0 5px 0 5px;
 }
 
-.mdc-checkbox:after, .mdc-checkbox:before, .mdc-checkbox__background {
-  background-color: $mdc-theme-primary !important;
+.mdc-checkbox__background {
   border-color: $mdc-theme-primary !important;
-}
-.mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate)~.mdc-checkbox__background {
-  background-color: $mdcCheckboxUncheckBackgroundColor !important;
-  border-color: $mdcCheckboxUncheckBorderColor !important;
 }
 
-.mdc-radio__native-control:enabled:checked+.mdc-radio__background .mdc-radio__outer-circle, .mdc-radio__native-control:enabled+.mdc-radio__background .mdc-radio__inner-circle {
-  background-color: $mdc-theme-primary !important;
-  border-color: $mdc-theme-primary !important;
-}
-.mdc-radio__native-control:enabled:not(:checked)+.mdc-radio__background .mdc-radio__outer-circle {
-  background-color: $mdcCheckboxUncheckBackgroundColor !important;
-  border-color: $mdcCheckboxUncheckBorderColor !important;
+.mdc-radio__background {
+  .mdc-radio__outer-circle {
+    border-color: $mdc-theme-primary !important;
+  }
 }
 
 #panel_id_1 {
