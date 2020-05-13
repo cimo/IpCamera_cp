@@ -1185,7 +1185,10 @@ class Helper {
     }
     
     private function createPageListHierarchy($pageRows, $pagination) {
-        $elements = array_slice($pageRows, $pagination['offset'], $pagination['show']);
+        $elements = Array();
+
+        if ($pagination != null)
+            $elements = array_slice($pageRows, $pagination['offset'], $pagination['show']);
         
         $nodes = Array();
         $tree = Array();
