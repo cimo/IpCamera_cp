@@ -182,12 +182,12 @@ App\Entity\MicroserviceDeploy:
             - Regex:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
                 htmlPattern: false
-                pattern: /^[a-zA-Z0-9_\-]+$/
+                pattern: /^[a-zA-Z0-9._\-]{4,20}$/
         sshUsername:
             - Regex:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
                 htmlPattern: false
-                pattern: /^[a-zA-Z0-9_\-]+$/
+                pattern: /^[a-zA-Z0-9._\-]{4,20}$/
         sshPassword:
             - Regex:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
@@ -238,7 +238,7 @@ App\Entity\MicroserviceDeploy:
             - Regex:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
                 htmlPattern: false
-                pattern: /^[a-zA-Z0-9_\-]+$/
+                pattern: /^[a-zA-Z0-9._\-]{4,20}$/
         gitCloneUrl:
             - NotBlank:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
@@ -252,7 +252,7 @@ App\Entity\MicroserviceDeploy:
             - Regex:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
                 htmlPattern: false
-                pattern: /^[a-zA-Z0-9_\-]+$/
+                pattern: /^[a-zA-Z0-9._\-]{4,20}$/
         gitCloneUrlPassword:
             - NotBlank:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
@@ -273,14 +273,14 @@ App\Entity\MicroserviceDeploy:
             - Regex:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
                 htmlPattern: false
-                pattern: /^[a-zA-Z0-9_\-]+$/
+                pattern: /^[a-zA-Z0-9._\-]{4,20}$/
         userWebScript:
             - NotBlank:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
             - Regex:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
                 htmlPattern: false
-                pattern: /^[a-zA-Z0-9:_\-]+$/
+                pattern: /^[a-zA-Z0-9._\-]{4,20}$/
         rootWebPath:
             - NotBlank:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
@@ -703,7 +703,7 @@ App\Entity\Setting:
             - Regex:
                 groups: [setting]
                 htmlPattern: false
-                pattern: /^[a-zA-Z]+$/
+                pattern: /^[a-zA-Z0-9._\-]{4,20}$/
         serverRoot:
             - NotBlank:
                 groups: [setting]
@@ -729,7 +729,7 @@ App\Entity\Setting:
             - Regex:
                   groups: [setting]
                   htmlPattern: false
-                  pattern: /^[a-zA-Z0-9_\-]+$/
+                  pattern: /^[a-zA-Z0-9._\-]{4,20}$/
         serverSshPassword:
             - Regex:
                   groups: [setting]
