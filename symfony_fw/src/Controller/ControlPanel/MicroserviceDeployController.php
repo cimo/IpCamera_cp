@@ -444,8 +444,11 @@ class MicroserviceDeployController extends AbstractController {
                     $microserviceDeployDatabase = $this->query->deleteMicroserviceDeployDatabase("one", $id);
 
                     if ($microserviceDeployDatabase == true) {
-                        unlink("{$path}/{$microserviceDeployRow['key_public']}");
-                        unlink("{$path}/{$microserviceDeployRow['key_private']}");
+                        if (file_exists("{$path}/{$microserviceDeployRow['key_public']}") == true)
+                            unlink("{$path}/{$microserviceDeployRow['key_public']}");
+                        
+                        if (file_exists("{$path}/{$microserviceDeployRow['key_private']}") == true)
+                            unlink("{$path}/{$microserviceDeployRow['key_private']}");
 
                         $this->response['values']['id'] = $id;
 

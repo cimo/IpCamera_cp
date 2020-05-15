@@ -299,11 +299,14 @@ class ApiBasicController extends AbstractController {
                     $apiBasicEntity = $this->entityManager->getRepository("App\Entity\ApiBasic")->find($id);
 
                     if ($apiBasicEntity != null) {
-                        $path = "{$this->helper->getPathSrc()}/files/microservice/api/basic/";
+                        $path = "{$this->helper->getPathSrc()}/files/microservice/api/basic";
                         $downloadPath = "{$this->helper->getPathPublic()}/files/microservice/api/basic";
-
-                        unlink("{$path}/{$apiBasicEntity->getName()}.log");
-                        unlink("{$path}/{$apiBasicEntity->getName()}_csv.log");
+                        
+                        if (file_exists("{$path}/{$apiBasicEntity->getName()}.log") == true)
+                            unlink("{$path}/{$apiBasicEntity->getName()}.log");
+                        
+                        if (file_exists("{$path}/{$apiBasicEntity->getName()}_csv.log") == true)
+                            unlink("{$path}/{$apiBasicEntity->getName()}_csv.log");
 
                         $this->helper->removeDirRecursive($downloadPath, false);
 

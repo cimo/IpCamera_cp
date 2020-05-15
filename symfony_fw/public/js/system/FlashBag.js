@@ -11,12 +11,11 @@ class FlashBag {
     // Functions public
     constructor() {
         this.snackbarMdc = null;
-        
-        this.interval = null;
     }
     
     show = (message) => {
-        clearInterval(this.interval);
+        if ($("#flashBag").attr("aria-hidden") !== "true" || $("#flashBag").hasClass("mdc-snackbar mdc-snackbar--active") === true)
+            $("#flashBag").find(".mdc-snackbar__action-button").click();
         
         let snackbarDataObj = {
             message: message,
@@ -25,14 +24,6 @@ class FlashBag {
         };
         
         this.snackbarMdc.show(snackbarDataObj);
-        
-        this.interval = setInterval(() => {
-            if ($("#flashBag").attr("aria-hidden") !== "true" || $("#flashBag").hasClass("mdc-snackbar mdc-snackbar--active") === true) {
-                $("#flashBag").find(".mdc-snackbar__action-button").click();
-                
-                clearInterval(this.interval);
-            }
-        }, 3000);
     }
     
     sessionActivity = () => {

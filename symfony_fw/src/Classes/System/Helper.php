@@ -854,11 +854,10 @@ class Helper {
         $currentUser = $this->session->get("currentUser");
         
         if ($currentUser != null) {
-            $timeElapsed = time() - intval($this->session->get("userOvertime"));
-            $userOverRole = false;
+            $userOvertime = $this->session->get("userOvertime") == null ? time() : $this->session->get("userOvertime");
             
-            if ($this->session->remove("userOvertime") == null)
-                $timeElapsed = 0;
+            $timeElapsed = time() - $userOvertime;
+            $userOverRole = false;
             
             $userRow = $this->query->selectUserDatabase($currentUser['id']);
             
@@ -869,8 +868,6 @@ class Helper {
             }
             
             if (($timeElapsed >= $this->sessionMaxIdleTime && $request->cookies->has("{$this->session->getName()}_remember_me") == false) || $userOverRole == true) {
-                $this->createCookie("{$this->session->getName()}_sessionOver", 1, 0, true, false);
-                
                 if ($userOverRole == false)
                     $this->session->set("userInform", $this->translator->trans("classHelper_6"));
                 
@@ -880,41 +877,32 @@ class Helper {
                         'sessionOver' => true
                     ));
                     
-                    $this->removeCookie("{$this->session->getName()}_login");
-                    
                     exit;
                 }
-                else
+                else {
+                    $this->createCookie("{$this->session->getName()}_sessionOver", 1, 0, true, false);
+                    
                     return $this->forceLogout($router);
+                }
             }
             
             $this->session->set("userOvertime", time());
         }
-        else {
-            if ($request->cookies->has("{$this->session->getName()}_sessionOver") == true) {
-                $this->removeCookie("{$this->session->getName()}_sessionOver");
-                
-                $this->session->set("userInform", $this->translator->trans("classHelper_6"));
-                
-                if ($request->isXmlHttpRequest() == true) {
-                    echo json_encode(Array(
-                        'userInform' => $this->session->get("userInform"),
-                        'sessionOver' => true
-                    ));
-                    
-                    $this->removeCookie("{$this->session->getName()}_login");
-                    
-                    exit;
-                }
-            }
-            else
-                $this->session->set("userInform", "");
+        
+        if ($request->cookies->has("{$this->session->getName()}_sessionOver") == true) {
+            $this->removeCookie("{$this->session->getName()}_sessionOver");
+
+            $this->session->set("userInform", "");
         }
         
         return false;
     }
     
     public function forceLogout($router) {
+        $this->session->remove("userOvertime");
+        
+        $this->tokenStorage->setToken(null);
+        
         return $router->generate(
             "authentication_exit_check",
             Array(
@@ -977,7 +965,7 @@ class Helper {
 
         readfile($path);
 
-        if ($remove == true)
+        if ($remove == true && file_exists($path) == true)
             unlink($path);
         
         return;
@@ -1012,8 +1000,10 @@ class Helper {
         
         if ($checked == true) 
             rename("{$filePath}.tmp", $filePath);
-        else
-            unlink("{$filePath}.tmp");
+        else {
+            if (file_exists("{$filePath}.tmp") == true)
+                unlink("{$filePath}.tmp");
+        }
     }
     
     public function fileReadTail($path, $limit = 50) {

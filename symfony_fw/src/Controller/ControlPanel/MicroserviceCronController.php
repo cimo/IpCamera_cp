@@ -408,7 +408,8 @@ class MicroserviceCronController extends AbstractController {
 
             $this->helper->fileSearchInside("{$path}/job.txt", "{$microserviceCronRow['name']}.log", " ");
 
-            unlink("{$path}/{$microserviceCronRow['name']}.log");
+            if (file_exists("{$path}/{$microserviceCronRow['name']}.log") == true)
+                unlink("{$path}/{$microserviceCronRow['name']}.log");
         }
         else if ($type == "all") {
             $microserviceCronRows = $this->query->selectAllMicroserviceCronDatabase();
@@ -416,7 +417,8 @@ class MicroserviceCronController extends AbstractController {
             foreach ($microserviceCronRows as $key => $value) {
                 $this->helper->fileSearchInside("{$path}/job.txt", "{$value['name']}.log", " ");
 
-                unlink("{$path}/{$value['name']}.log");
+                if (file_exists("{$path}/{$value['name']}.log") == true)
+                    unlink("{$path}/{$value['name']}.log");
             }
         }
 

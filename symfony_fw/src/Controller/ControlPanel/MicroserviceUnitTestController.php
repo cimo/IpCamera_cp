@@ -307,7 +307,8 @@ class MicroserviceUnitTestController extends AbstractController {
                     $microserviceUnitTestDatabase = $this->query->deleteMicroserviceUnitTestDatabase("one", $id);
                     
                     if ($microserviceUnitTestDatabase == true) {
-                        unlink("{$path}/{$microserviceUnitTestRow['name']}.html");
+                        if (file_exists("{$path}/{$microserviceUnitTestRow['name']}.html") == true)
+                            unlink("{$path}/{$microserviceUnitTestRow['name']}.html");
                         
                         $this->response['values']['id'] = $id;
                         

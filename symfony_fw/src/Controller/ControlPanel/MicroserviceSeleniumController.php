@@ -169,7 +169,8 @@ class MicroserviceSeleniumController extends AbstractController {
                     $id = $request->get("id") == null ? $this->session->get("microserviceSeleniumProfileId") : $request->get("id");
                     $name = $request->get("name") == null ? $this->session->get("microserviceSeleniumProfileName") : $request->get("name");
                     
-                    unlink("{$path}/{$name}");
+                    if (file_exists("{$path}/{$name}") == true)
+                        unlink("{$path}/{$name}");
                     
                     $this->response['values']['id'] = $id;
                     

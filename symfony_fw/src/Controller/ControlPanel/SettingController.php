@@ -221,7 +221,8 @@ class SettingController extends AbstractController {
                         $settingDatabase = $this->query->deleteLanguageDatabase("text", $code);
 
                         if ($settingDatabase == true) {
-                            unlink("{$this->helper->getPathRoot()}/translations/messages.$code.yml");
+                            if (file_exists("{$this->helper->getPathRoot()}/translations/messages.$code.yml") == true)
+                                unlink("{$this->helper->getPathRoot()}/translations/messages.$code.yml");
 
                             $this->query->deleteLanguageDatabase("page", $code);
                             
