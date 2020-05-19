@@ -280,7 +280,7 @@ App\Entity\MicroserviceDeploy:
             - Regex:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
                 htmlPattern: false
-                pattern: /^[a-zA-Z0-9._\-]{4,20}$/
+                pattern: /^[a-zA-Z0-9._\-:]{4,20}$/
         rootWebPath:
             - NotBlank:
                 groups: [microservice_deploy_create, microservice_deploy_profile]
