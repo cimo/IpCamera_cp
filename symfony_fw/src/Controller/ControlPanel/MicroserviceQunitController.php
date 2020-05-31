@@ -11,11 +11,11 @@ use App\Classes\System\Helper;
 use App\Classes\System\Ajax;
 use App\Classes\System\TableAndPagination;
 
-use App\Entity\MicroserviceUnitTest;
-use App\Form\MicroserviceUnitTestFormType;
-use App\Form\MicroserviceUnitTestSelectFormType;
+use App\Entity\MicroserviceQunit;
+use App\Form\MicroserviceQunitFormType;
+use App\Form\MicroserviceQunitSelectFormType;
 
-class MicroserviceUnitTestController extends AbstractController {
+class MicroserviceQunitController extends AbstractController {
     // Vars
     private $urlLocale;
     private $urlCurrentPageId;
@@ -37,13 +37,13 @@ class MicroserviceUnitTestController extends AbstractController {
     // Functions public
     /**
     * @Route(
-    *   name = "cp_microservice_unit_test_create",
-    *   path = "/cp_microservice_unit_test_create/{_locale}/{urlCurrentPageId}/{urlExtra}",
+    *   name = "cp_microservice_qunit_create",
+    *   path = "/cp_microservice_qunit_create/{_locale}/{urlCurrentPageId}/{urlExtra}",
     *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
     *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
     *	methods={"POST"}
     * )
-    * @Template("@templateRoot/render/control_panel/microservice_unit_test_create.html.twig")
+    * @Template("@templateRoot/render/control_panel/microservice_qunit_create.html.twig")
     */
     public function createAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
         $this->entityManager = $this->getDoctrine()->getManager();
@@ -63,26 +63,26 @@ class MicroserviceUnitTestController extends AbstractController {
         
         $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
-        $microserviceUnitTestEntity = new MicroserviceUnitTest();
+        $microserviceQunitEntity = new MicroserviceQunit();
         
-        $this->session->set("microserviceUnitTestProfileId", 0);
+        $this->session->set("microserviceQunitProfileId", 0);
         
-        $form = $this->createForm(MicroserviceUnitTestFormType::class, $microserviceUnitTestEntity, Array(
-            'validation_groups' => Array("microservice_unit_test_create")
+        $form = $this->createForm(MicroserviceQunitFormType::class, $microserviceQunitEntity, Array(
+            'validation_groups' => Array("microservice_qunit_create")
         ));
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                $this->entityManager->persist($microserviceUnitTestEntity);
+                $this->entityManager->persist($microserviceQunitEntity);
                 $this->entityManager->flush();
                 
-                $this->createFile($microserviceUnitTestEntity);
+                $this->createFile($microserviceQunitEntity);
                 
-                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_1");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceQunitController_1");
             }
             else {
-                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_2");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceQunitController_2");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -105,13 +105,13 @@ class MicroserviceUnitTestController extends AbstractController {
     
     /**
     * @Route(
-    *   name = "cp_microservice_unit_test_select",
-    *   path = "/cp_microservice_unit_test_select/{_locale}/{urlCurrentPageId}/{urlExtra}",
+    *   name = "cp_microservice_qunit_select",
+    *   path = "/cp_microservice_qunit_select/{_locale}/{urlCurrentPageId}/{urlExtra}",
     *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
     *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
     *	methods={"POST"}
     * )
-    * @Template("@templateRoot/render/control_panel/microservice_unit_test_select.html.twig")
+    * @Template("@templateRoot/render/control_panel/microservice_qunit_select.html.twig")
     */
     public function selectAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
         $this->entityManager = $this->getDoctrine()->getManager();
@@ -132,20 +132,20 @@ class MicroserviceUnitTestController extends AbstractController {
         
         $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
-        $this->session->set("microserviceUnitTestProfileId", 0);
+        $this->session->set("microserviceQunitProfileId", 0);
         
-        $microserviceUnitTestRows = $this->query->selectAllMicroserviceUnitTestDatabase();
+        $microserviceQunitRows = $this->query->selectAllMicroserviceQunitDatabase();
         
-        $tableAndPagination = $this->tableAndPagination->request($microserviceUnitTestRows, 20, "microservice_unit_test", false);
+        $tableAndPagination = $this->tableAndPagination->request($microserviceQunitRows, 20, "microservice_qunit", false);
         
         $this->response['values']['search'] = $tableAndPagination['search'];
         $this->response['values']['pagination'] = $tableAndPagination['pagination'];
         $this->response['values']['listHtml'] = $this->createListHtml($tableAndPagination['listHtml']);
         $this->response['values']['count'] = $tableAndPagination['count'];
         
-        $form = $this->createForm(MicroserviceUnitTestSelectFormType::class, null, Array(
-            'validation_groups' => Array("microservice_unit_test_select"),
-            'id' => array_column($microserviceUnitTestRows, "id", "name")
+        $form = $this->createForm(MicroserviceQunitSelectFormType::class, null, Array(
+            'validation_groups' => Array("microservice_qunit_select"),
+            'id' => array_column($microserviceQunitRows, "id", "name")
         ));
         $form->handleRequest($request);
         
@@ -158,19 +158,19 @@ class MicroserviceUnitTestController extends AbstractController {
                 $id = $form->get("id")->getData();
             
             if ($request->get("event") != "refresh" && $request->get("event") != "tableAndPagination") {
-                $microserviceUnitTestEntity = $this->entityManager->getRepository("App\Entity\MicroserviceUnitTest")->find($id);
+                $microserviceQunitEntity = $this->entityManager->getRepository("App\Entity\MicroserviceQunit")->find($id);
 
-                if ($microserviceUnitTestEntity != null) {
-                    $this->session->set("microserviceUnitTestProfileId", $microserviceUnitTestEntity->getId());
+                if ($microserviceQunitEntity != null) {
+                    $this->session->set("microserviceQunitProfileId", $microserviceQunitEntity->getId());
 
-                    $formSub = $this->createForm(MicroserviceUnitTestFormType::class, $microserviceUnitTestEntity, Array(
-                        'validation_groups' => Array("microservice_unit_test_profile")
+                    $formSub = $this->createForm(MicroserviceQunitFormType::class, $microserviceQunitEntity, Array(
+                        'validation_groups' => Array("microservice_qunit_profile")
                     ));
                     $formSub->handleRequest($request);
 
-                    $this->response['values']['id'] = $this->session->get("microserviceUnitTestProfileId");
+                    $this->response['values']['id'] = $this->session->get("microserviceQunitProfileId");
 
-                    $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/microservice_unit_test_profile.html.twig", Array(
+                    $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/microservice_qunit_profile.html.twig", Array(
                         'urlLocale' => $this->urlLocale,
                         'urlCurrentPageId' => $this->urlCurrentPageId,
                         'urlExtra' => $this->urlExtra,
@@ -179,7 +179,7 @@ class MicroserviceUnitTestController extends AbstractController {
                     ));
                 }
                 else {
-                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_3");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceQunitController_3");
                     $this->response['errors'] = $this->ajax->errors($form);
                 }
             }
@@ -203,13 +203,13 @@ class MicroserviceUnitTestController extends AbstractController {
     
     /**
     * @Route(
-    *   name = "cp_microservice_unit_test_profile",
-    *   path = "/cp_microservice_unit_test_profile/{_locale}/{urlCurrentPageId}/{urlExtra}",
+    *   name = "cp_microservice_qunit_profile",
+    *   path = "/cp_microservice_qunit_profile/{_locale}/{urlCurrentPageId}/{urlExtra}",
     *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
     *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
     *	methods={"POST"}
     * )
-    * @Template("@templateRoot/render/control_panel/microservice_unit_test_profile.html.twig")
+    * @Template("@templateRoot/render/control_panel/microservice_qunit_profile.html.twig")
     */
     public function profileAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
         $this->entityManager = $this->getDoctrine()->getManager();
@@ -229,24 +229,24 @@ class MicroserviceUnitTestController extends AbstractController {
         
         $checkUserRole = $this->helper->checkUserRole(Array("ROLE_ADMIN", "ROLE_MICROSERVICE"), $this->getUser());
         
-        $microserviceUnitTestEntity = $this->entityManager->getRepository("App\Entity\MicroserviceUnitTest")->find($this->session->get("microserviceUnitTestProfileId"));
+        $microserviceQunitEntity = $this->entityManager->getRepository("App\Entity\MicroserviceQunit")->find($this->session->get("microserviceQunitProfileId"));
         
-        $form = $this->createForm(MicroserviceUnitTestFormType::class, $microserviceUnitTestEntity, Array(
-            'validation_groups' => Array("microservice_unit_test_profile")
+        $form = $this->createForm(MicroserviceQunitFormType::class, $microserviceQunitEntity, Array(
+            'validation_groups' => Array("microservice_qunit_profile")
         ));
         $form->handleRequest($request);
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($form->isSubmitted() == true && $form->isValid() == true) {
-                $this->entityManager->persist($microserviceUnitTestEntity);
+                $this->entityManager->persist($microserviceQunitEntity);
                 $this->entityManager->flush();
                 
-                $this->createFile($microserviceUnitTestEntity);
+                $this->createFile($microserviceQunitEntity);
                 
-                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_4");
+                $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceQunitController_4");
             }
             else {
-                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_5");
+                $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceQunitController_5");
                 $this->response['errors'] = $this->ajax->errors($form);
             }
             
@@ -269,13 +269,13 @@ class MicroserviceUnitTestController extends AbstractController {
     
     /**
     * @Route(
-    *   name = "cp_microservice_unit_test_delete",
-    *   path = "/cp_microservice_unit_test_delete/{_locale}/{urlCurrentPageId}/{urlExtra}",
+    *   name = "cp_microservice_qunit_delete",
+    *   path = "/cp_microservice_qunit_delete/{_locale}/{urlCurrentPageId}/{urlExtra}",
     *   defaults = {"_locale" = "%locale%", "urlCurrentPageId" = "2", "urlExtra" = ""},
     *   requirements = {"_locale" = "[a-z]{2}", "urlCurrentPageId" = "\d+", "urlExtra" = "[^/]+"},
     *	methods={"POST"}
     * )
-    * @Template("@templateRoot/render/control_panel/microservice_unit_test_delete.html.twig")
+    * @Template("@templateRoot/render/control_panel/microservice_qunit_delete.html.twig")
     */
     public function deleteAction($_locale, $urlCurrentPageId, $urlExtra, Request $request, TranslatorInterface $translator) {
         $this->entityManager = $this->getDoctrine()->getManager();
@@ -297,35 +297,35 @@ class MicroserviceUnitTestController extends AbstractController {
         
         if ($request->isMethod("POST") == true && $checkUserRole == true) {
             if ($this->isCsrfTokenValid("intention", $request->get("token")) == true) {
-                $path = "{$this->helper->getPathPublic()}/files/microservice/unit_test/run";
+                $path = "{$this->helper->getPathPublic()}/files/microservice/qunit/run";
 
                 if ($request->get("event") == "delete") {
-                    $id = $request->get("id") == null ? $this->session->get("microserviceUnitTestProfileId") : $request->get("id");
+                    $id = $request->get("id") == null ? $this->session->get("microserviceQunitProfileId") : $request->get("id");
                     
-                    $microserviceUnitTestRow = $this->query->selectMicroserviceUnitTestDatabase($id);
+                    $microserviceQunitRow = $this->query->selectMicroserviceQunitDatabase($id);
 
-                    $microserviceUnitTestDatabase = $this->query->deleteMicroserviceUnitTestDatabase("one", $id);
+                    $microserviceQunitDatabase = $this->query->deleteMicroserviceQunitDatabase("one", $id);
                     
-                    if ($microserviceUnitTestDatabase == true) {
-                        if (file_exists("{$path}/{$microserviceUnitTestRow['name']}.html") == true)
-                            unlink("{$path}/{$microserviceUnitTestRow['name']}.html");
+                    if ($microserviceQunitDatabase == true) {
+                        if (file_exists("{$path}/{$microserviceQunitRow['name']}.html") == true)
+                            unlink("{$path}/{$microserviceQunitRow['name']}.html");
                         
                         $this->response['values']['id'] = $id;
                         
-                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_6");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceQunitController_6");
                     }
                 }
                 else if ($request->get("event") == "deleteAll") {
-                    $microserviceUnitTestDatabase = $this->query->deleteMicroserviceUnitTestDatabase("all");
+                    $microserviceQunitDatabase = $this->query->deleteMicroserviceQunitDatabase("all");
 
-                    if ($microserviceUnitTestDatabase == true) {
+                    if ($microserviceQunitDatabase == true) {
                         $this->helper->removeDirRecursive($path, false);
                         
-                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_7");
+                        $this->response['messages']['success'] = $this->helper->getTranslator()->trans("microserviceQunitController_7");
                     }
                 }
                 else
-                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceUnitTestController_8");
+                    $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceQunitController_8");
 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,
@@ -369,12 +369,12 @@ class MicroserviceUnitTestController extends AbstractController {
                 </td>
                 <td>";
                     if ($value['active'] == 0)
-                        $listHtml .= $this->helper->getTranslator()->trans("microserviceUnitTestController_9");
+                        $listHtml .= $this->helper->getTranslator()->trans("microserviceQunitController_9");
                     else
-                        $listHtml .= $this->helper->getTranslator()->trans("microserviceUnitTestController_10");
+                        $listHtml .= $this->helper->getTranslator()->trans("microserviceQunitController_10");
                 $listHtml .= "</td>
                 <td class=\"horizontal_center\">
-                    <button class=\"mdc-fab mdc-fab--mini cp_microservice_unit_test_delete icon_warning\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
+                    <button class=\"mdc-fab mdc-fab--mini cp_microservice_qunit_delete icon_warning\" type=\"button\" aria-label=\"label\"><span class=\"mdc-fab__icon material-icons\">delete</span></button>
                 </td>
             </tr>";
         }
@@ -382,15 +382,15 @@ class MicroserviceUnitTestController extends AbstractController {
         return $listHtml;
     }
     
-    private function createFile($microserviceUnitTestEntity) {
+    private function createFile($microserviceQunitEntity) {
         $settingRow = $this->helper->getSettingRow();
         
-        $path = "{$this->helper->getPathPublic()}/files/microservice/unit_test/run/{$microserviceUnitTestEntity->getName()}.html";
+        $path = "{$this->helper->getPathPublic()}/files/microservice/qunit/run/{$microserviceQunitEntity->getName()}.html";
         
         $html = "<!DOCTYPE html>
         <html>
            <head>
-                <title>Unit test</title>
+                <title>Qunit</title>
                 
                 <!-- Meta -->
                 <meta charset=\"UTF-8\"/>
@@ -404,21 +404,21 @@ class MicroserviceUnitTestController extends AbstractController {
                 <link href=\"{$this->helper->getUrlRoot()}/images/templates/{$settingRow['template']}/favicon.ico\" rel=\"icon\" type=\"image/x-icon\">
                 
                 <!-- Css -->
-                <link href=\"{$this->helper->getUrlRoot()}/files/microservice/unit_test/library/qunit_2.9.2.css\" rel=\"stylesheet\"/>
+                <link href=\"{$this->helper->getUrlRoot()}/files/microservice/qunit/library/qunit_2.9.2.css\" rel=\"stylesheet\"/>
             </head>
             <body>";
-                if ($microserviceUnitTestEntity->getActive() == true) {
-                    $originReplace = trim(preg_replace("/\r\n|\r|\n/", ",", $microserviceUnitTestEntity->getOrigin()));
+                if ($microserviceQunitEntity->getActive() == true) {
+                    $originReplace = trim(preg_replace("/\r\n|\r|\n/", ",", $microserviceQunitEntity->getOrigin()));
                     
                     $html .= "<div id=\"qunit\"></div>
                     <div id=\"qunit-fixture\"></div>
                     <div id=\"qunit_result\" style=\"display: none;\"></div>
-                    <script src=\"{$this->helper->getUrlRoot()}/files/microservice/unit_test/library/jquery_3.4.1.min.js\"></script>
-                    <script src=\"{$this->helper->getUrlRoot()}/files/microservice/unit_test/library/qunit_2.9.2.js\"></script>
+                    <script src=\"{$this->helper->getUrlRoot()}/files/microservice/qunit/library/jquery_3.4.1.min.js\"></script>
+                    <script src=\"{$this->helper->getUrlRoot()}/files/microservice/qunit/library/qunit_2.9.2.js\"></script>
                     <script>
                         \"use strict\";
                         
-                        let unitTestExecute = (event) => {
+                        let qunitExecute = (event) => {
                             let result = $(\"#qunit_result\");
                             
                             let data = event.data;
@@ -436,8 +436,8 @@ class MicroserviceUnitTestController extends AbstractController {
                                 
                                 result.html(page);
                                 
-                                QUnit.test(\"{$microserviceUnitTestEntity->getName()}\", (assert) => {
-                                    {$microserviceUnitTestEntity->getCode()}
+                                QUnit.test(\"{$microserviceQunitEntity->getName()}\", (assert) => {
+                                    {$microserviceQunitEntity->getCode()}
                                 });
                             }
                             else
@@ -445,12 +445,12 @@ class MicroserviceUnitTestController extends AbstractController {
                         };
                         
                         window.addEventListener(\"message\", (event) => {
-                            unitTestExecute(event);
+                            qunitExecute(event);
                         }, false);
                     </script>";
                 }
                 else
-                    $html .= "<p>" . $this->helper->getTranslator()->trans("microserviceUnitTestController_11") . "</p>";
+                    $html .= "<p>" . $this->helper->getTranslator()->trans("microserviceQunitController_11") . "</p>";
             $html .= "</body>
         </html>";
         

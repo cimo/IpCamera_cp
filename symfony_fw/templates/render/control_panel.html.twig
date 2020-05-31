@@ -183,22 +183,22 @@
                         {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceApiController::profileAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
                 {% endif %}
-            {% elseif "cp_microservice_unit_test" in urlExtra %}
+            {% elseif "cp_microservice_qunit" in urlExtra %}
                 {% if is_granted("ROLE_ADMIN") == true or is_granted("ROLE_MICROSERVICE") == true %}
-                    <p>{% trans %}controlPanelMicroserviceUnitTest_1{% endtrans %}</p>
+                    <p>{% trans %}controlPanelMicroserviceQunit_1{% endtrans %}</p>
                     <div class="cp_section_button">
-                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_unit_test_create"})}}">{% trans %}controlPanel_1{% endtrans %}</a>
-                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_unit_test_select"})}}">{% trans %}controlPanel_2{% endtrans %}</a>
+                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_qunit_create"})}}">{% trans %}controlPanel_1{% endtrans %}</a>
+                        <a class="mdc-button mdc-button--dense mdc-button--raised" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_qunit_select"})}}">{% trans %}controlPanel_2{% endtrans %}</a>
                     </div>
                     
-                    <p>{% trans %}controlPanelMicroserviceUnitTest_2{% endtrans %}</p>
+                    <p>{% trans %}controlPanelMicroserviceQunit_2{% endtrans %}</p>
                     
-                    {% set iframe = "<iframe id=\"unitTest_iframe\" src=\"[website_public_url]/files/microservice/unit_test/run/[filen_name].html\" style=\"width: 100%; height: 400px;\"></iframe>" %}
+                    {% set iframe = "<iframe id=\"qunit_iframe\" src=\"[website_public_url]/files/microservice/qunit/run/[filen_name].html\" style=\"width: 100%; height: 400px;\"></iframe>" %}
                     
-                    {% set script = "<script nonce=\"{{php_session.xssProtectionValue}}\" id=\"unitTest_script\">\n"~
-                    "   const unitTestStartup = (event) => {\n"~
+                    {% set script = "<script nonce=\"{{php_session.xssProtectionValue}}\" id=\"qunit_script\">\n"~
+                    "   const qunitStartup = (event) => {\n"~
                     "       let page = JSON.stringify({'page': document.body.innerHTML});\n"~
-                    "       let iframe = document.querySelectorAll(\"#unitTest_iframe\")[0];\n\n"~
+                    "       let iframe = document.querySelectorAll(\"#qunit_iframe\")[0];\n\n"~
                     
                     "       iframe.onload = () => {\n"~
                     "           iframe.contentWindow.postMessage(page, iframe.src);\n"~
@@ -206,17 +206,17 @@
                     "   };\n\n"~
                     
                     "   window.addEventListener(\"DOMContentLoaded\", (event) => {\n"~
-                    "       unitTestStartup(event);\n"~
+                    "       qunitStartup(event);\n"~
                     "   }, false);\n"~
                     "</script>" %}
                     
                     <pre class="square_code">{{iframe}}</pre>
                     <pre class="square_code">{{script}}</pre>
                     
-                    {% if urlExtra == "cp_microservice_unit_test_create" %}
-                        {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceUnitTestController::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
-                    {% elseif urlExtra == "cp_microservice_unit_test_select" %}
-                        {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceUnitTestController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% if urlExtra == "cp_microservice_qunit_create" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceQunitController::createAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
+                    {% elseif urlExtra == "cp_microservice_qunit_select" %}
+                        {{-render(controller("App\\Controller\\ControlPanel\\MicroserviceQunitController::selectAction", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra}))-}}
                     {% endif %}
                 {% endif %}
             {% elseif urlExtra == "cp_microservice_selenium" %}
@@ -234,7 +234,7 @@
                     
                     "Chrome and Firefox:\n"~
                     "wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -\n"~
-                    "sudo sh -c 'echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google-chrome.list'\n"~
+                    "sudo echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google-chrome.list\n"~
                     "sudo apt-get update\n"~
                     "sudo apt-get install google-chrome-stable firefox\n"~
                     "sudo npm install -g selenium-side-runner --unsafe-perm=true --allow-root\n"~
@@ -568,35 +568,35 @@
             window.url['cpApiBasicCsv'] = "{{path("cp_apiBasic_csv", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
             window.url['cpApiBasicDownloadDetail'] = "{{path("cp_apiBasic_download_detail", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
         </script>
-    {% elseif "cp_microservice_unit_test" in urlExtra %}
-        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceUnitTest" ~ javascriptMinify)}}"></script>
+    {% elseif "cp_microservice_qunit" in urlExtra %}
+        <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceQunit" ~ javascriptMinify)}}"></script>
 
         <script nonce="{{php_session.xssProtectionValue}}">
             "use strict";
 
             $(document).ready(() => {
-                let controlPanelMicroserviceUnitTest = new ControlPanelMicroserviceUnitTest();
-                controlPanelMicroserviceUnitTest.action();
-                controlPanelMicroserviceUnitTest.changeView();
+                let controlPanelMicroserviceQunit = new ControlPanelMicroserviceQunit();
+                controlPanelMicroserviceQunit.action();
+                controlPanelMicroserviceQunit.changeView();
 
                 $(window).on("resize", "", (event) => {
-                    controlPanelMicroserviceUnitTest.changeView();
+                    controlPanelMicroserviceQunit.changeView();
                 });
 
                 $(window).on("orientationchange", "", (event) => {
-                    controlPanelMicroserviceUnitTest.changeView();
+                    controlPanelMicroserviceQunit.changeView();
                 });
             });
 
-            window.textMicroserviceUnitTest = {
-                'label_1': "{{"controlPanelMicroserviceUnitTest_3"|trans}}",
-                'label_2': "{{"controlPanelMicroserviceUnitTest_4"|trans}}"
+            window.textMicroserviceQunit = {
+                'label_1': "{{"controlPanelMicroserviceQunit_3"|trans}}",
+                'label_2': "{{"controlPanelMicroserviceQunit_4"|trans}}"
             };
 
-            window.url['cpMicroserviceUnitTestCreate'] = "{{path("cp_microservice_unit_test_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
-            window.url['cpMicroserviceUnitTestSelect'] = "{{path("cp_microservice_unit_test_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
-            window.url['cpMicroserviceUnitTestProfile'] = "{{path("cp_microservice_unit_test_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
-            window.url['cpMicroserviceUnitTestDelete'] = "{{path("cp_microservice_unit_test_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+            window.url['cpMicroserviceQunitCreate'] = "{{path("cp_microservice_qunit_create", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+            window.url['cpMicroserviceQunitSelect'] = "{{path("cp_microservice_qunit_select", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+            window.url['cpMicroserviceQunitProfile'] = "{{path("cp_microservice_qunit_profile", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
+            window.url['cpMicroserviceQunitDelete'] = "{{path("cp_microservice_qunit_delete", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': urlExtra})}}";
         </script>
     {% elseif urlExtra == "cp_microservice_selenium" %}
         <script nonce="{{php_session.xssProtectionValue}}" src="{{asset("js/system/control_panel/MicroserviceSelenium" ~ javascriptMinify)}}"></script>
@@ -707,7 +707,7 @@
             <i class="material-icons mdc-list-item__graphic">perm_data_setting</i>
             <span>{% trans %}controlPanel_16{% endtrans %}</span>
         </a>
-        <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_unit_test"})}}">
+        <a class="mdc-list-item" href="{{path("control_panel", {'_locale': urlLocale, 'urlCurrentPageId': 0, 'urlExtra': "cp_microservice_qunit"})}}">
             <i class="material-icons mdc-list-item__graphic">bug_report</i>
             <span>{% trans %}controlPanel_18{% endtrans %}</span>
         </a>

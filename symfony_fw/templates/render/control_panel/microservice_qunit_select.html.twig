@@ -1,8 +1,8 @@
 <fieldset>
-    <legend>{% trans %}microserviceUnitTestSelect_1{% endtrans %}</legend>
-    <p>{% trans %}microserviceUnitTestSelect_2{% endtrans %}</p>
-    <div id="cp_microservice_unit_test_select_desktop" class="display_desktop">
-        <div id="cp_microservice_unit_test_select_result_desktop">
+    <legend>{% trans %}microserviceQunitSelect_1{% endtrans %}</legend>
+    <p>{% trans %}microserviceQunitSelect_2{% endtrans %}</p>
+    <div id="cp_microservice_qunit_select_desktop" class="display_desktop">
+        <div id="cp_microservice_qunit_select_result_desktop">
             
             {{-include("@templateRoot/include/table_and_pagination.html.twig")-}}
             
@@ -10,27 +10,27 @@
                 <thead>
                     <tr>
                         <th>
-                            <span>{% trans %}microserviceUnitTestSelect_3{% endtrans %}</span>
+                            <span>{% trans %}microserviceQunitSelect_3{% endtrans %}</span>
                             <i class="material-icons">arrow_drop_down</i>
                             <i class="material-icons">arrow_drop_up</i>
                         </th>
                         <th>
-                            <span>{% trans %}microserviceUnitTestSelect_4{% endtrans %}</span>
+                            <span>{% trans %}microserviceQunitSelect_4{% endtrans %}</span>
                             <i class="material-icons">arrow_drop_down</i>
                             <i class="material-icons">arrow_drop_up</i>
                         </th>
                         <th>
-                            <span>{% trans %}microserviceUnitTestSelect_5{% endtrans %}</span>
+                            <span>{% trans %}microserviceQunitSelect_5{% endtrans %}</span>
                             <i class="material-icons">arrow_drop_down</i>
                             <i class="material-icons">arrow_drop_up</i>
                         </th>
                         <th>
-                            <span>{% trans %}microserviceUnitTestSelect_6{% endtrans %}</span>
+                            <span>{% trans %}microserviceQunitSelect_6{% endtrans %}</span>
                             <i class="material-icons">arrow_drop_down</i>
                             <i class="material-icons">arrow_drop_up</i>
                         </th>
                         <th>
-                            <span>{% trans %}microserviceUnitTestSelect_7{% endtrans %}</span>
+                            <span>{% trans %}microserviceQunitSelect_7{% endtrans %}</span>
                             <i class="material-icons">arrow_drop_down</i>
                             <i class="material-icons">arrow_drop_up</i>
                         </th>
@@ -41,12 +41,12 @@
                 </tbody>
             </table>
         </div>
-        <button id="cp_microservice_unit_test_select_button_desktop" class="mdc-button mdc-button--dense mdc-button--raised" type="button">{% trans %}microserviceUnitTestSelect_8{% endtrans %}</button>
+        <button id="cp_microservice_qunit_select_button_desktop" class="mdc-button mdc-button--dense mdc-button--raised" type="button">{% trans %}microserviceQunitSelect_8{% endtrans %}</button>
     </div>
-    <div id="cp_microservice_unit_test_select_mobile" class="display_mobile">
+    <div id="cp_microservice_qunit_select_mobile" class="display_mobile">
         {% form_theme form "@templateRoot/layout/layout_form_materialDesign.html.twig" %}
         
-        <form id="form_cp_microservice_unit_test_select_mobile" action="{{path("cp_microservice_unit_test_select", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
+        <form id="form_cp_microservice_qunit_select_mobile" action="{{path("cp_microservice_qunit_select", {'_locale': urlLocale, 'urlCurrentPageId': urlCurrentPageId, 'urlExtra': urlExtra})}}" method="post" novalidate="novalidate">
             {{form_row(form.id)}}
 
             {{form_widget(form._token)}}
@@ -54,5 +54,5 @@
             {{form_widget(form.submit, {'dense': "", 'raised': ""})}}
         </form>
     </div>
-    <div id="cp_microservice_unit_test_select_result"></div>
+    <div id="cp_microservice_qunit_select_result"></div>
 </fieldset>

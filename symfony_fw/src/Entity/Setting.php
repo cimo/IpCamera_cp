@@ -158,7 +158,7 @@ class Setting {
     /**
      * @ORM\Column(name="server_host", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT 'lsv2.machine.local'")
      */
-    private $serverHost = "lsv2.machine.local";
+    private $serverHost = "localhost";
 
     /**
      * @ORM\Column(name="server_ip", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT ''")

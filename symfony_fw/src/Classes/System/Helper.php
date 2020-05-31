@@ -1118,18 +1118,18 @@ class Helper {
     }
 
     public function sshConnection($ip, $port, $username, $options = Array()) {
-        $this->sshConnection = @ssh2_connect($ip, $port);
+        $this->sshConnection = ssh2_connect($ip, $port);
 
         if ($this->sshConnection == false)
             return false;
 
         if (count($options) > 1) {
-            $auth = @ssh2_auth_pubkey_file($this->sshConnection, $username, $options[0], $options[1], $options[2]);
+            $auth = ssh2_auth_pubkey_file($this->sshConnection, $username, $options[0], $options[1], $options[2]);
 
             $this->sshSudo = "sudo";
         }
         else if (count($options) == 1) {
-            $auth = @ssh2_auth_password($this->sshConnection, $username, $options[0]);
+            $auth = ssh2_auth_password($this->sshConnection, $username, $options[0]);
 
             $this->sshSudo = "echo '{$options[0]}' | sudo -S";
         }

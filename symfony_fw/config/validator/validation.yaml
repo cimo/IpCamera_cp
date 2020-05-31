@@ -296,37 +296,37 @@ App\Entity\MicroserviceDeploy:
                 htmlPattern: false
                 pattern: /^1$|^0$/
 
-App\Entity\MicroserviceUnitTest:
+App\Entity\MicroserviceQunit:
     properties:
         id:
             - NotBlank:
-                groups: [microservice_unit_test_select]
+                groups: [microservice_qunit_select]
             - Regex:
-                groups: [microservice_unit_test_select]
+                groups: [microservice_qunit_select]
                 htmlPattern: false
                 pattern: /^[0-9]+$/
         name:
             - NotBlank:
-                groups: [microservice_unit_test_create, microservice_unit_test_profile]
+                groups: [microservice_qunit_create, microservice_qunit_profile]
             - Regex:
-                groups: [microservice_unit_test_create, microservice_unit_test_profile]
+                groups: [microservice_qunit_create, microservice_qunit_profile]
                 htmlPattern: false
                 pattern: /^[a-zA-Z0-9_\- ]+$/
         origin:
             - NotBlank:
-                groups: [microservice_unit_test_create, microservice_unit_test_profile]
+                groups: [microservice_qunit_create, microservice_qunit_profile]
             - Regex:
-                groups: [microservice_unit_test_create, microservice_unit_test_profile]
+                groups: [microservice_qunit_create, microservice_qunit_profile]
                 htmlPattern: false
                 pattern: /^([a-zA-Z0-9:\/._\-\r\n|\r|\n]+)$/
         code:
             - NotBlank:
-                groups: [microservice_unit_test_create, microservice_unit_test_profile]
+                groups: [microservice_qunit_create, microservice_qunit_profile]
         active:
             - NotBlank:
-                groups: [microservice_unit_test_create, microservice_unit_test_profile]
+                groups: [microservice_qunit_create, microservice_qunit_profile]
             - Regex:
-                groups: [microservice_unit_test_create, microservice_unit_test_profile]
+                groups: [microservice_qunit_create, microservice_qunit_profile]
                 htmlPattern: false
                 pattern: /^1$|^0$/
 

@@ -5,11 +5,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Table(name="microservice_unit_test", options={"collate"="utf8_unicode_ci", "charset"="utf8", "engine"="InnoDB"})
- * @ORM\Entity(repositoryClass="App\Repository\MicroserviceUnitTestRepository")
- * @UniqueEntity(fields={"name"}, groups={"microservice_unit_test_create", "microservice_unit_test_profile"})
+ * @ORM\Table(name="microservice_qunit", options={"collate"="utf8_unicode_ci", "charset"="utf8", "engine"="InnoDB"})
+ * @ORM\Entity(repositoryClass="App\Repository\MicroserviceQunitRepository")
+ * @UniqueEntity(fields={"name"}, groups={"microservice_qunit_create", "microservice_qunit_profile"})
  */
-class MicroserviceUnitTest {
+class MicroserviceQunit {
     /**
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id

@@ -362,7 +362,8 @@ class SettingController extends AbstractController {
         if ($keyPublic != null && $form->get("serverRemoveKeyPublic")->getData() == false) {
             $fileName = $keyPublic->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-            $newName = uniqid() . ".$extension";
+            $extension = $extension != "" ? ".{$extension}" : "";
+            $newName = uniqid() . $extension;
             $keyPublic->move($pathKeyPublic, $newName);
 
             $entity->setServerKeyPublic($newName);
@@ -383,7 +384,8 @@ class SettingController extends AbstractController {
         if ($keyPrivate != null && $form->get("serverRemoveKeyPrivate")->getData() == false) {
             $fileName = $keyPrivate->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-            $newName = uniqid() . ".$extension";
+            $extension = $extension != "" ? ".{$extension}" : "";
+            $newName = uniqid() . $extension;
             $keyPrivate->move($pathKeyPrivate, $newName);
 
             $entity->setServerKeyPrivate($newName);

@@ -561,12 +561,12 @@ class ApiBasicController extends AbstractController {
                             if ($readCsv == true) {
                                 //...
                             }
-                            
-                            $this->helper->removeProcessLock();
                         }
                     }
                     else
                         $this->response = $this->helper->responseProcessLock($this->response);
+
+                    $this->helper->removeProcessLock();
                 }
             }
         }

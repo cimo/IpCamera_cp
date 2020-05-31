@@ -2,7 +2,7 @@
 
 /* global helper, ajax, materialDesign, popupEasy */
 
-class ControlPanelMicroserviceUnitTest {
+class ControlPanelMicroserviceQunit {
     // Properties
     
     // Functions public
@@ -16,7 +16,7 @@ class ControlPanelMicroserviceUnitTest {
         
         this._selectMobile();
         
-        $("#form_cp_microservice_unit_test_create").on("submit", "", (event) => {
+        $("#form_cp_microservice_qunit_create").on("submit", "", (event) => {
             event.preventDefault();
             
             ajax.send(
@@ -41,15 +41,15 @@ class ControlPanelMicroserviceUnitTest {
     changeView = () => {
         if (helper.checkWidthType() === "mobile") {
             if (this.selectSended === true) {
-                this.selectId = $("#cp_microservice_unit_test_select_mobile").find("select option:selected").val();
+                this.selectId = $("#cp_microservice_qunit_select_mobile").find("select option:selected").val();
 
                 this.selectSended = false;
             }
 
             if (this.selectId >= 0) {
-                $("#cp_microservice_unit_test_select_result_desktop").find(".checkbox_column input[type='checkbox']").prop("checked", false);
+                $("#cp_microservice_qunit_select_result_desktop").find(".checkbox_column input[type='checkbox']").prop("checked", false);
 
-                let id = $("#cp_microservice_unit_test_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
+                let id = $("#cp_microservice_qunit_select_result_desktop").find(".checkbox_column input[type='checkbox']").parents("tr").find(".id_column");
 
                 $.each(id, (key, value) => {
                     if ($.trim($(value).text()) === String(this.selectId))
@@ -59,13 +59,13 @@ class ControlPanelMicroserviceUnitTest {
         }
         else {
             if (this.selectSended === true) {
-                this.selectId = $.trim($("#cp_microservice_unit_test_select_result_desktop").find(".checkbox_column input[type='checkbox']:checked").parents("tr").find(".id_column").text());
+                this.selectId = $.trim($("#cp_microservice_qunit_select_result_desktop").find(".checkbox_column input[type='checkbox']:checked").parents("tr").find(".id_column").text());
 
                 this.selectSended = false;
             }
 
             if (this.selectId > 0)
-                $("#cp_microservice_unit_test_select_mobile").find("select option[value='" + this.selectId + "']").prop("selected", true);
+                $("#cp_microservice_qunit_select_mobile").find("select option[value='" + this.selectId + "']").prop("selected", true);
         }
     }
     
@@ -73,15 +73,15 @@ class ControlPanelMicroserviceUnitTest {
     _selectDesktop = () => {
         let tableAndPagination = new TableAndPagination();
         tableAndPagination.setButtonStatus = "show";
-        tableAndPagination.create(window.url.cpMicroserviceUnitTestSelect, "#cp_microservice_unit_test_select_result_desktop", true);
+        tableAndPagination.create(window.url.cpMicroserviceQunitSelect, "#cp_microservice_qunit_select_result_desktop", true);
         tableAndPagination.search();
         tableAndPagination.pagination();
         tableAndPagination.sort();
         
-        $(document).on("click", "#cp_microservice_unit_test_select_result_desktop .refresh", (event) => {
+        $(document).on("click", "#cp_microservice_qunit_select_result_desktop .refresh", (event) => {
             ajax.send(
                 true,
-                window.url.cpMicroserviceUnitTestSelect,
+                window.url.cpMicroserviceQunitSelect,
                 "post",
                 {
                     'event': "refresh",
@@ -97,21 +97,21 @@ class ControlPanelMicroserviceUnitTest {
                     
                     tableAndPagination.populate(xhr);
                     
-                    $("#cp_microservice_unit_test_select_result").html("");
+                    $("#cp_microservice_qunit_select_result").html("");
                 },
                 null,
                 null
             );
         });
         
-        $(document).on("click", "#cp_microservice_unit_test_select_result_desktop .delete_all", (event) => {
+        $(document).on("click", "#cp_microservice_qunit_select_result_desktop .delete_all", (event) => {
             popupEasy.show(
                 window.text.index_5,
-                window.textMicroserviceUnitTest.label_2,
+                window.textMicroserviceQunit.label_2,
                 () => {
                     ajax.send(
                         true,
-                        window.url.cpMicroserviceUnitTestDelete,
+                        window.url.cpMicroserviceQunitDelete,
                         "post",
                         {
                             'event': "deleteAll",
@@ -125,7 +125,7 @@ class ControlPanelMicroserviceUnitTest {
                         (xhr) => {
                             ajax.reply(xhr, "");
                             
-                            let ids = $("#cp_microservice_unit_test_select_result_desktop").find("table .id_column");
+                            let ids = $("#cp_microservice_qunit_select_result_desktop").find("table .id_column");
                             
                             $.each(ids, (key, value) => {
                                 let id = $.trim($(value).parents("tr").find(".id_column").text());
@@ -134,7 +134,7 @@ class ControlPanelMicroserviceUnitTest {
                                     $(value).parents("tr").remove();
                             });
                             
-                            $("#cp_microservice_unit_test_select_result").html("");
+                            $("#cp_microservice_qunit_select_result").html("");
                         },
                         null,
                         null
@@ -143,18 +143,18 @@ class ControlPanelMicroserviceUnitTest {
             );
         });
         
-        $(document).on("click", "#cp_microservice_unit_test_select_result_desktop .cp_microservice_unit_test_delete", (event) => {
+        $(document).on("click", "#cp_microservice_qunit_select_result_desktop .cp_microservice_qunit_delete", (event) => {
             let id = $.trim($(event.currentTarget).parents("tr").find(".id_column").text());
             
             this._deleteElement(id);
         });
         
-        $(document).on("click", "#cp_microservice_unit_test_select_button_desktop", (event) => {
+        $(document).on("click", "#cp_microservice_qunit_select_button_desktop", (event) => {
             let id = $.trim($(event.currentTarget).parent().find(".checkbox_column input:checked").parents("tr").find(".id_column").text());
 
             ajax.send(
                 true,
-                window.url.cpMicroserviceUnitTestSelect,
+                window.url.cpMicroserviceQunitSelect,
                 "post",
                 {
                     'event': "result",
@@ -166,7 +166,7 @@ class ControlPanelMicroserviceUnitTest {
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 () => {
-                    $("#cp_microservice_unit_test_select_result").html("");
+                    $("#cp_microservice_qunit_select_result").html("");
                 },
                 (xhr) => {
                     ajax.reply(xhr, `#${event.currentTarget.id}`);
@@ -179,12 +179,12 @@ class ControlPanelMicroserviceUnitTest {
         });
         
         $(document).on("click", ".checkbox_column input[type='checkbox']", (event) => {
-            $("#cp_microservice_unit_test_select_result").html("");
+            $("#cp_microservice_qunit_select_result").html("");
         });
     }
     
     _selectMobile = () => {
-        $(document).on("submit", "#form_cp_microservice_unit_test_select_mobile", (event) => {
+        $(document).on("submit", "#form_cp_microservice_qunit_select_mobile", (event) => {
             event.preventDefault();
 
             ajax.send(
@@ -197,7 +197,7 @@ class ControlPanelMicroserviceUnitTest {
                 true,
                 "application/x-www-form-urlencoded; charset=UTF-8",
                 () => {
-                    $("#cp_microservice_unit_test_select_result").html("");
+                    $("#cp_microservice_qunit_select_result").html("");
                 },
                 (xhr) => {
                     ajax.reply(xhr, `#${event.currentTarget.id}`);
@@ -209,8 +209,8 @@ class ControlPanelMicroserviceUnitTest {
             );
         });
         
-        $(document).on("change", "#form_microservice_unit_test_select_id", (event) => {
-            $("#cp_microservice_unit_test_select_result").html("");
+        $(document).on("change", "#form_microservice_qunit_select_id", (event) => {
+            $("#cp_microservice_qunit_select_result").html("");
         });
     }
     
@@ -218,15 +218,15 @@ class ControlPanelMicroserviceUnitTest {
         if ($.isEmptyObject(xhr.response) === false && xhr.response.render !== undefined) {
             this.selectSended = true;
             
-            $("#cp_microservice_unit_test_select_result").html(xhr.response.render);
+            $("#cp_microservice_qunit_select_result").html(xhr.response.render);
             
             materialDesign.refresh();
 
-            $("#form_microservice_unit_test_level").on("keyup", "", (event) => {
+            $("#form_microservice_qunit_level").on("keyup", "", (event) => {
                 $(event.target).val($(event.target).val().toUpperCase());
             });
 
-            $("#form_cp_microservice_unit_test_profile").on("submit", "", (event) => {
+            $("#form_cp_microservice_qunit_profile").on("submit", "", (event) => {
                 event.preventDefault();
 
                 ajax.send(
@@ -243,9 +243,9 @@ class ControlPanelMicroserviceUnitTest {
                         ajax.reply(xhr, `#${event.currentTarget.id}`);
                         
                         if (xhr.response.messages.success !== undefined) {
-                            $("#cp_microservice_unit_test_select_result").html("");
+                            $("#cp_microservice_qunit_select_result").html("");
                             
-                            $("#cp_microservice_unit_test_select_result_desktop").find(".refresh").click();
+                            $("#cp_microservice_qunit_select_result_desktop").find(".refresh").click();
                         }
                     },
                     null,
@@ -253,7 +253,7 @@ class ControlPanelMicroserviceUnitTest {
                 );
             });
 
-            $("#cp_microservice_unit_test_delete").on("click", "", (event) => {
+            $("#cp_microservice_qunit_delete").on("click", "", (event) => {
                this._deleteElement();
             });
         }
@@ -264,11 +264,11 @@ class ControlPanelMicroserviceUnitTest {
         
         popupEasy.show(
             window.text.index_5,
-            window.textMicroserviceUnitTest.label_1,
+            window.textMicroserviceQunit.label_1,
             () => {
                 ajax.send(
                     true,
-                    window.url.cpMicroserviceUnitTestDelete,
+                    window.url.cpMicroserviceQunitDelete,
                     "post",
                     {
                         'event': "delete",
@@ -284,18 +284,18 @@ class ControlPanelMicroserviceUnitTest {
                         ajax.reply(xhr, "");
                         
                         if (xhr.response.messages.success !== undefined) {
-                            let ids = $("#cp_microservice_unit_test_select_result_desktop").find("table .id_column");
+                            let ids = $("#cp_microservice_qunit_select_result_desktop").find("table .id_column");
                             
                             $.each(ids, (key, value) => {
                                 if (xhr.response.values.id === $.trim($(value).text()))
                                     $(value).parents("tr").remove();
                             });
                             
-                            $("#form_microservice_unit_test_select_id").find("option[value='" + xhr.response.values.id + "']").remove();
+                            $("#form_microservice_qunit_select_id").find("option[value='" + xhr.response.values.id + "']").remove();
                             
-                            $("#cp_microservice_unit_test_select_result").html("");
+                            $("#cp_microservice_qunit_select_result").html("");
                             
-                            $("#cp_microservice_unit_test_select_result_desktop").find(".refresh").click();
+                            $("#cp_microservice_qunit_select_result_desktop").find(".refresh").click();
                         }
                     },
                     null,

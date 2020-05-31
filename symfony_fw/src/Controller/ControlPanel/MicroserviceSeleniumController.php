@@ -97,11 +97,11 @@ class MicroserviceSeleniumController extends AbstractController {
             
             if ($request->get("event") != "refresh" && $request->get("event") != "tableAndPagination") {
                 if (is_file("{$this->helper->getPathSrc()}/files/microservice/selenium/{$name}") == true) {
-                    $this->session->set("microserviceUnitTestProfileId", $id);
-                    $this->session->set("microserviceUnitTestProfileName", $name);
+                    $this->session->set("microserviceSeleniumProfileId", $id);
+                    $this->session->set("microserviceSeleniumProfileName", $name);
 
-                    $this->response['values']['id'] = $this->session->get("microserviceUnitTestProfileId");
-                    $this->response['values']['name'] = $this->session->get("microserviceUnitTestProfileName");
+                    $this->response['values']['id'] = $this->session->get("microserviceSeleniumProfileId");
+                    $this->response['values']['name'] = $this->session->get("microserviceSeleniumProfileName");
 
                     $this->response['render'] = $this->renderView("@templateRoot/render/control_panel/microservice_selenium_profile.html.twig", Array(
                         'urlLocale' => $this->urlLocale,
@@ -290,14 +290,14 @@ class MicroserviceSeleniumController extends AbstractController {
                         }
                         else
                             $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceSeleniumController_6");
-
-                        $this->helper->removeProcessLock();
                     }
                     else
                         $this->response['messages']['error'] = $this->helper->getTranslator()->trans("microserviceSeleniumController_6");
                 }
                 else
                     $this->response = $this->helper->responseProcessLock($this->response);
+
+                $this->helper->removeProcessLock();
                 
                 return $this->ajax->response(Array(
                     'urlLocale' => $this->urlLocale,

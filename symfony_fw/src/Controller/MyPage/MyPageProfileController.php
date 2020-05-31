@@ -345,7 +345,8 @@ class MyPageProfileController extends AbstractController {
         if ($image != null && $form->get("removeImage")->getData() == false) {
             $fileName = $image->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-            $newName = uniqid() . ".{$extension}";
+            $extension = $extension != "" ? ".{$extension}" : "";
+            $newName = uniqid() . $extension;
             $image->move($pathImage, $newName);
             
             $user->setImage($newName);

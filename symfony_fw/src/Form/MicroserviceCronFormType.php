@@ -39,8 +39,8 @@ class MicroserviceCronFormType extends AbstractType {
             'required' => true,
             'placeholder' => "microserviceCronFormType_4",
             'choices' => Array(
-                "microserviceUnitTestFormType_5" => "0",
-                "microserviceUnitTestFormType_6" => "1"
+                "microserviceCronFormType_5" => "0",
+                "microserviceCronFormType_6" => "1"
             )
         ))
         ->add("submit", SubmitType::class, Array(

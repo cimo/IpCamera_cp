@@ -3,7 +3,7 @@ namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-class MicroserviceUnitTestRepository extends EntityRepository {
+class MicroserviceQunitRepository extends EntityRepository {
     // Vars
     
     // Properties

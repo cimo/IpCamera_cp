@@ -1846,9 +1846,9 @@ class Query {
         return false;
     }
     
-    // Microservice unit
-    public function selectMicroserviceUnitTestDatabase($id) {
-        $query = $this->connection->prepare("SELECT * FROM microservice_unit_test
+    // Microservice qunit
+    public function selectMicroserviceQunitDatabase($id) {
+        $query = $this->connection->prepare("SELECT * FROM microservice_qunit
                                                 WHERE id = :id
                                                 ORDER by name ASC");
         
@@ -1859,8 +1859,8 @@ class Query {
         return $query->fetch();
     }
     
-    public function selectAllMicroserviceUnitTestDatabase() {
-        $query = $this->connection->prepare("SELECT * FROM microservice_unit_test
+    public function selectAllMicroserviceQunitDatabase() {
+        $query = $this->connection->prepare("SELECT * FROM microservice_qunit
                                                 ORDER by name ASC");
         
         $query->execute();
@@ -1868,9 +1868,9 @@ class Query {
         return $query->fetchAll();
     }
     
-    public function deleteMicroserviceUnitTestDatabase($type, $id = 0) {
+    public function deleteMicroserviceQunitDatabase($type, $id = 0) {
         if ($type == "one") {
-            $query = $this->connection->prepare("DELETE FROM microservice_unit_test
+            $query = $this->connection->prepare("DELETE FROM microservice_qunit
                                                     WHERE id = :id");
             
             $query->bindValue(":id", $id);
@@ -1878,7 +1878,7 @@ class Query {
             return $query->execute();
         }
         else if ($type == "all") {
-            $query = $this->connection->prepare("DELETE FROM microservice_unit_test");
+            $query = $this->connection->prepare("DELETE FROM microservice_qunit");
             
             return $query->execute();
         }
