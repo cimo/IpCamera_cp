@@ -10,7 +10,7 @@ class Config {
     private $file;
     private $name;
     
-    // Properties
+    // Properties    
     public function getProtocol() {
         return $this->protocol;
     }
@@ -38,11 +38,11 @@ class Config {
     // Functions public
     public function __construct() {
         $this->protocol = isset($_SERVER['HTTPS']) == true ? "https://" : "http://";
-        $this->pathRoot = "/path_root";
-        $this->urlRoot = "/path_public";
+        $this->pathRoot = "/project/ipcamera_cp/root/symfony_fw";
+        $this->urlRoot = "/project/ipcamera_cp/root/symfony_fw/public";
         $this->supportSymlink = true;
         $this->file = "/index.php";
-        $this->name = "Website name";
+        $this->name = "IpCamera cp 1.0.0";
     }
     
     // Functions private

@@ -11,8 +11,7 @@ framework:
         #handler_id: ~
         handler_id: session.handler.native_file
         save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
-        #save_path: '/var/lib/php/sessions'
-        name: name_dev
+        name: ipCameraCp_dev
 
     # cimo +
     assets:
