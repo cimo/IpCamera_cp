@@ -280,7 +280,7 @@ class MicroserviceSeleniumController extends AbstractController {
                         }
 
                         if ($sshConnection == true) {
-                            $commands = Array("sudo -u {$settingRow['server_user']} selenium-side-runner -c \"{$browserOption}\" \"{$path}/{$name}\"");
+                            $commands = Array("sudo selenium-side-runner -c \"{$browserOption}\" \"{$path}/{$name}\"");
 
                             $sshExecution = $this->helper->sshExecution($commands);
 

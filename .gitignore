@@ -46,18 +46,25 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# cimo
-symfony_fw/public/.sass-cache
-symfony_fw/src/Config.php
-symfony_fw/var/sessions/*
-!symfony_fw/var/sessions/.gitkeep
+# cimo +
 symfony_fw/config/packages/framework.yaml
+symfony_fw/public/.sass-cache
+symfony_fw/public/files/microservice/api/basic/*
+!symfony_fw/public/files/microservice/api/basic/.gitkeep
+symfony_fw/src/files/microservice/api/basic/*
+!symfony_fw/src/files/microservice/api/basic/.gitkeep
+symfony_fw/src/files/microservice/cron/*
+!symfony_fw/src/files/microservice/cron/.gitkeep
+symfony_fw/src/files/microservice/deploy/*
+!symfony_fw/src/files/microservice/deploy/.gitkeep
+symfony_fw/src/files/microservice/selenium/*
+!symfony_fw/src/files/microservice/selenium/.gitkeep
 symfony_fw/src/files/setting/*
 !symfony_fw/src/files/setting/.gitkeep
-symfony_fw/src/files/microservice/cron/*
-!symfony_fw/src/files/microservice/cron/*
-symfony_fw/src/files/microservice/deploy/*
-!symfony_fw/src/files/microservice/deploy/*
+symfony_fw/src/Config.php
+symfony_fw/var
+symfony_fw/vendor
+.env
 
 symfony_fw/src/files/ipCamera/*
 !symfony_fw/src/files/ipCamera/.gitkeep

@@ -815,7 +815,8 @@ class MicroserviceDeployController extends AbstractController {
         if ($keyPrivate != null && $form->get("removeKeyPrivate")->getData() == false) {
             $fileName = $keyPrivate->getClientOriginalName();
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-            $newName = uniqid() . ".$extension";
+            $extension = $extension != "" ? ".{$extension}" : "";
+            $newName = uniqid() . $extension;
             $keyPrivate->move($pathKeyPrivate, $newName);
             
             $entity->setKeyPrivate($newName);

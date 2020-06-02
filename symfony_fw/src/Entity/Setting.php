@@ -146,11 +146,6 @@ class Setting {
     private $blockMultitab = true;
     
     /**
-     * @ORM\Column(name="server_user", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT 'cimo'")
-     */
-    private $serverUser = "cimo";
-    
-    /**
      * @ORM\Column(name="server_root", type="string", columnDefinition="varchar(255) NOT NULL DEFAULT '/home/cimo/www'")
      */
     private $serverRoot = "/home/cimo/www";
@@ -305,10 +300,6 @@ class Setting {
         $this->blockMultitab = $value;
     }
     
-    public function setServerUser($value) {
-        $this->serverUser = $value;
-    }
-    
     public function setServerRoot($value) {
         $this->serverRoot = $value;
     }
@@ -457,10 +448,6 @@ class Setting {
 
     public function getBlockMultitab() {
         return $this->blockMultitab;
-    }
-    
-    public function getServerUser() {
-        return $this->serverUser;
     }
     
     public function getServerRoot() {

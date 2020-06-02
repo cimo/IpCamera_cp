@@ -1148,8 +1148,7 @@ class Helper {
 
         $result = "";
 
-        $command = implode(";", $commands);
-        $command = str_replace("sudo ", "{$this->sshSudo} ", $command);
+        $command = str_replace("sudo ", "{$this->sshSudo} ", implode(";", $commands));
 
         $stream = ssh2_exec($this->sshConnection, $command);
 

@@ -6,8 +6,6 @@
         <p>{% trans %}setting_18{% endtrans %}</p>
         <button class="mdc-button mdc-button--dense mdc-button--raised button_accordion" type="button">{% trans %}index_9{% endtrans %}</button>
         <div class="accordion">
-            {{form_row(form.serverUser, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
-
             {% if (response.values.serverRoot != "")%}<p class="info_field text_warning"><span>{% trans %}setting_16{% endtrans %}</span> "{{response.values.serverRoot}}"</p>{% endif %}
             {{form_row(form.serverRoot, {'dense': "", 'styleType': "outlinedTrailing", 'icon': "textsms"})}}
 

@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.62, for Win64 (AMD64)
+-- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
 --
--- Host: 127.0.0.1    Database: stg_ipcamera_cp
+-- Host: 127.0.0.1    Database: ipcamera_cp
 -- ------------------------------------------------------
--- Server version	5.7.30-0ubuntu0.18.04.1
+-- Server version	5.7.30
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -556,7 +556,6 @@ CREATE TABLE `setting` (
   `payPal_credit_amount` varchar(12) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0.01',
   `javascript_minify` tinyint(1) NOT NULL DEFAULT '0',
   `block_multitab` tinyint(1) NOT NULL DEFAULT '1',
-  `server_user` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'cimo',
   `server_root` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '/home/cimo/www',
   `server_host` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'lsv2.machine.local',
   `server_ip` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
@@ -575,7 +574,7 @@ CREATE TABLE `setting` (
 
 LOCK TABLES `setting` WRITE;
 /*!40000 ALTER TABLE `setting` DISABLE KEYS */;
-INSERT INTO `setting` VALUES (1,'basic',4,'en','cimo@reinventsoftware.org',1,'2,3,',1,1,15,3,0,1,0,0,0,0,1,'1234',0,0,1,'paypal.business@gmail.com','EUR','0.01',0,1,'cimo','/home/user_1/www/stg.reinventsoftware.org','stg.reinventsoftware.org','127.0.0.1','cimo',NULL,'5ebb739445b63.pub','5ebb739445c12.pem',NULL);
+INSERT INTO `setting` VALUES (1,'basic',4,'en','cimo@reinventsoftware.org',1,'2,3,',1,1,15,3,0,1,0,0,0,0,1,'1234',0,0,1,'paypal.business@gmail.com','EUR','0.01',0,1,'/home/user_1/www','localhost','127.0.0.1','cimo',NULL,'5ed5f1ca40a47.pub','5ed5f1ca41edb.pem',NULL);
 /*!40000 ALTER TABLE `setting` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -711,7 +710,7 @@ INSERT INTO `user` VALUES (1,'1,2,','ROLE_USER,ROLE_ADMIN','5cbfc82693953.jpg','
 UNLOCK TABLES;
 
 --
--- Dumping routines for database 'stg_ipcamera_cp'
+-- Dumping routines for database 'ipcamera_cp'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -723,4 +722,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-05-24 22:03:29
+-- Dump completed on 2020-06-02 18:36:46

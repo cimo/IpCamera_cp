@@ -697,13 +697,6 @@ App\Entity\Setting:
                 groups: [setting]
                 htmlPattern: false
                 pattern: /^1$|^0$/
-        serverUser:
-            - NotBlank:
-                groups: [setting]
-            - Regex:
-                groups: [setting]
-                htmlPattern: false
-                pattern: /^[a-zA-Z0-9._\-]{4,20}$/
         serverRoot:
             - NotBlank:
                 groups: [setting]

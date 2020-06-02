@@ -199,15 +199,11 @@ class SettingFormType extends AbstractType {
         ))
         ->add("blockMultitab", ChoiceType::class, Array(
             'required' => true,
-            'placeholder' => "settingFormType_36",
+            'placeholder' => "settingFormType_32",
             'choices' => Array(
                 "settingFormType_7" => "0",
                 "settingFormType_8" => "1"
             )
-        ))
-        ->add("serverUser", TextType::class, Array(
-            'required' => true,
-            'label' => "settingFormType_32"
         ))
         ->add("serverRoot", TextType::class, Array(
             'required' => true,
@@ -219,40 +215,40 @@ class SettingFormType extends AbstractType {
         ))
         ->add("serverIp", TextType::class, Array(
             'required' => true,
-            'label' => "settingFormType_37"
+            'label' => "settingFormType_35"
         ))
         ->add("serverSshUsername", TextType::class, Array(
             'required' => false,
-            'label' => "settingFormType_38"
+            'label' => "settingFormType_36"
         ))
         ->add("serverSshPassword", PasswordType::class, Array(
             'required' => false,
-            'label' => "settingFormType_39"
+            'label' => "settingFormType_37"
         ))
         ->add("serverKeyPublic", FileType::class, Array(
             'required' => false,
-            'label' => "settingFormType_40",
+            'label' => "settingFormType_38",
             'data_class' => null
         ))
         ->add("serverRemoveKeyPublic", CheckboxType::class, Array(
             'required' => false,
-            'label' => "settingFormType_41"
+            'label' => "settingFormType_39"
         ))
         ->add("serverKeyPrivate", FileType::class, Array(
             'required' => false,
-            'label' => "settingFormType_42",
+            'label' => "settingFormType_40",
             'data_class' => null
         ))
         ->add("serverRemoveKeyPrivate", CheckboxType::class, Array(
             'required' => false,
-            'label' => "settingFormType_43"
+            'label' => "settingFormType_41"
         ))
         ->add("serverKeyPrivatePassword", PasswordType::class, Array(
             'required' => false,
-            'label' => "settingFormType_44"
+            'label' => "settingFormType_42"
         ))
         ->add("submit", SubmitType::class, Array(
-            'label' => "settingFormType_35"
+            'label' => "settingFormType_43"
         ));
         
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $formEvent) {
