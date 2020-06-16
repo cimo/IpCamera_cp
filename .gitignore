@@ -47,6 +47,7 @@ Temporary Items
 .apdisk
 
 # cimo +
+error.log
 symfony_fw/config/packages/framework.yaml
 symfony_fw/public/.sass-cache
 symfony_fw/public/files/microservice/api/basic/*
