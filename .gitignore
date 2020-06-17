@@ -47,7 +47,6 @@ Temporary Items
 .apdisk
 
 # cimo +
-error.log
 symfony_fw/config/packages/framework.yaml
 symfony_fw/public/.sass-cache
 symfony_fw/public/files/microservice/api/basic/*
@@ -66,6 +65,8 @@ symfony_fw/src/Config.php
 symfony_fw/var
 symfony_fw/vendor
 .env
+error.log
+debug.log
 
 symfony_fw/src/files/ipCamera/*
 !symfony_fw/src/files/ipCamera/.gitkeep
