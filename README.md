@@ -4,6 +4,7 @@ IpCamera cp
 Framework for management your IpCamera.
 
 Based on "Uebusaito" project.
+
 You can record video and take image, setting your IpCamera and use a motion detection.
 WORK IN PROGRESS...
 
