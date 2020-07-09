@@ -1463,7 +1463,7 @@ class Query {
         if (is_numeric($value) == true) {
             if ($onlyActive == true) {
                 $query = $this->connection->prepare("SELECT *, AES_DECRYPT(database_password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS database_password_decrypt
-                                                        FROM microservice_apiBasic
+                                                        FROM microservice_api_basic
                                                     WHERE id = :id
                                                     AND active = :active
                                                     ORDER by name ASC");
@@ -1472,7 +1472,7 @@ class Query {
             }
             else {
                 $query = $this->connection->prepare("SELECT *, AES_DECRYPT(database_password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS database_password_decrypt
-                                                        FROM microservice_apiBasic
+                                                        FROM microservice_api_basic
                                                     WHERE id = :id
                                                     ORDER by name ASC");
             }
@@ -1486,7 +1486,7 @@ class Query {
         else {
             if ($onlyActive == true) {
                 $query = $this->connection->prepare("SELECT *, AES_DECRYPT(database_password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS database_password_decrypt
-                                                        FROM microservice_apiBasic
+                                                        FROM microservice_api_basic
                                                     WHERE token_name = :tokenName
                                                     AND active = :active
                                                     ORDER by name ASC");
@@ -1495,7 +1495,7 @@ class Query {
             }
             else {
                 $query = $this->connection->prepare("SELECT *, AES_DECRYPT(database_password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS database_password_decrypt
-                                                        FROM microservice_apiBasic
+                                                        FROM microservice_api_basic
                                                     WHERE token_name = :tokenName
                                                     ORDER by name ASC");
             }
@@ -1515,7 +1515,7 @@ class Query {
         
         if ($onlyActive == true) {
             $query = $this->connection->prepare("SELECT *, AES_DECRYPT(database_password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS database_password_decrypt
-                                                    FROM microservice_apiBasic
+                                                    FROM microservice_api_basic
                                                 WHERE active = :active
                                                 ORDER by name ASC");
             
@@ -1527,7 +1527,7 @@ class Query {
         }
         else {
             $query = $this->connection->prepare("SELECT *, AES_DECRYPT(database_password, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512))) AS database_password_decrypt
-                                                    FROM microservice_apiBasic
+                                                    FROM microservice_api_basic
                                                 ORDER by name ASC");
             
             $query->execute();
@@ -1543,7 +1543,7 @@ class Query {
             if ($value != null) {
                 $settingRow = $this->selectSettingDatabase();
                 
-                $query = $this->connection->prepare("UPDATE IGNORE microservice_apiBasic
+                $query = $this->connection->prepare("UPDATE IGNORE microservice_api_basic
                                                             SET {$name} = AES_ENCRYPT(:{$name}, UNHEX(SHA2('{$settingRow['secret_passphrase']}', 512)))
                                                         WHERE id = :id");
                 
@@ -1554,7 +1554,7 @@ class Query {
             }
         }
         else if ($type == "clear") {
-            $query = $this->connection->prepare("UPDATE microservice_apiBasic
+            $query = $this->connection->prepare("UPDATE microservice_api_basic
                                                         SET {$name} = :{$name}
                                                     WHERE id = :id");
             
@@ -1568,7 +1568,7 @@ class Query {
     }
     
     public function selectApiBasicRequestDatabase($apiId, $name) {
-        $query = $this->connection->prepare("SELECT * FROM microservice_apiBasic_request
+        $query = $this->connection->prepare("SELECT * FROM microservice_api_basic_request
                                                 WHERE api_id = :apiId
                                                 AND name = :name
                                                 AND date LIKE :date
@@ -1584,7 +1584,7 @@ class Query {
     }
     
     public function selectAllApiBasicRequestDatabase($apiId, $name, $year, $month) {
-        $query = $this->connection->prepare("SELECT * FROM microservice_apiBasic_request
+        $query = $this->connection->prepare("SELECT * FROM microservice_api_basic_request
                                                 WHERE api_id = :apiId
                                                 AND name = :name
                                                 AND date LIKE :date
@@ -1600,7 +1600,7 @@ class Query {
     }
     
     public function insertApiBasicRequestDatabase($apiId, $name) {
-        $query = $this->connection->prepare("INSERT INTO microservice_apiBasic_request (
+        $query = $this->connection->prepare("INSERT INTO microservice_api_basic_request (
                                                     api_id,
                                                     name,
                                                     date,
@@ -1622,7 +1622,7 @@ class Query {
     }
     
     public function updateApiBasicRequestDatabase($apiId, $name, $count) {
-        $query = $this->connection->prepare("UPDATE microservice_apiBasic_request
+        $query = $this->connection->prepare("UPDATE microservice_api_basic_request
                                                 SET count = :count
                                                 WHERE api_id = :apiId
                                                 AND name = :name
@@ -1637,7 +1637,7 @@ class Query {
     }
     
     public function deleteApiBasicRequestDatabase($apiId) {
-        $query = $this->connection->prepare("DELETE FROM microservice_apiBasic_request
+        $query = $this->connection->prepare("DELETE FROM microservice_api_basic_request
                                                 WHERE api_id = :apiId");
         
         $query->bindValue(":apiId", $apiId);
@@ -1647,7 +1647,7 @@ class Query {
     
     public function selectAllApiBasicRequestDetailDatabase($name, $dateStart, $dateEnd) {
         if ($dateStart != "" && $dateEnd == "") {
-            $query = $this->connection->prepare("SELECT * FROM microservice_apiBasic_request_detail
+            $query = $this->connection->prepare("SELECT * FROM microservice_api_basic_request_detail
                                                     WHERE name = :name AND DATE(date) >= :dateStart
                                                     ORDER by name ASC");
             
@@ -1659,7 +1659,7 @@ class Query {
             return $query->fetchAll();
         }
         else if ($dateStart == "" && $dateEnd != "") {
-            $query = $this->connection->prepare("SELECT * FROM microservice_apiBasic_request_detail
+            $query = $this->connection->prepare("SELECT * FROM microservice_api_basic_request_detail
                                                     WHERE name = :name AND DATE(date) <= :dateEnd
                                                     ORDER by name ASC");
             
@@ -1671,7 +1671,7 @@ class Query {
             return $query->fetchAll();
         }
         else if ($dateStart != "" && $dateEnd != "") {
-            $query = $this->connection->prepare("SELECT * FROM microservice_apiBasic_request_detail
+            $query = $this->connection->prepare("SELECT * FROM microservice_api_basic_request_detail
                                                     WHERE name = :name AND DATE(date) >= :dateStart AND DATE(date) <= :dateEnd
                                                     ORDER by name ASC");
             
@@ -1688,7 +1688,7 @@ class Query {
     }
     
     public function insertApiBasicRequestDetailDatabase($name, $json) {
-        $query = $this->connection->prepare("INSERT INTO microservice_apiBasic_request_detail (
+        $query = $this->connection->prepare("INSERT INTO microservice_api_basic_request_detail (
                                                 name,
                                                 date,
                                                 data

@@ -232,14 +232,15 @@
                     "sudo apt-get install nodejs\n"~
                     "sudo npm -g update npm\n\n"~
                     
-                    "Chrome and Firefox:\n"~
-                    "wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -\n"~
-                    "sudo echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google-chrome.list\n"~
-                    "sudo apt-get update\n"~
-                    "sudo apt-get install google-chrome-stable firefox\n"~
-                    "sudo npm install -g selenium-side-runner --unsafe-perm=true --allow-root\n"~
-                    "sudo npm install -g chromedriver --unsafe-perm=true --allow-root\n"~
-                    "sudo npm install -g geckodriver --unsafe-perm=true --allow-root" %}
+                    "Selenium:\n"~
+                    "wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add \n"~
+                    "echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google-chrome.list \n"~
+                    "sudo add-apt-repository ppa:mozillateam/ppa \n"~
+                    "apt-get update \n"~
+                    "apt-get install -y google-chrome-stable=83.0.4103.116-1 firefox-esr=68.9.0esr-1~deb9u1 \n"~
+                    "npm install -g selenium-side-runner@3.17.0 --unsafe-perm=true --allow-root \n"~
+                    "npm install -g chromedriver@83.0.0 --unsafe-perm=true --allow-root \n"~
+                    "npm install -g geckodriver@1.19.1 --unsafe-perm=true --allow-root \n"~ %}
                     
                     <pre class="square_code">{{textA}}</pre>
                     

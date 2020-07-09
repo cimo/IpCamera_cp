@@ -7,8 +7,12 @@
     "use strict";
 
     window.addEventListener("DOMContentLoaded", (event) => {
-        document.querySelector("body .column_left_container").remove();
-        document.querySelector("body .column_right_container").remove();
+        if (document.querySelector("body .column_left_container") !== null)
+            document.querySelector("body .column_left_container").remove();
+
+        if (document.querySelector("body .column_right_container") !== null)
+            document.querySelector("body .column_right_container").remove();
+
         document.querySelector("body .column_center_container").className = "mdc-layout-grid__cell mdc-layout-grid__cell--span-12 mdc-layout-grid__cell--span-12-tablet column_center_container";
     }, false);
 </script>

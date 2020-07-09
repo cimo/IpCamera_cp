@@ -146,17 +146,14 @@ class Helper {
         $languageRow = $this->query->selectLanguageDatabase($this->settingRow['language']);
         $this->languageFormat = $languageRow['date'];
         
-        $serverRoot = isset($_SERVER['DOCUMENT_ROOT']) == true ? $_SERVER['DOCUMENT_ROOT'] : $this->settingRow['server_root'];
-        $serverHost = isset($_SERVER['HTTP_HOST']) == true ? $_SERVER['HTTP_HOST'] : $this->settingRow['server_host'];
-        
         $this->protocol = $this->config->getProtocol();
         
-        $this->pathRoot = $serverRoot . $this->config->getPathRoot();
+        $this->pathRoot = $this->config->getPathRoot();
         $this->pathSrc = "{$this->pathRoot}/src";
         $this->pathPublic = "{$this->pathRoot}/public";
         $this->pathLock = "{$this->pathRoot}/src/files/lock";
         
-        $this->urlRoot = $this->config->getProtocol() . $serverHost . $this->config->getUrlRoot();
+        $this->urlRoot = $this->protocol . $this->config->getUrlRoot();
         
         $this->supportSymlink = $this->config->getSupportSymlink();
         
@@ -972,31 +969,33 @@ class Helper {
     }
     
     public function fileSearchInside($filePath, $word, $replace) {
-        $reading = fopen($filePath, "r");
-        $writing = fopen("{$filePath}.tmp", "w");
-        
         $checked = false;
         
-        while (feof($reading) == false) {
-            $line = fgets($reading);
+        if (file_exists($filePath) == true) {
+            $reading = fopen($filePath, "r");
+            $writing = fopen("{$filePath}.tmp", "w");
             
-            if (stristr($line, $word) != false) {
-                $line = $replace;
-                
-                $checked = true;
-            }
-            
-            if (feof($reading) == true && $replace == null) {
-                $line = "$word\n";
+            while (feof($reading) == false) {
+                $line = fgets($reading);
 
-                $checked = true;
+                if (stristr($line, $word) != false) {
+                    $line = $replace;
+
+                    $checked = true;
+                }
+
+                if (feof($reading) == true && $replace == null) {
+                    $line = "$word\n";
+
+                    $checked = true;
+                }
+
+                fwrite($writing, $line);
             }
-            
-            fwrite($writing, $line);
+
+            fclose($reading);
+            fclose($writing);
         }
-        
-        fclose($reading);
-        fclose($writing);
         
         if ($checked == true) 
             rename("{$filePath}.tmp", $filePath);
@@ -1007,26 +1006,30 @@ class Helper {
     }
     
     public function fileReadTail($path, $limit = 50) {
-        $fopen = fopen($path, "r");
+        $lines = Array();
         
-        fseek($fopen, -1, SEEK_END);
-        
-        for ($a = 0, $lines = Array(); $a < $limit && ($char = fgetc($fopen)) !== false;) {
-            if ($char === "\n") {
-                if (isset($lines[$a]) == true) {
-                    $lines[$a][] = $char;
-                    $lines[$a] = implode("", array_reverse($lines[$a]));
-                    
-                    $a ++;
+        if (file_exists($path) == true) {
+            $fopen = fopen($path, "r");
+
+            fseek($fopen, -1, SEEK_END);
+
+            for ($a = 0, $lines = Array(); $a < $limit && ($char = fgetc($fopen)) !== false;) {
+                if ($char === "\n") {
+                    if (isset($lines[$a]) == true) {
+                        $lines[$a][] = $char;
+                        $lines[$a] = implode("", array_reverse($lines[$a]));
+
+                        $a ++;
+                    }
                 }
+                else
+                    $lines[$a][] = $char;
+
+                fseek($fopen, -2, SEEK_CUR);
             }
-            else
-                $lines[$a][] = $char;
-            
-            fseek($fopen, -2, SEEK_CUR);
+
+            fclose($fopen);
         }
-        
-        fclose($fopen);
         
         if (count($lines) > 0 && $a < $limit)
             $lines[$a] = implode("", array_reverse($lines[$a]));
