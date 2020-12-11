@@ -31,10 +31,12 @@ class Helper {
     private $languageFormat;
     
     private $protocol;
+    private $domain;
     
     private $pathRoot;
     private $pathSrc;
     private $pathPublic;
+    private $pathLock;
     
     private $urlRoot;
     
@@ -89,6 +91,10 @@ class Helper {
     
     public function getProtocol() {
         return $this->protocol;
+    }
+
+    public function getDomain() {
+        return $this->domain;
     }
     
     public function getPathRoot() {
@@ -147,14 +153,15 @@ class Helper {
         $this->languageFormat = $languageRow['date'];
         
         $this->protocol = $this->config->getProtocol();
+        $this->domain = $this->config->getDomain();
         
         $this->pathRoot = $this->config->getPathRoot();
         $this->pathSrc = "{$this->pathRoot}/src";
         $this->pathPublic = "{$this->pathRoot}/public";
         $this->pathLock = "{$this->pathRoot}/src/files/lock";
         
-        $this->urlRoot = $this->protocol . $this->config->getUrlRoot();
-        
+        $this->urlRoot = $this->protocol . $this->domain . $this->config->getPathUrl();
+
         $this->supportSymlink = $this->config->getSupportSymlink();
         
         $this->websiteFile = $this->config->getFile();

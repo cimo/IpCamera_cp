@@ -2,6 +2,9 @@
     "composer/ca-bundle": {
         "version": "1.1.1"
     },
+    "composer/package-versions-deprecated": {
+        "version": "1.11.99"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -254,6 +257,9 @@
             "ref": "87c585d24de9f43bca80ebcfd5cf5cb39445d95f"
         }
     },
+    "symfony/http-client-contracts": {
+        "version": "v1.1.10"
+    },
     "symfony/http-foundation": {
         "version": "v4.1.1"
     },
@@ -320,6 +326,9 @@
     "symfony/polyfill-intl-idn": {
         "version": "v1.12.0"
     },
+    "symfony/polyfill-intl-normalizer": {
+        "version": "v1.18.1"
+    },
     "symfony/polyfill-mbstring": {
         "version": "v1.8.0"
     },
@@ -328,6 +337,9 @@
     },
     "symfony/polyfill-php73": {
         "version": "v1.12.0"
+    },
+    "symfony/polyfill-php80": {
+        "version": "v1.18.1"
     },
     "symfony/process": {
         "version": "v4.1.1"

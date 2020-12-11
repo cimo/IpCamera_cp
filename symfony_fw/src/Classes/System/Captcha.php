@@ -32,7 +32,7 @@ class Captcha {
         
         imagefilledrectangle($image, 0, 0, 299, 99, $red);
         
-        $fontFile = "{$this->helper->getPathPublic()}/fonts/roboto_light.ttf";
+        $fontFile = dirname($_SERVER['DOCUMENT_ROOT']) . $this->helper->getPathRoot() . "/public/fonts/roboto_light.ttf";
         
         imagefttext($image, 10, 0, 12, 20, $black, $fontFile, $string);
         
