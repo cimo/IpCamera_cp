@@ -160,7 +160,7 @@ class Helper {
         $this->pathPublic = "{$this->pathRoot}/public";
         $this->pathLock = "{$this->pathRoot}/src/files/lock";
         
-        $this->urlRoot = $this->protocol . $this->domain . $this->config->getPathUrl();
+        $this->urlRoot = $this->protocol . $this->domain . $this->config->getUrlRoot();
 
         $this->supportSymlink = $this->config->getSupportSymlink();
         

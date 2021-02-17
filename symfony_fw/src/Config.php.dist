@@ -4,45 +4,51 @@ namespace App;
 class Config {
     // Vars
     private $protocol;
+    private $domain;
     private $pathRoot;
     private $urlRoot;
-    private $supportSymlink;
     private $file;
     private $name;
-    
-    // Properties    
+    private $supportSymlink;
+
+    // Properties
     public function getProtocol() {
         return $this->protocol;
     }
-    
+
+    public function getDomain() {
+        return $this->domain;
+    }
+
     public function getPathRoot() {
         return $this->pathRoot;
     }
-    
+
     public function getUrlRoot() {
         return $this->urlRoot;
     }
-    
-    public function getSupportSymlink() {
-        return $this->supportSymlink;
-    }
-    
+
     public function getFile() {
         return $this->file;
     }
-    
+
     public function getName() {
         return $this->name;
     }
-    
+
+    public function getSupportSymlink() {
+        return $this->supportSymlink;
+    }
+
     // Functions public
     public function __construct() {
         $this->protocol = isset($_SERVER['HTTPS']) == true ? "https://" : "http://";
-        $this->pathRoot = "/project/ipcamera_cp/root/symfony_fw";
-        $this->urlRoot = "/project/ipcamera_cp/root/symfony_fw/public";
-        $this->supportSymlink = true;
+        $this->domain = "localhost-php7";
+        $this->pathRoot = "/home/folder_name/root/symfony_fw";
+        $this->urlRoot = "/folder_name/root/symfony_fw/public";
         $this->file = "/index.php";
-        $this->name = "IpCamera cp 1.0.0";
+        $this->name = "Name 1.0.0";
+        $this->supportSymlink = true;
     }
     
     // Functions private

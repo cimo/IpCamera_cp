@@ -11,7 +11,7 @@ framework:
         #handler_id: ~
         handler_id: session.handler.native_file
         save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
-        name: ipCameraCp_dev
+        name: xxx_dev
 
     # cimo +
     assets:

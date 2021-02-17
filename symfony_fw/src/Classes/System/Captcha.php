@@ -23,6 +23,15 @@ class Captcha {
         
         return $this->image($this->session->get("captcha"));
     }
+
+    public function check($captchaEnabled, $captcha) {
+        $sessionCaptcha = $this->session->get("captcha");
+
+        if ($captchaEnabled == false || ($captchaEnabled == true && $sessionCaptcha != null && $sessionCaptcha == $captcha))
+            return Array(true, "");
+
+        return Array(false, $this->helper->getTranslator()->trans("captcha_1"));
+    }
     
     // Functions private
     private function image($string) {
@@ -31,9 +40,9 @@ class Captcha {
         $black = imagecolorallocate($image, 0x00, 0x00, 0x00);
         
         imagefilledrectangle($image, 0, 0, 299, 99, $red);
-        
-        $fontFile = dirname($_SERVER['DOCUMENT_ROOT']) . $this->helper->getPathRoot() . "/public/fonts/roboto_light.ttf";
-        
+
+        $fontFile = "{$this->helper->getPathPublic()}/fonts/roboto_light.ttf";
+
         imagefttext($image, 10, 0, 12, 20, $black, $fontFile, $string);
         
         ob_start();
@@ -45,14 +54,5 @@ class Captcha {
         imagedestroy($image);
         
         return $result;
-    }
-    
-    public function check($captchaEnabled, $captcha) {
-        $sessionCaptcha = $this->session->get("captcha");
-        
-        if ($captchaEnabled == false || ($captchaEnabled == true && $sessionCaptcha != null && $sessionCaptcha == $captcha))
-            return Array(true, "");
-        
-        return Array(false, $this->helper->getTranslator()->trans("captcha_1"));
     }
 }
