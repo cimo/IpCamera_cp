@@ -37,11 +37,12 @@ symfony_fw/src/files/setting/*
 symfony_fw/src/Config.php
 symfony_fw/var
 symfony_fw/vendor
+
+symfony_fw/src/files/ipCamera/*
+!symfony_fw/src/files/ipCamera/.gitkeep
+
 .digest_htpasswd
 .env
 error.log
 debug.log
 node_modules
-
-symfony_fw/src/files/ipCamera/*
-!symfony_fw/src/files/ipCamera/.gitkeep
