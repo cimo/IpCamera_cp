@@ -43,7 +43,7 @@ class Config {
     // Functions public
     public function __construct() {
         $this->protocol = isset($_SERVER['HTTPS']) == true ? "https://" : "http://";
-        $this->domain = "localhost-php7";
+        $this->domain = "localhost-php";
         $this->pathRoot = "/home/folder_name/root/symfony_fw";
         $this->urlRoot = "/folder_name/root/symfony_fw/public";
         $this->file = "/index.php";
