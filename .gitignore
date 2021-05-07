@@ -46,3 +46,4 @@ symfony_fw/src/files/ipCamera/*
 error.log
 debug.log
 node_modules
+Note.txt
