@@ -47,3 +47,6 @@ error.log
 debug.log
 node_modules
 Note.txt
+__blobstorage__
+__queuestorage__
+__azurite*.json
